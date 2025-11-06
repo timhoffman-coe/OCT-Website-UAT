@@ -191,6 +191,27 @@ export default function ServiceHealthPage() {
           </div>
         </div>
 
+        {/* Report Issue Box */}
+        <div className="mb-10 p-6 bg-[#D3ECEF] border-2 border-[#DDE3E6] rounded-lg shadow-sm">
+          <div className="flex items-start space-x-4">
+            <div className="text-3xl flex-shrink-0">🔔</div>
+            <div className="flex-1">
+              <h3 className="font-sans text-lg font-bold text-[#212529] mb-2">
+                Seeing a problem that's not listed?
+              </h3>
+              <p className="font-sans text-base text-[#495057] mb-4">
+                Help us improve service monitoring by reporting issues not shown above.
+              </p>
+              <a
+                href="#"
+                className="inline-block font-sans text-base font-semibold bg-primary-blue text-white px-6 py-2 rounded-md hover:bg-[#193A5A] transition-colors"
+              >
+                Report It Here →
+              </a>
+            </div>
+          </div>
+        </div>
+
         {/* Application Status */}
         <section className="mb-12">
           <h2 className="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3 border-primary-blue">
@@ -226,6 +247,38 @@ export default function ServiceHealthPage() {
             </ul>
           </div>
         </section>
+
+        {/* Change Schedule Card */}
+        <div className="mb-12">
+          <a
+            href="#"
+            className="block bg-[#F4F2F1] border-2 border-[#DDE3E6] rounded-lg p-6 hover:shadow-lg hover:border-primary-blue transition-all"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="text-3xl">📅</div>
+                <div>
+                  <h3 className="font-sans text-xl font-bold text-[#212529] mb-1">
+                    View Our Change Schedule
+                  </h3>
+                  <p className="font-sans text-base text-[#495057]">
+                    Stay informed about upcoming maintenance and system changes
+                  </p>
+                </div>
+              </div>
+              <svg
+                className="h-6 w-6 text-primary-blue flex-shrink-0"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </div>
+          </a>
+        </div>
       </main>
 
       <Footer />

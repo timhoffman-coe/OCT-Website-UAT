@@ -11,7 +11,7 @@ import AnimatedSection from '@/components/AnimatedSection';
 
 export default function Home() {
   return (
-    <div className="bg-gray-100">
+    <div className="bg-white">
       <Header />
       <ScrollSpyNav />
       <Hero />

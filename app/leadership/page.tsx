@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -25,9 +26,9 @@ export default function LeadershipPage() {
   const branchManagerOffice = {
     section: "Branch Manager's Office",
     members: [
-      { role: 'Branch Manager', name: 'Daryl Croft', email: 'daryl.croft@edmonton.ca' },
-      { role: 'Administrative Assistant', name: 'Charalyn Parlee', email: 'charalyn.parlee@edmonton.ca' },
-      { role: 'Strategic Coordinator', name: 'Andrew Clark', email: 'andrew.clark@edmonton.ca' },
+      { role: 'Branch Manager', name: 'Daryl Croft', email: 'daryl.croft@edmonton.ca', image: '/images/Daryl.png' },
+      { role: 'Administrative Assistant', name: 'Charalyn Parlee', email: 'charalyn.parlee@edmonton.ca', image: '/images/Portraits/Charalyn.png' },
+      { role: 'Strategic Coordinator', name: 'Andrew Clark', email: 'andrew.clark@edmonton.ca', image: '/images/Portraits/Andrew.png' },
     ]
   };
 
@@ -36,7 +37,7 @@ export default function LeadershipPage() {
       section: 'Business Solutions',
       link: '/business-solutions',
       members: [
-        { role: 'Director', name: 'Robert Dufresne', email: 'robert.dufresne@edmonton.ca' },
+        { role: 'Director', name: 'Robert Dufresne', email: 'robert.dufresne@edmonton.ca', image: '/images/Portraits/Bob.png' },
         { role: 'Program Manager', name: 'Matthew Raven', email: 'matthew.raven@edmonton.ca' },
         { role: 'Program Manager', name: 'Margaret Cieslak-Olmos', email: 'margaret.cieslak-olmos@edmonton.ca' },
         { role: 'Program Manager', name: 'Ken Merkel', email: 'ken.merkel@edmonton.ca' },
@@ -46,7 +47,7 @@ export default function LeadershipPage() {
       section: 'Corporate Information and Security Office',
       link: '/corporate-information-security',
       members: [
-        { role: 'Director', name: 'Daniel Pedersen', email: 'daniel.pedersen@edmonton.ca' },
+        { role: 'Director', name: 'Daniel Pedersen', email: 'daniel.pedersen@edmonton.ca', image: '/images/Portraits/Daniel.png' },
         { role: 'Program Manager', name: 'Andrea Buchholz', email: 'andrea.buchholz@edmonton.ca' },
         { role: 'Program Manager', name: 'David Malone', email: 'david.malone@edmonton.ca' },
         { role: 'Program Manager', name: 'Jack Truong', email: 'jack.truong@edmonton.ca' },
@@ -57,9 +58,9 @@ export default function LeadershipPage() {
       section: 'Integrated Technology Solutions',
       link: '/integrated-technology-solutions',
       members: [
-        { role: 'Director', name: 'Mike Fryer', email: 'mike.fryer@edmonton.ca' },
+        { role: 'Director', name: 'Mike Fryer', email: 'mike.fryer@edmonton.ca', image: '/images/Portraits/Mike.png' },
         { role: 'Program Manager', name: 'Josh McGillis', email: 'josh.mcgillis@edmonton.ca' },
-        { role: 'Program Manager', name: 'Patrick Lau', email: 'patrick.lau@edmonton.ca' },
+        { role: 'Program Manager', name: 'Greg Krol', email: 'greg.krol@edmonton.ca' },
         { role: 'Program Manager', name: 'Tim Hoffman', email: 'tim.hoffman@edmonton.ca' },
         { role: 'Program Manager', name: 'Alex Noot', email: 'alex.noot@edmonton.ca' },
         { role: 'Technical Lead', name: 'Kevin Wang', email: 'kevin.wang@edmonton.ca' },
@@ -69,7 +70,7 @@ export default function LeadershipPage() {
       section: 'Project Management Office',
       link: '/project-management-office',
       members: [
-        { role: 'Director', name: 'Nisreen Hussain', email: 'nisreen.hussain@edmonton.ca' },
+        { role: 'Director', name: 'Nisreen Hussain', email: 'nisreen.hussain@edmonton.ca', image: '/images/Portraits/Nisreen.png' },
         { role: 'Program Manager', name: 'Liviu Jalba', email: 'liviu.jalba@edmonton.ca' },
         { role: 'Program Manager', name: 'Shengxi Jin', email: 'shengxi.jin@edmonton.ca' },
       ]
@@ -78,7 +79,7 @@ export default function LeadershipPage() {
       section: 'Technology Planning',
       link: '/technology-planning',
       members: [
-        { role: 'Director', name: 'Troy Murray', email: 'troy.murray@edmonton.ca' },
+        { role: 'Director', name: 'Troy Murray', email: 'troy.murray@edmonton.ca', image: '/images/Portraits/Troy.png' },
         { role: 'Program Manager', name: 'Liza Wong', email: 'liza.wong@edmonton.ca' },
         { role: 'Program Manager', name: 'Mike Meraw', email: 'mike.meraw@edmonton.ca' },
         { role: 'Program Manager', name: 'Romelia Fernandez', email: 'romelia.fernandez@edmonton.ca' },
@@ -114,18 +115,31 @@ export default function LeadershipPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {branchManagerOffice.members.map((member, memberIdx) => (
                 <div key={memberIdx} className="bg-white rounded-lg p-5 hover:shadow-lg transition-shadow">
-                  <p className="font-sans text-sm font-semibold text-complement-empire-blue uppercase mb-1">
-                    {member.role}
-                  </p>
-                  <h3 className="font-sans text-lg font-bold text-gray-800 mb-2">
-                    {member.name}
-                  </h3>
-                  <a
-                    href={`mailto:${member.email}`}
-                    className="font-sans text-sm text-complement-sea-green hover:text-primary-blue transition-colors"
-                  >
-                    {member.email}
-                  </a>
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <Image
+                        src={member.image}
+                        alt={member.name}
+                        width={96}
+                        height={96}
+                        className="w-24 h-24 rounded-lg object-cover"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-sans text-sm font-semibold text-complement-empire-blue uppercase mb-1">
+                        {member.role}
+                      </p>
+                      <h3 className="font-sans text-lg font-bold text-gray-800 mb-2">
+                        {member.name}
+                      </h3>
+                      <a
+                        href={`mailto:${member.email}`}
+                        className="font-sans text-sm text-complement-sea-green hover:text-primary-blue transition-colors"
+                      >
+                        {member.email}
+                      </a>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -166,8 +180,40 @@ export default function LeadershipPage() {
                   {isExpanded && (
                     <div className="bg-gray-50">
                       <div className="px-6 pt-2 pb-4">
+                        {/* Director Section */}
+                        {unit.members.filter(m => m.role === 'Director').map((director, idx) => (
+                          <div key={idx} className="bg-white border border-gray-200 rounded-lg p-5 mb-6 hover:shadow-md transition-shadow">
+                            <div className="flex items-start gap-4">
+                              <div className="flex-shrink-0">
+                                <Image
+                                  src={director.image}
+                                  alt={director.name}
+                                  width={96}
+                                  height={96}
+                                  className="w-24 h-24 rounded-lg object-cover"
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-sans text-sm font-semibold text-complement-empire-blue uppercase mb-1">
+                                  {director.role}
+                                </p>
+                                <h4 className="font-sans text-lg font-bold text-gray-800 mb-2">
+                                  {director.name}
+                                </h4>
+                                <a
+                                  href={`mailto:${director.email}`}
+                                  className="font-sans text-sm text-complement-sea-green hover:text-primary-blue transition-colors"
+                                >
+                                  {director.email}
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* Program Managers and Other Staff Section */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {unit.members.map((member, memberIdx) => (
+                          {unit.members.filter(m => m.role !== 'Director').map((member, memberIdx) => (
                             <div key={memberIdx} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
                               <p className="font-sans text-sm font-semibold text-complement-empire-blue uppercase mb-1">
                                 {member.role}

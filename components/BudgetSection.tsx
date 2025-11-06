@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function BudgetSection() {
   return (
-    <section id="budget" className="bg-complement-sea-green py-16 sm:py-20">
+    <section id="budget" className="bg-[#DDE3E6] py-16 sm:py-20">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-xl p-8 md:p-12 text-center">
           <h2 className="font-sans text-3xl md:text-4xl font-bold text-primary-blue mb-6">

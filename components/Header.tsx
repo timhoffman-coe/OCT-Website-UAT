@@ -18,7 +18,7 @@ export default function Header() {
           {/* Logo and Branch ID */}
           <div className="flex items-center space-x-6">
             {/* Edmonton Logo */}
-            <a href="#" title="City of Edmonton Home">
+            <a href="/" title="City of Edmonton Home">
               <Image
                 src="/images/EDM_logo_Blue.png"
                 alt="City of Edmonton Logo"
@@ -86,13 +86,14 @@ export default function Header() {
 
             {/* Services Dropdown */}
             <div className="relative group">
-              <div className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 cursor-pointer py-2">
+              <a href="/services" className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 py-2">
                 <span>Services</span>
                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
-              </div>
+              </a>
               <div className="hidden group-hover:block absolute z-10 top-full w-72 bg-white rounded-md shadow-lg py-1">
+                <a href="/services" className="block px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-gray-100 border-b border-gray-200">View All Services</a>
                 <a href="/technology-planning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Investment & Governance</a>
                 <a href="/technology-planning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Business Engagement & Intake</a>
                 <a href="/technology-planning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Vendor & Contract Management</a>
@@ -119,14 +120,20 @@ export default function Header() {
                 </svg>
               </div>
               <div className="hidden group-hover:block absolute z-10 right-0 top-full w-56 bg-white rounded-md shadow-lg py-1">
+                <a href="/policies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Policies, Directives, & Procedures</a>
+                <a href="/branch-templates" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Branch Templates</a>
+                <a href="/technology-strategies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Strategies</a>
+                <a href="/budget" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget & Spend</a>
+                <a href="/org-chart" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">OCT Org Chart</a>
+                <a href="/dashboards" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboards</a>
+                <a href="/ai-resources" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">AI Resources</a>
                 <a href="https://data.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Open Data Portal</a>
-                <a href="https://data.edmonton.ca/stories/s/Business-Analytics-Catalogue/iita-auh3" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Business Analytics Catalogue</a>
-                <a href="https://maps.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Geospatial Maps</a>
+                <a href="/links" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Links</a>
               </div>
             </div>
 
             {/* Contact Link */}
-            <a href="/leadership" className="font-sans text-base font-medium text-white hover:text-gray-300">Contact</a>
+            <a href="/contact" className="font-sans text-base font-medium text-white hover:text-gray-300">Contact</a>
 
             {/* Service Health Button */}
             <a
@@ -190,6 +197,7 @@ export default function Header() {
               </svg>
             </button>
             <div className={`${openDropdown === 'mobile-services' ? '' : 'hidden'} mt-1 pl-4`}>
+              <a href="/services" className="block px-3 py-2 rounded-md text-sm font-semibold text-primary-blue hover:bg-gray-50 border-b border-gray-200 mb-1">View All Services</a>
               <a href="/technology-planning" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Investment & Governance</a>
               <a href="/technology-planning" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Business Engagement & Intake</a>
               <a href="/technology-planning" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Vendor & Contract Management</a>
@@ -219,14 +227,20 @@ export default function Header() {
               </svg>
             </button>
             <div className={`${openDropdown === 'mobile-resources' ? '' : 'hidden'} mt-1 pl-4`}>
+              <a href="/policies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Policies, Directives, & Procedures</a>
+              <a href="/branch-templates" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Branch Templates</a>
+              <a href="/technology-strategies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Strategies</a>
+              <a href="/budget" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Budget & Spend</a>
+              <a href="/org-chart" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">OCT Org Chart</a>
+              <a href="/dashboards" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Dashboards</a>
+              <a href="/ai-resources" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">AI Resources</a>
               <a href="https://data.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Open Data Portal</a>
-              <a href="https://data.edmonton.ca/stories/s/Business-Analytics-Catalogue/iita-auh3" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Business Analytics Catalogue</a>
-              <a href="https://maps.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Geospatial Maps</a>
+              <a href="/links" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Links</a>
             </div>
           </div>
 
           {/* Mobile Contact */}
-          <a href="/leadership" className="font-sans block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Contact</a>
+          <a href="/contact" className="font-sans block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Contact</a>
 
           {/* Mobile Service Health Button */}
           <a

@@ -34,9 +34,9 @@ export default function WhoWeAre() {
   ];
 
   return (
-    <section id="who-we-are" className="bg-complement-empire-blue py-16 sm:py-20">
+    <section id="who-we-are" className="bg-[#F4F2F1] py-16 sm:py-20">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="font-sans text-3xl font-bold text-center text-white mb-10 md:mb-12">
+        <h2 className="font-sans text-3xl font-bold text-center text-primary-blue mb-10 md:mb-12">
           Who We Are
         </h2>
 
