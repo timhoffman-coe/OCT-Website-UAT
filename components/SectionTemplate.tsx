@@ -18,42 +18,39 @@ export interface ServiceArea {
 interface SectionTemplateProps {
   pageTitle: string;
   pageDescription: string;
-  heroColor?: string;
   serviceAreas: ServiceArea[];
 }
 
 export default function SectionTemplate({
   pageTitle,
   pageDescription,
-  heroColor = 'bg-primary-blue',
   serviceAreas,
 }: SectionTemplateProps) {
   const [selectedArea, setSelectedArea] = useState<ServiceArea | null>(null);
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-white min-h-screen">
       <Header />
 
-      {/* Hero Section */}
-      <section className={`${heroColor} py-16 md:py-20`}>
-        <div className="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <h1 className="font-sans text-4xl md:text-5xl font-bold text-white mb-4">
+      {/* Main Content */}
+      <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        {/* Page Title Section */}
+        <div className="mb-12">
+          <h1 className="font-sans text-4xl md:text-5xl font-bold text-primary-blue mb-4 pb-3 border-b-2 border-[#F4F2F1]">
             {pageTitle}
           </h1>
-          <p className="font-serif text-lg md:text-xl text-white/90 max-w-3xl">
+          <p className="font-serif text-lg md:text-xl text-[#495057] max-w-3xl mt-6">
             {pageDescription}
           </p>
         </div>
-      </section>
 
-      {/* Service Areas Grid */}
-      <section className="py-16 md:py-20">
-        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-sans text-3xl font-bold text-center text-gray-900 mb-12">
+        {/* Service Areas Section */}
+        <section>
+          <h2 className="font-sans text-3xl font-bold text-primary-blue mb-8 pb-3 border-b-2 border-[#F4F2F1]">
             Our Service Areas
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
             {serviceAreas.map((area) => (
               <ServiceAreaCard
                 key={area.id}
@@ -64,8 +61,8 @@ export default function SectionTemplate({
               />
             ))}
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
       {/* Modal */}
       <ServiceAreaModal

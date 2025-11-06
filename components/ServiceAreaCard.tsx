@@ -18,7 +18,7 @@ export default function ServiceAreaCard({
   return (
     <button
       onClick={onClick}
-      className="group relative bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 p-6 text-left w-full hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2"
+      className="group relative bg-[#D3ECEF] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6 text-left w-full hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2"
     >
       {/* Icon */}
       {icon && (
@@ -34,12 +34,12 @@ export default function ServiceAreaCard({
       )}
 
       {/* Title */}
-      <h3 className="font-sans text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-blue transition-colors">
+      <h3 className="font-sans text-xl font-bold text-[#212529] mb-3 group-hover:text-primary-blue transition-colors">
         {title}
       </h3>
 
       {/* Short Description */}
-      <p className="font-serif text-sm text-gray-600 mb-4 line-clamp-3">
+      <p className="font-sans text-sm text-[#495057] mb-4 line-clamp-3">
         {shortDescription}
       </p>
 

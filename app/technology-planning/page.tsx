@@ -75,7 +75,6 @@ export default function TechnologyPlanningPage() {
     <SectionTemplate
       pageTitle="Technology Planning"
       pageDescription="The Technology Planning and Business Engagement section enables the City to make informed technology decisions that provide value to our citizens, businesses and partners."
-      heroColor="bg-complement-empire-blue"
       serviceAreas={serviceAreas}
     />
   );

@@ -3,11 +3,21 @@
 @theme inline {
   /* Custom City of Edmonton Colors */
   --color-primary-blue: #005087;
+  --color-dark-blue: #193A5A;
   --color-complement-empire-blue: #2F63AD;
   --color-complement-spring-mist: #61BEB2;
   --color-complement-sea-green: #109D7E;
   --color-complement-sunrise: #FAB840;
   --color-complement-grey-flannel: #839899;
+
+  /* Peaceful/Structural Palette (from Visual Standards) */
+  --color-peaceful-light-blue: #D3ECEF;
+  --color-structural-gray-blue: #DDE3E6;
+  --color-structural-light-gray: #F4F2F1;
+
+  /* Text Colors */
+  --color-text-dark: #212529;
+  --color-text-secondary: #495057;
 
   /* Font families */
   --font-sans: var(--font-open-sans);
