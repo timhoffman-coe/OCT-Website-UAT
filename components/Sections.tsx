@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function BusinessUnits() {
+export default function Sections() {
   const units = [
     {
       title: 'Technology Planning',
@@ -53,9 +53,9 @@ export default function BusinessUnits() {
   ];
 
   return (
-    <main className="container mx-auto max-w-7xl py-12 md:py-16 px-4 sm:px-6 lg:px-8">
+    <main id="sections" className="container mx-auto max-w-7xl py-12 md:py-16 px-4 sm:px-6 lg:px-8">
       <h3 className="font-sans text-3xl font-bold text-center text-gray-800 mb-10 md:mb-12">
-        Our Business Units
+        Sections
       </h3>
 
       {/* Grid layout (5-column grid on large screens) */}

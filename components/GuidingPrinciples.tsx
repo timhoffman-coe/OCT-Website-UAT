@@ -27,7 +27,7 @@ export default function GuidingPrinciples() {
   ];
 
   return (
-    <section className="bg-white py-16 sm:py-20">
+    <section id="guiding-principles" className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <h2 className="font-sans text-3xl font-bold text-center text-gray-900 mb-12">
           Our Guiding Principles

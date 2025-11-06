@@ -40,7 +40,7 @@ export default function KeyInitiatives() {
   };
 
   return (
-    <section className="bg-gray-100 py-16 sm:py-20">
+    <section id="initiatives" className="bg-white py-16 sm:py-20">
       <div className="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <h2 className="font-sans text-3xl font-bold text-center text-gray-900 mb-12">
           Key Initiatives Spotlight

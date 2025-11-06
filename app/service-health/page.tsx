@@ -1,273 +1,231 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import MetricCard from '@/components/dashboard/MetricCard';
-import IncidentsTrendChart from '@/components/dashboard/IncidentsTrendChart';
-import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 export default function ServiceHealthPage() {
+  const [lastUpdated, setLastUpdated] = useState('');
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set());
 
-  const timeAccountingData = [
-    { name: 'Service Desk', hours: 8200 },
-    { name: 'Network Ops', hours: 6500 },
-    { name: 'App Dev', hours: 7100 },
-    { name: 'Project Mgmt', hours: 4500 },
-    { name: 'Security Ops', hours: 5300 },
+  useEffect(() => {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+    const dateString = now.toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+    setLastUpdated(`${dateString} at ${timeString}`);
+  }, []);
+
+  const toggleSection = (sectionId: string) => {
+    setOpenSections(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(sectionId)) {
+        newSet.delete(sectionId);
+      } else {
+        newSet.add(sectionId);
+      }
+      return newSet;
+    });
+  };
+
+  type StatusType = 'operational' | 'partial-outage' | 'major-outage' | 'maintenance';
+
+  const getStatusStyles = (status: StatusType) => {
+    const styles = {
+      'operational': 'bg-green-50 text-complement-sea-green border-green-200',
+      'partial-outage': 'bg-yellow-50 text-complement-sunrise border-yellow-200',
+      'major-outage': 'bg-red-50 text-complement-sunset border-red-200',
+      'maintenance': 'bg-gray-50 text-complement-grey-flannel border-gray-200'
+    };
+    return styles[status];
+  };
+
+  const getStatusLabel = (status: StatusType) => {
+    const labels = {
+      'operational': 'Operational',
+      'partial-outage': 'Partial Outage',
+      'major-outage': 'Major Outage',
+      'maintenance': 'Maintenance'
+    };
+    return labels[status];
+  };
+
+  const StatusPill = ({ status }: { status: StatusType }) => (
+    <span className={`inline-block px-3 py-1.5 text-sm font-semibold uppercase tracking-wide rounded-full border min-w-[140px] text-center ${getStatusStyles(status)}`}>
+      {getStatusLabel(status)}
+    </span>
+  );
+
+  interface Service {
+    name: string;
+    status: StatusType;
+  }
+
+  interface ServiceCategory {
+    id: string;
+    name: string;
+    status: StatusType;
+    services?: Service[];
+  }
+
+  const applicationCategories: ServiceCategory[] = [
+    {
+      id: 'financial',
+      name: 'Financial & Corporate Services',
+      status: 'operational',
+      services: [
+        { name: 'SAP (Financials)', status: 'operational' },
+        { name: 'PeopleSoft (HR)', status: 'operational' }
+      ]
+    },
+    {
+      id: 'city-ops',
+      name: 'City Operations',
+      status: 'operational',
+      services: [
+        { name: '311 Call Centre', status: 'operational' },
+        { name: 'Fleet Management', status: 'operational' },
+        { name: 'Waste Collection Services', status: 'operational' }
+      ]
+    },
+    {
+      id: 'community',
+      name: 'Community Services',
+      status: 'partial-outage',
+      services: [
+        { name: 'Recreation Facility Booking', status: 'partial-outage' },
+        { name: 'Fire Rescue Dispatch', status: 'operational' }
+      ]
+    },
+    {
+      id: 'iis',
+      name: 'Integrated Infrastructure Services (IIS)',
+      status: 'maintenance',
+      services: [
+        { name: 'Construction Project Portal', status: 'maintenance' }
+      ]
+    },
+    {
+      id: 'urban-planning',
+      name: 'Urban Planning and Economy',
+      status: 'operational',
+      services: [
+        { name: 'Permit & Licensing', status: 'operational' },
+        { name: 'Economic Data Portal', status: 'operational' }
+      ]
+    }
   ];
 
-  const spendData = [
-    { name: 'Software Licensing', value: 4.2 },
-    { name: 'Personnel', value: 3.8 },
-    { name: 'Cloud Infrastructure', value: 2.5 },
-    { name: 'Telecom', value: 1.8 },
-    { name: 'Consulting', value: 1.1 },
+  const networkCategories: ServiceCategory[] = [
+    {
+      id: 'corporate-network',
+      name: 'Corporate Network',
+      status: 'operational',
+      services: [
+        { name: 'Campus', status: 'operational' },
+        { name: 'Datacenter', status: 'operational' },
+        { name: 'Wifi', status: 'operational' }
+      ]
+    }
   ];
 
-  const COLORS = ['#2F63AD', '#9947AE', '#61BEB2', '#109D7E', '#B1C034', '#FAB840', '#EA5853', '#839899'];
+  const CategorySection = ({ category, isLast = false }: { category: ServiceCategory; isLast?: boolean }) => {
+    const isOpen = openSections.has(category.id);
+
+    return (
+      <li className={isLast ? '' : 'border-b border-gray-200'}>
+        <button
+          className="w-full px-6 py-5 flex items-center justify-between space-x-4 text-left hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-blue"
+          onClick={() => toggleSection(category.id)}
+          aria-expanded={isOpen}
+        >
+          <div className="flex items-center space-x-4">
+            <div className="text-gray-500 flex-shrink-0">
+              {isOpen ? (
+                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" />
+                </svg>
+              ) : (
+                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              )}
+            </div>
+            <p className="text-lg font-medium text-gray-800">{category.name}</p>
+          </div>
+          <StatusPill status={category.status} />
+        </button>
+
+        {isOpen && category.services && (
+          <div className="bg-gray-50 pl-16 pr-6 pb-4 pt-2">
+            <ul className="divide-y divide-gray-100">
+              {category.services.map((service, idx) => (
+                <li key={idx} className="py-3 flex justify-between items-center">
+                  <p className="text-sm text-gray-700">{service.name}</p>
+                  <StatusPill status={service.status} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </li>
+    );
+  };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-gray-50 min-h-screen">
       <Header />
 
-      {/* Sample Data Warning Banner */}
-      <div className="bg-red-600 text-white text-center py-3 px-4">
-        <p className="font-sans text-lg font-bold uppercase tracking-wide">
-          ⚠️ SAMPLE DATA ONLY - NOT LIVE ⚠️
-        </p>
-      </div>
-
-      {/* Dashboard Header */}
-      <div className="bg-white shadow-sm p-4">
-        <h1 className="font-sans text-2xl font-bold text-primary-blue">Chief Information Officer Dashboard</h1>
-      </div>
-
-      <main className="p-4 md:p-6 lg:p-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-          {/* Critical Systems Performance */}
-          <div className="bg-white rounded-lg shadow-lg md:col-span-2 lg:col-span-4 p-4">
-            <h2 className="font-sans text-lg font-bold text-primary-blue mb-4">Critical Systems & Service Performance</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <MetricCard title="Citizen Systems Uptime" value="99.98%" subtitle="Last 30 days" valueColor="text-complement-sea-green" />
-              <MetricCard title="Internal Systems Uptime" value="99.95%" subtitle="AD, Network, DNS" valueColor="text-complement-sea-green" />
-              <MetricCard title="Active P1/P2 Incidents" value="3" subtitle="Real-time count" valueColor="text-complement-sunrise" />
-              <MetricCard title="End-User CSAT" value="4.8/5" subtitle="Post-ticket surveys" valueColor="text-primary-blue" />
-            </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        {/* Overall Status Bar */}
+        <div className="mb-10 p-5 bg-green-100 border border-green-200 rounded-lg shadow-sm flex items-center space-x-4">
+          <div className="flex-shrink-0">
+            <svg className="h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
           </div>
-
-          {/* Major Incidents Trend */}
-          <div className="bg-white rounded-lg shadow-lg p-4 lg:col-span-2">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Major Incidents Trend (Last 30 Days)</h3>
-            <div className="h-72">
-              <IncidentsTrendChart />
-            </div>
+          <div>
+            <h2 className="text-xl font-bold text-green-800">All systems operational</h2>
+            <p className="text-green-700 mt-1">
+              All services are currently running smoothly. Last checked: <span className="font-medium">{lastUpdated}</span>
+            </p>
           </div>
-
-          {/* SLA Performance */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">SLA Performance</h3>
-            <div className="space-y-4">
-              <p className="text-sm text-gray-600">OCT tickets past threshold:</p>
-              <p className="text-5xl font-bold text-center text-red-600">12</p>
-              <p className="text-xs text-center text-gray-400">Currently in Remedy</p>
-            </div>
-          </div>
-
-          {/* Service Level Targets */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Service Level Targets</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span>ITS Uptime:</span> <span className="font-bold text-complement-sea-green">99.8%</span></div>
-              <div className="flex justify-between"><span>App Availability:</span> <span className="font-bold text-complement-sea-green">99.9%</span></div>
-              <div className="flex justify-between"><span>Helpdesk Response:</span> <span className="font-bold text-complement-sunrise">92%</span></div>
-            </div>
-          </div>
-
-          {/* Budget Burn Rates */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Operating Budget</h3>
-            <div className="text-center space-y-2">
-              <div className="flex justify-between text-sm"><span>Plan:</span><span>65.7%</span></div>
-              <div className="flex justify-between text-sm"><span>Actual:</span><span>68.0%</span></div>
-              <div className="mt-4">
-                <span className="text-2xl font-bold text-complement-sunrise">+3.5%</span>
-                <p className="text-sm text-gray-500">Variance</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Capital Budget</h3>
-            <div className="text-center space-y-2">
-              <div className="flex justify-between text-sm"><span>Plan:</span><span>42.7%</span></div>
-              <div className="flex justify-between text-sm"><span>Actual:</span><span>42.0%</span></div>
-              <div className="mt-4">
-                <span className="text-2xl font-bold text-complement-sea-green">-1.8%</span>
-                <p className="text-sm text-gray-500">Variance</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Top 5 Spend Categories */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Top 5 Spend Categories (YTD)</h3>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={spendData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {spendData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => `$${value}M`} />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Contract Renewals */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Upcoming Contract Renewals</h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex justify-between items-center p-2 bg-red-50 rounded">
-                <div><p className="font-semibold">Microsoft E5</p><p className="text-xs text-gray-500">Vendor: Microsoft</p></div>
-                <div className="text-red-600 font-bold">15 Days</div>
-              </li>
-              <li className="flex justify-between items-center p-2 bg-yellow-50 rounded">
-                <div><p className="font-semibold">ServiceNow Platform</p><p className="text-xs text-gray-500">Vendor: ServiceNow</p></div>
-                <div className="text-yellow-600 font-bold">42 Days</div>
-              </li>
-              <li className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                <div><p className="font-semibold">Network Switches</p><p className="text-xs text-gray-500">Vendor: Cisco</p></div>
-                <div className="text-gray-700">75 Days</div>
-              </li>
-            </ul>
-          </div>
-
-          {/* Project Portfolio Health */}
-          <div className="bg-white rounded-lg shadow-lg p-4 lg:col-span-2">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Capital Project Portfolio Health</h3>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="p-4 bg-green-50 rounded-lg">
-                <p className="text-4xl font-bold text-green-700">18</p>
-                <p className="text-sm font-semibold text-green-800">On Track</p>
-              </div>
-              <div className="p-4 bg-yellow-50 rounded-lg">
-                <p className="text-4xl font-bold text-yellow-700">6</p>
-                <p className="text-sm font-semibold text-yellow-800">At Risk</p>
-              </div>
-              <div className="p-4 bg-red-50 rounded-lg">
-                <p className="text-4xl font-bold text-red-700">2</p>
-                <p className="text-sm font-semibold text-red-800">Off Track</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Strategic Initiatives */}
-          <div className="bg-white rounded-lg shadow-lg p-4 lg:col-span-2">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Key Strategic Initiatives - Milestone Status</h3>
-            <div className="space-y-3">
-              <div>
-                <p className="text-sm font-semibold mb-1">DAS in the Tunnels</p>
-                <div className="w-full bg-gray-200 rounded-full h-4">
-                  <div className="bg-primary-blue h-4 rounded-full" style={{width: '75%'}}></div>
-                </div>
-              </div>
-              <div>
-                <p className="text-sm font-semibold mb-1">ServiceNow Implementation</p>
-                <div className="w-full bg-gray-200 rounded-full h-4">
-                  <div className="bg-primary-blue h-4 rounded-full" style={{width: '40%'}}></div>
-                </div>
-              </div>
-              <div>
-                <p className="text-sm font-semibold mb-1">Cloud Migration Strategy</p>
-                <div className="w-full bg-gray-200 rounded-full h-4">
-                  <div className="bg-primary-blue h-4 rounded-full" style={{width: '90%'}}></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Security Metrics */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Critical Vulnerability Remediation</h3>
-            <div className="text-center">
-              <p className="text-5xl font-bold text-complement-sea-green">96%</p>
-              <p className="text-sm text-gray-500">Patched within 30 days</p>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Phishing Test Failure Rate</h3>
-            <div className="text-center">
-              <p className="text-5xl font-bold text-complement-sunrise">8.2%</p>
-              <p className="text-sm text-gray-500">Last campaign</p>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Backup Success Rate (24h)</h3>
-            <div className="text-center">
-              <p className="text-5xl font-bold text-complement-sea-green">99.7%</p>
-              <p className="text-sm text-red-600">1 Critical Failure</p>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Top Risk Register Items</h3>
-            <ul className="text-sm space-y-2">
-              <li><span className="font-semibold">Aging Network Core:</span> <span className="text-red-600">Increasing</span></li>
-              <li><span className="font-semibold">Vendor Lock-in:</span> <span className="text-yellow-600">Holding Flat</span></li>
-              <li><span className="font-semibold">Data Governance:</span> <span className="text-green-600">Decreasing</span></li>
-            </ul>
-          </div>
-
-          {/* Staffing */}
-          <div className="bg-white rounded-lg shadow-lg p-4 lg:col-span-2">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Staffing Overview</h3>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <p className="text-3xl font-bold">185</p>
-                <p className="text-sm font-semibold text-gray-500">Filled Positions</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold text-complement-sunrise">15</p>
-                <p className="text-sm font-semibold text-gray-500">Vacant Positions</p>
-              </div>
-              <div>
-                <p className="text-3xl font-bold">45d</p>
-                <p className="text-sm font-semibold text-gray-500">Avg. Vacancy Age</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Time Accounting */}
-          <div className="bg-white rounded-lg shadow-lg p-4 lg:col-span-2">
-            <h3 className="font-sans text-base font-semibold text-gray-600 border-b border-gray-200 pb-3 mb-4">Time Accounting (Last Month)</h3>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={timeAccountingData}>
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip />
-                  <Bar dataKey="hours" fill="#2F63AD" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
         </div>
+
+        {/* Application Status */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3 border-primary-blue">
+            Application Status
+          </h2>
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <ul className="divide-y-0">
+              {applicationCategories.map((category, idx) => (
+                <CategorySection
+                  key={category.id}
+                  category={category}
+                  isLast={idx === applicationCategories.length - 1}
+                />
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Network Status */}
+        <section className="mb-12">
+          <h2 className="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3 border-primary-blue">
+            Network Status
+          </h2>
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <ul className="divide-y-0">
+              {networkCategories.map((category) => (
+                <CategorySection
+                  key={category.id}
+                  category={category}
+                  isLast={true}
+                />
+              ))}
+            </ul>
+          </div>
+        </section>
       </main>
 
       <Footer />

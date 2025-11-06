@@ -13,30 +13,30 @@ export default function WhoWeAre() {
   const accordionItems = [
     {
       title: 'Connect with OCT',
-      content: 'Learn how to engage with our team, submit requests, and collaborate on technology initiatives.',
-      link: '#',
+      content: 'Learn how to engage with our team, submit requests, and collaborate on technology initiatives. Contact our leadership team for inquiries.',
+      link: '/leadership',
     },
     {
       title: 'Branch Overview',
-      content: 'Discover our organizational structure, leadership team, and how we support the City of Edmonton.',
-      link: '#',
+      content: 'Discover our organizational structure, mission, vision, key actions for 2025-2026, and how we support the City of Edmonton.',
+      link: '/about',
     },
     {
       title: 'Services',
-      content: 'Explore the comprehensive range of technology services we provide to City departments and citizens.',
-      link: '#',
+      content: 'Explore the comprehensive range of technology services we provide through our five business units: Technology Planning, Business Solutions, Integrated Technology Solutions, Project Management Office, and Corporate Information Security.',
+      link: '/business-solutions',
     },
     {
       title: 'Technology Strategies & Directives',
-      content: 'Review our strategic plans, policies, and directives that guide technology decisions across the City.',
-      link: '#',
+      content: 'Review our strategic plans, key actions for 2025-2026, capital projects, and performance metrics that guide technology decisions across the City.',
+      link: '/about',
     },
   ];
 
   return (
-    <section className="bg-gray-100 py-16 sm:py-20">
+    <section id="who-we-are" className="bg-complement-empire-blue py-16 sm:py-20">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="font-sans text-3xl font-bold text-center text-gray-800 mb-10 md:mb-12">
+        <h2 className="font-sans text-3xl font-bold text-center text-white mb-10 md:mb-12">
           Who We Are
         </h2>
 
@@ -49,7 +49,7 @@ export default function WhoWeAre() {
                 Learn more about OCT
               </h3>
               <p className="text-gray-600 mb-4">
-                Watch this overview of our core network services and architecture.
+                Watch this overview to learn more about our branch.
               </p>
 
               {/* Video Placeholder */}
