@@ -3,283 +3,305 @@
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { Cloud, Calendar, AlertTriangle, Inbox, Zap, ChevronLeft, ChevronRight, CheckCircle2, Phone, ArrowRight } from 'lucide-react';
 
 export default function ServiceHealthPage() {
-  const [lastUpdated, setLastUpdated] = useState('');
-  const [openSections, setOpenSections] = useState<Set<string>>(new Set());
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  useEffect(() => {
-    const now = new Date();
-    const timeString = now.toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
-    const dateString = now.toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
-    setLastUpdated(`${dateString} at ${timeString}`);
-  }, []);
-
-  const toggleSection = (sectionId: string) => {
-    setOpenSections(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(sectionId)) {
-        newSet.delete(sectionId);
-      } else {
-        newSet.add(sectionId);
-      }
-      return newSet;
-    });
+  // Calendar navigation
+  const goToToday = () => {
+    setCurrentDate(new Date());
+    setSelectedDate(new Date());
   };
 
-  type StatusType = 'operational' | 'partial-outage' | 'major-outage' | 'maintenance';
-
-  const getStatusStyles = (status: StatusType) => {
-    const styles = {
-      'operational': 'bg-green-50 text-complement-sea-green border-green-200',
-      'partial-outage': 'bg-yellow-50 text-complement-sunrise border-yellow-200',
-      'major-outage': 'bg-red-50 text-complement-sunset border-red-200',
-      'maintenance': 'bg-gray-50 text-complement-grey-flannel border-gray-200'
-    };
-    return styles[status];
+  const goToPreviousMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
   };
 
-  const getStatusLabel = (status: StatusType) => {
-    const labels = {
-      'operational': 'Operational',
-      'partial-outage': 'Partial Outage',
-      'major-outage': 'Major Outage',
-      'maintenance': 'Maintenance'
-    };
-    return labels[status];
+  const goToNextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   };
 
-  const StatusPill = ({ status }: { status: StatusType }) => (
-    <span className={`inline-block px-3 py-1.5 text-sm font-semibold uppercase tracking-wide rounded-full border min-w-[140px] text-center ${getStatusStyles(status)}`}>
-      {getStatusLabel(status)}
-    </span>
-  );
+  // Get month name and year
+  const monthName = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
-  interface Service {
-    name: string;
-    status: StatusType;
-  }
+  // Calculate calendar days
+  const getCalendarDays = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
 
-  interface ServiceCategory {
-    id: string;
-    name: string;
-    status: StatusType;
-    services?: Service[];
-  }
+    // First day of the month
+    const firstDay = new Date(year, month, 1);
+    const firstDayOfWeek = firstDay.getDay(); // 0 = Sunday
 
-  const applicationCategories: ServiceCategory[] = [
-    {
-      id: 'financial',
-      name: 'Financial & Corporate Services',
-      status: 'operational',
-      services: [
-        { name: 'SAP (Financials)', status: 'operational' },
-        { name: 'PeopleSoft (HR)', status: 'operational' }
-      ]
-    },
-    {
-      id: 'city-ops',
-      name: 'City Operations',
-      status: 'operational',
-      services: [
-        { name: '311 Call Centre', status: 'operational' },
-        { name: 'Fleet Management', status: 'operational' },
-        { name: 'Waste Collection Services', status: 'operational' }
-      ]
-    },
-    {
-      id: 'community',
-      name: 'Community Services',
-      status: 'partial-outage',
-      services: [
-        { name: 'Recreation Facility Booking', status: 'partial-outage' },
-        { name: 'Fire Rescue Dispatch', status: 'operational' }
-      ]
-    },
-    {
-      id: 'iis',
-      name: 'Integrated Infrastructure Services (IIS)',
-      status: 'maintenance',
-      services: [
-        { name: 'Construction Project Portal', status: 'maintenance' }
-      ]
-    },
-    {
-      id: 'urban-planning',
-      name: 'Urban Planning and Economy',
-      status: 'operational',
-      services: [
-        { name: 'Permit & Licensing', status: 'operational' },
-        { name: 'Economic Data Portal', status: 'operational' }
-      ]
+    // Last day of the month
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+
+    // Create array of days with empty slots for alignment
+    const days: (number | null)[] = [];
+
+    // Add empty slots for days before the first day
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      days.push(null);
     }
-  ];
 
-  const networkCategories: ServiceCategory[] = [
-    {
-      id: 'corporate-network',
-      name: 'Corporate Network',
-      status: 'operational',
-      services: [
-        { name: 'Campus', status: 'operational' },
-        { name: 'Datacenter', status: 'operational' },
-        { name: 'Wifi', status: 'operational' }
-      ]
+    // Add all days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(day);
     }
-  ];
 
-  const CategorySection = ({ category, isLast = false }: { category: ServiceCategory; isLast?: boolean }) => {
-    const isOpen = openSections.has(category.id);
+    return days;
+  };
 
-    return (
-      <li className={isLast ? '' : 'border-b border-gray-200'}>
-        <button
-          className="w-full px-6 py-5 flex items-center justify-between space-x-4 text-left hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-blue"
-          onClick={() => toggleSection(category.id)}
-          aria-expanded={isOpen}
-        >
-          <div className="flex items-center space-x-4">
-            <div className="text-gray-500 flex-shrink-0">
-              {isOpen ? (
-                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4" />
-                </svg>
-              ) : (
-                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-              )}
-            </div>
-            <p className="text-lg font-medium text-gray-800">{category.name}</p>
-          </div>
-          <StatusPill status={category.status} />
-        </button>
+  const calendarDays = getCalendarDays();
 
-        {isOpen && category.services && (
-          <div className="bg-gray-50 pl-16 pr-6 pb-4 pt-2">
-            <ul className="divide-y divide-gray-100">
-              {category.services.map((service, idx) => (
-                <li key={idx} className="py-3 flex justify-between items-center">
-                  <p className="text-sm text-gray-700">{service.name}</p>
-                  <StatusPill status={service.status} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </li>
-    );
+  // Mock data for planned outages (you can replace this with actual data)
+  const plannedOutages: { [key: string]: number } = {
+    '2025-11-06': 1,
+    '2025-11-11': 2,
+    '2025-11-13': 1
+  };
+
+  const getOutageCount = (day: number) => {
+    const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return plannedOutages[dateStr] || 0;
+  };
+
+  const isToday = (day: number) => {
+    const today = new Date();
+    return day === today.getDate() &&
+           currentDate.getMonth() === today.getMonth() &&
+           currentDate.getFullYear() === today.getFullYear();
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-white min-h-screen">
       <Header />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {/* Overall Status Bar */}
-        <div className="mb-10 p-5 bg-green-100 border border-green-200 rounded-lg shadow-sm flex items-center space-x-4">
-          <div className="flex-shrink-0">
-            <svg className="h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-green-800">All systems operational</h2>
-            <p className="text-green-700 mt-1">
-              All services are currently running smoothly. Last checked: <span className="font-medium">{lastUpdated}</span>
-            </p>
-          </div>
-        </div>
+      <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-structural-light-gray">
+        <div className="max-w-7xl mx-auto">
+          <header className="mb-8">
+            <h1 className="font-sans text-3xl font-bold text-primary-blue">Service Status</h1>
+            <p className="font-sans mt-2 text-text-secondary">Check the status of our services and view planned maintenance.</p>
+          </header>
 
-        {/* Report Issue Box */}
-        <div className="mb-10 p-6 bg-[#D3ECEF] border-2 border-[#DDE3E6] rounded-lg shadow-sm">
-          <div className="flex items-start space-x-4">
-            <div className="text-3xl flex-shrink-0">🔔</div>
-            <div className="flex-1">
-              <h3 className="font-sans text-lg font-bold text-[#212529] mb-2">
-                Seeing a problem that's not listed?
-              </h3>
-              <p className="font-sans text-base text-[#495057] mb-4">
-                Help us improve service monitoring by reporting issues not shown above.
-              </p>
-              <a
-                href="#"
-                className="inline-block font-sans text-base font-semibold bg-primary-blue text-white px-6 py-2 rounded-md hover:bg-[#193A5A] transition-colors"
-              >
-                Report It Here →
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Application Status */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3 border-primary-blue">
-            Application Status
-          </h2>
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <ul className="divide-y-0">
-              {applicationCategories.map((category, idx) => (
-                <CategorySection
-                  key={category.id}
-                  category={category}
-                  isLast={idx === applicationCategories.length - 1}
-                />
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* Network Status */}
-        <section className="mb-12">
-          <h2 className="text-3xl font-extrabold text-gray-900 mb-6 border-b pb-3 border-primary-blue">
-            Network Status
-          </h2>
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <ul className="divide-y-0">
-              {networkCategories.map((category) => (
-                <CategorySection
-                  key={category.id}
-                  category={category}
-                  isLast={true}
-                />
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* Change Schedule Card */}
-        <div className="mb-12">
-          <a
-            href="#"
-            className="block bg-[#F4F2F1] border-2 border-[#DDE3E6] rounded-lg p-6 hover:shadow-lg hover:border-primary-blue transition-all"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="text-3xl">📅</div>
-                <div>
-                  <h3 className="font-sans text-xl font-bold text-[#212529] mb-1">
-                    View Our Change Schedule
-                  </h3>
-                  <p className="font-sans text-base text-[#495057]">
-                    Stay informed about upcoming maintenance and system changes
-                  </p>
+          <main className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column - Main Content */}
+            <div className="lg:col-span-2 flex flex-col gap-6">
+              {/* Current Service Outages */}
+              <div className="bg-white rounded-lg shadow-lg border border-structural-gray-blue">
+                <div className="p-6">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <Cloud className="text-primary-blue" size={32} />
+                      <h2 className="font-sans text-xl font-semibold text-text-dark">Current Service Outages</h2>
+                    </div>
+                    <a
+                      href="https://servicehealth-prod.edmonton.ca/uptrendsdashboard"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-sans px-4 py-2 text-sm font-medium bg-primary-blue text-white rounded-md hover:bg-dark-blue transition-colors inline-block"
+                    >
+                      View All Service Health
+                    </a>
+                  </div>
+                  <div className="mt-6 flex flex-col items-center justify-center text-center p-8 bg-structural-light-gray rounded-md">
+                    <CheckCircle2 className="text-complement-sea-green" size={48} />
+                    <p className="font-sans mt-4 text-lg font-medium text-text-dark">All systems are operational.</p>
+                    <p className="font-sans mt-1 text-sm text-text-secondary">
+                      There are no current service outages.
+                    </p>
+                  </div>
+                  <div className="mt-4 text-center">
+                    <p className="text-sm text-text-secondary mb-3">
+                      Experiencing issues? To report an outage, please contact the Service Desk.
+                    </p>
+                    <a
+                      className="font-sans inline-block px-6 py-2.5 text-sm font-semibold bg-primary-blue text-white rounded-md hover:bg-dark-blue transition-colors shadow-sm"
+                      href="https://sdchat.edmonton.ca/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Contact Service Desk
+                    </a>
+                  </div>
                 </div>
               </div>
-              <svg
-                className="h-6 w-6 text-primary-blue flex-shrink-0"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+
+              {/* Planned Outages with Calendar */}
+              <div className="bg-white rounded-lg shadow-lg border border-structural-gray-blue flex-1 flex flex-col">
+                <div className="p-6">
+                  <div className="flex items-center gap-4">
+                    <Calendar className="text-primary-blue" size={32} />
+                    <h2 className="font-sans text-xl font-semibold text-text-dark">Planned Outages</h2>
+                  </div>
+                </div>
+                <div className="px-6 pb-6 flex-1">
+                  <div className="bg-structural-light-gray p-4 rounded-md h-full flex flex-col">
+                    {/* Calendar Controls */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={goToToday}
+                          className="font-sans px-3 py-1.5 text-sm font-medium border border-structural-gray-blue bg-white rounded-md hover:bg-gray-50 transition-colors"
+                        >
+                          Today
+                        </button>
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={goToPreviousMonth}
+                            className="p-2 rounded-full hover:bg-white transition-colors"
+                          >
+                            <ChevronLeft className="text-primary-blue" size={20} />
+                          </button>
+                          <button
+                            onClick={goToNextMonth}
+                            className="p-2 rounded-full hover:bg-white transition-colors"
+                          >
+                            <ChevronRight className="text-primary-blue" size={20} />
+                          </button>
+                        </div>
+                        <h3 className="font-sans text-lg font-medium text-text-dark">{monthName}</h3>
+                      </div>
+                      <button className="p-2 rounded-full hover:bg-white transition-colors">
+                        <Calendar className="text-primary-blue" size={20} />
+                      </button>
+                    </div>
+
+                    {/* Calendar Grid */}
+                    <div className="mt-4 grid grid-cols-7 text-center text-xs font-sans font-medium text-complement-grey-flannel">
+                      <span>SUN</span>
+                      <span>MON</span>
+                      <span>TUE</span>
+                      <span>WED</span>
+                      <span>THU</span>
+                      <span>FRI</span>
+                      <span>SAT</span>
+                    </div>
+                    <div className="mt-2 grid grid-cols-7 gap-px text-center text-sm flex-1 content-start">
+                      {calendarDays.map((day, index) => {
+                        if (day === null) {
+                          return <div key={`empty-${index}`}></div>;
+                        }
+
+                        const outageCount = getOutageCount(day);
+                        const isTodayDate = isToday(day);
+
+                        return (
+                          <div key={day} className="py-2 relative">
+                            {isTodayDate ? (
+                              <span className="font-sans mx-auto flex h-8 w-8 items-center justify-center rounded-full bg-primary-blue text-white font-medium">
+                                {day}
+                              </span>
+                            ) : (
+                              <span className={`font-sans ${outageCount > 0 ? 'font-medium text-text-dark' : 'text-text-secondary'}`}>
+                                {day}
+                              </span>
+                            )}
+                            {outageCount > 0 && (
+                              <span className="font-sans absolute bottom-0 left-1/2 -translate-x-1/2 text-[10px] text-complement-grey-flannel whitespace-nowrap">
+                                {outageCount} more
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </a>
+
+            {/* Right Column - Sidebar */}
+            <div className="lg:col-span-1 space-y-6">
+              {/* Current Outage Reports */}
+              <div className="bg-white rounded-lg shadow-lg border border-structural-gray-blue">
+                <div className="p-6">
+                  <div className="flex items-center gap-4">
+                    <AlertTriangle className="text-primary-blue" size={32} />
+                    <h2 className="font-sans text-xl font-semibold text-text-dark">Current Outage Reports</h2>
+                  </div>
+                  <div className="mt-6 flex flex-col items-center justify-center text-center p-8 bg-structural-light-gray rounded-md">
+                    <Inbox className="text-complement-grey-flannel" size={48} />
+                    <p className="font-sans mt-4 text-base font-medium text-text-dark">No reports found</p>
+                    <p className="font-sans mt-1 text-sm text-text-secondary">The outage reports we publish will appear here.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* How To Section */}
+              <div className="bg-white rounded-lg shadow-lg border border-structural-gray-blue">
+                <div className="p-6">
+                  <div className="flex items-center gap-4">
+                    <Zap className="text-primary-blue" size={32} />
+                    <h2 className="font-sans text-xl font-semibold text-text-dark">How To</h2>
+                  </div>
+                  <div className="mt-4 space-y-3">
+                    <a
+                      className="flex items-center justify-between w-full p-4 rounded-md bg-structural-light-gray hover:bg-structural-gray-blue transition-colors"
+                      href="https://remedydwp.edmonton.ca/dwp/app/#/catalog"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span className="font-sans font-medium text-text-dark">Access DWP</span>
+                      <ArrowRight className="text-primary-blue" size={18} />
+                    </a>
+                    <a
+                      className="flex items-center justify-between w-full p-4 rounded-md bg-structural-light-gray hover:bg-structural-gray-blue transition-colors"
+                      href="https://docs.google.com/document/d/1My8ghONfvqqwogKhxZdE21PB7-9MvqgZlAB64CYqOBk/edit?tab=t.0#heading=h.utl9hw95rfjq"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span className="font-sans font-medium text-text-dark">Subscribe to DWP Alerts</span>
+                      <ArrowRight className="text-primary-blue" size={18} />
+                    </a>
+                    <a
+                      className="flex items-center justify-between w-full p-4 rounded-md bg-structural-light-gray hover:bg-structural-gray-blue transition-colors"
+                      href="https://docs.google.com/document/d/1H2YUvjWOMMsCwQHvjHHQIwLJbBl8S_M7DavGaIlopzE/edit?tab=t.0"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span className="font-sans font-medium text-text-dark">DWP Quick Reference</span>
+                      <ArrowRight className="text-primary-blue" size={18} />
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Need Help Card */}
+              <div className="bg-primary-blue rounded-lg shadow-lg p-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                    <Phone className="text-white" size={20} />
+                  </div>
+                  <div>
+                    <h2 className="font-sans text-xl font-semibold text-white">Need Help?</h2>
+                    <p className="font-sans mt-2 text-sm text-white/90">
+                      For any questions, to request assistance, or to report an outage, please contact support.
+                    </p>
+                    <div className="mt-4 space-y-2 text-sm">
+                      <p className="font-sans text-white/90">
+                        <span className="font-semibold text-white">Online:</span>{' '}
+                        <a className="underline hover:text-white" href="https://remedydwp.edmonton.ca/dwp/app/#/catalog" target="_blank" rel="noopener noreferrer">
+                          Digital Workplace
+                        </a>
+                      </p>
+                      <p className="font-sans text-white/90">
+                        <span className="font-semibold text-white">Phone:</span>{' '}
+                        <a className="underline hover:text-white" href="tel:7809444311">
+                          780.944.4311
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
         </div>
-      </main>
+      </div>
 
       <Footer />
     </div>

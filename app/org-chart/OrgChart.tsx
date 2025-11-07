@@ -4,14 +4,21 @@ import React, { useState } from 'react';
 import { Tree, TreeNode } from 'react-organizational-chart';
 import { OrgPerson } from './types';
 import { OrgChartNode } from './OrgChartNode';
-import { FaSearchPlus, FaSearchMinus, FaExpand, FaLink } from 'react-icons/fa';
+import { FaSearchPlus, FaSearchMinus, FaExpand, FaLink, FaChevronDown } from 'react-icons/fa';
 
 interface OrgChartProps {
   data: OrgPerson;
 }
 
 export const OrgChart: React.FC<OrgChartProps> = ({ data }) => {
-  const [zoom, setZoom] = useState(0.4);
+  const [zoom, setZoom] = useState(0.8);
+  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(() => {
+    // Initialize with only root expanded (CIO)
+    // Users can click to expand directors
+    const initialExpanded = new Set<string>();
+    initialExpanded.add(data.id); // Only add root (CIO)
+    return initialExpanded;
+  });
 
   const handleZoomIn = () => {
     setZoom((prev) => Math.min(prev + 0.1, 1.5));
@@ -22,14 +29,37 @@ export const OrgChart: React.FC<OrgChartProps> = ({ data }) => {
   };
 
   const handleResetZoom = () => {
-    setZoom(0.4);
+    setZoom(0.8);
+  };
+
+  const toggleNode = (nodeId: string) => {
+    setExpandedNodes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(nodeId)) {
+        newSet.delete(nodeId);
+      } else {
+        newSet.add(nodeId);
+      }
+      return newSet;
+    });
   };
 
   const renderTree = (person: OrgPerson) => {
+    const isExpanded = expandedNodes.has(person.id);
+    const hasSubordinates = person.subordinates && person.subordinates.length > 0;
+
     return (
-      <TreeNode label={<OrgChartNode person={person} />}>
-        {person.subordinates &&
-          person.subordinates.map((subordinate) => (
+      <TreeNode
+        label={
+          <OrgChartNode
+            person={person}
+            isExpanded={isExpanded}
+            onToggle={() => hasSubordinates && toggleNode(person.id)}
+          />
+        }
+      >
+        {hasSubordinates && isExpanded &&
+          person.subordinates!.map((subordinate) => (
             <React.Fragment key={subordinate.id}>
               {renderTree(subordinate)}
             </React.Fragment>
@@ -69,8 +99,9 @@ export const OrgChart: React.FC<OrgChartProps> = ({ data }) => {
       </div>
 
       {/* Chart Container */}
-      <div className="overflow-auto border-2 border-gray-200 rounded-lg bg-[#F9F9F9] p-8">
+      <div className="w-full overflow-x-auto py-8">
         <div
+          className="inline-flex justify-center min-w-full"
           style={{
             transform: `scale(${zoom})`,
             transformOrigin: 'top center',
@@ -81,9 +112,15 @@ export const OrgChart: React.FC<OrgChartProps> = ({ data }) => {
             lineWidth="2px"
             lineColor="#005087"
             lineBorderRadius="10px"
-            label={<OrgChartNode person={data} />}
+            label={
+              <OrgChartNode
+                person={data}
+                isExpanded={expandedNodes.has(data.id)}
+                onToggle={() => data.subordinates && data.subordinates.length > 0 && toggleNode(data.id)}
+              />
+            }
           >
-            {data.subordinates &&
+            {data.subordinates && expandedNodes.has(data.id) &&
               data.subordinates.map((subordinate) => (
                 <React.Fragment key={subordinate.id}>
                   {renderTree(subordinate)}
@@ -94,18 +131,25 @@ export const OrgChart: React.FC<OrgChartProps> = ({ data }) => {
       </div>
 
       {/* Legend */}
-      <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm text-gray-600">
+      <div className="mt-6 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 bg-[#005087] rounded-full flex items-center justify-center">
             <span className="text-white text-xs font-bold">26</span>
           </div>
-          <span>Employee Count</span>
+          <span>Total Employees</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
             <FaLink className="w-3 h-3 text-white" />
           </div>
           <span>Has Additional Resources</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 px-2 py-1 rounded">
+            <FaChevronDown className="w-3 h-3 text-[#005087]" />
+            <span className="text-xs">X reports</span>
+          </div>
+          <span>Click to expand/collapse</span>
         </div>
       </div>
     </div>

@@ -74,56 +74,49 @@ export default function AIResourcesPage() {
           {/* Google Gemini Resources Card - 2/3 width */}
           <div className="lg:col-span-2">
             <div className="bg-white border-2 border-[#005087] rounded-lg p-8 h-full">
-              <a
-                href="https://workspace.google.com/resources/ai/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block hover:opacity-80 transition-opacity duration-200"
-              >
-                <div className="flex items-start gap-6">
-                  <div className="flex-shrink-0">
-                    <Image
-                      src="/images/logos/gemini-logo.webp"
-                      alt="Gemini Logo"
-                      width={64}
-                      height={64}
-                      className="w-16 h-16 object-contain"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="font-sans text-2xl font-bold text-[#005087] mb-3">
-                      Google Resources for Gemini
-                    </h2>
-                    <p className="font-serif text-base text-[#495057] mb-4">
-                      Explore Google Workspace AI resources, including guides, tutorials, and best practices for using Gemini effectively in your work. Learn how to leverage AI-powered features across Google Workspace applications.
-                    </p>
-                    <div className="flex flex-col gap-3">
-                      <a
-                        href="https://workspace.google.com/resources/ai/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center text-[#005087] font-semibold hover:opacity-80 transition-opacity"
-                      >
-                        <span>Gemini Resources for Everyone</span>
-                        <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                      <a
-                        href="https://support.google.com/docs/answer/13952129"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center text-[#005087] font-semibold hover:opacity-80 transition-opacity"
-                      >
-                        <span>Get started with Google Workspace with Gemini</span>
-                        <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              <div className="flex items-start gap-6">
+                <div className="flex-shrink-0">
+                  <Image
+                    src="/images/logos/gemini-logo.webp"
+                    alt="Gemini Logo"
+                    width={64}
+                    height={64}
+                    className="w-16 h-16 object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <h2 className="font-sans text-2xl font-bold text-[#005087] mb-3">
+                    Google Resources for Gemini
+                  </h2>
+                  <p className="font-serif text-base text-[#495057] mb-4">
+                    Explore Google Workspace AI resources, including guides, tutorials, and best practices for using Gemini effectively in your work. Learn how to leverage AI-powered features across Google Workspace applications.
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    <a
+                      href="https://workspace.google.com/resources/ai/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-[#005087] font-semibold hover:opacity-80 transition-opacity"
+                    >
+                      <span>Gemini Resources for Everyone</span>
+                      <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </a>
+                    <a
+                      href="https://support.google.com/docs/answer/13952129"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-[#005087] font-semibold hover:opacity-80 transition-opacity"
+                    >
+                      <span>Get started with Google Workspace with Gemini</span>
+                      <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
                       </a>
                     </div>
                   </div>
                 </div>
-              </a>
             </div>
           </div>
         </div>

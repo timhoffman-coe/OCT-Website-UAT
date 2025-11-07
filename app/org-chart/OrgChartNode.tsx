@@ -1,25 +1,33 @@
 import React from 'react';
 import { OrgPerson } from './types';
-import { FaUser, FaLink } from 'react-icons/fa';
+import { FaUser, FaLink, FaChevronDown, FaChevronRight } from 'react-icons/fa';
 
 interface OrgChartNodeProps {
   person: OrgPerson;
+  isExpanded?: boolean;
+  onToggle?: () => void;
 }
 
-export const OrgChartNode: React.FC<OrgChartNodeProps> = ({ person }) => {
+export const OrgChartNode: React.FC<OrgChartNodeProps> = ({ person, isExpanded = false, onToggle }) => {
   // Special styling for Branch Manager's Office
   const isBranchOffice = person.id === 'branch-office';
 
   // Special styling for top-level CIO
   const isCIO = person.id === 'daryl-croft';
 
+  // Check if node has subordinates
+  const hasSubordinates = person.subordinates && person.subordinates.length > 0;
+  const subordinateCount = person.subordinates?.length || 0;
+
   return (
     <div
+      onClick={hasSubordinates ? onToggle : undefined}
       className={`
         relative bg-white border-2 rounded-lg shadow-md
-        transition-all duration-200 hover:shadow-lg hover:scale-105
+        transition-all duration-200 hover:shadow-lg
         ${isCIO ? 'border-[#005087] w-[220px] min-w-[220px] max-w-[220px]' : 'border-gray-200 w-[200px] min-w-[200px] max-w-[200px]'}
         ${isBranchOffice ? 'border-[#193A5A]' : ''}
+        ${hasSubordinates ? 'cursor-pointer hover:scale-105' : ''}
       `}
     >
       {/* Employee Number Badge - Top Right */}
@@ -76,6 +84,20 @@ export const OrgChartNode: React.FC<OrgChartNodeProps> = ({ person }) => {
           </p>
         )}
       </div>
+
+      {/* Expand/Collapse Indicator */}
+      {hasSubordinates && (
+        <div className="border-t border-gray-200 bg-gray-50 py-2 px-3 flex items-center justify-center gap-2">
+          {isExpanded ? (
+            <FaChevronDown className="w-3 h-3 text-[#005087]" />
+          ) : (
+            <FaChevronRight className="w-3 h-3 text-[#005087]" />
+          )}
+          <span className="text-xs text-gray-600 font-medium">
+            {subordinateCount} {subordinateCount === 1 ? 'report' : 'reports'}
+          </span>
+        </div>
+      )}
     </div>
   );
 };
