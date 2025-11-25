@@ -20,6 +20,7 @@ Our team provides critical services supporting the City's database environment, 
       'Process improvements and automation',
       'High availability and efficiency',
     ],
+    link: '/technology-infrastructure-operations',
   },
   {
     id: 'telecom-iot',
@@ -50,6 +51,7 @@ We manage the City's network infrastructure, data center facilities, and applica
       'Secure application delivery',
       'City-wide connectivity infrastructure',
     ],
+    link: '/data-technology',
   },
   {
     id: 'partner-experience',
@@ -65,6 +67,7 @@ We provide comprehensive support from remote troubleshooting to in-person assist
       'Operating system and patch management',
       'Software deployment and configuration',
     ],
+    link: '/partner-experience',
   },
   {
     id: 'service-delivery',
@@ -80,6 +83,7 @@ Monitoring & Analytics provides reliable monitoring platforms for IT infrastruct
       'Infrastructure and application monitoring',
       'AI-powered data analysis and dashboards',
     ],
+    link: '/service-delivery',
   },
 ];
 

@@ -13,6 +13,7 @@ export interface ServiceArea {
   shortDescription: string;
   fullDescription: string;
   features: string[];
+  link?: string;
 }
 
 interface SectionTemplateProps {
@@ -57,6 +58,7 @@ export default function SectionTemplate({
                 title={area.title}
                 icon={area.icon}
                 shortDescription={area.shortDescription}
+                link={area.link}
                 onClick={() => setSelectedArea(area)}
               />
             ))}

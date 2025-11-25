@@ -1,11 +1,13 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface ServiceAreaCardProps {
   title: string;
   icon?: string;
   shortDescription: string;
+  link?: string;
   onClick: () => void;
 }
 
@@ -13,13 +15,11 @@ export default function ServiceAreaCard({
   title,
   icon,
   shortDescription,
+  link,
   onClick,
 }: ServiceAreaCardProps) {
-  return (
-    <button
-      onClick={onClick}
-      className="group relative bg-[#D3ECEF] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6 text-left w-full hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2"
-    >
+  const cardContent = (
+    <>
       {/* Icon */}
       {icon && (
         <div className="mb-4">
@@ -60,6 +60,23 @@ export default function ServiceAreaCard({
           />
         </svg>
       </div>
+    </>
+  );
+
+  const cardClassName = "group relative bg-[#D3ECEF] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6 text-left w-full hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2";
+
+  // If link is provided, render as Link, otherwise render as button
+  if (link) {
+    return (
+      <Link href={link} className={cardClassName}>
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return (
+    <button onClick={onClick} className={cardClassName}>
+      {cardContent}
     </button>
   );
 }
