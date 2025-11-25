@@ -2,13 +2,23 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { Search } from 'lucide-react';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleDropdown = (name: string) => {
     setOpenDropdown(openDropdown === name ? null : name);
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to search results page with query
+      window.location.href = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
+    }
   };
 
   return (
@@ -81,33 +91,26 @@ export default function Header() {
                     <a href="/corporate-information-security" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">Corporate Information Security</a>
                   </div>
                 </div>
+                <a href="/services" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">View All Teams</a>
               </div>
             </div>
 
-            {/* Services Dropdown */}
+            {/* Dashboards Dropdown */}
             <div className="relative group">
-              <a href="/services" className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 py-2">
-                <span>Services</span>
+              <div className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 cursor-pointer py-2">
+                <span>Dashboards</span>
                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
-              </a>
+              </div>
               <div className="hidden group-hover:block absolute z-10 top-full w-72 bg-white rounded-md shadow-lg py-1">
-                <a href="/services" className="block px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-gray-100 border-b border-gray-200">View All Services</a>
-                <a href="/technology-planning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Investment & Governance</a>
-                <a href="/technology-planning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Business Engagement & Intake</a>
-                <a href="/technology-planning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Vendor & Contract Management</a>
-                <a href="/technology-planning" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">IT Asset Management</a>
-                <a href="/business-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Application Development & Support</a>
-                <a href="/integrated-technology-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Infrastructure Operations</a>
-                <a href="/integrated-technology-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Network & Data Center Operations</a>
-                <a href="/integrated-technology-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Voice, Mobility, & IoT</a>
-                <a href="/integrated-technology-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Desktop & End-User Support</a>
-                <a href="/integrated-technology-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Service Management & Monitoring</a>
-                <a href="/project-management-office" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Project Management Services</a>
-                <a href="/corporate-information-security" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Cybersecurity & Risk Management</a>
-                <a href="/corporate-information-security" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Identity & Access Management</a>
-                <a href="/business-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Artificial Intelligence</a>
+                <a href="/dashboards" className="block px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-gray-100 border-b border-gray-200">View All Dashboards</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Service & Infrastructure Health</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget & Financial</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">People Management</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Asset Management</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Incident & Service Management</a>
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Leadership</a>
               </div>
             </div>
 
@@ -125,7 +128,6 @@ export default function Header() {
                 <a href="/technology-strategies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Strategies</a>
                 <a href="/budget" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget & Spend</a>
                 <a href="/org-chart" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">OCT Org Chart</a>
-                <a href="/dashboards" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboards</a>
                 <a href="/ai-resources" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">AI Resources</a>
                 <a href="https://data.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Open Data Portal</a>
                 <a href="/links" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Links</a>
@@ -143,6 +145,23 @@ export default function Header() {
               Service Health
             </a>
           </nav>
+        </div>
+
+        {/* Search Bar Section */}
+        <div className="border-t border-white/20 py-2">
+          <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search website..."
+                className="w-full px-3 py-1.5 pl-9 pr-3 text-sm rounded-md bg-white border-0 focus:outline-none focus:ring-2 focus:ring-white text-gray-800 placeholder-gray-500"
+                aria-label="Search website"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            </div>
+          </form>
         </div>
       </div>
 
@@ -182,36 +201,29 @@ export default function Header() {
                 <a href="/project-management-office" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Project Management Office</a>
                 <a href="/corporate-information-security" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Corporate Information Security</a>
               </div>
+              <a href="/services" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">View All Teams</a>
             </div>
           </div>
 
-          {/* Mobile Services */}
+          {/* Mobile Dashboards */}
           <div>
             <button
-              onClick={() => toggleDropdown('mobile-services')}
+              onClick={() => toggleDropdown('mobile-dashboards')}
               className="font-sans w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 flex justify-between items-center"
             >
-              <span>Services</span>
+              <span>Dashboards</span>
               <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </button>
-            <div className={`${openDropdown === 'mobile-services' ? '' : 'hidden'} mt-1 pl-4`}>
-              <a href="/services" className="block px-3 py-2 rounded-md text-sm font-semibold text-primary-blue hover:bg-gray-50 border-b border-gray-200 mb-1">View All Services</a>
-              <a href="/technology-planning" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Investment & Governance</a>
-              <a href="/technology-planning" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Business Engagement & Intake</a>
-              <a href="/technology-planning" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Vendor & Contract Management</a>
-              <a href="/technology-planning" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">IT Asset Management</a>
-              <a href="/business-solutions" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Application Development & Support</a>
-              <a href="/integrated-technology-solutions" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Infrastructure Operations</a>
-              <a href="/integrated-technology-solutions" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Network & Data Center Operations</a>
-              <a href="/integrated-technology-solutions" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Voice, Mobility, & IoT</a>
-              <a href="/integrated-technology-solutions" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Desktop & End-User Support</a>
-              <a href="/integrated-technology-solutions" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Service Management & Monitoring</a>
-              <a href="/project-management-office" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Project Management Services</a>
-              <a href="/corporate-information-security" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Cybersecurity & Risk Management</a>
-              <a href="/corporate-information-security" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Identity & Access Management</a>
-              <a href="/business-solutions" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Artificial Intelligence</a>
+            <div className={`${openDropdown === 'mobile-dashboards' ? '' : 'hidden'} mt-1 pl-4`}>
+              <a href="/dashboards" className="block px-3 py-2 rounded-md text-sm font-semibold text-primary-blue hover:bg-gray-50 border-b border-gray-200 mb-1">View All Dashboards</a>
+              <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Service & Infrastructure Health</a>
+              <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Budget & Financial</a>
+              <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">People Management</a>
+              <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Asset Management</a>
+              <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Incident & Service Management</a>
+              <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Leadership</a>
             </div>
           </div>
 
@@ -232,7 +244,6 @@ export default function Header() {
               <a href="/technology-strategies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Strategies</a>
               <a href="/budget" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Budget & Spend</a>
               <a href="/org-chart" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">OCT Org Chart</a>
-              <a href="/dashboards" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Dashboards</a>
               <a href="/ai-resources" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">AI Resources</a>
               <a href="https://data.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Open Data Portal</a>
               <a href="/links" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Links</a>

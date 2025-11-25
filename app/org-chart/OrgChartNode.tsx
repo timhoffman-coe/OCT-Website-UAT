@@ -24,10 +24,12 @@ export const OrgChartNode: React.FC<OrgChartNodeProps> = ({ person, isExpanded =
       onClick={hasSubordinates ? onToggle : undefined}
       className={`
         relative bg-white border-2 rounded-lg shadow-md
-        transition-all duration-200 hover:shadow-lg
+        transition-shadow duration-200 hover:shadow-lg
         ${isCIO ? 'border-[#005087] w-[220px] min-w-[220px] max-w-[220px]' : 'border-gray-200 w-[200px] min-w-[200px] max-w-[200px]'}
         ${isBranchOffice ? 'border-[#193A5A]' : ''}
-        ${hasSubordinates ? 'cursor-pointer hover:scale-105' : ''}
+        ${hasSubordinates ? 'cursor-pointer' : ''}
+        h-[180px] min-h-[180px] max-h-[180px]
+        overflow-hidden flex flex-col
       `}
     >
       {/* Employee Number Badge - Top Right */}
@@ -44,7 +46,7 @@ export const OrgChartNode: React.FC<OrgChartNodeProps> = ({ person, isExpanded =
         </div>
       )}
 
-      <div className="p-3">
+      <div className="p-3 flex-1 flex flex-col">
         {/* Profile Picture/Avatar */}
         <div className="flex justify-center mb-2">
           {person.imageUrl ? (
@@ -77,7 +79,7 @@ export const OrgChartNode: React.FC<OrgChartNodeProps> = ({ person, isExpanded =
         {/* Title */}
         {person.title && (
           <p className={`
-            text-center text-xs leading-snug
+            text-center text-xs leading-snug line-clamp-2
             ${isCIO ? 'text-gray-700 font-medium' : 'text-gray-600'}
           `}>
             {person.title}
