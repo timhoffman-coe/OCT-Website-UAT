@@ -181,12 +181,12 @@ export default function LeadershipPage() {
                     <div className="bg-gray-50">
                       <div className="px-6 pt-2 pb-4">
                         {/* Director Section */}
-                        {unit.members.filter(m => m.role === 'Director').map((director, idx) => (
+                        {unit.members.filter(m => m.role === 'Director' && m.image).map((director, idx) => (
                           <div key={idx} className="bg-white border border-gray-200 rounded-lg p-5 mb-6 hover:shadow-md transition-shadow">
                             <div className="flex items-start gap-4">
                               <div className="flex-shrink-0">
                                 <Image
-                                  src={director.image}
+                                  src={director.image!}
                                   alt={director.name}
                                   width={96}
                                   height={96}
