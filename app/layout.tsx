@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Open_Sans, PT_Serif } from "next/font/google";
 import "./globals.css";
+import DevelopmentDisclaimer from "@/components/DevelopmentDisclaimer";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body
         className={`${openSans.variable} ${ptSerif.variable} antialiased`}
       >
+        <DevelopmentDisclaimer />
         {children}
       </body>
     </html>
