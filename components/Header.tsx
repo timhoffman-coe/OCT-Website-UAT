@@ -67,33 +67,33 @@ export default function Header() {
 
             {/* About Us Dropdown */}
             <div className="relative group">
-              <div className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 cursor-pointer py-2">
+              <a href="/about" className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 py-2">
                 <span>About Us</span>
                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
-              </div>
+              </a>
               <div className="hidden group-hover:block absolute z-10 top-full w-64 bg-white rounded-md shadow-lg py-1">
                 <a href="/about" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Branch Overview</a>
                 <a href="/leadership" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Our Leadership</a>
                 <div className="border-t border-gray-200 my-1"></div>
                 <div className="relative group/sections">
-                  <div className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between cursor-pointer">
+                  <a href="/services" className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
                     <span>Sections</span>
                     <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                     </svg>
-                  </div>
+                  </a>
                   <div className="hidden group-hover/sections:block absolute left-full top-0 ml-0 w-72 bg-white rounded-md shadow-lg py-1 border border-gray-200">
                     <a href="/technology-planning" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">Technology Planning</a>
                     <a href="/business-solutions" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">Business Solutions</a>
                     <div className="relative group/its">
-                      <div className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 flex items-center justify-between cursor-pointer">
+                      <a href="/integrated-technology-solutions" className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 flex items-center justify-between">
                         <span>Integrated Technology Solutions</span>
                         <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                         </svg>
-                      </div>
+                      </a>
                       <div className="hidden group-hover/its:block absolute left-full top-0 ml-0 w-72 bg-white rounded-md shadow-lg py-1 border border-gray-200">
                         <a href="/integrated-technology-solutions" className="block px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-gray-100 border-b border-gray-200">View All ITS Teams</a>
                         <a href="/technology-infrastructure-operations" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">Technology Infrastructure Operations</a>
@@ -112,20 +112,20 @@ export default function Header() {
 
             {/* Dashboards Dropdown */}
             <div className="relative group">
-              <div className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 cursor-pointer py-2">
+              <a href="/dashboards" className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 py-2">
                 <span>Dashboards</span>
                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
-              </div>
+              </a>
               <div className="hidden group-hover:block absolute z-10 top-full w-72 bg-white rounded-md shadow-lg py-1">
                 <a href="/dashboards" className="block px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-gray-100 border-b border-gray-200">View All Dashboards</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Service & Infrastructure Health</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget & Financial</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">People Management</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Asset Management</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Incident & Service Management</a>
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Leadership</a>
+                <a href="/service-health" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Service & Infrastructure Health</a>
+                <a href="/budget" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget & Financial</a>
+                <a href="/people-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">People Management</a>
+                <a href="/asset-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Asset Management</a>
+                <a href="/incident-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Incident & Service Management</a>
+                <a href="/cio-dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Leadership</a>
               </div>
             </div>
 
@@ -138,6 +138,7 @@ export default function Header() {
                 </svg>
               </div>
               <div className="hidden group-hover:block absolute z-10 right-0 top-full w-56 bg-white rounded-md shadow-lg py-1">
+                <a href="/oct-assistant" className="block px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-gray-100 border-b border-gray-200">OCT Service Assistant</a>
                 <a href="/policies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Policies, Directives, & Procedures</a>
                 <a href="/branch-templates" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Branch Templates</a>
                 <a href="/technology-strategies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Strategies</a>
@@ -275,6 +276,7 @@ export default function Header() {
               </svg>
             </button>
             <div className={`${openDropdown === 'mobile-resources' ? '' : 'hidden'} mt-1 pl-4`}>
+              <a href="/oct-assistant" className="block px-3 py-2 rounded-md text-sm font-semibold text-primary-blue hover:bg-gray-50 border-b border-gray-200 mb-1">OCT Service Assistant</a>
               <a href="/policies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Policies, Directives, & Procedures</a>
               <a href="/branch-templates" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Branch Templates</a>
               <a href="/technology-strategies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Strategies</a>

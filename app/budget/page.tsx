@@ -2,72 +2,36 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
-interface GaugeProps {
-  label: string;
-  value: number;
-  total: number;
-  color: string;
-}
-
-function BudgetGauge({ label, value, total, color }: GaugeProps) {
-  const percentage = Math.round((value / total) * 100);
-  const circumference = 2 * Math.PI * 70;
-  const offset = circumference - (percentage / 100) * circumference;
-
-  return (
-    <div className="flex flex-col items-center">
-      <div className="relative w-48 h-48">
-        <svg className="transform -rotate-90 w-48 h-48">
-          {/* Background circle */}
-          <circle
-            cx="96"
-            cy="96"
-            r="70"
-            stroke="#E5E7EB"
-            strokeWidth="16"
-            fill="none"
-          />
-          {/* Progress circle */}
-          <circle
-            cx="96"
-            cy="96"
-            r="70"
-            stroke={color}
-            strokeWidth="16"
-            fill="none"
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-            strokeLinecap="round"
-            className="transition-all duration-1000 ease-out"
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold text-gray-900">{percentage}%</span>
-          <span className="text-sm text-gray-500 mt-1">of budget</span>
-        </div>
-      </div>
-      <div className="mt-4 text-center">
-        <p className="font-sans text-sm font-semibold text-gray-500 uppercase mb-1">
-          {label}
-        </p>
-        <p className="font-sans text-2xl font-bold text-gray-900">
-          ${(value / 1000000).toFixed(1)}M
-        </p>
-        <p className="font-sans text-sm text-gray-500">
-          of ${(total / 1000000).toFixed(1)}M
-        </p>
-      </div>
-    </div>
-  );
-}
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 
 export default function BudgetPage() {
-  // Sample data - replace with actual values
-  const capitalBudgeted = 15000000;
-  const capitalActual = 9500000;
-  const operatingBudgeted = 85000000;
-  const operatingActual = 63000000;
+  // Sample data for Capital Budget
+  const capitalOverallData = [
+    { name: 'Total', Budgeted: 15.0, Actual: 9.5 }
+  ];
+
+  const capitalSectionData = [
+    { name: 'Tech Planning', Budgeted: 2.5, Actual: 1.8 },
+    { name: 'Business Solutions', Budgeted: 4.0, Actual: 2.2 },
+    { name: 'Integrated Tech', Budgeted: 5.5, Actual: 4.1 },
+    { name: 'PMO', Budgeted: 1.5, Actual: 0.8 },
+    { name: 'Corp Security', Budgeted: 1.5, Actual: 0.6 },
+  ];
+
+  // Sample data for Operating Budget
+  const operatingOverallData = [
+    { name: 'Total', Budgeted: 85.0, Actual: 63.0 }
+  ];
+
+  const operatingSectionData = [
+    { name: 'Tech Planning', Budgeted: 12.0, Actual: 9.5 },
+    { name: 'Business Solutions', Budgeted: 25.0, Actual: 18.0 },
+    { name: 'Integrated Tech', Budgeted: 35.0, Actual: 28.0 },
+    { name: 'PMO', Budgeted: 5.0, Actual: 3.5 },
+    { name: 'Corp Security', Budgeted: 8.0, Actual: 4.0 },
+  ];
+
+  const formatCurrency = (value: number) => `$${value}M`;
 
   return (
     <div className="bg-white min-h-screen">
@@ -84,61 +48,115 @@ export default function BudgetPage() {
           </p>
         </div>
 
-        {/* Budget Sections - Side by Side */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Budget Sections */}
+        <div className="space-y-12">
+
           {/* Capital Budget Section */}
           <div className="bg-[#D3ECEF] rounded-lg p-8">
-            <h2 className="font-sans text-3xl font-bold text-[#212529] mb-8">
-              Capital Budget
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              <BudgetGauge
-                label="Budgeted"
-                value={capitalBudgeted}
-                total={capitalBudgeted}
-                color="#005087"
-              />
-              <BudgetGauge
-                label="Actual"
-                value={capitalActual}
-                total={capitalBudgeted}
-                color="#2A9D8F"
-              />
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+              <h2 className="font-sans text-3xl font-bold text-[#212529]">
+                Capital Budget
+              </h2>
+              <a
+                href="#"
+                className="mt-4 md:mt-0 font-sans text-sm font-semibold text-primary-blue hover:text-[#193A5A] transition-colors"
+              >
+                View Detailed Capital Dashboard →
+              </a>
             </div>
-            <a
-              href="#"
-              className="block w-full text-center font-sans text-base font-semibold bg-primary-blue text-white px-6 py-3 rounded-md hover:bg-[#193A5A] transition-colors"
-            >
-              View the Detailed Capital Dashboard →
-            </a>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Overall Chart */}
+              <div className="bg-white/50 rounded-lg p-4 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">Overall Performance</h3>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={capitalOverallData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="name" />
+                      <YAxis tickFormatter={formatCurrency} />
+                      <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                      <Legend />
+                      <Bar dataKey="Budgeted" fill="#005087" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="Actual" fill="#2A9D8F" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* By Section Chart */}
+              <div className="lg:col-span-2 bg-white/50 rounded-lg p-4 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">Breakdown by Section</h3>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={capitalSectionData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="name" interval={0} angle={-15} textAnchor="end" height={60} />
+                      <YAxis tickFormatter={formatCurrency} />
+                      <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                      <Legend />
+                      <Bar dataKey="Budgeted" fill="#005087" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="Actual" fill="#2A9D8F" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Operating Budget Section */}
           <div className="bg-[#F4F2F1] rounded-lg p-8">
-            <h2 className="font-sans text-3xl font-bold text-[#212529] mb-8">
-              Operating Budget
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              <BudgetGauge
-                label="Budgeted"
-                value={operatingBudgeted}
-                total={operatingBudgeted}
-                color="#005087"
-              />
-              <BudgetGauge
-                label="Actual"
-                value={operatingActual}
-                total={operatingBudgeted}
-                color="#2A9D8F"
-              />
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+              <h2 className="font-sans text-3xl font-bold text-[#212529]">
+                Operating Budget
+              </h2>
+              <a
+                href="#"
+                className="mt-4 md:mt-0 font-sans text-sm font-semibold text-primary-blue hover:text-[#193A5A] transition-colors"
+              >
+                View Detailed Operating Dashboard →
+              </a>
             </div>
-            <a
-              href="#"
-              className="block w-full text-center font-sans text-base font-semibold bg-primary-blue text-white px-6 py-3 rounded-md hover:bg-[#193A5A] transition-colors"
-            >
-              View the Detailed Operating Dashboard →
-            </a>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Overall Chart */}
+              <div className="bg-white/50 rounded-lg p-4 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">Overall Performance</h3>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={operatingOverallData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="name" />
+                      <YAxis tickFormatter={formatCurrency} />
+                      <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                      <Legend />
+                      <Bar dataKey="Budgeted" fill="#005087" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="Actual" fill="#2A9D8F" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* By Section Chart */}
+              <div className="lg:col-span-2 bg-white/50 rounded-lg p-4 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">Breakdown by Section</h3>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={operatingSectionData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="name" interval={0} angle={-15} textAnchor="end" height={60} />
+                      <YAxis tickFormatter={formatCurrency} />
+                      <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                      <Legend />
+                      <Bar dataKey="Budgeted" fill="#005087" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="Actual" fill="#2A9D8F" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
       </main>
 

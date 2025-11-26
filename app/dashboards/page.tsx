@@ -12,37 +12,37 @@ export default function DashboardsPage() {
       title: 'Service & Infrastructure Health',
       description: 'Monitor uptime, performance, and health metrics for all technology services and infrastructure.',
       icon: '📊',
-      url: '#',
+      url: '/service-health',
     },
     {
       title: 'Budget & Financial',
       description: 'Track budget allocations, expenditures, forecasts, and financial performance across OCT.',
       icon: '💰',
-      url: '#',
+      url: '/budget',
     },
     {
       title: 'People Management',
       description: 'View team capacity, staffing levels, resource allocation, and workforce analytics.',
       icon: '👥',
-      url: '#',
+      url: '/people-management',
     },
     {
       title: 'Asset Management',
       description: 'Monitor IT assets, hardware inventory, software licenses, and lifecycle management.',
       icon: '🖥️',
-      url: '#',
+      url: '/asset-management',
     },
     {
       title: 'Incident & Service Management',
       description: 'Track incidents, service requests, resolution times, and service desk performance metrics.',
       icon: '🔧',
-      url: '#',
+      url: '/incident-management',
     },
     {
       title: 'Leadership',
       description: 'Executive dashboard with high-level KPIs, strategic metrics, and organizational performance.',
       icon: '📈',
-      url: '#',
+      url: '/cio-dashboard',
     },
   ];
 

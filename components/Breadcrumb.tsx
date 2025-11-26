@@ -50,8 +50,8 @@ const routeMap: Record<string, { label: string; parent: string | null }> = {
 export default function Breadcrumb() {
   const pathname = usePathname();
 
-  // Don't show on home page
-  if (pathname === '/') return null;
+  // On home page, return empty placeholder to maintain flex spacing
+  if (pathname === '/') return <div className="hidden md:block" />;
 
   // Build breadcrumb trail
   const trail: { path: string; label: string }[] = [];
