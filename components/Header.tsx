@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Search } from 'lucide-react';
 import Breadcrumb from './Breadcrumb';
@@ -9,6 +9,16 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 80);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleDropdown = (name: string) => {
     setOpenDropdown(openDropdown === name ? null : name);
@@ -23,29 +33,44 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-primary-blue shadow-lg z-20 relative">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-6">
-          {/* Logo and Branch ID */}
-          <div className="flex items-center space-x-6">
-            {/* Edmonton Logo */}
-            <a href="/" title="City of Edmonton Home">
-              <Image
-                src="/images/EDM_logo_Blue.png"
-                alt="City of Edmonton Logo"
-                width={56}
-                height={56}
-                className="h-14 w-14"
-                priority
-              />
-            </a>
+    <>
+      <header className={`bg-primary-blue shadow-lg z-50 fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out ${isScrolled ? 'py-0' : ''}`}>
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className={`flex justify-between items-center transition-all duration-300 ${isScrolled ? 'py-2' : 'py-6'}`}>
+            {/* Logo and Branch ID - hidden when scrolled on desktop */}
+            <div className={`flex items-center space-x-6 transition-all duration-300 ${isScrolled ? 'md:hidden' : ''}`}>
+              {/* Edmonton Logo */}
+              <a href="/" title="City of Edmonton Home">
+                <Image
+                  src="/images/EDM_logo_Blue.png"
+                  alt="City of Edmonton Logo"
+                  width={56}
+                  height={56}
+                  className="h-14 w-14"
+                  priority
+                />
+              </a>
 
-            {/* Branch & Dept Name */}
-            <div>
-              <h1 className="font-sans text-xl font-bold text-white">Open City & Technology</h1>
-              <h2 className="font-sans text-sm font-light text-gray-200" style={{ letterSpacing: '0.5px' }}>FINANCIAL AND CORPORATE SERVICES</h2>
+              {/* Branch & Dept Name */}
+              <div>
+                <h1 className="font-sans text-xl font-bold text-white">Open City & Technology</h1>
+                <h2 className="font-sans text-sm font-light text-gray-200" style={{ letterSpacing: '0.5px' }}>FINANCIAL AND CORPORATE SERVICES</h2>
+              </div>
             </div>
-          </div>
+
+            {/* Compact brand shown when scrolled on desktop */}
+            {isScrolled && (
+              <a href="/" className="hidden md:flex items-center space-x-2 text-white hover:text-gray-200 transition-colors">
+                <Image
+                  src="/images/EDM_logo_Blue.png"
+                  alt="City of Edmonton Logo"
+                  width={32}
+                  height={32}
+                  className="h-8 w-8"
+                />
+                <span className="font-sans text-sm font-semibold">OCT</span>
+              </a>
+            )}
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
@@ -163,8 +188,8 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Breadcrumb and Search Bar Section */}
-        <div className="border-t border-white/20 py-2">
+        {/* Breadcrumb and Search Bar Section - hidden when scrolled on desktop */}
+        <div className={`border-t border-white/20 py-2 transition-all duration-300 overflow-hidden ${isScrolled ? 'md:max-h-0 md:py-0 md:border-t-0' : 'max-h-20'}`}>
           <div className="flex items-center justify-between">
             {/* Breadcrumb - Left (hidden on mobile) */}
             <Breadcrumb />
@@ -300,6 +325,9 @@ export default function Header() {
           </a>
         </div>
       </div>
-    </header>
+      </header>
+      {/* Spacer to prevent content from being hidden behind fixed header */}
+      <div className={`transition-all duration-300 ${isScrolled ? 'h-16' : 'h-32 md:h-36'}`} />
+    </>
   );
 }
