@@ -6,6 +6,8 @@ services:
     image: coe_oct-website
     ports:
       - "3000:3000"
+    env_file:
+      - .env.local
     environment:
       - NODE_ENV=production
     restart: unless-stopped

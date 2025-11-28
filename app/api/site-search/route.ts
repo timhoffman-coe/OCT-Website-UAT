@@ -7,6 +7,9 @@ const getAIClient = () => {
     if (!apiKey) {
         throw new Error('GEMINI_API_KEY environment variable not set');
     }
+    if (apiKey.startsWith('github_pat_')) {
+        throw new Error('Invalid GEMINI_API_KEY: It looks like a GitHub PAT. Please use a Google Gemini API key.');
+    }
     return new GoogleGenAI({ apiKey });
 };
 
