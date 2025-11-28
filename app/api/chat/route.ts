@@ -82,7 +82,7 @@ Question: "${question}"`;
     });
 
   } catch (error) {
-    console.error('Gemini API error:', error);
+    console.error('Gemini API error details:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
 
     if (error instanceof Error) {
       return NextResponse.json(
