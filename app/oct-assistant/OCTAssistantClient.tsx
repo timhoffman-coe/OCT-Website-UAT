@@ -8,7 +8,8 @@ import CategorySelection from '@/components/oct-assistant/CategorySelection';
 import BotIcon from '@/components/icons/BotIcon';
 import { Document, Message, Category } from './types';
 import { generateAnswer } from './services/chatService';
-import { fetchDriveDocuments, getAvailableCategories } from './services/documentService';
+import { fetchDriveDocuments } from './services/documentService';
+import { getAvailableCategories } from './services/categoryService';
 
 export default function OCTAssistantClient() {
   const categories = getAvailableCategories();

@@ -66,7 +66,7 @@ const FormattedMessageContent: React.FC<{ content: string }> = ({ content }) => 
     parts.push(<span key={`text-${lastIndex}`}>{content.substring(lastIndex)}</span>);
   }
 
-  return <p className="whitespace-pre-wrap leading-relaxed">{parts}</p>;
+  return <div className="whitespace-pre-wrap leading-relaxed">{parts}</div>;
 };
 
 const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
@@ -91,11 +91,10 @@ const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
         </div>
       )}
       <div
-        className={`px-4 py-3 rounded-lg max-w-md md:max-w-lg lg:max-w-xl ${
-          isUser
+        className={`px-4 py-3 rounded-lg max-w-md md:max-w-lg lg:max-w-xl ${isUser
             ? 'bg-primary-blue text-white rounded-br-none shadow-sm'
             : 'bg-white text-dark-blue rounded-bl-none shadow-sm border border-gray-200'
-        }`}
+          }`}
       >
         {isUser ? (
           <p className="whitespace-pre-wrap">{message.content}</p>

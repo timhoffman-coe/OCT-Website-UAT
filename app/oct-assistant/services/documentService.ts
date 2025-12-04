@@ -1,4 +1,7 @@
+'use server';
+
 import { Document, Category } from '../types';
+import { listSharedFolders, listFilesInFolder, getFileContent } from '../../lib/google-drive';
 
 interface MockDoc extends Document {
   category: Category;
@@ -150,12 +153,46 @@ A one-time stipend of $500 is available for home office equipment (monitor, chai
   }
 ];
 
-export const getAvailableCategories = (): Category[] => {
-  return ['Service Management', 'IT Service Desk', 'HR Policies'];
-};
-
 export const fetchDriveDocuments = async (category: string): Promise<Document[]> => {
-  // Simulate network latency
+  if (category === 'HR Policies') {
+    try {
+      console.log('Fetching HR Policies from Google Drive...');
+      const folders = await listSharedFolders();
+      const hrFolder = folders.find(f => f.name === 'HR_FILES');
+
+      if (hrFolder && hrFolder.id) {
+        const files = await listFilesInFolder(hrFolder.id);
+        const documents: Document[] = [];
+
+        for (const file of files) {
+          if (file.id && file.mimeType) {
+            try {
+              // Only fetch content for documents/text, skip folders or binaries if any
+              if (file.mimeType === 'application/vnd.google-apps.document' || file.mimeType === 'application/pdf' || file.mimeType.startsWith('text/')) {
+                const content = await getFileContent(file.id, file.mimeType);
+                documents.push({
+                  name: file.name || 'Untitled',
+                  content: typeof content === 'string' ? content : JSON.stringify(content),
+                });
+              }
+            } catch (err) {
+              console.error(`Failed to fetch content for ${file.name} (ID: ${file.id}, Type: ${file.mimeType})`, err);
+              // We continue to next file even if one fails, but if ALL fail, we might want to know.
+            }
+          }
+        }
+        console.log(`Returning ${documents.length} documents from Drive:`, documents.map(d => d.name));
+        return documents;
+      } else {
+        throw new Error("HR_FILES folder not found in Google Drive.");
+      }
+    } catch (error) {
+      console.error('Error fetching from Drive:', error);
+      throw error; // Re-throw to prevent fallback to mock data
+    }
+  }
+
+  // Fallback / Default behavior for other categories
   return new Promise((resolve) => {
     setTimeout(() => {
       const filteredDocs = MOCK_REPOSITORY.filter(doc => doc.category === category);

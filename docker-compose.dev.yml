@@ -11,4 +11,5 @@ services:
     environment:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/service-account.json
     restart: unless-stopped
