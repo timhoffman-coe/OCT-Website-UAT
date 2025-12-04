@@ -15,7 +15,7 @@ export default function OCTAssistantClient() {
   const categories = getAvailableCategories();
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [, setIsRepoLoading] = useState(false);
+  const [isRepoLoading, setIsRepoLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isChatLoading, setIsChatLoading] = useState(false);
 
@@ -136,6 +136,7 @@ export default function OCTAssistantClient() {
             isLoading={isChatLoading}
             onSendMessage={handleSendMessage}
             selectedCategory={selectedCategory}
+            disabled={isRepoLoading}
           />
         </div>
       </main>

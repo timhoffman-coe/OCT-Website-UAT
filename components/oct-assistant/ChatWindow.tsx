@@ -11,6 +11,7 @@ interface ChatWindowProps {
   isLoading: boolean;
   onSendMessage: (message: string) => void;
   selectedCategory: string;
+  disabled?: boolean;
 }
 
 const CitationTooltip: React.FC<{ source: string; quote: string; index: number }> = ({ source, quote, index }) => {
@@ -92,8 +93,8 @@ const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
       )}
       <div
         className={`px-4 py-3 rounded-lg max-w-md md:max-w-lg lg:max-w-xl ${isUser
-            ? 'bg-primary-blue text-white rounded-br-none shadow-sm'
-            : 'bg-white text-dark-blue rounded-bl-none shadow-sm border border-gray-200'
+          ? 'bg-primary-blue text-white rounded-br-none shadow-sm'
+          : 'bg-white text-dark-blue rounded-bl-none shadow-sm border border-gray-200'
           }`}
       >
         {isUser ? (
@@ -126,7 +127,7 @@ const LoadingIndicator: React.FC = () => (
   </div>
 );
 
-const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading, onSendMessage, selectedCategory }) => {
+const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading, onSendMessage, selectedCategory, disabled }) => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -140,7 +141,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading, onSendMess
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim() && !isLoading) {
+    if (input.trim() && !isLoading && !disabled) {
       onSendMessage(input.trim());
       setInput('');
     }
@@ -152,8 +153,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading, onSendMess
         <h2 className="text-lg font-bold text-dark-blue flex items-center gap-2">
           {selectedCategory}
         </h2>
-        <span className="text-xs text-complement-grey-flannel font-semibold bg-gray-200 px-2 py-1 rounded">
-          Connected to Drive
+        <span className={`text-xs font-semibold px-2 py-1 rounded transition-colors duration-300 ${disabled
+          ? "text-complement-grey-flannel bg-gray-200"
+          : "text-green-700 bg-green-100 border border-green-200"
+          }`}>
+          {disabled ? "Connecting..." : "Connected to Drive"}
         </span>
       </div>
       <div className="flex-grow p-4 overflow-y-auto bg-gray-50/50">
@@ -161,6 +165,16 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading, onSendMess
           <ChatMessage key={msg.id} message={msg} />
         ))}
         {isLoading && <LoadingIndicator />}
+        {disabled && messages.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-full text-complement-grey-flannel opacity-70">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2 h-2 bg-process-blue rounded-full animate-pulse"></span>
+              <span className="w-2 h-2 bg-process-blue rounded-full animate-pulse" style={{ animationDelay: '150ms' }}></span>
+              <span className="w-2 h-2 bg-process-blue rounded-full animate-pulse" style={{ animationDelay: '300ms' }}></span>
+            </div>
+            <p className="text-sm font-medium">Connecting to knowledge base...</p>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
       <div className="p-4 border-t border-gray-200 bg-white rounded-b">
@@ -169,13 +183,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading, onSendMess
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask a question..."
-            className="flex-grow w-full px-4 py-3 bg-white text-dark-blue rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-process-blue focus:border-transparent transition placeholder-gray-400"
-            disabled={isLoading}
+            placeholder={disabled ? "Connecting to knowledge base..." : "Ask a question..."}
+            className="flex-grow w-full px-4 py-3 bg-white text-dark-blue rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-process-blue focus:border-transparent transition placeholder-gray-400 disabled:bg-gray-100 disabled:text-gray-500"
+            disabled={isLoading || disabled}
           />
           <button
             type="submit"
-            disabled={isLoading || !input.trim()}
+            disabled={isLoading || !input.trim() || disabled}
             className="bg-primary-blue text-white p-3 rounded hover:bg-dark-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-process-blue disabled:bg-complement-grey-flannel disabled:cursor-not-allowed transition-colors duration-200 flex-shrink-0 shadow-sm"
           >
             <SendIcon className="w-6 h-6" />
