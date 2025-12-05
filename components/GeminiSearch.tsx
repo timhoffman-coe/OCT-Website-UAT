@@ -11,8 +11,26 @@ interface Message {
 
 import { createPortal } from 'react-dom';
 
-export default function GeminiSearch() {
-    const [isOpen, setIsOpen] = useState(false);
+interface GeminiSearchProps {
+    isOpen?: boolean;
+    onOpenChange?: (isOpen: boolean) => void;
+}
+
+export default function GeminiSearch({ isOpen: externalIsOpen, onOpenChange }: GeminiSearchProps = {}) {
+    const [internalIsOpen, setInternalIsOpen] = useState(false);
+
+    const isControlled = typeof externalIsOpen !== 'undefined';
+    const isOpen = isControlled ? externalIsOpen : internalIsOpen;
+
+    const setIsOpen = (value: boolean) => {
+        if (onOpenChange) {
+            onOpenChange(value);
+        }
+        if (!isControlled) {
+            setInternalIsOpen(value);
+        }
+    };
+
     const [query, setQuery] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);

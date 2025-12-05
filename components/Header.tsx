@@ -9,6 +9,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   const isScrolledRef = useRef(false);
 
@@ -70,16 +71,30 @@ export default function Header() {
 
             {/* Compact brand shown when scrolled on desktop */}
             {isScrolled && (
-              <a href="/" className="hidden md:flex items-center space-x-2 text-white hover:text-gray-200 transition-colors">
-                <Image
-                  src="/images/EDM_logo_Blue.png"
-                  alt="City of Edmonton Logo"
-                  width={32}
-                  height={32}
-                  className="h-8 w-8"
-                />
-                <span className="font-sans text-sm font-semibold">OCT</span>
-              </a>
+              <div className="hidden md:flex items-center space-x-4">
+                <a href="/" className="flex items-center space-x-2 text-white hover:text-gray-200 transition-colors">
+                  <Image
+                    src="/images/EDM_logo_Blue.png"
+                    alt="City of Edmonton Logo"
+                    width={32}
+                    height={32}
+                    className="h-8 w-8"
+                  />
+                  <span className="font-sans text-sm font-semibold">OCT</span>
+                </a>
+
+                {/* Assistant Bubble */}
+                <button
+                  onClick={() => setChatOpen(true)}
+                  className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors border border-white/10"
+                  title="Ask OCT Assistant"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-gray-300">
+                    <path fillRule="evenodd" d="M10.5 3.75a6.75 6.75 0 100 13.5 6.75 6.75 0 000-13.5zM2.25 10.5a8.25 8.25 0 1114.59 5.28l4.69 4.69a.75.75 0 11-1.06 1.06l-4.69-4.69A8.25 8.25 0 012.25 10.5z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm font-medium text-gray-100">Ask...</span>
+                </button>
+              </div>
             )}
 
             {/* Mobile Menu Button */}
@@ -206,7 +221,7 @@ export default function Header() {
               <Breadcrumb />
 
               {/* Search - Right (full width on mobile) */}
-              <GeminiSearch />
+              <GeminiSearch isOpen={chatOpen} onOpenChange={setChatOpen} />
             </div>
           </div>
         </div>
