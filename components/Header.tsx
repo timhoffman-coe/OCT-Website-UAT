@@ -175,6 +175,7 @@ export default function Header() {
                   <a href="/people-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">People Management</a>
                   <a href="/asset-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Asset Management</a>
                   <a href="/incident-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Incident & Service Management</a>
+                  <a href="/vendor-command-center" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Vendor Command Center</a>
                   <a href="/cio-dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Leadership</a>
                 </div>
               </div>
@@ -304,6 +305,7 @@ export default function Header() {
                 <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">People Management</a>
                 <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Asset Management</a>
                 <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Incident & Service Management</a>
+                <a href="/vendor-command-center" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Vendor Command Center</a>
                 <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Leadership</a>
               </div>
             </div>

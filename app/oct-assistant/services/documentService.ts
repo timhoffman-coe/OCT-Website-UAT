@@ -192,6 +192,57 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
     }
   }
 
+  if (category === 'IT Service Desk') {
+    try {
+      console.log('Fetching IT Service Desk documents from Google Drive...');
+      const folders = await listSharedFolders();
+      const sdFolder = folders.find(f => f.name === 'Service_Desk');
+
+      if (sdFolder && sdFolder.id) {
+        // Function to process a folder and return documents
+        const processFolder = async (folderId: string): Promise<Document[]> => {
+          const files = await listFilesInFolder(folderId);
+          const folderDocs: Document[] = [];
+
+          for (const file of files) {
+            if (!file.id || !file.mimeType) continue;
+
+            if (file.mimeType === 'application/vnd.google-apps.folder') {
+              // Recursive call for subfolders
+              // Limit recursion depth if needed, but for now 1-2 levels is likely fine
+              try {
+                const subDocs = await processFolder(file.id);
+                folderDocs.push(...subDocs);
+              } catch (err) {
+                console.error(`Failed to process subfolder ${file.name} (${file.id})`, err);
+              }
+            } else if (file.mimeType === 'application/vnd.google-apps.document' || file.mimeType === 'application/pdf' || file.mimeType.startsWith('text/')) {
+              try {
+                const content = await getFileContent(file.id, file.mimeType);
+                folderDocs.push({
+                  name: file.name || 'Untitled',
+                  content: typeof content === 'string' ? content : JSON.stringify(content),
+                });
+              } catch (err) {
+                console.error(`Failed to fetch content for ${file.name} (ID: ${file.id}, Type: ${file.mimeType})`, err);
+              }
+            }
+          }
+          return folderDocs;
+        };
+
+        const documents = await processFolder(sdFolder.id);
+        console.log(`Returning ${documents.length} documents from Drive:`, documents.map(d => d.name));
+        return documents;
+      } else {
+        throw new Error("Service_Desk folder not found in Google Drive.");
+      }
+    } catch (error) {
+      console.error('Error fetching from Drive:', error);
+      throw error;
+    }
+  }
+
   // Fallback / Default behavior for other categories
   return new Promise((resolve) => {
     setTimeout(() => {
