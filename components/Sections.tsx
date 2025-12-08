@@ -54,9 +54,7 @@ export default function Sections() {
 
   return (
     <main id="sections" className="container mx-auto max-w-7xl py-12 md:py-16 px-4 sm:px-6 lg:px-8">
-      <h3 className="font-sans text-3xl font-bold text-center text-gray-800 mb-10 md:mb-12">
-        Sections
-      </h3>
+
 
       {/* Grid layout (5-column grid on xl screens) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8">

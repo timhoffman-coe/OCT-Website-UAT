@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import Image from 'next/image';
 import Hero from '@/components/Hero';
 import Sections from '@/components/Sections';
 import Link from 'next/link';
@@ -22,23 +23,40 @@ export default function Home() {
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 md:pt-16">
           <Link
             href="/about"
-            className="group block w-full bg-gradient-to-r from-primary-blue to-cyan-600 hover:to-cyan-500 transition-all duration-300 rounded-lg shadow-lg hover:shadow-xl hover:scale-[1.01] relative overflow-hidden"
+            className="group relative block w-full overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.01] hover:shadow-xl"
           >
-            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="flex items-center justify-center space-x-3 py-4 md:py-6">
-              <h2 className="font-sans text-2xl md:text-3xl font-bold text-white text-center">
-                Learn about Open City and Technology
-              </h2>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-                stroke="currentColor"
-                className="w-6 h-6 md:w-8 md:h-8 text-white transform group-hover:translate-x-1 transition-transform duration-300"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-              </svg>
+            {/* Background Base */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-blue to-cyan-600" />
+
+            {/* Image on Left (approx 1/6 width) */}
+            <div className="absolute inset-y-0 left-0 w-1/5 md:w-1/6">
+              <Image
+                src="/images/Technology.jpg"
+                alt="Technology"
+                fill
+                className="object-cover object-left"
+              />
+              {/* Gradient fade to blend into the blue background */}
+              <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-r from-transparent to-primary-blue" />
+            </div>
+
+            {/* Content */}
+            <div className="relative flex items-center justify-center py-16 px-6">
+              <div className="flex items-center space-x-4 z-10 w-full justify-center">
+                <h2 className="text-center font-sans text-2xl font-bold text-white drop-shadow-md md:text-3xl lg:text-4xl text-shadow-sm">
+                  Learn about Open City and Technology
+                </h2>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2.5}
+                  stroke="currentColor"
+                  className="h-8 w-8 text-white transition-transform duration-300 group-hover:translate-x-2 flex-shrink-0"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+              </div>
             </div>
           </Link>
         </div>

@@ -72,8 +72,8 @@ export default function ServiceHealthPage() {
   const isToday = (day: number) => {
     const today = new Date();
     return day === today.getDate() &&
-           currentDate.getMonth() === today.getMonth() &&
-           currentDate.getFullYear() === today.getFullYear();
+      currentDate.getMonth() === today.getMonth() &&
+      currentDate.getFullYear() === today.getFullYear();
   };
 
   return (
@@ -99,9 +99,7 @@ export default function ServiceHealthPage() {
                       <h2 className="font-sans text-xl font-semibold text-text-dark">Current Service Outages</h2>
                     </div>
                     <a
-                      href="https://servicehealth-prod.edmonton.ca/uptrendsdashboard"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="/service-health/dashboard"
                       className="font-sans px-4 py-2 text-sm font-medium bg-primary-blue text-white rounded-md hover:bg-dark-blue transition-colors inline-block"
                     >
                       View All Service Health

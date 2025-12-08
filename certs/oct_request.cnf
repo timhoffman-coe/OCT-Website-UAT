@@ -1,0 +1,18 @@
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+C = CA
+ST = Alberta
+L = Edmonton
+O = City of Edmonton
+OU = OCT
+CN = oct.edmonton.ca
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = oct.edmonton.ca
