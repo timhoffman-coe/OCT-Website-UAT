@@ -136,7 +136,7 @@ export default function VendorCommandCenter() {
             <Header />
 
             {/* Dashboard Header - Custom for this page */}
-            <div className="bg-white border-b border-slate-200 sticky top-16 md:top-20 z-20 shadow-sm mt-16 md:mt-20">
+            <div className="bg-white border-b border-slate-200 shadow-sm mt-16 md:mt-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="bg-indigo-600 p-2 rounded-lg">
