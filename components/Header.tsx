@@ -188,7 +188,12 @@ export default function Header() {
                   </svg>
                 </div>
                 <div className="hidden group-hover:block absolute z-10 right-0 top-full w-56 bg-white rounded-md shadow-lg py-1">
-                  <a href="/oct-assistant" className="block px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-gray-100 border-b border-gray-200">OCT Service Assistant</a>
+                  <a href="/oct-assistant" className="flex items-center justify-between px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-primary-blue/10 border-b border-gray-200 group">
+                    <span className="underline decoration-1 underline-offset-2">OCT Service Assistant</span>
+                    <svg className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
                   <a href="/resources/app-library" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">App Library</a>
                   <a href="/policies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Policies, Directives, & Procedures</a>
                   <a href="/branch-templates" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Branch Templates</a>
@@ -315,7 +320,12 @@ export default function Header() {
                 </svg>
               </button>
               <div className={`${openDropdown === 'mobile-resources' ? '' : 'hidden'} mt-1 pl-4`}>
-                <a href="/oct-assistant" className="block px-3 py-2 rounded-md text-sm font-semibold text-primary-blue hover:bg-gray-50 border-b border-gray-200 mb-1">OCT Service Assistant</a>
+                <a href="/oct-assistant" className="flex items-center justify-between px-3 py-2 rounded-md text-sm font-semibold text-primary-blue hover:bg-primary-blue/10 border-b border-gray-200 mb-1 group">
+                  <span className="underline decoration-1 underline-offset-2">OCT Service Assistant</span>
+                  <svg className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
                 <a href="/resources/app-library" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">App Library</a>
                 <a href="/policies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Policies, Directives, & Procedures</a>
                 <a href="/branch-templates" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Branch Templates</a>
