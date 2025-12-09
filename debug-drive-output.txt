@@ -1,0 +1,7 @@
+--- Debugging WiFi Folder CONTENTS ---
+WiFi FOLDER ID: 1uUQwuQuhYD7ddkn7HMJN2pp9QDYteSvc
+
+
+--- Files in WiFi Folder (2) ---
+1. [Network Connectivity _ Wifi Diagnostic Reset Script.docx] (ID: 1H6ikrVdIby-tKEDsTmPzwMhxqJtTbodA) - Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+2. [Creating Guest Credentials and connecting to COE-Guest network.docx] (ID: 1RlaukeF6I6s6ZeDL-yZdMQKTcBzFtNp-) - Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document

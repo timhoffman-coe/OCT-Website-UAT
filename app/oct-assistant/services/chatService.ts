@@ -1,9 +1,7 @@
 import { Document } from '../types';
 
 export const generateAnswer = async (
-  question: string,
-  documents: Document[],
-  context: string
+  question: string
 ): Promise<string> => {
   try {
     const response = await fetch('/api/chat', {
@@ -11,7 +9,7 @@ export const generateAnswer = async (
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ question, documents, context }),
+      body: JSON.stringify({ question }),
     });
 
     if (!response.ok) {

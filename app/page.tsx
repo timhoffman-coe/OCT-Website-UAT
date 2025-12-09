@@ -26,18 +26,18 @@ export default function Home() {
             className="group relative block w-full overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.01] hover:shadow-xl"
           >
             {/* Background Base */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-blue to-cyan-600" />
+            <div className="absolute inset-0 bg-[#055c8a]" />
 
-            {/* Image on Left (approx 1/6 width) */}
-            <div className="absolute inset-y-0 left-0 w-1/5 md:w-1/6">
+            {/* Image on Left (approx 1/2 width to prevent cropping of gradient) */}
+            <div className="absolute inset-y-0 left-0 w-1/3 md:w-1/2">
               <Image
-                src="/images/Technology.jpg"
+                src="/images/Technology-v1.jpg"
                 alt="Technology"
                 fill
                 className="object-cover object-left"
               />
               {/* Gradient fade to blend into the blue background */}
-              <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-r from-transparent to-primary-blue" />
+
             </div>
 
             {/* Content */}

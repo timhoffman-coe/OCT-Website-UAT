@@ -147,20 +147,44 @@ const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
   );
 };
 
-const LoadingIndicator: React.FC = () => (
-  <div className="flex items-start gap-3 my-4">
-    <div className="w-8 h-8 rounded-full bg-dark-blue flex items-center justify-center flex-shrink-0 shadow-sm">
-      <BotIcon className="w-5 h-5 text-white" />
-    </div>
-    <div className="px-4 py-3 rounded-lg bg-white text-gray-800 rounded-bl-none shadow-sm border border-gray-200">
-      <div className="flex items-center gap-2">
-        <span className="w-2 h-2 bg-process-blue rounded-full animate-pulse"></span>
-        <span className="w-2 h-2 bg-process-blue rounded-full animate-pulse" style={{ animationDelay: '150ms' }}></span>
-        <span className="w-2 h-2 bg-process-blue rounded-full animate-pulse" style={{ animationDelay: '300ms' }}></span>
+const LoadingIndicator: React.FC = () => {
+  const [text, setText] = useState("Analyzing your question...");
+
+  useEffect(() => {
+    const messages = [
+      "Analyzing your question...",
+      "Identifying the right department...",
+      "Searching knowledge base...",
+      "Reading documents...",
+      "Formulating answer..."
+    ];
+    let i = 0;
+    const interval = setInterval(() => {
+      i = (i + 1) % messages.length;
+      setText(messages[i]);
+    }, 4000); // Change text every 4 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="flex items-start gap-3 my-4">
+      <div className="w-8 h-8 rounded-full bg-dark-blue flex items-center justify-center flex-shrink-0 shadow-sm">
+        <BotIcon className="w-5 h-5 text-white" />
+      </div>
+      <div className="px-4 py-3 rounded-lg bg-white text-gray-800 rounded-bl-none shadow-sm border border-gray-200">
+        <div className="flex items-center gap-3">
+          <div className="flex gap-1">
+            <span className="w-2 h-2 bg-process-blue rounded-full animate-pulse"></span>
+            <span className="w-2 h-2 bg-process-blue rounded-full animate-pulse" style={{ animationDelay: '150ms' }}></span>
+            <span className="w-2 h-2 bg-process-blue rounded-full animate-pulse" style={{ animationDelay: '300ms' }}></span>
+          </div>
+          <span className="text-sm font-medium text-gray-500 animate-pulse">{text}</span>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading, onSendMessage, selectedCategory, disabled }) => {
   const [input, setInput] = useState('');

@@ -17,11 +17,22 @@ export const getDriveClient = () => {
 export const listSharedFolders = async () => {
     const drive = getDriveClient();
     try {
-        const res = await drive.files.list({
-            q: "mimeType = 'application/vnd.google-apps.folder' and trashed = false",
-            fields: 'files(id, name)',
-        });
-        return res.data.files || [];
+        let allFiles: any[] = [];
+        let pageToken: string | undefined = undefined;
+
+        do {
+            const res = await drive.files.list({
+                q: "mimeType = 'application/vnd.google-apps.folder' and trashed = false",
+                fields: 'nextPageToken, files(id, name)',
+                pageToken: pageToken,
+            });
+            if (res.data.files) {
+                allFiles = allFiles.concat(res.data.files);
+            }
+            pageToken = res.data.nextPageToken || undefined;
+        } while (pageToken);
+
+        return allFiles;
     } catch (error) {
         console.error('Error listing folders:', error);
         throw error;
@@ -31,11 +42,23 @@ export const listSharedFolders = async () => {
 export const listFilesInFolder = async (folderId: string) => {
     const drive = getDriveClient();
     try {
-        const res = await drive.files.list({
-            q: `'${folderId}' in parents and trashed = false`,
-            fields: 'files(id, name, mimeType, webViewLink)',
-        });
-        return res.data.files || [];
+        let allFiles: any[] = [];
+        let pageToken: string | undefined = undefined;
+
+        do {
+            const res = await drive.files.list({
+                q: `'${folderId}' in parents and trashed = false`,
+                fields: 'nextPageToken, files(id, name, mimeType, webViewLink)',
+                pageToken: pageToken,
+            });
+
+            if (res.data.files) {
+                allFiles = allFiles.concat(res.data.files);
+            }
+            pageToken = res.data.nextPageToken || undefined;
+        } while (pageToken);
+
+        return allFiles;
     } catch (error) {
         console.error(`Error listing files in folder ${folderId}:`, error);
         throw error;

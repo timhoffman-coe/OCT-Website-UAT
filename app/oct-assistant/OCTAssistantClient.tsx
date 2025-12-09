@@ -1,51 +1,24 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ChatWindow from '@/components/oct-assistant/ChatWindow';
-import CategorySelection from '@/components/oct-assistant/CategorySelection';
 import BotIcon from '@/components/icons/BotIcon';
-import { Document, Message, Category } from './types';
+import { Message } from './types';
 import { generateAnswer } from './services/chatService';
-import { fetchDriveDocuments } from './services/documentService';
-import { getAvailableCategories } from './services/categoryService';
 
 export default function OCTAssistantClient() {
-  const categories = getAvailableCategories();
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [isRepoLoading, setIsRepoLoading] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: 'welcome-msg',
+      role: 'system',
+      content: 'Hello! I am the OCT Service Assistant. I can help you with IT issues, HR policies, or finding your way around this website. How can I help you today?',
+    },
+  ]);
   const [isChatLoading, setIsChatLoading] = useState(false);
 
-  useEffect(() => {
-    if (!selectedCategory) return;
-
-    const loadRepository = async () => {
-      setIsRepoLoading(true);
-      try {
-        const docs = await fetchDriveDocuments(selectedCategory);
-        setDocuments(docs);
-        setMessages([
-          {
-            id: crypto.randomUUID(),
-            role: 'system',
-            content: `Hello! I am connected to the ${selectedCategory} knowledge base. How can I help you today?`,
-          },
-        ]);
-      } catch (error) {
-        console.error('Failed to load documents', error);
-      } finally {
-        setIsRepoLoading(false);
-      }
-    };
-    loadRepository();
-  }, [selectedCategory]);
-
   const handleSendMessage = async (userMessage: string) => {
-    if (!selectedCategory) return;
-
     const newUserMessage: Message = {
       id: crypto.randomUUID(),
       role: 'user',
@@ -55,7 +28,9 @@ export default function OCTAssistantClient() {
     setIsChatLoading(true);
 
     try {
-      const modelResponse = await generateAnswer(userMessage, documents, selectedCategory);
+      // Unified API call - no documents or context needed client-side
+      const modelResponse = await generateAnswer(userMessage);
+
       const newModelMessage: Message = {
         id: crypto.randomUUID(),
         role: 'model',
@@ -67,7 +42,7 @@ export default function OCTAssistantClient() {
       const errorMessage: Message = {
         id: crypto.randomUUID(),
         role: 'model',
-        content: 'An error occurred while getting a response. Please try again.',
+        content: 'I encountered an error connecting to the server. Please try again.',
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
     } finally {
@@ -75,32 +50,6 @@ export default function OCTAssistantClient() {
     }
   };
 
-  const resetSelection = () => {
-    setSelectedCategory(null);
-    setDocuments([]);
-    setMessages([]);
-  };
-
-  // Landing Page / Category Selection
-  if (!selectedCategory) {
-    return (
-      <div className="bg-white min-h-screen">
-        <Header />
-        <main className="min-h-[calc(100vh-200px)] flex flex-col items-center justify-center p-4 bg-structural-light-gray">
-          <CategorySelection
-            categories={categories}
-            onSelectCategory={setSelectedCategory}
-          />
-          <div className="mt-16 text-xs text-complement-grey-flannel">
-            <p>&copy; {new Date().getFullYear()} City of Edmonton Internal Services</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
-  // Main Chat Interface
   return (
     <div className="bg-white min-h-screen flex flex-col">
       <Header />
@@ -115,16 +64,10 @@ export default function OCTAssistantClient() {
             <div className="flex flex-col">
               <span className="leading-tight">OCT Service Assistant</span>
               <span className="text-[10px] uppercase tracking-wider font-normal text-process-blue">
-                City of Edmonton
+                Unified Support
               </span>
             </div>
           </h1>
-          <button
-            onClick={resetSelection}
-            className="text-sm font-bold text-white bg-process-blue hover:bg-primary-blue transition-all shadow-md px-5 py-2 rounded-lg flex items-center border border-white/10"
-          >
-            &larr; <span className="ml-2">Switch Topic</span>
-          </button>
         </div>
       </div>
 
@@ -135,8 +78,8 @@ export default function OCTAssistantClient() {
             messages={messages}
             isLoading={isChatLoading}
             onSendMessage={handleSendMessage}
-            selectedCategory={selectedCategory}
-            disabled={isRepoLoading}
+            selectedCategory="OCT Assistant"
+            disabled={false} // Always ready
           />
         </div>
       </main>
