@@ -77,58 +77,57 @@ export default function WhoWeAre() {
               </p>
 
               <div className="space-y-3">
-              {accordionItems.map((item, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
-                  <button
-                    onClick={() => toggleAccordion(index)}
-                    className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
-                  >
-                    <span className="font-sans font-semibold text-gray-800">
-                      {item.title}
-                    </span>
-                    <svg
-                      className={`w-5 h-5 text-primary-blue transition-transform ${
-                        openAccordion === index ? 'rotate-180' : ''
-                      }`}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
+                {accordionItems.map((item, index) => (
+                  <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => toggleAccordion(index)}
+                      className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
-
-                  {openAccordion === index && (
-                    <div className="p-4 bg-white border-t border-gray-200">
-                      <p className="text-gray-600 mb-3">{item.content}</p>
-                      <Link
-                        href={item.link}
-                        className="inline-flex items-center text-primary-blue hover:text-complement-empire-blue font-semibold"
+                      <span className="font-sans font-semibold text-gray-800">
+                        {item.title}
+                      </span>
+                      <svg
+                        className={`w-5 h-5 text-primary-blue transition-transform ${openAccordion === index ? 'rotate-180' : ''
+                          }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
                       >
-                        Learn More
-                        <svg
-                          className="w-4 h-4 ml-2"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+
+                    {openAccordion === index && (
+                      <div className="p-4 bg-white border-t border-gray-200">
+                        <p className="text-gray-600 mb-3">{item.content}</p>
+                        <Link
+                          href={item.link}
+                          className="inline-flex items-center text-primary-blue hover:text-complement-empire-blue font-semibold"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  )}
-                </div>
-              ))}
+                          Learn More
+                          <svg
+                            className="w-4 h-4 ml-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -1,0 +1,9 @@
+﻿Testing connection to: https://servicehealth-prod.edmonton.ca/
+Using Audience: https://servicehealth-prod.edmonton.ca/
+Acquiring identity token...
+Making authenticated request...
+
+Troubleshooting Tips:
+1. Ensure you are authenticated (run "gcloud auth application-default login").
+2. Ensure your account/service account has the "IAP-Secured Web App User" role on the target project/resource.
+3. If the target expects a specific Audience (IAP Client ID), provide it as the second argument.

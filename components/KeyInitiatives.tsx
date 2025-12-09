@@ -121,9 +121,8 @@ export default function KeyInitiatives() {
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentSlide ? 'bg-white' : 'bg-white/40'
-                }`}
+                className={`w-3 h-3 rounded-full transition-colors ${index === currentSlide ? 'bg-white' : 'bg-white/40'
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}

@@ -3,6 +3,7 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import Link from 'next/link';
 
 export default function BudgetPage() {
   // Sample data for Capital Budget
@@ -64,12 +65,12 @@ export default function BudgetPage() {
               <h2 className="font-sans text-3xl font-bold text-[#212529]">
                 Capital Budget
               </h2>
-              <a
-                href="#"
+              <Link
+                href="/budget/capital"
                 className="mt-4 md:mt-0 font-sans text-sm font-semibold text-primary-blue hover:text-[#193A5A] transition-colors"
               >
                 View Detailed Capital Dashboard →
-              </a>
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -117,12 +118,12 @@ export default function BudgetPage() {
               <h2 className="font-sans text-3xl font-bold text-[#212529]">
                 Operating Budget
               </h2>
-              <a
-                href="#"
+              <Link
+                href="/budget/operating"
                 className="mt-4 md:mt-0 font-sans text-sm font-semibold text-primary-blue hover:text-[#193A5A] transition-colors"
               >
                 View Detailed Operating Dashboard →
-              </a>
+              </Link>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

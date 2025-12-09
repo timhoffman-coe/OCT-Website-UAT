@@ -26,7 +26,7 @@ export default function Home() {
             className="group relative block w-full overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:scale-[1.01] hover:shadow-xl"
           >
             {/* Background Base */}
-            <div className="absolute inset-0 bg-[#055c8a]" />
+            <div className="absolute inset-0 bg-[#077199]" />
 
             {/* Image on Left (approx 1/2 width to prevent cropping of gradient) */}
             <div className="absolute inset-y-0 left-0 w-1/3 md:w-1/2">
