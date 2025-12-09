@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Search, X, Send, Loader2, MessageSquare, MessageSquarePlus, FileText, Quote } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { createPortal } from 'react-dom';
@@ -62,7 +62,7 @@ const FormattedMessageContent: React.FC<{ content: string }> = ({ content }) => 
     // Uses non-greedy match *? to handle multiple citations
     const citationRegex = /\[\[Source:\s*(.*?)\s*\|\s*Quote:\s*(.*?)\]\]/g;
 
-    const parts: (string | JSX.Element)[] = [];
+    const parts: (string | React.ReactNode)[] = [];
     let lastIndex = 0;
     let match;
     let citationIndex = 0;
