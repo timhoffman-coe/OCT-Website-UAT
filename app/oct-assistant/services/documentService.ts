@@ -1,7 +1,7 @@
 'use server';
 
 import { Document, Category } from '../types';
-import { listSharedFolders, listFilesInFolder, getFileContent } from '../../lib/google-drive';
+import { listSharedFolders, listFilesInFolder, getFileContent, getDriveClient } from '../../lib/google-drive';
 
 interface MockDoc extends Document {
   category: Category;
@@ -195,10 +195,21 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
   if (category === 'IT Service Desk') {
     try {
       console.log('Fetching IT Service Desk documents from Google Drive...');
-      const folders = await listSharedFolders();
-      const sdFolder = folders.find(f => f.name === 'Service_Desk');
 
-      if (sdFolder && sdFolder.id) {
+      let sdFolderId = process.env.SERVICE_DESK_FOLDER_ID;
+
+      // If no ID provided, try to find by name (fallback/backward compatibility)
+      if (!sdFolderId) {
+        const drive = getDriveClient();
+        const res = await drive.files.list({
+          q: "mimeType = 'application/vnd.google-apps.folder' and name = 'Service_Desk' and trashed = false",
+          fields: 'files(id, name)',
+        });
+        const sdFolder = res.data.files?.[0];
+        sdFolderId = sdFolder?.id || undefined;
+      }
+
+      if (sdFolderId) {
         // Function to process a folder and return documents
         const processFolder = async (folderId: string): Promise<Document[]> => {
           const files = await listFilesInFolder(folderId);
@@ -209,7 +220,6 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
 
             if (file.mimeType === 'application/vnd.google-apps.folder') {
               // Recursive call for subfolders
-              // Limit recursion depth if needed, but for now 1-2 levels is likely fine
               try {
                 const subDocs = await processFolder(file.id);
                 folderDocs.push(...subDocs);
@@ -231,7 +241,8 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
           return folderDocs;
         };
 
-        const documents = await processFolder(sdFolder.id);
+        const documents = await processFolder(sdFolderId);
+
         console.log(`Returning ${documents.length} documents from Drive:`, documents.map(d => d.name));
         return documents;
       } else {
