@@ -9,6 +9,24 @@ const nextConfig: NextConfig = {
         hostname: 'placehold.co',
       },
     ],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 31536000, // 1 year
+  },
+  async headers() {
+    return [
+      {
+        source: '/images/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+    ];
   },
   serverExternalPackages: ['pdf-parse', '@napi-rs/canvas'],
 };

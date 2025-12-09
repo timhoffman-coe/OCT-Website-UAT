@@ -7,12 +7,14 @@ const openSans = Open_Sans({
   variable: "--font-open-sans",
   subsets: ["latin"],
   weight: ["400", "600", "700"],
+  display: "swap",
 });
 
 const ptSerif = PT_Serif({
   variable: "--font-pt-serif",
   subsets: ["latin"],
   weight: ["400", "700"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {

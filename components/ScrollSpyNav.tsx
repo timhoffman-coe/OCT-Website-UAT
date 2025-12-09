@@ -1,6 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
+
+function throttle<T extends (...args: unknown[]) => void>(fn: T, ms: number) {
+  let lastCall = 0;
+  return (...args: Parameters<T>) => {
+    const now = Date.now();
+    if (now - lastCall >= ms) {
+      lastCall = now;
+      fn(...args);
+    }
+  };
+}
 
 interface NavItem {
   id: string;
@@ -51,9 +62,10 @@ export default function ScrollSpyNav() {
     // Wait for page to render before initial calculation
     const timeout = setTimeout(handleScroll, 100);
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    const throttledScroll = throttle(handleScroll, 100);
+    window.addEventListener('scroll', throttledScroll, { passive: true });
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', throttledScroll);
       clearTimeout(timeout);
     };
   }, []);
