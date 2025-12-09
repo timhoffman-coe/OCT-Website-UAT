@@ -13,7 +13,7 @@ export default function OCTAssistantClient() {
     {
       id: 'welcome-msg',
       role: 'system',
-      content: 'Hello! I am the OCT Service Assistant. I can help you with IT issues, HR policies, or finding your way around this website. How can I help you today?',
+      content: '👋 Welcome! I’m the OCT Assistant. I can help you with tech support, answer questions about policies and processes, and guide you to the right pages on this site.\n\nAsk me anything to get started!',
     },
   ]);
   const [isChatLoading, setIsChatLoading] = useState(false);

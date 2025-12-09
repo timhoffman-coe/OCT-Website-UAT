@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Search, X, Send, Loader2, MessageSquare, MessageSquarePlus, FileText, Quote } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { createPortal } from 'react-dom';
+import { CometButton } from './CometButton';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -231,7 +232,7 @@ export default function GeminiSearch({ isOpen: externalIsOpen, onOpenChange }: G
         if (isOpen && messages.length === 0) {
             setMessages([{
                 role: 'assistant',
-                content: "👋 Hi! I'm the OCT Assistant. I can help you with IT issues, HR policies, or finding specific pages on this site.\n\nType a question below to get started!"
+                content: "👋 Welcome! I’m the OCT Assistant. I can help you with tech support, answer questions about policies and processes, and guide you to the right pages on this site.\n\nAsk me anything to get started!"
             }]);
         }
     }, [isOpen, messages.length]);
@@ -240,7 +241,7 @@ export default function GeminiSearch({ isOpen: externalIsOpen, onOpenChange }: G
         localStorage.removeItem(STORAGE_KEY);
         setMessages([{
             role: 'assistant',
-            content: "👋 Hi! I'm the OCT Assistant. I can help you with IT issues, HR policies, or finding specific pages on this site.\n\nType a question below to get started!"
+            content: "👋 Welcome! I’m the OCT Assistant. I can help you with tech support, answer questions about policies and processes, and guide you to the right pages on this site.\n\nAsk me anything to get started!"
         }]);
     };
 
@@ -416,15 +417,15 @@ export default function GeminiSearch({ isOpen: externalIsOpen, onOpenChange }: G
             {/* Initial Search Bar State */}
             <div className="relative transition-all duration-300">
                 <div className="relative group">
-                    <input
-                        type="text"
-                        onFocus={handleExpand}
+                    <CometButton
                         onClick={handleExpand}
-                        placeholder="Ask OCT Assistant..."
-                        className="w-full px-4 py-2 pl-10 pr-4 text-sm rounded-full bg-white/10 border border-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/20 transition-all shadow-sm backdrop-blur-sm cursor-pointer"
-                        readOnly
-                    />
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-300 group-hover:text-white transition-colors" />
+                        onFocus={handleExpand}
+                        className="w-full text-left rounded-full bg-white/10 backdrop-blur-sm cursor-pointer shadow-sm p-0"
+                        contentClassName="w-full h-full flex items-center justify-start gap-0 py-2 px-4"
+                    >
+                        <Search className="h-4 w-4 text-gray-300 group-hover:text-white transition-colors mr-3 shrink-0" />
+                        <span className="text-sm text-gray-300 w-full truncate pointer-events-none">Ask OCT Assistant...</span>
+                    </CometButton>
                 </div>
             </div>
 
