@@ -1,6 +1,5 @@
-'use client';
-
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import ReactMarkdown, { Components } from 'react-markdown';
 import { Message } from '@/app/oct-assistant/types';
 import SendIcon from '@/components/icons/SendIcon';
 import BotIcon from '@/components/icons/BotIcon';
@@ -35,41 +34,77 @@ const CitationTooltip: React.FC<{ source: string; quote: string; index: number }
 };
 
 const FormattedMessageContent: React.FC<{ content: string }> = ({ content }) => {
-  const citationRegex = /\[\[Source: ([\s\S]*?) \| Quote: ([\s\S]*?)\]\]/g;
+  // Pre-process content to replace internal citation format with markdown links that we can intercept
+  const { processedContent, citations } = useMemo(() => {
+    // Regex to match "[[Source: ... | Quote: ...]]" with flexible whitespace and case insensitivity
+    const citationRegex = /\[\[\s*Source:\s*([\s\S]*?)\s*\|\s*Quote:\s*([\s\S]*?)\s*\]\]/gi;
+    const citationsList: { source: string; quote: string }[] = [];
 
-  const parts = [];
-  let lastIndex = 0;
-  let match;
-  let citationCount = 0;
+    const processed = content.replace(citationRegex, (match, source, quote) => {
+      citationsList.push({ source: source.trim(), quote: quote.trim() });
+      // Replace with a special markdown link format: [CITATION](citation:<index>)
+      // We use the index to retrieve the source/quote later
+      return `[CITATION](citation:${citationsList.length - 1})`;
+    });
 
-  while ((match = citationRegex.exec(content)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push(<span key={`text-${lastIndex}`}>{content.substring(lastIndex, match.index)}</span>);
-    }
+    return { processedContent: processed, citations: citationsList };
+  }, [content]);
 
-    citationCount++;
-    const source = match[1].trim();
-    const quote = match[2].trim();
+  const markdownComponents: Components = {
+    // Intercept links to render citations
+    a: ({ href, children, ...props }) => {
+      if (href?.startsWith('citation:')) {
+        const indexStr = href.split(':')[1];
+        const index = parseInt(indexStr, 10);
 
-    parts.push(
-      <CitationTooltip
-        key={`citation-${match.index}`}
-        source={source}
-        quote={quote}
-        index={citationCount}
-      />
-    );
+        if (!isNaN(index) && citations[index]) {
+          return (
+            <CitationTooltip
+              source={citations[index].source}
+              quote={citations[index].quote}
+              index={index + 1}
+            />
+          );
+        }
+      }
+      // Default link rendering
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary-blue hover:underline break-all"
+          {...props}
+        >
+          {children}
+        </a>
+      );
+    },
+    // Style basic markdown elements to match the design system
+    ul: (props) => <ul className="list-disc pl-5 mb-3 space-y-1" {...props} />,
+    ol: (props) => <ol className="list-decimal pl-5 mb-3 space-y-1" {...props} />,
+    li: (props) => <li className="pl-1" {...props} />,
+    h1: (props) => <h1 className="text-xl font-bold mb-3 mt-4 text-dark-blue first:mt-0" {...props} />,
+    h2: (props) => <h2 className="text-lg font-bold mb-2 mt-3 text-dark-blue" {...props} />,
+    h3: (props) => <h3 className="text-md font-bold mb-2 mt-2 text-dark-blue" {...props} />,
+    p: (props) => <p className="mb-3 last:mb-0 leading-relaxed" {...props} />,
+    strong: (props) => <strong className="font-bold text-dark-blue" {...props} />,
+    blockquote: (props) => <blockquote className="border-l-4 border-gray-200 pl-4 italic my-2 text-gray-600" {...props} />,
+    code: (props) => <code className="bg-gray-100 rounded px-1 py-0.5 text-sm font-mono text-red-600" {...props} />,
+    pre: (props) => <pre className="bg-gray-100 rounded p-3 overflow-x-auto text-sm font-mono my-3" {...props} />,
+  };
 
-    lastIndex = citationRegex.lastIndex;
-  }
-
-  if (lastIndex < content.length) {
-    parts.push(<span key={`text-${lastIndex}`}>{content.substring(lastIndex)}</span>);
-  }
-
-  return <div className="whitespace-pre-wrap leading-relaxed">{parts}</div>;
+  return (
+    <div className="text-dark-blue message-content">
+      <ReactMarkdown
+        components={markdownComponents}
+        urlTransform={(value) => value} // Allow all protocols including citation:
+      >
+        {processedContent}
+      </ReactMarkdown>
+    </div>
+  );
 };
-
 const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
   const isUser = message.role === 'user';
   const isSystem = message.role === 'system';
@@ -92,9 +127,9 @@ const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
         </div>
       )}
       <div
-        className={`px-4 py-3 rounded-lg max-w-md md:max-w-lg lg:max-w-xl ${isUser
-          ? 'bg-primary-blue text-white rounded-br-none shadow-sm'
-          : 'bg-white text-dark-blue rounded-bl-none shadow-sm border border-gray-200'
+        className={`px-4 py-3 rounded-lg max-w-md md:max-w-lg lg:max-w-xl shadow-sm ${isUser
+          ? 'bg-primary-blue text-white rounded-br-none'
+          : 'bg-white text-dark-blue rounded-bl-none border border-gray-200'
           }`}
       >
         {isUser ? (

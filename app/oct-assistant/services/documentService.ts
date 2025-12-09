@@ -162,25 +162,30 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
 
       if (hrFolder && hrFolder.id) {
         const files = await listFilesInFolder(hrFolder.id);
-        const documents: Document[] = [];
 
-        for (const file of files) {
-          if (file.id && file.mimeType) {
+        // Parallel fetch all file contents
+        const documentPromises = files
+          .filter(file => file.id && file.mimeType && (
+            file.mimeType === 'application/vnd.google-apps.document' ||
+            file.mimeType === 'application/pdf' ||
+            file.mimeType.startsWith('text/')
+          ))
+          .map(async (file) => {
             try {
-              // Only fetch content for documents/text, skip folders or binaries if any
-              if (file.mimeType === 'application/vnd.google-apps.document' || file.mimeType === 'application/pdf' || file.mimeType.startsWith('text/')) {
-                const content = await getFileContent(file.id, file.mimeType);
-                documents.push({
-                  name: file.name || 'Untitled',
-                  content: typeof content === 'string' ? content : JSON.stringify(content),
-                });
-              }
+              const content = await getFileContent(file.id!, file.mimeType!);
+              return {
+                name: file.name || 'Untitled',
+                content: typeof content === 'string' ? content : JSON.stringify(content),
+              };
             } catch (err) {
               console.error(`Failed to fetch content for ${file.name} (ID: ${file.id}, Type: ${file.mimeType})`, err);
-              // We continue to next file even if one fails, but if ALL fail, we might want to know.
+              return null;
             }
-          }
-        }
+          });
+
+        const results = await Promise.all(documentPromises);
+        const documents = results.filter((doc): doc is Document => doc !== null);
+
         console.log(`Returning ${documents.length} documents from Drive:`, documents.map(d => d.name));
         return documents;
       } else {
@@ -213,35 +218,52 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
       }
 
       if (sdFolderId) {
-        // Function to process a folder and return documents
+        // Function to process a folder and return documents (with parallel fetching)
         const processFolder = async (folderId: string): Promise<Document[]> => {
           const files = await listFilesInFolder(folderId);
-          const folderDocs: Document[] = [];
 
-          for (const file of files) {
-            if (!file.id || !file.mimeType) continue;
+          // Separate folders from documents
+          const subfolders = files.filter(f => f.id && f.mimeType === 'application/vnd.google-apps.folder');
+          const documentFiles = files.filter(f => f.id && f.mimeType && (
+            f.mimeType === 'application/vnd.google-apps.document' ||
+            f.mimeType === 'application/pdf' ||
+            f.mimeType.startsWith('text/')
+          ));
 
-            if (file.mimeType === 'application/vnd.google-apps.folder') {
-              // Recursive call for subfolders
-              try {
-                const subDocs = await processFolder(file.id);
-                folderDocs.push(...subDocs);
-              } catch (err) {
-                console.error(`Failed to process subfolder ${file.name} (${file.id})`, err);
-              }
-            } else if (file.mimeType === 'application/vnd.google-apps.document' || file.mimeType === 'application/pdf' || file.mimeType.startsWith('text/')) {
-              try {
-                const content = await getFileContent(file.id, file.mimeType);
-                folderDocs.push({
-                  name: file.name || 'Untitled',
-                  content: typeof content === 'string' ? content : JSON.stringify(content),
-                });
-              } catch (err) {
-                console.error(`Failed to fetch content for ${file.name} (ID: ${file.id}, Type: ${file.mimeType})`, err);
-              }
+          // Parallel fetch: process subfolders and documents concurrently
+          const subfolderPromises = subfolders.map(async (folder) => {
+            try {
+              return await processFolder(folder.id!);
+            } catch (err) {
+              console.error(`Failed to process subfolder ${folder.name} (${folder.id})`, err);
+              return [];
             }
-          }
-          return folderDocs;
+          });
+
+          const documentPromises = documentFiles.map(async (file) => {
+            try {
+              const content = await getFileContent(file.id!, file.mimeType!);
+              return {
+                name: file.name || 'Untitled',
+                content: typeof content === 'string' ? content : JSON.stringify(content),
+              };
+            } catch (err) {
+              console.error(`Failed to fetch content for ${file.name} (ID: ${file.id}, Type: ${file.mimeType})`, err);
+              return null;
+            }
+          });
+
+          // Wait for all operations in parallel
+          const [subfolderResults, documentResults] = await Promise.all([
+            Promise.all(subfolderPromises),
+            Promise.all(documentPromises),
+          ]);
+
+          // Flatten subfolder results and filter out failed documents
+          const subfolderDocs = subfolderResults.flat();
+          const folderDocs = documentResults.filter((doc): doc is Document => doc !== null);
+
+          return [...folderDocs, ...subfolderDocs];
         };
 
         const documents = await processFolder(sdFolderId);
