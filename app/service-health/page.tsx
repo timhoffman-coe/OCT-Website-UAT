@@ -80,6 +80,13 @@ export default function ServiceHealthPage() {
     <div className="bg-white min-h-screen">
       <Header />
 
+      {/* Sample Data Warning Banner */}
+      <div className="bg-red-600 text-white text-center py-3 px-4">
+        <p className="font-sans text-lg font-bold uppercase tracking-wide">
+          ⚠️ SAMPLE DATA ONLY - NOT LIVE ⚠️
+        </p>
+      </div>
+
       <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-structural-light-gray">
         <div className="max-w-7xl mx-auto">
           <header className="mb-8">

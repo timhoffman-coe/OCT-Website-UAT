@@ -135,6 +135,14 @@ export default function VendorCommandCenter() {
         <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
             <Header />
 
+            {isUsingMock && (
+                <div className="bg-red-600 text-white text-center py-3 px-4">
+                    <p className="font-sans text-lg font-bold uppercase tracking-wide">
+                        ⚠️ SAMPLE DATA ONLY - NOT LIVE ⚠️
+                    </p>
+                </div>
+            )}
+
             {/* Dashboard Header - Custom for this page */}
             <div className="bg-white border-b border-slate-200 shadow-sm mt-16 md:mt-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">

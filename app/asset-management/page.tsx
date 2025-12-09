@@ -45,6 +45,13 @@ export default function AssetManagementPage() {
         <div className="bg-gray-100 min-h-screen font-sans">
             <Header />
 
+            {/* Sample Data Warning Banner */}
+            <div className="bg-red-600 text-white text-center py-3 px-4">
+                <p className="font-sans text-lg font-bold uppercase tracking-wide">
+                    ⚠️ SAMPLE DATA ONLY - NOT LIVE ⚠️
+                </p>
+            </div>
+
             <main className="container mx-auto max-w-7xl py-8 px-4 sm:px-6 lg:px-8">
 
                 {/* Top Row: Spend & Savings */}
