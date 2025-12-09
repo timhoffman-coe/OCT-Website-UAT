@@ -197,15 +197,18 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
       console.log('Fetching IT Service Desk documents from Google Drive...');
 
       let sdFolderId = process.env.SERVICE_DESK_FOLDER_ID;
+      console.log(`[DEBUG] SERVICE_DESK_FOLDER_ID env var: ${sdFolderId}`);
 
       // If no ID provided, try to find by name (fallback/backward compatibility)
       if (!sdFolderId) {
+        console.log('[DEBUG] No ID found in env, searching by name...');
         const drive = getDriveClient();
         const res = await drive.files.list({
           q: "mimeType = 'application/vnd.google-apps.folder' and name = 'Service_Desk' and trashed = false",
           fields: 'files(id, name)',
         });
         const sdFolder = res.data.files?.[0];
+        console.log(`[DEBUG] Search by name found:`, sdFolder);
         sdFolderId = sdFolder?.id || undefined;
       }
 
