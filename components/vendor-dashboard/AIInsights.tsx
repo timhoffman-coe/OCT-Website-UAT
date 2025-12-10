@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import DOMPurify from 'dompurify';
 import { generateDashboardAnalysis } from '@/app/vendor-command-center/actions';
 import { KPIData, Vendor } from './types';
 import { Sparkles, RefreshCw } from 'lucide-react';
@@ -55,7 +56,7 @@ const AIInsights: React.FC<AIInsightsProps> = ({ kpiData, criticalVendors }) => 
                         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/10 animate-fade-in">
                             <div
                                 className="prose prose-invert prose-sm max-w-none [&>ul]:list-disc [&>ul]:pl-5 [&>li]:mb-1"
-                                dangerouslySetInnerHTML={{ __html: analysis }}
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(analysis) }}
                             />
                             <button
                                 onClick={() => setAnalysis(null)}

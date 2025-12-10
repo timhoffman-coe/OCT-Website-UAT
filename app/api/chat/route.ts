@@ -55,13 +55,41 @@ async function classifyIntent(question: string, ai: GoogleGenAI): Promise<'HR' |
   }
 }
 
+// Input validation constants
+const MAX_QUESTION_LENGTH = 2000;
+const MAX_HISTORY_LENGTH = 20;
+const MAX_HISTORY_CONTENT_LENGTH = 5000;
+
 export async function POST(request: NextRequest) {
   try {
     const body: ChatRequest = await request.json();
     const { question, history = [] } = body;
 
+    // Validate question
     if (!question) {
       return NextResponse.json({ error: 'Missing question' }, { status: 400 });
+    }
+    if (typeof question !== 'string') {
+      return NextResponse.json({ error: 'Question must be a string' }, { status: 400 });
+    }
+    if (question.length > MAX_QUESTION_LENGTH) {
+      return NextResponse.json({ error: `Question exceeds maximum length of ${MAX_QUESTION_LENGTH} characters` }, { status: 400 });
+    }
+
+    // Validate history
+    if (!Array.isArray(history)) {
+      return NextResponse.json({ error: 'History must be an array' }, { status: 400 });
+    }
+    if (history.length > MAX_HISTORY_LENGTH) {
+      return NextResponse.json({ error: `History exceeds maximum of ${MAX_HISTORY_LENGTH} messages` }, { status: 400 });
+    }
+    for (const msg of history) {
+      if (!msg.role || !['user', 'assistant'].includes(msg.role)) {
+        return NextResponse.json({ error: 'Invalid history message role' }, { status: 400 });
+      }
+      if (typeof msg.content !== 'string' || msg.content.length > MAX_HISTORY_CONTENT_LENGTH) {
+        return NextResponse.json({ error: 'Invalid history message content' }, { status: 400 });
+      }
     }
 
     const ai = getAIClient();
