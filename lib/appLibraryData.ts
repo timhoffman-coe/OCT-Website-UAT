@@ -28,4 +28,11 @@ export const appLibraryData: App[] = [
         url: 'https://workspace.edmonton.ca',
         category: 'it',
     },
+    {
+        id: 'nic',
+        name: 'Network Information Center',
+        description: 'Centralized dashboard for network infrastructure, fibre routes, and tower management.',
+        url: '/resources/nic',
+        category: 'it',
+    },
 ];

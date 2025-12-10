@@ -191,6 +191,7 @@ export default function Header() {
                 </div>
                 <div className="hidden group-hover:block absolute z-10 right-0 top-full w-56 bg-white rounded-md shadow-lg py-1">
                   <a href="/resources/app-library" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">App Library</a>
+                  <a href="/resources/nic" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Network Information Center</a>
 
                   <a href="/branch-templates" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Branch Templates</a>
                   <a href="/technology-strategies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Strategies</a>
