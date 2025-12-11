@@ -31,6 +31,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#004A8F" />
       </head>
       <body
         className={`${openSans.variable} ${ptSerif.variable} antialiased`}
