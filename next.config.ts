@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
-// @ts-expect-error - next-pwa doesn't have type declarations
-import withPWA from "next-pwa";
+import withSerwistInit from "@serwist/next";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
@@ -41,67 +40,10 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['pdf-parse', '@napi-rs/canvas'],
 };
 
-const pwaConfig = withPWA({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-  runtimeCaching: [
-    {
-      // Cache static assets (JS, CSS) - content-hashed, immutable
-      urlPattern: /^\/_next\/static\/.*/i,
-      handler: 'CacheFirst',
-      options: {
-        cacheName: 'static-assets',
-        expiration: {
-          maxEntries: 200,
-          maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
-        },
-      },
-    },
-    {
-      // Cache images
-      urlPattern: /^\/images\/.*/i,
-      handler: 'CacheFirst',
-      options: {
-        cacheName: 'images',
-        expiration: {
-          maxEntries: 100,
-          maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
-        },
-      },
-    },
-    {
-      // Cache fonts
-      urlPattern: /\.(?:woff|woff2|ttf|otf|eot)$/i,
-      handler: 'CacheFirst',
-      options: {
-        cacheName: 'fonts',
-        expiration: {
-          maxEntries: 20,
-          maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
-        },
-      },
-    },
-    {
-      // Network-first for HTML pages (always check for updates)
-      urlPattern: /^https:\/\/.*\.html$/i,
-      handler: 'NetworkFirst',
-      options: {
-        cacheName: 'pages',
-        networkTimeoutSeconds: 10,
-        expiration: {
-          maxEntries: 50,
-          maxAgeSeconds: 24 * 60 * 60, // 1 day
-        },
-      },
-    },
-    {
-      // Never cache API routes
-      urlPattern: /^\/api\/.*/i,
-      handler: 'NetworkOnly',
-    },
-  ],
+const withSerwist = withSerwistInit({
+  swSrc: "app/sw.ts",
+  swDest: "public/sw.js",
+  disable: process.env.NODE_ENV === "development",
 });
 
-export default pwaConfig(nextConfig);
+export default withSerwist(nextConfig);

@@ -1,0 +1,73 @@
+'use client';
+
+import React from 'react';
+import { Project } from './types';
+// import { Edit2, Trash2 } from 'lucide-react'; // Commented out for future RBAC integration
+
+interface RoadmapBarProps {
+  project: Project;
+  colorBase: string;
+  left: number; // Percentage
+  width: number; // Percentage
+  // onClick: () => void; // Commented out for future RBAC integration
+  // onDelete: (e: React.MouseEvent) => void; // Commented out for future RBAC integration
+}
+
+// Map color bases to specific hex codes from the brand palette
+const getColorClasses = (base: string) => {
+  switch (base) {
+    case 'watermelon': return 'bg-[#EA5853] border-[#EA5853]';
+    case 'sea-green': return 'bg-[#109D7E] border-[#109D7E]';
+    case 'empire-blue': return 'bg-[#2F63AD] border-[#2F63AD]';
+    case 'violet-night': return 'bg-[#99479A] border-[#99479A]';
+    case 'sunrise': return 'bg-[#FAB840] border-[#FAB840]';
+    default: return 'bg-[#005087] border-[#005087]';
+  }
+};
+
+const RoadmapBar: React.FC<RoadmapBarProps> = ({ project, colorBase, left, width }) => {
+  return (
+    <div
+      className="absolute h-8 top-1.5 rounded-md shadow-md cursor-default group transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden"
+      style={{
+        left: `${left}%`,
+        width: `${width}%`,
+        marginLeft: '2px',
+        maxWidth: `calc(${width}% - 4px)` // Prevent overlap issues with tiny gaps
+      }}
+      // onClick={onClick} // Commented out for future RBAC integration
+    >
+      <div className={`w-full h-full ${getColorClasses(colorBase)} border-b-2 flex items-center justify-between px-3`}>
+        <span className="text-white text-xs font-bold truncate tracking-wide drop-shadow-sm">
+          {project.name.toUpperCase()}
+        </span>
+
+        {/* Edit/Delete buttons - Commented out for future RBAC integration
+        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button
+            className="text-white/80 hover:text-white"
+            title="Edit"
+          >
+            <Edit2 size={12} />
+          </button>
+          <button
+            className="text-white/80 hover:text-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(e);
+            }}
+            title="Delete"
+          >
+            <Trash2 size={12} />
+          </button>
+        </div>
+        */}
+      </div>
+
+      {/* Glossy overlay effect */}
+      <div className="absolute top-0 left-0 w-full h-1/2 bg-white/10 pointer-events-none"></div>
+    </div>
+  );
+};
+
+export default RoadmapBar;

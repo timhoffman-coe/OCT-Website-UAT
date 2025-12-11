@@ -43,6 +43,7 @@ next-env.d.ts
 # service account key
 service-account.json
 
-# next-pwa generated files
+# Serwist/PWA generated files
 public/sw.js
 public/workbox-*.js
+public/swe-worker-*.js

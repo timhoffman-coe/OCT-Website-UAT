@@ -127,6 +127,7 @@ export default function Header() {
                 <div className="hidden group-hover:block absolute z-10 top-full w-64 bg-white rounded-md shadow-lg py-1">
                   <a href="/about" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Branch Overview</a>
                   <a href="/leadership" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Our Leadership</a>
+                  <a href="/roadmap" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Roadmap</a>
                   <div className="border-t border-gray-200 my-1"></div>
                   <div className="relative group/sections">
                     <a href="/services" className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
@@ -247,6 +248,7 @@ export default function Header() {
               <div className={`${openDropdown === 'mobile-about' ? '' : 'hidden'} mt-1 pl-4`}>
                 <a href="/about" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Branch Overview</a>
                 <a href="/leadership" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Our Leadership</a>
+                <a href="/roadmap" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Roadmap</a>
                 <div className="border-t border-gray-200 my-2"></div>
                 <button
                   onClick={() => toggleDropdown('mobile-sections')}
