@@ -367,7 +367,7 @@ const Dashboard: React.FC<DashboardProps> = ({ focusedType }) => {
                                         ))}
                                     </Pie>
                                     <Tooltip
-                                        formatter={(value: number) => formatCurrency(value)}
+                                        formatter={(value) => formatCurrency(Number(value))}
                                         contentStyle={{ backgroundColor: '#fff', borderColor: '#ccc', color: '#000' }}
                                     />
                                     <Legend verticalAlign="bottom" height={36} />
@@ -396,7 +396,7 @@ const Dashboard: React.FC<DashboardProps> = ({ focusedType }) => {
                                         ))}
                                     </Pie>
                                     <Tooltip
-                                        formatter={(value: number) => formatCurrency(value)}
+                                        formatter={(value) => formatCurrency(Number(value))}
                                         contentStyle={{ backgroundColor: '#fff', borderColor: '#ccc', color: '#000' }}
                                     />
                                     <Legend verticalAlign="bottom" height={36} />
@@ -425,7 +425,7 @@ const Dashboard: React.FC<DashboardProps> = ({ focusedType }) => {
                                         ))}
                                     </Pie>
                                     <Tooltip
-                                        formatter={(value: number) => formatCurrency(value)}
+                                        formatter={(value) => formatCurrency(Number(value))}
                                         contentStyle={{ backgroundColor: '#fff', borderColor: '#ccc', color: '#000' }}
                                     />
                                     <Legend verticalAlign="bottom" height={36} />

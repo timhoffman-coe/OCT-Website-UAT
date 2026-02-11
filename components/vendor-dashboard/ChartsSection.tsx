@@ -92,7 +92,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
                             <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={true} />
                             <XAxis type="number" tickFormatter={(val) => `$${val / 1000}k`} />
                             <YAxis dataKey="name" type="category" width={80} />
-                            <Tooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
+                            <Tooltip formatter={(value) => `$${Number(value).toLocaleString()}`} />
                             <Bar dataKey="spend" stackId="a" fill="#3b82f6" name="Spend" radius={[0, 4, 4, 0]} barSize={20}>
                                 {spendData.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={entry.utilization > 90 ? '#ef4444' : '#3b82f6'} />
