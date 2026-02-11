@@ -7,24 +7,22 @@ import TeamTabs from '@/components/its-shared/TeamTabs';
 import AccordionSection from '@/components/its-shared/AccordionSection';
 import WorkTrackingCard from '@/components/its-shared/WorkTrackingCard';
 import OrgCard from '@/components/its-shared/OrgCard';
-import { ClipboardList, BarChart3, FileText } from 'lucide-react';
-
 // Portfolio data
 const portfolios = [
   {
-    icon: ClipboardList,
+    icon: 'ClipboardList',
     title: 'Service Management Office',
     description: 'Change, Problem, and Incident Management processes with CMDB and Remedy ITSM support.',
     href: '/service-delivery/service-management-office',
   },
   {
-    icon: BarChart3,
+    icon: 'BarChart3',
     title: 'Monitoring & Analytics',
     description: 'Infrastructure and application monitoring with AI-powered analysis and dashboards.',
     href: '/service-delivery/monitoring-analytics',
   },
   {
-    icon: FileText,
+    icon: 'FileText',
     title: 'Digital Workplace Catalog',
     description: 'Managing the Digital Workplace Catalog and Work Order process.',
     href: '/service-delivery/digital-workplace-catalog',
