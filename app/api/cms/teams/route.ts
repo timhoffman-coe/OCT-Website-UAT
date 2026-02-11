@@ -2,32 +2,24 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { requireUser } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const user = await requireUser();
 
-    let teams;
-    if (user.role === 'SUPER_ADMIN') {
-      teams = await prisma.team.findMany({
-        orderBy: { sortOrder: 'asc' },
-        include: {
-          _count: {
-            select: { portfolios: true, teamMembers: true, serviceAreas: true },
-          },
+    const teamWhere = user.role === 'SUPER_ADMIN'
+      ? {}
+      : { id: { in: user.teamPermissions.map((p: { teamId: string }) => p.teamId) } };
+    const teams = await prisma.team.findMany({
+      where: teamWhere,
+      orderBy: { sortOrder: 'asc' },
+      include: {
+        _count: {
+          select: { portfolios: true, teamMembers: true, serviceAreas: true },
         },
-      });
-    } else {
-      const teamIds = user.teamPermissions.map((p) => p.teamId);
-      teams = await prisma.team.findMany({
-        where: { id: { in: teamIds } },
-        orderBy: { sortOrder: 'asc' },
-        include: {
-          _count: {
-            select: { portfolios: true, teamMembers: true, serviceAreas: true },
-          },
-        },
-      });
-    }
+      },
+    });
 
     return NextResponse.json(teams);
   } catch (e) {

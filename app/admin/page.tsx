@@ -2,32 +2,24 @@ import { prisma } from '@/lib/prisma';
 import { requireUser } from '@/lib/auth';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
   const user = await requireUser();
 
   // Fetch teams based on role
-  let teams;
-  if (user.role === 'SUPER_ADMIN') {
-    teams = await prisma.team.findMany({
-      orderBy: { sortOrder: 'asc' },
-      include: {
-        _count: {
-          select: { portfolios: true, teamMembers: true, serviceAreas: true },
-        },
+  const teamWhere = user.role === 'SUPER_ADMIN'
+    ? {}
+    : { id: { in: user.teamPermissions.map((p: { teamId: string }) => p.teamId) } };
+  const teams = await prisma.team.findMany({
+    where: teamWhere,
+    orderBy: { sortOrder: 'asc' },
+    include: {
+      _count: {
+        select: { portfolios: true, teamMembers: true, serviceAreas: true },
       },
-    });
-  } else {
-    const teamIds = user.teamPermissions.map((p) => p.teamId);
-    teams = await prisma.team.findMany({
-      where: { id: { in: teamIds } },
-      orderBy: { sortOrder: 'asc' },
-      include: {
-        _count: {
-          select: { portfolios: true, teamMembers: true, serviceAreas: true },
-        },
-      },
-    });
-  }
+    },
+  });
 
   // Recent audit logs
   const recentLogs = await prisma.auditLog.findMany({

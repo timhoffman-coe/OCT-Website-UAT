@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma';
 import { requireSuperAdmin } from '@/lib/auth';
 import UserManagementClient from '@/components/admin/UserManagementClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function UsersPage() {
   await requireSuperAdmin();
 

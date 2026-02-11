@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma';
 import { requireUser } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AuditLogPage() {
   const user = await requireUser();
   if (user.role === 'VIEWER') redirect('/admin');

@@ -3,6 +3,8 @@ import { requireTeamAccess } from '@/lib/auth';
 import { notFound } from 'next/navigation';
 import TeamDetailClient from '@/components/admin/TeamDetailClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function TeamDetailPage({
   params,
 }: {
