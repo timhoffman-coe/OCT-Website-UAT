@@ -1,6 +1,5 @@
 import PortfolioSubpageTemplate from '@/components/its-shared/PortfolioSubpageTemplate';
 import { fetchPortfolioSubpage } from '@/lib/data/fetch-subpage';
-import { Layers } from 'lucide-react';
 
 const fallback = {
   parentTeam: 'Technology Infrastructure Operations',
@@ -8,7 +7,7 @@ const fallback = {
   title: 'Virtualization',
   description:
     'We manage the City\'s virtualization platforms including VMware, Hyper-V, and container services, enabling efficient resource utilization and flexible infrastructure deployment.',
-  icon: Layers,
+  icon: 'Layers',
   services: [
     {
       title: 'VMware Infrastructure',

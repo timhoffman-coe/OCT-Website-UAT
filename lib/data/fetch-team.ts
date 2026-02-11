@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { resolveIcon } from '@/lib/icon-resolver';
 import type { ITSTeamPageData } from './its-shared';
 import type { ServiceArea } from '@/components/SectionTemplate';
 
@@ -25,7 +24,7 @@ export async function fetchITSTeamData(
       teamName: team.teamName,
       teamShortName: team.teamShortName,
       portfolios: team.portfolios.map((p) => ({
-        icon: resolveIcon(p.iconName),
+        icon: p.iconName,
         title: p.title,
         description: p.description,
         href: p.href,

@@ -1,4 +1,3 @@
-import { Database, Server, Layers } from 'lucide-react';
 import { ITSTeamPageData } from './its-shared';
 
 export const technologyInfrastructureOperationsData: ITSTeamPageData = {
@@ -6,19 +5,19 @@ export const technologyInfrastructureOperationsData: ITSTeamPageData = {
   teamShortName: 'Infrastructure Operations',
   portfolios: [
     {
-      icon: Database,
+      icon: 'Database',
       title: 'Database Management',
       description: 'Supporting the City database environment with reliable, secure data storage and retrieval.',
       href: '/technology-infrastructure-operations/database',
     },
     {
-      icon: Server,
+      icon: 'Server',
       title: 'Server Solutions & Automation',
       description: 'OS, storage, printing, data protection, and automated infrastructure management.',
       href: '/technology-infrastructure-operations/server-solutions',
     },
     {
-      icon: Layers,
+      icon: 'Layers',
       title: 'Virtualization',
       description: 'Server infrastructure and virtualization platforms for efficient resource utilization.',
       href: '/technology-infrastructure-operations/virtualization',

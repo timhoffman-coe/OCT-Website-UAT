@@ -1,15 +1,16 @@
 'use client';
 
-import { LucideIcon } from 'lucide-react';
+import { resolveIcon } from '@/lib/icon-resolver';
 
 interface PortfolioCardProps {
-  icon: LucideIcon;
+  icon: string;
   title: string;
   description: string;
   href: string;
 }
 
-export default function PortfolioCard({ icon: Icon, title, description, href }: PortfolioCardProps) {
+export default function PortfolioCard({ icon, title, description, href }: PortfolioCardProps) {
+  const Icon = resolveIcon(icon);
   return (
     <div className="bg-[#D3ECEF] rounded-lg overflow-hidden shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col">
       <div className="p-6 flex flex-col flex-grow">

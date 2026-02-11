@@ -1,6 +1,5 @@
 import PortfolioSubpageTemplate from '@/components/its-shared/PortfolioSubpageTemplate';
 import { fetchPortfolioSubpage } from '@/lib/data/fetch-subpage';
-import { Monitor } from 'lucide-react';
 
 const fallback = {
   parentTeam: 'Partner Experience',
@@ -8,7 +7,7 @@ const fallback = {
   title: 'Desktop Administration',
   description:
     'We manage approximately 12,000 computing devices across the City, including operating system deployment, patch management, software distribution, and configuration management.',
-  icon: Monitor,
+  icon: 'Monitor',
   services: [
     {
       title: 'Device Management',

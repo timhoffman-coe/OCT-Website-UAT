@@ -1,4 +1,3 @@
-import { Network, Server, Smartphone } from 'lucide-react';
 import { ITSTeamPageData } from './its-shared';
 
 export const dataTechnologyData: ITSTeamPageData = {
@@ -6,19 +5,19 @@ export const dataTechnologyData: ITSTeamPageData = {
   teamShortName: 'Data Technology',
   portfolios: [
     {
-      icon: Network,
+      icon: 'Network',
       title: 'Network Services',
       description: 'Core network, connectivity, security perimeter, and traffic management.',
       href: '/data-technology/network-services',
     },
     {
-      icon: Server,
+      icon: 'Server',
       title: 'Data Centre',
       description: 'Compute, storage, backup, recovery, and hosting platforms.',
       href: '/data-technology/data-centre',
     },
     {
-      icon: Smartphone,
+      icon: 'Smartphone',
       title: 'Voice, Mobility & IoT',
       description: 'Corporate voice, mobile fleet, radio, and smart/connected devices.',
       href: '/data-technology/voice-mobility-iot',

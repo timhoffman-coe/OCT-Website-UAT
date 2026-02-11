@@ -1,6 +1,5 @@
 import PortfolioSubpageTemplate from '@/components/its-shared/PortfolioSubpageTemplate';
 import { fetchPortfolioSubpage } from '@/lib/data/fetch-subpage';
-import { Wrench } from 'lucide-react';
 
 const fallback = {
   parentTeam: 'Partner Experience',
@@ -8,7 +7,7 @@ const fallback = {
   title: 'Desktop Support',
   description:
     'We provide in-person break-fix services for hardware and software issues across City facilities. Our field technicians are available to resolve complex issues that cannot be handled remotely.',
-  icon: Wrench,
+  icon: 'Wrench',
   services: [
     {
       title: 'Hardware Support',

@@ -1,8 +1,6 @@
-import { LucideIcon } from 'lucide-react';
-
 // Type definitions for ITS shared data structures
 export interface Portfolio {
-  icon: LucideIcon;
+  icon: string;
   title: string;
   description: string;
   href: string;

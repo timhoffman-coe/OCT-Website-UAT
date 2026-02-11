@@ -1,6 +1,5 @@
 import PortfolioSubpageTemplate from '@/components/its-shared/PortfolioSubpageTemplate';
 import { fetchPortfolioSubpage } from '@/lib/data/fetch-subpage';
-import { Phone } from 'lucide-react';
 
 const fallback = {
   parentTeam: 'Data Technology',
@@ -8,7 +7,7 @@ const fallback = {
   title: 'Voice, Mobility & IoT',
   description:
     'We provide comprehensive communication services including wireline and VoIP phone systems, cellular wireless, machine-to-machine connectivity, and the City\'s LoRaWAN IoT network infrastructure.',
-  icon: Phone,
+  icon: 'Phone',
   services: [
     {
       title: 'Voice Services (VoIP)',

@@ -1,4 +1,3 @@
-import { Headphones, Wrench, Monitor } from 'lucide-react';
 import { ITSTeamPageData } from './its-shared';
 
 export const partnerExperienceData: ITSTeamPageData = {
@@ -6,19 +5,19 @@ export const partnerExperienceData: ITSTeamPageData = {
   teamShortName: 'Partner Experience',
   portfolios: [
     {
-      icon: Headphones,
+      icon: 'Headphones',
       title: 'Service Desk',
       description: 'IT assistance via tickets and calls, providing remote troubleshooting and support.',
       href: '/partner-experience/service-desk',
     },
     {
-      icon: Wrench,
+      icon: 'Wrench',
       title: 'Desktop Support',
       description: 'In-person break-fix services for hardware and software issues.',
       href: '/partner-experience/desktop-support',
     },
     {
-      icon: Monitor,
+      icon: 'Monitor',
       title: 'Desktop Administration',
       description: 'Managing approximately 12,000 computing devices across the City.',
       href: '/partner-experience/desktop-administration',

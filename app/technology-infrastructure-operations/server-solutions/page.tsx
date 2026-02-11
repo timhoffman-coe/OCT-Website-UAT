@@ -1,6 +1,5 @@
 import PortfolioSubpageTemplate from '@/components/its-shared/PortfolioSubpageTemplate';
 import { fetchPortfolioSubpage } from '@/lib/data/fetch-subpage';
-import { Server } from 'lucide-react';
 
 const fallback = {
   parentTeam: 'Technology Infrastructure Operations',
@@ -8,7 +7,7 @@ const fallback = {
   title: 'Server Solutions & Automation',
   description:
     'We manage the City\'s server infrastructure including operating systems, storage, printing, and data protection services, with a focus on automation and process improvements.',
-  icon: Server,
+  icon: 'Server',
   services: [
     {
       title: 'Operating Systems',

@@ -1,6 +1,5 @@
 import PortfolioSubpageTemplate from '@/components/its-shared/PortfolioSubpageTemplate';
 import { fetchPortfolioSubpage } from '@/lib/data/fetch-subpage';
-import { Database } from 'lucide-react';
 
 const fallback = {
   parentTeam: 'Technology Infrastructure Operations',
@@ -8,7 +7,7 @@ const fallback = {
   title: 'Database Management',
   description:
     'We support the City\'s database environment, ensuring data services are reliable, secure, and performant. Our team manages SQL Server, Oracle, and PostgreSQL platforms across the enterprise.',
-  icon: Database,
+  icon: 'Database',
   services: [
     {
       title: 'Database Administration',

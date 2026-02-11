@@ -3,7 +3,8 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { LucideIcon, User, UserCog, ExternalLink, Lock, CheckCircle } from 'lucide-react';
+import { User, UserCog, ExternalLink, Lock, CheckCircle } from 'lucide-react';
+import { resolveIcon } from '@/lib/icon-resolver';
 
 export interface ServiceCard {
   title: string;
@@ -34,7 +35,7 @@ interface PortfolioSubpageTemplateProps {
   parentTeamHref: string;
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon: string;
   services: ServiceCard[];
   initiatives: Initiative[];
   contacts: Contact[];
@@ -47,13 +48,14 @@ export default function PortfolioSubpageTemplate({
   parentTeamHref,
   title,
   description,
-  icon: Icon,
+  icon,
   services,
   initiatives,
   contacts,
   quickLinks,
   showStatus = true,
 }: PortfolioSubpageTemplateProps) {
+  const Icon = resolveIcon(icon);
   return (
     <div className="bg-white min-h-screen">
       <Header />

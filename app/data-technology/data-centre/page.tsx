@@ -1,6 +1,5 @@
 import PortfolioSubpageTemplate from '@/components/its-shared/PortfolioSubpageTemplate';
 import { fetchPortfolioSubpage } from '@/lib/data/fetch-subpage';
-import { Building2 } from 'lucide-react';
 
 const fallback = {
   parentTeam: 'Data Technology',
@@ -8,7 +7,7 @@ const fallback = {
   title: 'Data Centre',
   description:
     'We manage the City\'s physical computing infrastructure, including on-premises data centres and colocation facilities, ensuring reliable, secure hosting for all City applications and services.',
-  icon: Building2,
+  icon: 'Building2',
   services: [
     {
       title: 'Facility Management',

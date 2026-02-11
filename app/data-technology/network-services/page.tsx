@@ -1,6 +1,5 @@
 import PortfolioSubpageTemplate from '@/components/its-shared/PortfolioSubpageTemplate';
 import { fetchPortfolioSubpage } from '@/lib/data/fetch-subpage';
-import { Network } from 'lucide-react';
 
 const fallback = {
   parentTeam: 'Data Technology',
@@ -8,7 +7,7 @@ const fallback = {
   title: 'Network Services',
   description:
     'We provide the digital foundation for the City of Edmonton. Our team manages the core connectivity, security perimeter, and traffic management infrastructure that connects over 300 City facilities.',
-  icon: Network,
+  icon: 'Network',
   services: [
     { title: 'Connectivity (LAN/WAN)', items: ['Wired office connectivity', 'Fibre optic backbone', 'Site-to-site switching'] },
     { title: 'Wireless (Wi-Fi)', items: ['Corporate Secure Wi-Fi', 'Guest/Public Wi-Fi', 'High-density event wireless'] },

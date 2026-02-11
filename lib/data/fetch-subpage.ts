@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import { resolveIcon } from '@/lib/icon-resolver';
 
 export async function fetchPortfolioSubpage(portfolioHref: string) {
   try {
@@ -25,7 +24,7 @@ export async function fetchPortfolioSubpage(portfolioHref: string) {
       parentTeamHref: subpage.parentTeamHref,
       title: subpage.title,
       description: subpage.description,
-      icon: resolveIcon(subpage.iconName),
+      icon: subpage.iconName,
       services: subpage.services.map((s) => ({
         title: s.title,
         items: s.items,
