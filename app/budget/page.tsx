@@ -83,7 +83,7 @@ export default function BudgetPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} />
                       <XAxis dataKey="name" />
                       <YAxis tickFormatter={formatCurrency} />
-                      <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                      <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                       <Legend />
                       <Bar dataKey="Budgeted" fill="#005087" radius={[4, 4, 0, 0]} />
                       <Bar dataKey="Actual" fill="#2A9D8F" radius={[4, 4, 0, 0]} />
@@ -101,7 +101,7 @@ export default function BudgetPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} />
                       <XAxis dataKey="name" interval={0} angle={-15} textAnchor="end" height={60} />
                       <YAxis tickFormatter={formatCurrency} />
-                      <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                      <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                       <Legend />
                       <Bar dataKey="Budgeted" fill="#005087" radius={[4, 4, 0, 0]} />
                       <Bar dataKey="Actual" fill="#2A9D8F" radius={[4, 4, 0, 0]} />
@@ -136,7 +136,7 @@ export default function BudgetPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} />
                       <XAxis dataKey="name" />
                       <YAxis tickFormatter={formatCurrency} />
-                      <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                      <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                       <Legend />
                       <Bar dataKey="Budgeted" fill="#005087" radius={[4, 4, 0, 0]} />
                       <Bar dataKey="Actual" fill="#2A9D8F" radius={[4, 4, 0, 0]} />
@@ -154,7 +154,7 @@ export default function BudgetPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} />
                       <XAxis dataKey="name" interval={0} angle={-15} textAnchor="end" height={60} />
                       <YAxis tickFormatter={formatCurrency} />
-                      <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                      <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                       <Legend />
                       <Bar dataKey="Budgeted" fill="#005087" radius={[4, 4, 0, 0]} />
                       <Bar dataKey="Actual" fill="#2A9D8F" radius={[4, 4, 0, 0]} />
