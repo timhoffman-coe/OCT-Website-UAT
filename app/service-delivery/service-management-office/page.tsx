@@ -6,7 +6,6 @@ import PortfolioSubpageTemplate, {
   Contact,
   QuickLink,
 } from '@/components/its-shared/PortfolioSubpageTemplate';
-import { ClipboardList } from 'lucide-react';
 
 const services: ServiceCard[] = [
   {
@@ -95,7 +94,7 @@ export default function ServiceManagementOfficePage() {
       parentTeamHref="/service-delivery"
       title="Service Management Office"
       description="We manage Change, Problem, and Incident Management processes, maintaining the CMDB and supporting the Remedy ITSM platform to ensure efficient IT service delivery."
-      icon={ClipboardList}
+      icon="ClipboardList"
       services={services}
       initiatives={initiatives}
       contacts={contacts}

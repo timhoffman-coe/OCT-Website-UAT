@@ -6,7 +6,6 @@ import PortfolioSubpageTemplate, {
   Contact,
   QuickLink,
 } from '@/components/its-shared/PortfolioSubpageTemplate';
-import { FileText } from 'lucide-react';
 
 const services: ServiceCard[] = [
   {
@@ -95,7 +94,7 @@ export default function DigitalWorkplaceCatalogPage() {
       parentTeamHref="/service-delivery"
       title="Digital Workplace Catalog"
       description="We manage the Digital Workplace Catalog and Work Order process, making it easy for City employees to discover and request IT services through a centralized, user-friendly portal."
-      icon={FileText}
+      icon="FileText"
       services={services}
       initiatives={initiatives}
       contacts={contacts}

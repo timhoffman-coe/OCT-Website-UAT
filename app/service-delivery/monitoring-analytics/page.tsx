@@ -6,7 +6,6 @@ import PortfolioSubpageTemplate, {
   Contact,
   QuickLink,
 } from '@/components/its-shared/PortfolioSubpageTemplate';
-import { BarChart3 } from 'lucide-react';
 
 const services: ServiceCard[] = [
   {
@@ -95,7 +94,7 @@ export default function MonitoringAnalyticsPage() {
       parentTeamHref="/service-delivery"
       title="Monitoring & Analytics"
       description="We provide reliable monitoring platforms for IT infrastructure, networks, applications, and user interfaces with modern alerting, dashboards, and AI-powered analysis tools."
-      icon={BarChart3}
+      icon="BarChart3"
       services={services}
       initiatives={initiatives}
       contacts={contacts}
