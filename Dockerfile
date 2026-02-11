@@ -7,6 +7,7 @@ RUN npm install --maxsockets 1
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
 RUN npx prisma generate
 RUN npm run build
 
