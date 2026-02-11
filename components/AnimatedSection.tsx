@@ -23,10 +23,10 @@ export default function AnimatedSection({
   return (
     <div
       ref={ref}
-      className={`transition-all duration-1000 ease-out ${className}`}
+      className={`transition-all duration-700 ease-out ${className}`}
       style={{
         opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(80px)',
+        transform: isVisible ? 'translateY(0)' : 'translateY(40px)',
         transitionDelay: `${delay}ms`,
       }}
     >

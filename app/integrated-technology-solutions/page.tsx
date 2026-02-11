@@ -1,11 +1,12 @@
 import SectionTemplate, { ServiceArea } from '@/components/SectionTemplate';
+import { fetchSectionData } from '@/lib/data/fetch-team';
 
 export const metadata = {
   title: 'Integrated Technology Solutions | Open City & Technology',
   description: 'Managing the core infrastructure, networks, and systems that keep the City connected.',
 };
 
-const serviceAreas: ServiceArea[] = [
+const fallbackAreas: ServiceArea[] = [
   {
     id: 'infrastructure-operations',
     title: 'Technology Infrastructure Operations',
@@ -87,12 +88,16 @@ Monitoring & Analytics provides reliable monitoring platforms for IT infrastruct
   },
 ];
 
-export default function IntegratedTechnologySolutionsPage() {
+const fallbackTitle = 'Integrated Technology Solutions';
+const fallbackDescription = "IT infrastructure serves as the underlying structure that supports all services and solutions within the City's technology environment. We ensure that technology resources are always available and operate efficiently, forming the foundation for all digital services.";
+
+export default async function IntegratedTechnologySolutionsPage() {
+  const data = await fetchSectionData('integrated-technology-solutions');
   return (
     <SectionTemplate
-      pageTitle="Integrated Technology Solutions"
-      pageDescription="IT infrastructure serves as the underlying structure that supports all services and solutions within the City's technology environment. We ensure that technology resources are always available and operate efficiently, forming the foundation for all digital services."
-      serviceAreas={serviceAreas}
+      pageTitle={data?.pageTitle || fallbackTitle}
+      pageDescription={data?.pageDescription || fallbackDescription}
+      serviceAreas={data?.serviceAreas || fallbackAreas}
     />
   );
 }

@@ -1,11 +1,12 @@
 import SectionTemplate, { ServiceArea } from '@/components/SectionTemplate';
+import { fetchSectionData } from '@/lib/data/fetch-team';
 
 export const metadata = {
   title: 'Business Solutions | Open City & Technology',
   description: 'Developing, implementing, and supporting the applications that power City services.',
 };
 
-const serviceAreas: ServiceArea[] = [
+const fallbackAreas: ServiceArea[] = [
   {
     id: 'posse',
     title: 'Application Support for POSSE',
@@ -98,12 +99,16 @@ Experience the power of streamlined workflows, captivating apps, and optimized p
   },
 ];
 
-export default function BusinessSolutionsPage() {
+const fallbackTitle = 'Business Solutions';
+const fallbackDescription = 'IT business solutions encompass a range of software, applications, programs, and services designed to assist in achieving business goals. From 311 to internal tools, we develop, implement, and support the applications that power City services.';
+
+export default async function BusinessSolutionsPage() {
+  const data = await fetchSectionData('business-solutions');
   return (
     <SectionTemplate
-      pageTitle="Business Solutions"
-      pageDescription="IT business solutions encompass a range of software, applications, programs, and services designed to assist in achieving business goals. From 311 to internal tools, we develop, implement, and support the applications that power City services."
-      serviceAreas={serviceAreas}
+      pageTitle={data?.pageTitle || fallbackTitle}
+      pageDescription={data?.pageDescription || fallbackDescription}
+      serviceAreas={data?.serviceAreas || fallbackAreas}
     />
   );
 }

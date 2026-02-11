@@ -1,11 +1,12 @@
 import SectionTemplate, { ServiceArea } from '@/components/SectionTemplate';
+import { fetchSectionData } from '@/lib/data/fetch-team';
 
 export const metadata = {
   title: 'Corporate Information Security | Open City & Technology',
   description: 'Protecting the City\'s data, assets, and information from cyber threats.',
 };
 
-const serviceAreas: ServiceArea[] = [
+const fallbackAreas: ServiceArea[] = [
   {
     id: 'advisory-services',
     title: 'Cyber Security Advisory Services',
@@ -101,12 +102,16 @@ From onboarding to offboarding, we manage digital identities and access rights, 
   },
 ];
 
-export default function CorporateInformationSecurityPage() {
+const fallbackTitle = 'Corporate Information Security';
+const fallbackDescription = "Protecting the City's data, assets, and information from cyber threats. We safeguard citizen privacy and ensure the integrity of municipal operations against evolving risks through comprehensive security services, incident response, and continuous monitoring.";
+
+export default async function CorporateInformationSecurityPage() {
+  const data = await fetchSectionData('corporate-information-security');
   return (
     <SectionTemplate
-      pageTitle="Corporate Information Security"
-      pageDescription="Protecting the City's data, assets, and information from cyber threats. We safeguard citizen privacy and ensure the integrity of municipal operations against evolving risks through comprehensive security services, incident response, and continuous monitoring."
-      serviceAreas={serviceAreas}
+      pageTitle={data?.pageTitle || fallbackTitle}
+      pageDescription={data?.pageDescription || fallbackDescription}
+      serviceAreas={data?.serviceAreas || fallbackAreas}
     />
   );
 }

@@ -1,11 +1,12 @@
 import SectionTemplate, { ServiceArea } from '@/components/SectionTemplate';
+import { fetchSectionData } from '@/lib/data/fetch-team';
 
 export const metadata = {
   title: 'Technology Planning | Open City & Technology',
   description: 'Strategizing and roadmapping the future of technology for the City of Edmonton.',
 };
 
-const serviceAreas: ServiceArea[] = [
+const fallbackAreas: ServiceArea[] = [
   {
     id: 'technology-investment',
     title: 'Technology Investment & Financial Management',
@@ -70,12 +71,16 @@ This service includes financial, contractual and inventory services to support l
   },
 ];
 
-export default function TechnologyPlanningPage() {
+const fallbackTitle = 'Technology Planning';
+const fallbackDescription = 'The Technology Planning and Business Engagement section enables the City to make informed technology decisions that provide value to our citizens, businesses and partners.';
+
+export default async function TechnologyPlanningPage() {
+  const data = await fetchSectionData('technology-planning');
   return (
     <SectionTemplate
-      pageTitle="Technology Planning"
-      pageDescription="The Technology Planning and Business Engagement section enables the City to make informed technology decisions that provide value to our citizens, businesses and partners."
-      serviceAreas={serviceAreas}
+      pageTitle={data?.pageTitle || fallbackTitle}
+      pageDescription={data?.pageDescription || fallbackDescription}
+      serviceAreas={data?.serviceAreas || fallbackAreas}
     />
   );
 }

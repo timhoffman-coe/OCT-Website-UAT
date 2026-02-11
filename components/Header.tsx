@@ -16,18 +16,19 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      // Add hysteresis to prevent flickering
-      // Collapse when scrolling down past 100px
-      // Expand when scrolling up past 20px
-      // The gap must be larger than the layout shift (~80px) to prevent loops
-      if (currentScrollY > 100 && !isScrolledRef.current) {
-        setIsScrolled(true);
-        isScrolledRef.current = true;
-      } else if (currentScrollY < 20 && isScrolledRef.current) {
-        setIsScrolled(false);
-        isScrolledRef.current = false;
-      }
+      requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        // Add hysteresis to prevent flickering
+        // Collapse when scrolling down past 50px
+        // Expand when scrolling up past 10px
+        if (currentScrollY > 50 && !isScrolledRef.current) {
+          setIsScrolled(true);
+          isScrolledRef.current = true;
+        } else if (currentScrollY < 10 && isScrolledRef.current) {
+          setIsScrolled(false);
+          isScrolledRef.current = false;
+        }
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
