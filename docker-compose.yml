@@ -35,6 +35,19 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    environment:
+      - DATABASE_URL=postgresql://coe_admin:${POSTGRES_PASSWORD}@postgres:5432/coe_cms
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+
   nginx:
     image: nginx:alpine
     ports:
