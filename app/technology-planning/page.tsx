@@ -1,5 +1,6 @@
 import SectionTemplate, { ServiceArea } from '@/components/SectionTemplate';
 import { fetchSectionData } from '@/lib/data/fetch-team';
+import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 
 export const metadata = {
   title: 'Technology Planning | Open City & Technology',
@@ -75,12 +76,16 @@ const fallbackTitle = 'Technology Planning';
 const fallbackDescription = 'The Technology Planning and Business Engagement section enables the City to make informed technology decisions that provide value to our citizens, businesses and partners.';
 
 export default async function TechnologyPlanningPage() {
-  const data = await fetchSectionData('technology-planning');
+  const [data, widgetOrder] = await Promise.all([
+    fetchSectionData('technology-planning'),
+    fetchWidgetOrder('technology-planning'),
+  ]);
   return (
     <SectionTemplate
       pageTitle={data?.pageTitle || fallbackTitle}
       pageDescription={data?.pageDescription || fallbackDescription}
       serviceAreas={data?.serviceAreas || fallbackAreas}
+      widgetOrder={widgetOrder || undefined}
     />
   );
 }

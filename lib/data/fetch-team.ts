@@ -16,6 +16,16 @@ export async function fetchITSTeamData(
         },
         trelloBoards: { orderBy: { sortOrder: 'asc' } },
         teamMembers: { orderBy: { sortOrder: 'asc' } },
+        accordionGroups: {
+          orderBy: { sortOrder: 'asc' },
+          include: { links: { orderBy: { sortOrder: 'asc' } } },
+        },
+        widgetInstances: {
+          select: {
+            config: true,
+            widgetDefinition: { select: { widgetType: true } },
+          },
+        },
       },
     });
     if (!team) return null;
@@ -52,6 +62,18 @@ export async function fetchITSTeamData(
         title: m.title,
         email: m.email,
       })),
+      accordionItems: team.accordionGroups.length > 0
+        ? team.accordionGroups.map((g) => ({
+            id: g.groupId,
+            title: g.title,
+            links: g.links.map((l) => ({ label: l.label, href: l.href })),
+          }))
+        : undefined,
+      widgetConfigs: Object.fromEntries(
+        team.widgetInstances
+          .filter((wi) => wi.config && typeof wi.config === 'object' && Object.keys(wi.config as object).length > 0)
+          .map((wi) => [wi.widgetDefinition.widgetType, wi.config as Record<string, string>])
+      ),
     };
   } catch {
     return null;

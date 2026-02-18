@@ -1,5 +1,6 @@
 import SectionTemplate, { ServiceArea } from '@/components/SectionTemplate';
 import { fetchSectionData } from '@/lib/data/fetch-team';
+import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 
 export const metadata = {
   title: 'Corporate Information Security | Open City & Technology',
@@ -106,12 +107,16 @@ const fallbackTitle = 'Corporate Information Security';
 const fallbackDescription = "Protecting the City's data, assets, and information from cyber threats. We safeguard citizen privacy and ensure the integrity of municipal operations against evolving risks through comprehensive security services, incident response, and continuous monitoring.";
 
 export default async function CorporateInformationSecurityPage() {
-  const data = await fetchSectionData('corporate-information-security');
+  const [data, widgetOrder] = await Promise.all([
+    fetchSectionData('corporate-information-security'),
+    fetchWidgetOrder('corporate-information-security'),
+  ]);
   return (
     <SectionTemplate
       pageTitle={data?.pageTitle || fallbackTitle}
       pageDescription={data?.pageDescription || fallbackDescription}
       serviceAreas={data?.serviceAreas || fallbackAreas}
+      widgetOrder={widgetOrder || undefined}
     />
   );
 }

@@ -15,6 +15,10 @@ import {
   Shield,
   Users,
   Settings,
+  Type,
+  LayoutGrid,
+  Columns,
+  List,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -35,6 +39,10 @@ const iconMap: Record<string, LucideIcon> = {
   Shield,
   Users,
   Settings,
+  Type,
+  LayoutGrid,
+  Columns,
+  List,
 };
 
 export function resolveIcon(name: string): LucideIcon {

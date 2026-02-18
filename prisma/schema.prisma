@@ -83,6 +83,7 @@ model Team {
   accordionGroups AccordionGroup[]
   serviceAreas    ServiceArea[]
   teamPermissions TeamPermission[]
+  widgetInstances WidgetInstance[]
 }
 
 // ============================================================
@@ -257,4 +258,33 @@ model ServiceArea {
   sortOrder        Int      @default(0)
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// WIDGET-BASED PAGE BUILDER
+// ============================================================
+
+model WidgetDefinition {
+  id          String  @id @default(cuid())
+  widgetType  String  @unique
+  label       String
+  description String?
+  icon        String  @default("LayoutGrid")
+  isEnabled   Boolean @default(true)
+
+  instances WidgetInstance[]
+}
+
+model WidgetInstance {
+  id                 String @id @default(cuid())
+  teamId             String
+  widgetDefinitionId String
+  sortOrder          Int    @default(0)
+  config             Json?
+
+  team             Team             @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  widgetDefinition WidgetDefinition @relation(fields: [widgetDefinitionId], references: [id], onDelete: Restrict)
+
+  @@unique([teamId, widgetDefinitionId])
+  @@index([teamId, sortOrder])
 }

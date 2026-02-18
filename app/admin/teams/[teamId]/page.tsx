@@ -18,28 +18,38 @@ export default async function TeamDetailPage({
     notFound();
   }
 
-  const team = await prisma.team.findUnique({
-    where: { id: teamId },
-    include: {
-      portfolios: {
-        orderBy: { sortOrder: 'asc' },
-        include: { subpage: true },
+  const [team, widgetDefinitions] = await Promise.all([
+    prisma.team.findUnique({
+      where: { id: teamId },
+      include: {
+        portfolios: {
+          orderBy: { sortOrder: 'asc' },
+          include: { subpage: true },
+        },
+        teamTabs: {
+          orderBy: { sortOrder: 'asc' },
+          include: { diagramLinks: { orderBy: { sortOrder: 'asc' } } },
+        },
+        trelloBoards: { orderBy: { sortOrder: 'asc' } },
+        teamMembers: { orderBy: { sortOrder: 'asc' } },
+        serviceAreas: { orderBy: { sortOrder: 'asc' } },
+        accordionGroups: {
+          orderBy: { sortOrder: 'asc' },
+          include: { links: { orderBy: { sortOrder: 'asc' } } },
+        },
+        widgetInstances: {
+          orderBy: { sortOrder: 'asc' },
+          include: { widgetDefinition: true },
+        },
       },
-      teamTabs: {
-        orderBy: { sortOrder: 'asc' },
-        include: { diagramLinks: { orderBy: { sortOrder: 'asc' } } },
-      },
-      trelloBoards: { orderBy: { sortOrder: 'asc' } },
-      teamMembers: { orderBy: { sortOrder: 'asc' } },
-      serviceAreas: { orderBy: { sortOrder: 'asc' } },
-      accordionGroups: {
-        orderBy: { sortOrder: 'asc' },
-        include: { links: { orderBy: { sortOrder: 'asc' } } },
-      },
-    },
-  });
+    }),
+    prisma.widgetDefinition.findMany({
+      where: { isEnabled: true },
+      orderBy: { label: 'asc' },
+    }),
+  ]);
 
   if (!team) notFound();
 
-  return <TeamDetailClient team={team} />;
+  return <TeamDetailClient team={team} widgetDefinitions={widgetDefinitions} />;
 }

@@ -1,10 +1,7 @@
-'use client';
-
-import { useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import ServiceAreaCard from './ServiceAreaCard';
-import ServiceAreaModal from './ServiceAreaModal';
+import WidgetRenderer, { DEFAULT_SECTION_WIDGETS } from '@/components/widgets/WidgetRenderer';
+import type { WidgetDataBag } from '@/components/widgets/WidgetRenderer';
 
 export interface ServiceArea {
   id: string;
@@ -20,20 +17,27 @@ interface SectionTemplateProps {
   pageTitle: string;
   pageDescription: string;
   serviceAreas: ServiceArea[];
+  widgetOrder?: string[];
 }
 
 export default function SectionTemplate({
   pageTitle,
   pageDescription,
   serviceAreas,
+  widgetOrder,
 }: SectionTemplateProps) {
-  const [selectedArea, setSelectedArea] = useState<ServiceArea | null>(null);
+  const order = widgetOrder || [...DEFAULT_SECTION_WIDGETS];
+
+  const dataBag: WidgetDataBag = {
+    pageTitle,
+    pageDescription,
+    serviceAreas,
+  };
 
   return (
     <div className="bg-white min-h-screen">
       <Header />
 
-      {/* Main Content */}
       <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         {/* Page Title Section */}
         <div className="mb-12">
@@ -45,36 +49,8 @@ export default function SectionTemplate({
           </p>
         </div>
 
-        {/* Service Areas Section */}
-        <section>
-          <h2 className="font-sans text-3xl font-bold text-primary-blue mb-8 pb-3 border-b-2 border-[#F4F2F1]">
-            Our Service Areas
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-            {serviceAreas.map((area) => (
-              <ServiceAreaCard
-                key={area.id}
-                title={area.title}
-                icon={area.icon}
-                shortDescription={area.shortDescription}
-                link={area.link}
-                onClick={() => setSelectedArea(area)}
-              />
-            ))}
-          </div>
-        </section>
+        <WidgetRenderer widgetOrder={order} data={dataBag} />
       </main>
-
-      {/* Modal */}
-      <ServiceAreaModal
-        isOpen={!!selectedArea}
-        onClose={() => setSelectedArea(null)}
-        title={selectedArea?.title || ''}
-        icon={selectedArea?.icon}
-        fullDescription={selectedArea?.fullDescription || ''}
-        features={selectedArea?.features || []}
-      />
 
       <Footer />
     </div>

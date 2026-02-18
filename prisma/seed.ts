@@ -1,6 +1,8 @@
 import { PrismaClient, PageTemplate, Role } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log('Seeding database...');
@@ -24,8 +26,10 @@ async function main() {
   // ============================================================
 
   // --- Data Technology ---
-  const dataTech = await prisma.team.create({
-    data: {
+  const dataTech = await prisma.team.upsert({
+    where: { slug: 'data-technology' },
+    update: {},
+    create: {
       slug: 'data-technology',
       teamName: 'Data Technology',
       teamShortName: 'Data Technology',
@@ -163,8 +167,10 @@ async function main() {
   console.log('Created team:', dataTech.teamName);
 
   // --- Partner Experience ---
-  const partnerExp = await prisma.team.create({
-    data: {
+  const partnerExp = await prisma.team.upsert({
+    where: { slug: 'partner-experience' },
+    update: {},
+    create: {
       slug: 'partner-experience',
       teamName: 'Partner Experience',
       teamShortName: 'Partner Experience',
@@ -236,8 +242,10 @@ async function main() {
   console.log('Created team:', partnerExp.teamName);
 
   // --- Technology Infrastructure Operations ---
-  const tio = await prisma.team.create({
-    data: {
+  const tio = await prisma.team.upsert({
+    where: { slug: 'technology-infrastructure-operations' },
+    update: {},
+    create: {
       slug: 'technology-infrastructure-operations',
       teamName: 'Technology Infrastructure Operations',
       teamShortName: 'Infrastructure Operations',
@@ -547,28 +555,33 @@ async function main() {
     },
   ];
 
-  for (const sp of subpageData) {
-    const portfolio = portfolioByHref[sp.portfolioHref];
-    if (!portfolio) {
-      console.warn(`Portfolio not found for href: ${sp.portfolioHref}`);
-      continue;
+  const existingSubpages = await prisma.portfolioSubpage.count();
+  if (existingSubpages === 0) {
+    for (const sp of subpageData) {
+      const portfolio = portfolioByHref[sp.portfolioHref];
+      if (!portfolio) {
+        console.warn(`Portfolio not found for href: ${sp.portfolioHref}`);
+        continue;
+      }
+      await prisma.portfolioSubpage.create({
+        data: {
+          portfolioId: portfolio.id,
+          parentTeam: sp.parentTeam,
+          parentTeamHref: sp.parentTeamHref,
+          title: sp.title,
+          description: sp.description,
+          iconName: sp.iconName,
+          showStatus: true,
+          services: { create: sp.services },
+          initiatives: { create: sp.initiatives },
+          contacts: { create: sp.contacts },
+          quickLinks: { create: sp.quickLinks },
+        },
+      });
+      console.log('Created subpage:', sp.title);
     }
-    await prisma.portfolioSubpage.create({
-      data: {
-        portfolioId: portfolio.id,
-        parentTeam: sp.parentTeam,
-        parentTeamHref: sp.parentTeamHref,
-        title: sp.title,
-        description: sp.description,
-        iconName: sp.iconName,
-        showStatus: true,
-        services: { create: sp.services },
-        initiatives: { create: sp.initiatives },
-        contacts: { create: sp.contacts },
-        quickLinks: { create: sp.quickLinks },
-      },
-    });
-    console.log('Created subpage:', sp.title);
+  } else {
+    console.log('Subpages already exist, skipping...');
   }
 
   // ============================================================
@@ -630,17 +643,22 @@ async function main() {
     },
   ];
 
-  for (const group of sharedAccordionData) {
-    await prisma.accordionGroup.create({
-      data: {
-        teamId: null, // Shared across all ITS teams
-        groupId: group.groupId,
-        title: group.title,
-        sortOrder: group.sortOrder,
-        links: { create: group.links },
-      },
-    });
-    console.log('Created shared accordion group:', group.title);
+  const existingAccordionGroups = await prisma.accordionGroup.count();
+  if (existingAccordionGroups === 0) {
+    for (const group of sharedAccordionData) {
+      await prisma.accordionGroup.create({
+        data: {
+          teamId: null, // Shared across all ITS teams
+          groupId: group.groupId,
+          title: group.title,
+          sortOrder: group.sortOrder,
+          links: { create: group.links },
+        },
+      });
+      console.log('Created shared accordion group:', group.title);
+    }
+  } else {
+    console.log('Accordion groups already exist, skipping...');
   }
 
   // ============================================================
@@ -648,8 +666,10 @@ async function main() {
   // ============================================================
 
   // --- Business Solutions ---
-  await prisma.team.create({
-    data: {
+  await prisma.team.upsert({
+    where: { slug: 'business-solutions' },
+    update: {},
+    create: {
       slug: 'business-solutions',
       teamName: 'Business Solutions',
       teamShortName: 'Business Solutions',
@@ -702,8 +722,10 @@ async function main() {
   console.log('Created team: Business Solutions');
 
   // --- Corporate Information Security ---
-  await prisma.team.create({
-    data: {
+  await prisma.team.upsert({
+    where: { slug: 'corporate-information-security' },
+    update: {},
+    create: {
       slug: 'corporate-information-security',
       teamName: 'Corporate Information Security',
       teamShortName: 'Info Security',
@@ -756,8 +778,10 @@ async function main() {
   console.log('Created team: Corporate Information Security');
 
   // --- Technology Planning ---
-  await prisma.team.create({
-    data: {
+  await prisma.team.upsert({
+    where: { slug: 'technology-planning' },
+    update: {},
+    create: {
       slug: 'technology-planning',
       teamName: 'Technology Planning',
       teamShortName: 'Tech Planning',
@@ -798,8 +822,10 @@ async function main() {
   console.log('Created team: Technology Planning');
 
   // --- Integrated Technology Solutions ---
-  await prisma.team.create({
-    data: {
+  await prisma.team.upsert({
+    where: { slug: 'integrated-technology-solutions' },
+    update: {},
+    create: {
       slug: 'integrated-technology-solutions',
       teamName: 'Integrated Technology Solutions',
       teamShortName: 'ITS',
@@ -848,6 +874,57 @@ async function main() {
     },
   });
   console.log('Created team: Integrated Technology Solutions');
+
+  // ============================================================
+  // 6. Seed Widget Definitions
+  // ============================================================
+  const widgetDefinitions = [
+    { widgetType: 'page_header', label: 'Page Header', description: 'Team name banner with support request button', icon: 'Type' },
+    { widgetType: 'portfolios', label: 'Our Portfolios', description: 'Grid of portfolio cards with icons, descriptions, and links', icon: 'LayoutGrid' },
+    { widgetType: 'team_tabs', label: 'Team Overviews', description: 'Tabbed interface with video embeds and diagram links', icon: 'Columns' },
+    { widgetType: 'accordion_links', label: 'Important Links', description: 'Collapsible accordion groups of categorized links', icon: 'List' },
+    { widgetType: 'work_tracking', label: 'Work Tracking Boards', description: 'Grid of external board cards (Trello, etc.)', icon: 'ClipboardList' },
+    { widgetType: 'ongoing_projects', label: 'Ongoing Projects', description: 'Hero block highlighting current projects with CTA', icon: 'FileText' },
+    { widgetType: 'budget_spend', label: 'Budget & Spend', description: 'Budget overview card with link to financial reports', icon: 'BarChart3' },
+    { widgetType: 'team_members', label: 'Who We Are', description: 'Team member cards grid with contact info', icon: 'Users' },
+    { widgetType: 'service_areas', label: 'Service Areas', description: 'Service area cards with modal detail views', icon: 'Layers' },
+  ];
+
+  for (const def of widgetDefinitions) {
+    await prisma.widgetDefinition.upsert({
+      where: { widgetType: def.widgetType },
+      update: {},
+      create: def,
+    });
+  }
+  console.log('Created widget definitions:', widgetDefinitions.length);
+
+  // ============================================================
+  // 7. Seed Default Widget Instances for Each Team
+  // ============================================================
+  const allTeams = await prisma.team.findMany();
+  const allWidgetDefs = await prisma.widgetDefinition.findMany();
+  const defByType = Object.fromEntries(allWidgetDefs.map(d => [d.widgetType, d]));
+
+  const ITS_TEAM_DEFAULTS = [
+    'page_header', 'portfolios', 'team_tabs', 'accordion_links',
+    'work_tracking', 'ongoing_projects', 'budget_spend', 'team_members',
+  ];
+  const SECTION_DEFAULTS = ['service_areas'];
+
+  for (const team of allTeams) {
+    const defaults = team.pageTemplate === 'ITS_TEAM' ? ITS_TEAM_DEFAULTS : SECTION_DEFAULTS;
+    for (let i = 0; i < defaults.length; i++) {
+      const def = defByType[defaults[i]];
+      if (!def) continue;
+      await prisma.widgetInstance.upsert({
+        where: { teamId_widgetDefinitionId: { teamId: team.id, widgetDefinitionId: def.id } },
+        update: {},
+        create: { teamId: team.id, widgetDefinitionId: def.id, sortOrder: i },
+      });
+    }
+    console.log(`Created default widget instances for: ${team.teamName} (${defaults.length} widgets)`);
+  }
 
   console.log('Seeding complete!');
 }

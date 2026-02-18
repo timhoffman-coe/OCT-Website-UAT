@@ -52,6 +52,8 @@ export interface ITSTeamPageData {
   teamTabs: TeamTab[];
   trelloBoards: TrelloBoard[];
   teamMembers: TeamMember[];
+  accordionItems?: AccordionItem[];
+  widgetConfigs?: Record<string, Record<string, string>>;
 }
 
 // Shared important links used across all ITS team pages

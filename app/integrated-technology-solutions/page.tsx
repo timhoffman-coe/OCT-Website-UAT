@@ -1,5 +1,6 @@
 import SectionTemplate, { ServiceArea } from '@/components/SectionTemplate';
 import { fetchSectionData } from '@/lib/data/fetch-team';
+import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 
 export const metadata = {
   title: 'Integrated Technology Solutions | Open City & Technology',
@@ -92,12 +93,16 @@ const fallbackTitle = 'Integrated Technology Solutions';
 const fallbackDescription = "IT infrastructure serves as the underlying structure that supports all services and solutions within the City's technology environment. We ensure that technology resources are always available and operate efficiently, forming the foundation for all digital services.";
 
 export default async function IntegratedTechnologySolutionsPage() {
-  const data = await fetchSectionData('integrated-technology-solutions');
+  const [data, widgetOrder] = await Promise.all([
+    fetchSectionData('integrated-technology-solutions'),
+    fetchWidgetOrder('integrated-technology-solutions'),
+  ]);
   return (
     <SectionTemplate
       pageTitle={data?.pageTitle || fallbackTitle}
       pageDescription={data?.pageDescription || fallbackDescription}
       serviceAreas={data?.serviceAreas || fallbackAreas}
+      widgetOrder={widgetOrder || undefined}
     />
   );
 }

@@ -6,6 +6,28 @@ import TeamMemberEditor from './TeamMemberEditor';
 import TrelloBoardEditor from './TrelloBoardEditor';
 import ServiceAreaEditor from './ServiceAreaEditor';
 import TeamTabEditor from './TeamTabEditor';
+import LayoutEditor from './LayoutEditor';
+import AccordionLinksEditor from './AccordionLinksEditor';
+
+type WidgetInstanceData = {
+  id: string;
+  sortOrder: number;
+  config: unknown;
+  widgetDefinition: {
+    id: string;
+    widgetType: string;
+    label: string;
+    icon: string;
+  };
+};
+
+type WidgetDefinitionData = {
+  id: string;
+  widgetType: string;
+  label: string;
+  description: string | null;
+  icon: string;
+};
 
 type TeamWithRelations = {
   id: string;
@@ -69,12 +91,18 @@ type TeamWithRelations = {
     sortOrder: number;
     links: Array<{ id: string; label: string; href: string; sortOrder: number }>;
   }>;
+  widgetInstances: WidgetInstanceData[];
 };
 
-const ITS_TABS = ['Portfolios', 'Team Overviews', 'Boards', 'Members'] as const;
-const SECTION_TABS = ['Service Areas'] as const;
+const ITS_TABS = ['Layout', 'Portfolios', 'Team Overviews', 'Boards', 'Links', 'Members'] as const;
+const SECTION_TABS = ['Layout', 'Service Areas'] as const;
 
-export default function TeamDetailClient({ team }: { team: TeamWithRelations }) {
+interface TeamDetailClientProps {
+  team: TeamWithRelations;
+  widgetDefinitions: WidgetDefinitionData[];
+}
+
+export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetailClientProps) {
   const tabs = team.pageTemplate === 'ITS_TEAM' ? ITS_TABS : SECTION_TABS;
   const [activeTab, setActiveTab] = useState<string>(tabs[0]);
 
@@ -122,6 +150,14 @@ export default function TeamDetailClient({ team }: { team: TeamWithRelations }) 
       </div>
 
       {/* Tab Content */}
+      {activeTab === 'Layout' && (
+        <LayoutEditor
+          teamId={team.id}
+          teamSlug={team.slug}
+          instances={team.widgetInstances}
+          definitions={widgetDefinitions}
+        />
+      )}
       {activeTab === 'Portfolios' && (
         <PortfolioEditor teamId={team.id} portfolios={team.portfolios} />
       )}
@@ -130,6 +166,9 @@ export default function TeamDetailClient({ team }: { team: TeamWithRelations }) 
       )}
       {activeTab === 'Boards' && (
         <TrelloBoardEditor teamId={team.id} boards={team.trelloBoards} />
+      )}
+      {activeTab === 'Links' && (
+        <AccordionLinksEditor teamId={team.id} groups={team.accordionGroups} />
       )}
       {activeTab === 'Members' && (
         <TeamMemberEditor teamId={team.id} members={team.teamMembers} />

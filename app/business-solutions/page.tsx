@@ -1,5 +1,6 @@
 import SectionTemplate, { ServiceArea } from '@/components/SectionTemplate';
 import { fetchSectionData } from '@/lib/data/fetch-team';
+import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 
 export const metadata = {
   title: 'Business Solutions | Open City & Technology',
@@ -103,12 +104,16 @@ const fallbackTitle = 'Business Solutions';
 const fallbackDescription = 'IT business solutions encompass a range of software, applications, programs, and services designed to assist in achieving business goals. From 311 to internal tools, we develop, implement, and support the applications that power City services.';
 
 export default async function BusinessSolutionsPage() {
-  const data = await fetchSectionData('business-solutions');
+  const [data, widgetOrder] = await Promise.all([
+    fetchSectionData('business-solutions'),
+    fetchWidgetOrder('business-solutions'),
+  ]);
   return (
     <SectionTemplate
       pageTitle={data?.pageTitle || fallbackTitle}
       pageDescription={data?.pageDescription || fallbackDescription}
       serviceAreas={data?.serviceAreas || fallbackAreas}
+      widgetOrder={widgetOrder || undefined}
     />
   );
 }
