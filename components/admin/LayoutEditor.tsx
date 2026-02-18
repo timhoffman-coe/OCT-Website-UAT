@@ -22,12 +22,13 @@ import {
   Plus,
   Trash2,
   Eye,
+  Pencil,
   X,
   ExternalLink,
   Loader2,
   CheckCircle2,
-  Settings,
   Save,
+  RotateCcw,
 } from 'lucide-react';
 import { resolveIcon } from '@/lib/icon-resolver';
 import {
@@ -35,7 +36,23 @@ import {
   removeWidgetFromTeam,
   reorderWidgets,
   updateWidgetConfig,
+  resetWidgetsToDefault,
 } from '@/lib/actions/widget-actions';
+import PortfolioEditor from './PortfolioEditor';
+import TeamTabEditor from './TeamTabEditor';
+import TrelloBoardEditor from './TrelloBoardEditor';
+import TeamMemberEditor from './TeamMemberEditor';
+import ServiceAreaEditor from './ServiceAreaEditor';
+import AccordionLinksEditor from './AccordionLinksEditor';
+import PageHeaderWidget from '@/components/widgets/PageHeaderWidget';
+import PortfoliosWidget from '@/components/widgets/PortfoliosWidget';
+import TeamTabsWidget from '@/components/widgets/TeamTabsWidget';
+import AccordionLinksWidget from '@/components/widgets/AccordionLinksWidget';
+import WorkTrackingWidget from '@/components/widgets/WorkTrackingWidget';
+import OngoingProjectsWidget from '@/components/widgets/OngoingProjectsWidget';
+import BudgetSpendWidget from '@/components/widgets/BudgetSpendWidget';
+import TeamMembersWidget from '@/components/widgets/TeamMembersWidget';
+import ServiceAreasWidget from '@/components/widgets/ServiceAreasWidget';
 
 // ── Types ──────────────────────────────────────────────
 
@@ -62,8 +79,63 @@ type WidgetDefinitionData = {
 interface LayoutEditorProps {
   teamId: string;
   teamSlug: string;
+  teamName: string;
+  teamShortName: string;
   instances: WidgetInstanceData[];
   definitions: WidgetDefinitionData[];
+  portfolios: Array<{
+    id: string;
+    iconName: string;
+    title: string;
+    description: string;
+    href: string;
+    sortOrder: number;
+    subpage: { id: string } | null;
+  }>;
+  teamTabs: Array<{
+    id: string;
+    tabId: string;
+    label: string;
+    videoTitle: string;
+    videoDescription: string;
+    videoUrl: string;
+    diagramsTitle: string;
+    diagramsDescription: string;
+    sortOrder: number;
+    diagramLinks: Array<{ id: string; label: string; href: string; sortOrder: number }>;
+  }>;
+  trelloBoards: Array<{
+    id: string;
+    title: string;
+    description: string;
+    href: string;
+    sortOrder: number;
+  }>;
+  teamMembers: Array<{
+    id: string;
+    name: string;
+    title: string;
+    email: string;
+    sortOrder: number;
+  }>;
+  serviceAreas: Array<{
+    id: string;
+    serviceAreaId: string;
+    title: string;
+    shortDescription: string;
+    fullDescription: string;
+    features: string[];
+    icon: string | null;
+    link: string | null;
+    sortOrder: number;
+  }>;
+  accordionGroups: Array<{
+    id: string;
+    groupId: string;
+    title: string;
+    sortOrder: number;
+    links: Array<{ id: string; label: string; href: string; sortOrder: number }>;
+  }>;
 }
 
 // ── Widget Preview Data ────────────────────────────────
@@ -206,20 +278,18 @@ const WIDGET_CONFIG_FIELDS: Record<string, ConfigField[]> = {
   ],
 };
 
-// ── Widget Config Form ──────────────────────────────────
+// ── Widget Config Form (for config-based widgets) ───────
 
 function WidgetConfigForm({
   instanceId,
   widgetType,
   currentConfig,
   onSaved,
-  onCancel,
 }: {
   instanceId: string;
   widgetType: string;
   currentConfig: Record<string, string>;
   onSaved: (config: Record<string, string>) => void;
-  onCancel: () => void;
 }) {
   const fields = WIDGET_CONFIG_FIELDS[widgetType];
   const [form, setForm] = useState<Record<string, string>>(() => {
@@ -245,10 +315,7 @@ function WidgetConfigForm({
   if (!fields) return null;
 
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mt-2 space-y-3">
-      <p className="font-sans text-xs font-semibold text-gray-500 uppercase tracking-wider">
-        Widget Settings
-      </p>
+    <div className="space-y-3">
       {fields.map((f) => (
         <div key={f.key}>
           <label className="block font-sans text-xs text-gray-500 mb-1">{f.label}</label>
@@ -280,12 +347,6 @@ function WidgetConfigForm({
           className="flex items-center gap-1 bg-primary-blue text-white text-sm px-3 py-1.5 rounded hover:bg-dark-blue disabled:opacity-50"
         >
           <Save className="w-3 h-3" /> Save Settings
-        </button>
-        <button
-          onClick={onCancel}
-          className="flex items-center gap-1 text-gray-600 text-sm px-3 py-1.5 rounded hover:bg-gray-100"
-        >
-          <X className="w-3 h-3" /> Cancel
         </button>
       </div>
     </div>
@@ -407,7 +468,6 @@ function WidgetPreviewModal({
         className="relative bg-white rounded-xl shadow-xl max-w-md w-full max-h-[80vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center gap-3 p-5 border-b border-gray-100">
           <div className="w-10 h-10 rounded-lg bg-[#D3ECEF] flex items-center justify-center flex-shrink-0">
             <IconComponent className="w-5 h-5 text-primary-blue" />
@@ -426,23 +486,16 @@ function WidgetPreviewModal({
             <X className="w-5 h-5" />
           </button>
         </div>
-
-        {/* Content */}
         <div className="p-5 space-y-4">
-          {/* Wireframe */}
           <div className="bg-gray-50 border border-gray-100 rounded-lg p-4">
             <p className="font-sans text-[10px] uppercase tracking-wider text-gray-400 mb-2">
               Layout Preview
             </p>
             <WireframeSchematic type={preview.schematic} />
           </div>
-
-          {/* Description */}
           <p className="font-sans text-sm text-gray-600 leading-relaxed">
             {preview.description}
           </p>
-
-          {/* Contents list */}
           <div>
             <p className="font-sans text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
               What&apos;s included
@@ -462,22 +515,283 @@ function WidgetPreviewModal({
   );
 }
 
+// ── Widget Editor Modal ────────────────────────────────
+
+function WidgetEditorModal({
+  instance,
+  teamId,
+  onClose,
+  onConfigSaved,
+  portfolios,
+  teamTabs,
+  trelloBoards,
+  teamMembers,
+  serviceAreas,
+  accordionGroups,
+}: {
+  instance: WidgetInstanceData;
+  teamId: string;
+  onClose: () => void;
+  onConfigSaved: (instanceId: string, config: Record<string, string>) => void;
+  portfolios: LayoutEditorProps['portfolios'];
+  teamTabs: LayoutEditorProps['teamTabs'];
+  trelloBoards: LayoutEditorProps['trelloBoards'];
+  teamMembers: LayoutEditorProps['teamMembers'];
+  serviceAreas: LayoutEditorProps['serviceAreas'];
+  accordionGroups: LayoutEditorProps['accordionGroups'];
+}) {
+  const IconComponent = resolveIcon(instance.widgetDefinition.icon);
+  const widgetType = instance.widgetDefinition.widgetType;
+  const isConfigWidget = widgetType in WIDGET_CONFIG_FIELDS;
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', handleKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleKey);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
+  function renderEditor() {
+    if (isConfigWidget) {
+      return (
+        <WidgetConfigForm
+          instanceId={instance.id}
+          widgetType={widgetType}
+          currentConfig={(instance.config as Record<string, string>) || {}}
+          onSaved={(config) => {
+            onConfigSaved(instance.id, config);
+            onClose();
+          }}
+        />
+      );
+    }
+
+    switch (widgetType) {
+      case 'portfolios':
+        return <PortfolioEditor teamId={teamId} portfolios={portfolios} />;
+      case 'team_tabs':
+        return <TeamTabEditor teamId={teamId} tabs={teamTabs} />;
+      case 'work_tracking':
+        return <TrelloBoardEditor teamId={teamId} boards={trelloBoards} />;
+      case 'team_members':
+        return <TeamMemberEditor teamId={teamId} members={teamMembers} />;
+      case 'service_areas':
+        return <ServiceAreaEditor teamId={teamId} areas={serviceAreas} />;
+      case 'accordion_links':
+        return <AccordionLinksEditor teamId={teamId} groups={accordionGroups} />;
+      default:
+        return (
+          <p className="font-sans text-sm text-gray-500">
+            No editor available for this widget type.
+          </p>
+        );
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+      <div
+        className="relative bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[85vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center gap-3 p-5 border-b border-gray-100 flex-shrink-0">
+          <div className="w-10 h-10 rounded-lg bg-[#D3ECEF] flex items-center justify-center flex-shrink-0">
+            <IconComponent className="w-5 h-5 text-primary-blue" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-sans font-semibold text-gray-900">
+              Edit: {instance.widgetDefinition.label}
+            </h3>
+            <span className="font-sans text-xs text-gray-400">
+              {widgetType}
+            </span>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Close editor"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Scrollable content */}
+        <div className="overflow-y-auto p-5">
+          {renderEditor()}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Widget Inline Preview ──────────────────────────────
+
+function EmptyWidgetPlaceholder() {
+  return (
+    <div className="flex flex-col items-center justify-center py-10 text-center">
+      <p className="font-sans text-sm text-gray-400">
+        Nothing configured yet. Click the pencil icon to set up this widget.
+      </p>
+    </div>
+  );
+}
+
+function WidgetInlinePreview({
+  widgetType,
+  config,
+  teamName,
+  teamShortName,
+  portfolios,
+  teamTabs,
+  trelloBoards,
+  teamMembers,
+  serviceAreas,
+  accordionGroups,
+}: {
+  widgetType: string;
+  config: unknown;
+  teamName: string;
+  teamShortName: string;
+  portfolios: LayoutEditorProps['portfolios'];
+  teamTabs: LayoutEditorProps['teamTabs'];
+  trelloBoards: LayoutEditorProps['trelloBoards'];
+  teamMembers: LayoutEditorProps['teamMembers'];
+  serviceAreas: LayoutEditorProps['serviceAreas'];
+  accordionGroups: LayoutEditorProps['accordionGroups'];
+}) {
+  const cfg = (config as Record<string, string>) || {};
+
+  switch (widgetType) {
+    case 'page_header':
+      return <PageHeaderWidget teamName={teamName} config={cfg} />;
+    case 'portfolios':
+      return portfolios.length > 0 ? (
+        <PortfoliosWidget
+          portfolios={portfolios.map((p) => ({
+            icon: p.iconName,
+            title: p.title,
+            description: p.description,
+            href: p.href,
+          }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    case 'team_tabs':
+      return teamTabs.length > 0 ? (
+        <TeamTabsWidget
+          teamTabs={teamTabs.map((t) => ({
+            id: t.tabId,
+            label: t.label,
+            videoTitle: t.videoTitle,
+            videoDescription: t.videoDescription,
+            videoUrl: t.videoUrl,
+            diagramsTitle: t.diagramsTitle,
+            diagramsDescription: t.diagramsDescription,
+            diagramLinks: t.diagramLinks.map((d) => ({
+              label: d.label,
+              href: d.href,
+            })),
+          }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    case 'accordion_links':
+      return accordionGroups.length > 0 ? (
+        <AccordionLinksWidget
+          items={accordionGroups.map((g) => ({
+            id: g.groupId,
+            title: g.title,
+            links: g.links.map((l) => ({ label: l.label, href: l.href })),
+          }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    case 'work_tracking':
+      return trelloBoards.length > 0 ? (
+        <WorkTrackingWidget
+          trelloBoards={trelloBoards.map((b) => ({
+            title: b.title,
+            description: b.description,
+            href: b.href,
+          }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    case 'ongoing_projects':
+      return (
+        <OngoingProjectsWidget
+          teamName={teamName}
+          teamShortName={teamShortName}
+          config={cfg}
+        />
+      );
+    case 'budget_spend':
+      return <BudgetSpendWidget teamName={teamName} config={cfg} />;
+    case 'team_members':
+      return teamMembers.length > 0 ? (
+        <TeamMembersWidget
+          teamMembers={teamMembers.map((m) => ({
+            name: m.name,
+            title: m.title,
+            email: m.email,
+          }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    case 'service_areas':
+      return serviceAreas.length > 0 ? (
+        <ServiceAreasWidget
+          serviceAreas={serviceAreas.map((sa) => ({
+            id: sa.serviceAreaId,
+            title: sa.title,
+            icon: sa.icon || undefined,
+            shortDescription: sa.shortDescription,
+            fullDescription: sa.fullDescription,
+            features: sa.features,
+            link: sa.link || undefined,
+          }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    default:
+      return null;
+  }
+}
+
 // ── Sortable Widget Item ───────────────────────────────
 
 function SortableWidgetItem({
   instance,
   onRemove,
   onPreview,
-  onToggleConfig,
-  isConfigOpen,
+  onEdit,
   isPending,
+  teamName,
+  teamShortName,
+  portfolios,
+  teamTabs,
+  trelloBoards,
+  teamMembers,
+  serviceAreas,
+  accordionGroups,
 }: {
   instance: WidgetInstanceData;
   onRemove: (id: string) => void;
   onPreview: (widgetType: string, icon: string, label: string) => void;
-  onToggleConfig: (id: string) => void;
-  isConfigOpen: boolean;
+  onEdit: (instance: WidgetInstanceData) => void;
   isPending: boolean;
+  teamName: string;
+  teamShortName: string;
+  portfolios: LayoutEditorProps['portfolios'];
+  teamTabs: LayoutEditorProps['teamTabs'];
+  trelloBoards: LayoutEditorProps['trelloBoards'];
+  teamMembers: LayoutEditorProps['teamMembers'];
+  serviceAreas: LayoutEditorProps['serviceAreas'];
+  accordionGroups: LayoutEditorProps['accordionGroups'];
 }) {
   const {
     attributes,
@@ -495,13 +809,15 @@ function SortableWidgetItem({
   };
 
   const IconComponent = resolveIcon(instance.widgetDefinition.icon);
-  const hasConfig = instance.widgetDefinition.widgetType in WIDGET_CONFIG_FIELDS;
 
   return (
-    <div ref={setNodeRef} style={style}>
-      <div
-        className={`bg-white border border-gray-200 rounded-lg p-4 flex items-center gap-3 shadow-sm ${isConfigOpen ? 'rounded-b-none border-b-0' : ''}`}
-      >
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
+    >
+      {/* Header bar */}
+      <div className="flex items-center gap-3 p-3 border-b border-gray-100 bg-gray-50">
         <button
           {...attributes}
           {...listeners}
@@ -510,8 +826,8 @@ function SortableWidgetItem({
         >
           <GripVertical className="w-5 h-5" />
         </button>
-        <div className="w-8 h-8 rounded bg-[#D3ECEF] flex items-center justify-center flex-shrink-0">
-          <IconComponent className="w-4 h-4 text-primary-blue" />
+        <div className="w-7 h-7 rounded bg-[#D3ECEF] flex items-center justify-center flex-shrink-0">
+          <IconComponent className="w-3.5 h-3.5 text-primary-blue" />
         </div>
         <div className="flex-1 min-w-0">
           <span className="font-sans font-semibold text-gray-900 text-sm">
@@ -521,18 +837,16 @@ function SortableWidgetItem({
             {instance.widgetDefinition.widgetType}
           </span>
         </div>
-        {hasConfig && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleConfig(instance.id);
-            }}
-            className={`p-1.5 rounded hover:bg-gray-100 transition-colors ${isConfigOpen ? 'text-primary-blue bg-gray-100' : 'text-gray-400 hover:text-primary-blue'}`}
-            aria-label={`Settings for ${instance.widgetDefinition.label}`}
-          >
-            <Settings className="w-4 h-4" />
-          </button>
-        )}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit(instance);
+          }}
+          className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-white transition-colors"
+          aria-label={`Edit ${instance.widgetDefinition.label}`}
+        >
+          <Pencil className="w-4 h-4" />
+        </button>
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -542,7 +856,7 @@ function SortableWidgetItem({
               instance.widgetDefinition.label
             );
           }}
-          className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-gray-100 transition-colors"
+          className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-white transition-colors"
           aria-label={`Preview ${instance.widgetDefinition.label}`}
         >
           <Eye className="w-4 h-4" />
@@ -550,11 +864,26 @@ function SortableWidgetItem({
         <button
           onClick={() => onRemove(instance.id)}
           disabled={isPending}
-          className="p-1.5 text-gray-400 hover:text-red-600 rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
+          className="p-1.5 text-gray-400 hover:text-red-600 rounded hover:bg-white disabled:opacity-50 transition-colors"
           aria-label={`Remove ${instance.widgetDefinition.label}`}
         >
           <Trash2 className="w-4 h-4" />
         </button>
+      </div>
+      {/* Inline widget preview */}
+      <div className="pointer-events-none select-none">
+        <WidgetInlinePreview
+          widgetType={instance.widgetDefinition.widgetType}
+          config={instance.config}
+          teamName={teamName}
+          teamShortName={teamShortName}
+          portfolios={portfolios}
+          teamTabs={teamTabs}
+          trelloBoards={trelloBoards}
+          teamMembers={teamMembers}
+          serviceAreas={serviceAreas}
+          accordionGroups={accordionGroups}
+        />
       </div>
     </div>
   );
@@ -565,8 +894,16 @@ function SortableWidgetItem({
 export default function LayoutEditor({
   teamId,
   teamSlug,
+  teamName,
+  teamShortName,
   instances: initialInstances,
   definitions,
+  portfolios,
+  teamTabs,
+  trelloBoards,
+  teamMembers,
+  serviceAreas,
+  accordionGroups,
 }: LayoutEditorProps) {
   const [instances, setInstances] = useState(initialInstances);
   const [isPending, startTransition] = useTransition();
@@ -575,7 +912,7 @@ export default function LayoutEditor({
     icon: string;
     label: string;
   } | null>(null);
-  const [editingConfigId, setEditingConfigId] = useState<string | null>(null);
+  const [editingWidget, setEditingWidget] = useState<WidgetInstanceData | null>(null);
 
   // Save state indicator
   const [showSaved, setShowSaved] = useState(false);
@@ -654,6 +991,35 @@ export default function LayoutEditor({
     []
   );
 
+  const handleEdit = useCallback(
+    (instance: WidgetInstanceData) => {
+      setEditingWidget(instance);
+    },
+    []
+  );
+
+  function handleConfigSaved(instanceId: string, config: Record<string, string>) {
+    setInstances((prev) =>
+      prev.map((i) =>
+        i.id === instanceId ? { ...i, config } : i
+      )
+    );
+  }
+
+  function handleReset() {
+    if (!confirm('Are you sure you want to reset to the default layout? This will remove all current widgets and replace them with the default set.')) return;
+
+    startTransition(async () => {
+      const newInstances = await resetWidgetsToDefault(teamId);
+      setInstances(
+        newInstances.map((inst) => ({
+          ...inst,
+          config: inst.config as unknown,
+        }))
+      );
+    });
+  }
+
   return (
     <div className="space-y-8">
       {/* Header with Preview Page button and save indicator */}
@@ -678,6 +1044,15 @@ export default function LayoutEditor({
                 </span>
               )}
             </div>
+            {/* Reset to Default button */}
+            <button
+              onClick={handleReset}
+              disabled={isPending}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-primary-blue hover:text-primary-blue transition-colors disabled:opacity-50"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Reset to Default
+            </button>
             {/* Preview Page button */}
             <a
               href={`/${teamSlug}`}
@@ -691,7 +1066,7 @@ export default function LayoutEditor({
           </div>
         </div>
         <p className="font-sans text-sm text-gray-500 mb-4">
-          Drag to reorder sections. Changes save automatically.
+          Drag to reorder sections. Click the pencil to edit widget content.
         </p>
 
         {instances.length === 0 ? (
@@ -710,41 +1085,24 @@ export default function LayoutEditor({
               items={instances.map((i) => i.id)}
               strategy={verticalListSortingStrategy}
             >
-              <div className="space-y-2">
+              <div className="space-y-4">
                 {instances.map((instance) => (
-                  <div key={instance.id}>
-                    <SortableWidgetItem
-                      instance={instance}
-                      onRemove={handleRemove}
-                      onPreview={handlePreview}
-                      onToggleConfig={(id) =>
-                        setEditingConfigId((prev) => (prev === id ? null : id))
-                      }
-                      isConfigOpen={editingConfigId === instance.id}
-                      isPending={isPending}
-                    />
-                    {editingConfigId === instance.id &&
-                      instance.widgetDefinition.widgetType in WIDGET_CONFIG_FIELDS && (
-                        <div className="bg-white border border-gray-200 border-t-0 rounded-b-lg px-4 pb-4">
-                          <WidgetConfigForm
-                            instanceId={instance.id}
-                            widgetType={instance.widgetDefinition.widgetType}
-                            currentConfig={
-                              (instance.config as Record<string, string>) || {}
-                            }
-                            onSaved={(config) => {
-                              setInstances((prev) =>
-                                prev.map((i) =>
-                                  i.id === instance.id ? { ...i, config } : i
-                                )
-                              );
-                              setEditingConfigId(null);
-                            }}
-                            onCancel={() => setEditingConfigId(null)}
-                          />
-                        </div>
-                      )}
-                  </div>
+                  <SortableWidgetItem
+                    key={instance.id}
+                    instance={instance}
+                    onRemove={handleRemove}
+                    onPreview={handlePreview}
+                    onEdit={handleEdit}
+                    isPending={isPending}
+                    teamName={teamName}
+                    teamShortName={teamShortName}
+                    portfolios={portfolios}
+                    teamTabs={teamTabs}
+                    trelloBoards={trelloBoards}
+                    teamMembers={teamMembers}
+                    serviceAreas={serviceAreas}
+                    accordionGroups={accordionGroups}
+                  />
                 ))}
               </div>
             </SortableContext>
@@ -814,6 +1172,22 @@ export default function LayoutEditor({
           icon={previewWidget.icon}
           label={previewWidget.label}
           onClose={() => setPreviewWidget(null)}
+        />
+      )}
+
+      {/* Widget Editor Modal */}
+      {editingWidget && (
+        <WidgetEditorModal
+          instance={editingWidget}
+          teamId={teamId}
+          onClose={() => setEditingWidget(null)}
+          onConfigSaved={handleConfigSaved}
+          portfolios={portfolios}
+          teamTabs={teamTabs}
+          trelloBoards={trelloBoards}
+          teamMembers={teamMembers}
+          serviceAreas={serviceAreas}
+          accordionGroups={accordionGroups}
         />
       )}
     </div>

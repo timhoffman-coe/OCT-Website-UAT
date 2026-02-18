@@ -1,13 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import PortfolioEditor from './PortfolioEditor';
-import TeamMemberEditor from './TeamMemberEditor';
-import TrelloBoardEditor from './TrelloBoardEditor';
-import ServiceAreaEditor from './ServiceAreaEditor';
-import TeamTabEditor from './TeamTabEditor';
 import LayoutEditor from './LayoutEditor';
-import AccordionLinksEditor from './AccordionLinksEditor';
 
 type WidgetInstanceData = {
   id: string;
@@ -94,18 +87,12 @@ type TeamWithRelations = {
   widgetInstances: WidgetInstanceData[];
 };
 
-const ITS_TABS = ['Layout', 'Portfolios', 'Team Overviews', 'Boards', 'Links', 'Members'] as const;
-const SECTION_TABS = ['Layout', 'Service Areas'] as const;
-
 interface TeamDetailClientProps {
   team: TeamWithRelations;
   widgetDefinitions: WidgetDefinitionData[];
 }
 
 export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetailClientProps) {
-  const tabs = team.pageTemplate === 'ITS_TEAM' ? ITS_TABS : SECTION_TABS;
-  const [activeTab, setActiveTab] = useState<string>(tabs[0]);
-
   return (
     <div className="p-8">
       {/* Header */}
@@ -130,52 +117,20 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         </p>
       </div>
 
-      {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="flex gap-6">
-          {tabs.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`font-sans text-sm pb-3 border-b-2 transition-colors ${
-                activeTab === tab
-                  ? 'border-primary-blue text-primary-blue font-semibold'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </nav>
-      </div>
-
-      {/* Tab Content */}
-      {activeTab === 'Layout' && (
-        <LayoutEditor
-          teamId={team.id}
-          teamSlug={team.slug}
-          instances={team.widgetInstances}
-          definitions={widgetDefinitions}
-        />
-      )}
-      {activeTab === 'Portfolios' && (
-        <PortfolioEditor teamId={team.id} portfolios={team.portfolios} />
-      )}
-      {activeTab === 'Team Overviews' && (
-        <TeamTabEditor teamId={team.id} tabs={team.teamTabs} />
-      )}
-      {activeTab === 'Boards' && (
-        <TrelloBoardEditor teamId={team.id} boards={team.trelloBoards} />
-      )}
-      {activeTab === 'Links' && (
-        <AccordionLinksEditor teamId={team.id} groups={team.accordionGroups} />
-      )}
-      {activeTab === 'Members' && (
-        <TeamMemberEditor teamId={team.id} members={team.teamMembers} />
-      )}
-      {activeTab === 'Service Areas' && (
-        <ServiceAreaEditor teamId={team.id} areas={team.serviceAreas} />
-      )}
+      <LayoutEditor
+        teamId={team.id}
+        teamSlug={team.slug}
+        teamName={team.teamName}
+        teamShortName={team.teamShortName}
+        instances={team.widgetInstances}
+        definitions={widgetDefinitions}
+        portfolios={team.portfolios}
+        teamTabs={team.teamTabs}
+        trelloBoards={team.trelloBoards}
+        teamMembers={team.teamMembers}
+        serviceAreas={team.serviceAreas}
+        accordionGroups={team.accordionGroups}
+      />
     </div>
   );
 }

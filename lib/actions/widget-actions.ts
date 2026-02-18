@@ -91,6 +91,60 @@ export async function reorderWidgets(
   revalidatePath(`/admin/teams/${teamId}`);
 }
 
+const DEFAULT_WIDGET_TYPES = [
+  'page_header',
+  'portfolios',
+  'team_tabs',
+  'ongoing_projects',
+  'team_members',
+];
+
+export async function resetWidgetsToDefault(teamId: string) {
+  const user = await requireTeamAccess(teamId);
+
+  // Delete all existing instances
+  await prisma.widgetInstance.deleteMany({ where: { teamId } });
+
+  // Look up definitions for the defaults
+  const defs = await prisma.widgetDefinition.findMany({
+    where: { widgetType: { in: DEFAULT_WIDGET_TYPES } },
+  });
+  const defMap = new Map(defs.map((d) => [d.widgetType, d]));
+
+  // Create in order
+  const instances = [];
+  for (let i = 0; i < DEFAULT_WIDGET_TYPES.length; i++) {
+    const def = defMap.get(DEFAULT_WIDGET_TYPES[i]);
+    if (!def) continue;
+    const inst = await prisma.widgetInstance.create({
+      data: { teamId, widgetDefinitionId: def.id, sortOrder: i },
+      include: {
+        widgetDefinition: {
+          select: { id: true, widgetType: true, label: true, icon: true },
+        },
+      },
+    });
+    instances.push(inst);
+  }
+
+  await prisma.auditLog.create({
+    data: {
+      userId: user.id,
+      action: 'RESET_WIDGETS',
+      entity: 'Team',
+      entityId: teamId,
+      changes: { resetTo: DEFAULT_WIDGET_TYPES },
+    },
+  });
+
+  const team = await prisma.team.findUniqueOrThrow({
+    where: { id: teamId },
+  });
+  revalidatePath(`/${team.slug}`);
+  revalidatePath(`/admin/teams/${teamId}`);
+  return instances;
+}
+
 export async function updateWidgetConfig(
   instanceId: string,
   config: Record<string, string>
