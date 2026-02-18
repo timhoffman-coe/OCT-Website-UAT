@@ -10,14 +10,60 @@ export async function createPortfolio(
     iconName: string;
     title: string;
     description: string;
-    href: string;
   }
 ) {
   const user = await requireTeamAccess(teamId);
+  const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
   const count = await prisma.portfolio.count({ where: { teamId } });
 
+  // Auto-generate slug from title
+  const slug = data.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  const href = `/${team.slug}/${slug}`;
+
+  // Create linked sub-team
+  const subTeam = await prisma.team.create({
+    data: {
+      slug,
+      teamName: data.title,
+      teamShortName: data.title,
+      pageTemplate: 'SUB_TEAM',
+      iconName: data.iconName,
+      pageDescription: data.description,
+      parentId: teamId,
+      isPublished: false,
+      sortOrder: count,
+    },
+  });
+
+  // Create default widget instances for the sub-team
+  const SUB_TEAM_DEFAULTS = ['subteam_header', 'subteam_services', 'subteam_initiatives', 'subteam_contacts', 'subteam_quick_links'];
+  const widgetDefs = await prisma.widgetDefinition.findMany({
+    where: { widgetType: { in: SUB_TEAM_DEFAULTS } },
+  });
+  const defByType = Object.fromEntries(widgetDefs.map((d) => [d.widgetType, d]));
+  for (let i = 0; i < SUB_TEAM_DEFAULTS.length; i++) {
+    const def = defByType[SUB_TEAM_DEFAULTS[i]];
+    if (def) {
+      await prisma.widgetInstance.create({
+        data: { teamId: subTeam.id, widgetDefinitionId: def.id, sortOrder: i },
+      });
+    }
+  }
+
+  // Create the portfolio card linked to the sub-team
   const portfolio = await prisma.portfolio.create({
-    data: { ...data, teamId, sortOrder: count },
+    data: {
+      iconName: data.iconName,
+      title: data.title,
+      description: data.description,
+      href,
+      teamId,
+      sortOrder: count,
+      linkedTeamId: subTeam.id,
+    },
   });
 
   await prisma.auditLog.create({
@@ -26,11 +72,10 @@ export async function createPortfolio(
       action: 'CREATE',
       entity: 'Portfolio',
       entityId: portfolio.id,
-      changes: data,
+      changes: { ...data, linkedTeamId: subTeam.id },
     },
   });
 
-  const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
   revalidatePath(`/${team.slug}`);
   revalidatePath(`/admin/teams/${teamId}`);
   return portfolio;
@@ -42,7 +87,6 @@ export async function updatePortfolio(
     iconName?: string;
     title?: string;
     description?: string;
-    href?: string;
     sortOrder?: number;
   }
 ) {
@@ -79,6 +123,11 @@ export async function deletePortfolio(portfolioId: string) {
     where: { id: portfolioId },
   });
   const user = await requireTeamAccess(portfolio.teamId);
+
+  // Delete linked sub-team if it exists (cascades to its content + widgets)
+  if (portfolio.linkedTeamId) {
+    await prisma.team.delete({ where: { id: portfolio.linkedTeamId } });
+  }
 
   await prisma.portfolio.delete({ where: { id: portfolioId } });
 

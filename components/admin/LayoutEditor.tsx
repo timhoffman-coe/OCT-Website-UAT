@@ -90,6 +90,8 @@ interface LayoutEditorProps {
     description: string;
     href: string;
     sortOrder: number;
+    linkedTeamId: string | null;
+    linkedTeam: { id: string; teamName: string; isPublished: boolean } | null;
     subpage: { id: string } | null;
   }>;
   teamTabs: Array<{

@@ -8,6 +8,8 @@ interface Team {
   id: string;
   teamName: string;
   slug: string;
+  pageTemplate: string;
+  parentId: string | null;
 }
 
 interface AdminSidebarProps {
@@ -48,20 +50,60 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
           <p className="px-3 text-xs font-sans font-semibold text-white/40 uppercase tracking-wider mb-2">
             Teams
           </p>
-          {teams.map((team) => (
-            <Link
-              key={team.id}
-              href={`/admin/teams/${team.id}`}
-              className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
-                isActive(`/admin/teams/${team.id}`)
-                  ? 'bg-primary-blue text-white'
-                  : 'text-white/80 hover:bg-white/10'
-              }`}
-            >
-              <ChevronRight className="w-3 h-3" />
-              <span className="truncate">{team.teamName}</span>
-            </Link>
-          ))}
+          {(() => {
+            const topLevel = teams.filter((t) => !t.parentId);
+            const childrenOf = (parentId: string) =>
+              teams.filter((t) => t.parentId === parentId);
+
+            return topLevel.map((team) => {
+              const children = childrenOf(team.id);
+              return (
+                <div key={team.id}>
+                  <Link
+                    href={`/admin/teams/${team.id}`}
+                    className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                      isActive(`/admin/teams/${team.id}`)
+                        ? 'bg-primary-blue text-white'
+                        : 'text-white/80 hover:bg-white/10'
+                    }`}
+                  >
+                    <ChevronRight className="w-3 h-3" />
+                    <span className="truncate">{team.teamName}</span>
+                  </Link>
+                  {children.map((child) => {
+                    const grandchildren = childrenOf(child.id);
+                    return (
+                      <div key={child.id}>
+                        <Link
+                          href={`/admin/teams/${child.id}`}
+                          className={`flex items-center gap-2 pl-8 pr-3 py-1.5 rounded text-xs font-sans transition-colors ${
+                            isActive(`/admin/teams/${child.id}`)
+                              ? 'bg-primary-blue text-white'
+                              : 'text-white/60 hover:bg-white/10'
+                          }`}
+                        >
+                          <span className="truncate">{child.teamName}</span>
+                        </Link>
+                        {grandchildren.map((gc) => (
+                          <Link
+                            key={gc.id}
+                            href={`/admin/teams/${gc.id}`}
+                            className={`flex items-center gap-2 pl-12 pr-3 py-1 rounded text-xs font-sans transition-colors ${
+                              isActive(`/admin/teams/${gc.id}`)
+                                ? 'bg-primary-blue text-white'
+                                : 'text-white/50 hover:bg-white/10'
+                            }`}
+                          >
+                            <span className="truncate">{gc.teamName}</span>
+                          </Link>
+                        ))}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            });
+          })()}
         </div>
 
         {/* Admin Section (Super Admin Only) */}

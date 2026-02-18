@@ -91,7 +91,7 @@ export async function reorderWidgets(
   revalidatePath(`/admin/teams/${teamId}`);
 }
 
-const DEFAULT_WIDGET_TYPES = [
+const ITS_TEAM_DEFAULT_WIDGETS = [
   'page_header',
   'portfolios',
   'team_tabs',
@@ -99,22 +99,39 @@ const DEFAULT_WIDGET_TYPES = [
   'team_members',
 ];
 
+const SECTION_DEFAULT_WIDGETS = ['service_areas'];
+
+const SUB_TEAM_DEFAULT_WIDGETS = [
+  'subteam_header',
+  'subteam_services',
+  'subteam_initiatives',
+  'subteam_contacts',
+  'subteam_quick_links',
+];
+
 export async function resetWidgetsToDefault(teamId: string) {
   const user = await requireTeamAccess(teamId);
+
+  const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
+  const defaults = team.pageTemplate === 'SECTION'
+    ? SECTION_DEFAULT_WIDGETS
+    : team.pageTemplate === 'SUB_TEAM'
+      ? SUB_TEAM_DEFAULT_WIDGETS
+      : ITS_TEAM_DEFAULT_WIDGETS;
 
   // Delete all existing instances
   await prisma.widgetInstance.deleteMany({ where: { teamId } });
 
   // Look up definitions for the defaults
   const defs = await prisma.widgetDefinition.findMany({
-    where: { widgetType: { in: DEFAULT_WIDGET_TYPES } },
+    where: { widgetType: { in: defaults } },
   });
   const defMap = new Map(defs.map((d) => [d.widgetType, d]));
 
   // Create in order
   const instances = [];
-  for (let i = 0; i < DEFAULT_WIDGET_TYPES.length; i++) {
-    const def = defMap.get(DEFAULT_WIDGET_TYPES[i]);
+  for (let i = 0; i < defaults.length; i++) {
+    const def = defMap.get(defaults[i]);
     if (!def) continue;
     const inst = await prisma.widgetInstance.create({
       data: { teamId, widgetDefinitionId: def.id, sortOrder: i },
@@ -133,13 +150,10 @@ export async function resetWidgetsToDefault(teamId: string) {
       action: 'RESET_WIDGETS',
       entity: 'Team',
       entityId: teamId,
-      changes: { resetTo: DEFAULT_WIDGET_TYPES },
+      changes: { resetTo: defaults },
     },
   });
 
-  const team = await prisma.team.findUniqueOrThrow({
-    where: { id: teamId },
-  });
   revalidatePath(`/${team.slug}`);
   revalidatePath(`/admin/teams/${teamId}`);
   return instances;

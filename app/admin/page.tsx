@@ -16,7 +16,7 @@ export default async function AdminDashboard() {
     orderBy: { sortOrder: 'asc' },
     include: {
       _count: {
-        select: { portfolios: true, teamMembers: true, serviceAreas: true },
+        select: { portfolios: true, teamMembers: true, serviceAreas: true, children: true },
       },
     },
   });
@@ -45,7 +45,9 @@ export default async function AdminDashboard() {
           Your Teams
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {teams.map((team) => (
+          {teams
+            .filter((t) => !t.parentId)
+            .map((team) => (
             <Link
               key={team.id}
               href={`/admin/teams/${team.id}`}
@@ -55,16 +57,21 @@ export default async function AdminDashboard() {
                 {team.teamName}
               </h3>
               <p className="font-sans text-xs text-gray-500 mt-1 mb-3">
-                {team.pageTemplate === 'ITS_TEAM' ? 'ITS Team Page' : 'Section Page'}
+                {team.pageTemplate === 'SECTION' ? 'Section Page' : 'ITS Team Page'}
               </p>
               <div className="flex gap-4 text-sm text-gray-600 font-sans">
-                {team.pageTemplate === 'ITS_TEAM' ? (
+                {team.pageTemplate === 'SECTION' ? (
+                  <>
+                    <span>{team._count.serviceAreas} service areas</span>
+                    {team._count.children > 0 && (
+                      <span>{team._count.children} sub-teams</span>
+                    )}
+                  </>
+                ) : (
                   <>
                     <span>{team._count.portfolios} portfolios</span>
                     <span>{team._count.teamMembers} members</span>
                   </>
-                ) : (
-                  <span>{team._count.serviceAreas} service areas</span>
                 )}
               </div>
             </Link>

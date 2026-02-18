@@ -58,6 +58,7 @@ model AuditLog {
 enum PageTemplate {
   ITS_TEAM
   SECTION
+  SUB_TEAM
   CUSTOM
 }
 
@@ -76,6 +77,15 @@ model Team {
   pageTitle       String?
   pageDescription String?
 
+  // Fields for SubTeam pages
+  iconName   String?
+  showStatus Boolean @default(false)
+
+  // Parent-child hierarchy (sections contain teams, teams contain sub-teams)
+  parentId String?
+  parent   Team?  @relation("TeamHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  children Team[] @relation("TeamHierarchy")
+
   portfolios      Portfolio[]
   teamTabs        TeamTab[]
   trelloBoards    TrelloBoard[]
@@ -84,6 +94,12 @@ model Team {
   serviceAreas    ServiceArea[]
   teamPermissions TeamPermission[]
   widgetInstances WidgetInstance[]
+  teamServices    TeamService[]
+  teamInitiatives TeamInitiative[]
+  teamContacts    TeamContact[]
+  teamQuickLinks  TeamQuickLink[]
+
+  linkedFromPortfolio Portfolio? @relation("PortfolioLinkedTeam")
 }
 
 // ============================================================
@@ -91,16 +107,18 @@ model Team {
 // ============================================================
 
 model Portfolio {
-  id          String @id @default(cuid())
-  teamId      String
-  iconName    String
-  title       String
-  description String
-  href        String
-  sortOrder   Int    @default(0)
+  id           String  @id @default(cuid())
+  teamId       String
+  iconName     String
+  title        String
+  description  String
+  href         String
+  sortOrder    Int     @default(0)
+  linkedTeamId String? @unique
 
-  team    Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  subpage PortfolioSubpage?
+  team       Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  linkedTeam Team?             @relation("PortfolioLinkedTeam", fields: [linkedTeamId], references: [id], onDelete: SetNull)
+  subpage    PortfolioSubpage?
 }
 
 model TeamTab {
@@ -287,4 +305,52 @@ model WidgetInstance {
 
   @@unique([teamId, widgetDefinitionId])
   @@index([teamId, sortOrder])
+}
+
+// ============================================================
+// CONTENT: SUB-TEAM PAGE DATA
+// ============================================================
+
+model TeamService {
+  id        String   @id @default(cuid())
+  teamId    String
+  title     String
+  items     String[]
+  sortOrder Int      @default(0)
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model TeamInitiative {
+  id          String @id @default(cuid())
+  teamId      String
+  title       String
+  description String
+  href        String
+  sortOrder   Int    @default(0)
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model TeamContact {
+  id        String @id @default(cuid())
+  teamId    String
+  name      String
+  role      String
+  email     String
+  sortOrder Int    @default(0)
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model TeamQuickLink {
+  id          String  @id @default(cuid())
+  teamId      String
+  label       String
+  description String
+  href        String
+  isSecure    Boolean @default(false)
+  sortOrder   Int     @default(0)
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 }

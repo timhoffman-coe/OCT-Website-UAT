@@ -847,6 +847,7 @@ async function main() {
             shortDescription: 'Communication services including wireline, VoIP, cellular wireless, M2M, LoRaWAN IoT network and Cisco Call Center solutions.',
             fullDescription: 'Telecommunications provides various communication services including wireline & VoIP (Voice over IP) phone, cellular wireless, M2M (machine to machine), LoRaWAN IoT network and a Cisco Call Center solution to serve and support all City business areas.\n\nThe Internet of Things (IoT) refers to networked devices embedded with sensors and software, allowing them to collect and share data that can be processed and utilized for various purposes across the City.',
             features: ['Wireline & VoIP phone services', 'Cellular wireless and M2M communications', 'LoRaWAN IoT network infrastructure', 'Cisco Call Center solutions', 'IoT device management and data collection'],
+            link: '/telecom-iot',
           },
           {
             serviceAreaId: 'data-technology', title: 'Data Technology', sortOrder: 2,
@@ -876,6 +877,47 @@ async function main() {
   console.log('Created team: Integrated Technology Solutions');
 
   // ============================================================
+  // 5b. Set Parent-Child Relationships & Create Missing ITS Sub-Teams
+  // ============================================================
+  const itsSection = await prisma.team.findUniqueOrThrow({ where: { slug: 'integrated-technology-solutions' } });
+
+  // Set parentId on existing ITS sub-teams
+  await prisma.team.update({ where: { slug: 'data-technology' }, data: { parentId: itsSection.id } });
+  await prisma.team.update({ where: { slug: 'partner-experience' }, data: { parentId: itsSection.id } });
+  await prisma.team.update({ where: { slug: 'technology-infrastructure-operations' }, data: { parentId: itsSection.id } });
+  console.log('Set parentId for existing ITS sub-teams');
+
+  // Create Service Delivery and Analytics team under ITS
+  const serviceDelivery = await prisma.team.upsert({
+    where: { slug: 'service-delivery' },
+    update: {},
+    create: {
+      slug: 'service-delivery',
+      teamName: 'Service Delivery and Analytics',
+      teamShortName: 'Service Delivery',
+      pageTemplate: PageTemplate.ITS_TEAM,
+      sortOrder: 3,
+      parentId: itsSection.id,
+    },
+  });
+  console.log('Created team:', serviceDelivery.teamName);
+
+  // Create Telecom and IoT team under ITS
+  const telecomIot = await prisma.team.upsert({
+    where: { slug: 'telecom-iot' },
+    update: {},
+    create: {
+      slug: 'telecom-iot',
+      teamName: 'Telecom and Internet of Things (IoT)',
+      teamShortName: 'Telecom & IoT',
+      pageTemplate: PageTemplate.ITS_TEAM,
+      sortOrder: 4,
+      parentId: itsSection.id,
+    },
+  });
+  console.log('Created team:', telecomIot.teamName);
+
+  // ============================================================
   // 6. Seed Widget Definitions
   // ============================================================
   const widgetDefinitions = [
@@ -888,6 +930,11 @@ async function main() {
     { widgetType: 'budget_spend', label: 'Budget & Spend', description: 'Budget overview card with link to financial reports', icon: 'BarChart3' },
     { widgetType: 'team_members', label: 'Who We Are', description: 'Team member cards grid with contact info', icon: 'Users' },
     { widgetType: 'service_areas', label: 'Service Areas', description: 'Service area cards with modal detail views', icon: 'Layers' },
+    { widgetType: 'subteam_header', label: 'Sub-Team Header', description: 'Hero section with icon, title, and breadcrumb', icon: 'LayoutGrid' },
+    { widgetType: 'subteam_services', label: 'Our Services', description: 'Grid of service cards with bullet items', icon: 'Briefcase' },
+    { widgetType: 'subteam_initiatives', label: 'Current Initiatives', description: 'Initiative cards with descriptions and links', icon: 'Rocket' },
+    { widgetType: 'subteam_contacts', label: 'Key Contacts', description: 'Sidebar contact cards with roles and emails', icon: 'Users' },
+    { widgetType: 'subteam_quick_links', label: 'Quick Links', description: 'Sidebar quick links with descriptions', icon: 'Link' },
   ];
 
   for (const def of widgetDefinitions) {
@@ -911,9 +958,17 @@ async function main() {
     'work_tracking', 'ongoing_projects', 'budget_spend', 'team_members',
   ];
   const SECTION_DEFAULTS = ['service_areas'];
+  const SUB_TEAM_DEFAULTS = [
+    'subteam_header', 'subteam_services', 'subteam_initiatives',
+    'subteam_contacts', 'subteam_quick_links',
+  ];
 
   for (const team of allTeams) {
-    const defaults = team.pageTemplate === 'ITS_TEAM' ? ITS_TEAM_DEFAULTS : SECTION_DEFAULTS;
+    const defaults = team.pageTemplate === 'SECTION'
+      ? SECTION_DEFAULTS
+      : team.pageTemplate === 'SUB_TEAM'
+        ? SUB_TEAM_DEFAULTS
+        : ITS_TEAM_DEFAULTS;
     for (let i = 0; i < defaults.length; i++) {
       const def = defByType[defaults[i]];
       if (!def) continue;
@@ -924,6 +979,96 @@ async function main() {
       });
     }
     console.log(`Created default widget instances for: ${team.teamName} (${defaults.length} widgets)`);
+  }
+
+  // ============================================================
+  // 8. Migrate PortfolioSubpage data to Sub-Team Team records
+  // ============================================================
+  const existingSubTeams = await prisma.team.count({ where: { pageTemplate: 'SUB_TEAM' } });
+  if (existingSubTeams === 0) {
+    const portfoliosWithSubpages = await prisma.portfolio.findMany({
+      where: { subpage: { isNot: null } },
+      include: {
+        team: true,
+        subpage: {
+          include: {
+            services: { orderBy: { sortOrder: 'asc' } },
+            initiatives: { orderBy: { sortOrder: 'asc' } },
+            contacts: { orderBy: { sortOrder: 'asc' } },
+            quickLinks: { orderBy: { sortOrder: 'asc' } },
+          },
+        },
+      },
+    });
+
+    // Re-fetch widget defs (now includes sub-team defs)
+    const freshWidgetDefs = await prisma.widgetDefinition.findMany();
+    const freshDefByType = Object.fromEntries(freshWidgetDefs.map(d => [d.widgetType, d]));
+
+    for (const portfolio of portfoliosWithSubpages) {
+      const sp = portfolio.subpage!;
+      // Derive slug from the portfolio href (e.g. "/data-technology/network-services" -> "network-services")
+      const slug = portfolio.href.split('/').pop() || portfolio.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+      const subTeam = await prisma.team.create({
+        data: {
+          slug,
+          teamName: sp.title,
+          teamShortName: sp.title,
+          pageTemplate: 'SUB_TEAM',
+          iconName: sp.iconName,
+          pageDescription: sp.description,
+          showStatus: sp.showStatus,
+          parentId: portfolio.teamId,
+          isPublished: true,
+          sortOrder: portfolio.sortOrder,
+        },
+      });
+
+      // Copy content data
+      for (const svc of sp.services) {
+        await prisma.teamService.create({
+          data: { teamId: subTeam.id, title: svc.title, items: svc.items, sortOrder: svc.sortOrder },
+        });
+      }
+      for (const init of sp.initiatives) {
+        await prisma.teamInitiative.create({
+          data: { teamId: subTeam.id, title: init.title, description: init.description, href: init.href, sortOrder: init.sortOrder },
+        });
+      }
+      for (const contact of sp.contacts) {
+        await prisma.teamContact.create({
+          data: { teamId: subTeam.id, name: contact.name, role: contact.role, email: contact.email, sortOrder: contact.sortOrder },
+        });
+      }
+      for (const ql of sp.quickLinks) {
+        await prisma.teamQuickLink.create({
+          data: { teamId: subTeam.id, label: ql.label, description: ql.description, href: ql.href, isSecure: ql.isSecure, sortOrder: ql.sortOrder },
+        });
+      }
+
+      // Create default sub-team widget instances
+      for (let i = 0; i < SUB_TEAM_DEFAULTS.length; i++) {
+        const def = freshDefByType[SUB_TEAM_DEFAULTS[i]];
+        if (def) {
+          await prisma.widgetInstance.upsert({
+            where: { teamId_widgetDefinitionId: { teamId: subTeam.id, widgetDefinitionId: def.id } },
+            update: {},
+            create: { teamId: subTeam.id, widgetDefinitionId: def.id, sortOrder: i },
+          });
+        }
+      }
+
+      // Link portfolio to sub-team
+      await prisma.portfolio.update({
+        where: { id: portfolio.id },
+        data: { linkedTeamId: subTeam.id },
+      });
+
+      console.log(`Migrated subpage to sub-team: ${sp.title} (slug: ${slug})`);
+    }
+  } else {
+    console.log('Sub-teams already exist, skipping migration...');
   }
 
   console.log('Seeding complete!');

@@ -24,7 +24,12 @@ export default async function TeamDetailPage({
       include: {
         portfolios: {
           orderBy: { sortOrder: 'asc' },
-          include: { subpage: true },
+          include: {
+            subpage: true,
+            linkedTeam: {
+              select: { id: true, teamName: true, isPublished: true },
+            },
+          },
         },
         teamTabs: {
           orderBy: { sortOrder: 'asc' },
@@ -40,6 +45,17 @@ export default async function TeamDetailPage({
         widgetInstances: {
           orderBy: { sortOrder: 'asc' },
           include: { widgetDefinition: true },
+        },
+        teamServices: { orderBy: { sortOrder: 'asc' } },
+        teamInitiatives: { orderBy: { sortOrder: 'asc' } },
+        teamContacts: { orderBy: { sortOrder: 'asc' } },
+        teamQuickLinks: { orderBy: { sortOrder: 'asc' } },
+        children: {
+          orderBy: { sortOrder: 'asc' },
+          select: { id: true, slug: true, teamName: true, teamShortName: true, isPublished: true, sortOrder: true },
+        },
+        parent: {
+          select: { id: true, teamName: true },
         },
       },
     }),

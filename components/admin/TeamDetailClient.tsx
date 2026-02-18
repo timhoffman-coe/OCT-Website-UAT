@@ -1,6 +1,13 @@
 'use client';
 
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import LayoutEditor from './LayoutEditor';
+import SubTeamsEditor from './SubTeamsEditor';
+import TeamServicesEditor from './TeamServicesEditor';
+import TeamInitiativesEditor from './TeamInitiativesEditor';
+import TeamContactsEditor from './TeamContactsEditor';
+import TeamQuickLinksEditor from './TeamQuickLinksEditor';
 
 type WidgetInstanceData = {
   id: string;
@@ -38,6 +45,8 @@ type TeamWithRelations = {
     description: string;
     href: string;
     sortOrder: number;
+    linkedTeamId: string | null;
+    linkedTeam: { id: string; teamName: string; isPublished: boolean } | null;
     subpage: { id: string } | null;
   }>;
   teamTabs: Array<{
@@ -85,6 +94,43 @@ type TeamWithRelations = {
     links: Array<{ id: string; label: string; href: string; sortOrder: number }>;
   }>;
   widgetInstances: WidgetInstanceData[];
+  teamServices: Array<{
+    id: string;
+    title: string;
+    items: string[];
+    sortOrder: number;
+  }>;
+  teamInitiatives: Array<{
+    id: string;
+    title: string;
+    description: string;
+    href: string;
+    sortOrder: number;
+  }>;
+  teamContacts: Array<{
+    id: string;
+    name: string;
+    role: string;
+    email: string;
+    sortOrder: number;
+  }>;
+  teamQuickLinks: Array<{
+    id: string;
+    label: string;
+    description: string;
+    href: string;
+    isSecure: boolean;
+    sortOrder: number;
+  }>;
+  children: Array<{
+    id: string;
+    slug: string;
+    teamName: string;
+    teamShortName: string;
+    isPublished: boolean;
+    sortOrder: number;
+  }>;
+  parent: { id: string; teamName: string } | null;
 };
 
 interface TeamDetailClientProps {
@@ -92,9 +138,45 @@ interface TeamDetailClientProps {
   widgetDefinitions: WidgetDefinitionData[];
 }
 
+const SECTION_WIDGET_TYPES = ['service_areas'];
+const SUB_TEAM_WIDGET_TYPES = ['subteam_header', 'subteam_services', 'subteam_initiatives', 'subteam_contacts', 'subteam_quick_links'];
+
+function getTemplateLabel(template: string): string {
+  switch (template) {
+    case 'ITS_TEAM': return 'ITS Team Page';
+    case 'SECTION': return 'Section Page';
+    case 'SUB_TEAM': return 'Sub-Team Page';
+    default: return 'Custom Page';
+  }
+}
+
 export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetailClientProps) {
+  const filteredDefinitions = (() => {
+    switch (team.pageTemplate) {
+      case 'SECTION':
+        return widgetDefinitions.filter((d) => SECTION_WIDGET_TYPES.includes(d.widgetType));
+      case 'SUB_TEAM':
+        return widgetDefinitions.filter((d) => SUB_TEAM_WIDGET_TYPES.includes(d.widgetType));
+      default:
+        return widgetDefinitions.filter(
+          (d) => !SECTION_WIDGET_TYPES.includes(d.widgetType) && !SUB_TEAM_WIDGET_TYPES.includes(d.widgetType)
+        );
+    }
+  })();
+
   return (
     <div className="p-8">
+      {/* Back to parent breadcrumb */}
+      {team.parent && (
+        <Link
+          href={`/admin/teams/${team.parent.id}`}
+          className="inline-flex items-center gap-1.5 font-sans text-sm text-gray-500 hover:text-primary-blue mb-4 transition-colors"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          Back to {team.parent.teamName}
+        </Link>
+      )}
+
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-1">
@@ -112,8 +194,7 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
           </span>
         </div>
         <p className="font-sans text-sm text-gray-500">
-          /{team.slug} &middot;{' '}
-          {team.pageTemplate === 'ITS_TEAM' ? 'ITS Team Page' : 'Section Page'}
+          /{team.slug} &middot; {getTemplateLabel(team.pageTemplate)}
         </p>
       </div>
 
@@ -123,7 +204,7 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         teamName={team.teamName}
         teamShortName={team.teamShortName}
         instances={team.widgetInstances}
-        definitions={widgetDefinitions}
+        definitions={filteredDefinitions}
         portfolios={team.portfolios}
         teamTabs={team.teamTabs}
         trelloBoards={team.trelloBoards}
@@ -131,6 +212,26 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         serviceAreas={team.serviceAreas}
         accordionGroups={team.accordionGroups}
       />
+
+      {/* Sub-Teams section for SECTION pages */}
+      {team.pageTemplate === 'SECTION' && (
+        <SubTeamsEditor parentId={team.id} children={team.children} />
+      )}
+
+      {/* Sub-Team content editors */}
+      {team.pageTemplate === 'SUB_TEAM' && (
+        <div className="mt-8 space-y-8">
+          <div className="border-t border-gray-200 pt-8">
+            <h2 className="font-sans text-xl font-bold text-gray-900 mb-6">Sub-Team Content</h2>
+            <div className="space-y-8">
+              <TeamServicesEditor teamId={team.id} services={team.teamServices} />
+              <TeamInitiativesEditor teamId={team.id} initiatives={team.teamInitiatives} />
+              <TeamContactsEditor teamId={team.id} contacts={team.teamContacts} />
+              <TeamQuickLinksEditor teamId={team.id} quickLinks={team.teamQuickLinks} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
