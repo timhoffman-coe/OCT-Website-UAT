@@ -195,7 +195,7 @@ export default function AIResourcesPage() {
               <div className="flex flex-col items-center text-center">
                 <div className="mb-3">
                   <Image
-                    src="/images/logos/Google_Vid_Logo.png"
+                    src="/images/logos/Google_Vid_Logo.webp"
                     alt="Google Vids Logo"
                     width={48}
                     height={48}
@@ -224,7 +224,7 @@ export default function AIResourcesPage() {
               <div className="flex flex-col items-center text-center">
                 <div className="mb-3">
                   <Image
-                    src="/images/logos/Google_AI_Studio_icon.png"
+                    src="/images/logos/Google_AI_Studio_icon.webp"
                     alt="Google AI Studio Logo"
                     width={48}
                     height={48}

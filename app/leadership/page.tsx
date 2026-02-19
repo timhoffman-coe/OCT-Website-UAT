@@ -26,9 +26,9 @@ export default function LeadershipPage() {
   const branchManagerOffice = {
     section: "Branch Manager's Office",
     members: [
-      { role: 'Branch Manager', name: 'Daryl Croft', email: 'daryl.croft@edmonton.ca', image: '/images/Daryl.png' },
-      { role: 'Administrative Assistant', name: 'Charalyn Parlee', email: 'charalyn.parlee@edmonton.ca', image: '/images/Portraits/Charalyn.png' },
-      { role: 'Strategic Coordinator', name: 'Andrew Clark', email: 'andrew.clark@edmonton.ca', image: '/images/Portraits/Andrew.png' },
+      { role: 'Branch Manager', name: 'Daryl Croft', email: 'daryl.croft@edmonton.ca', image: '/images/Daryl.webp' },
+      { role: 'Administrative Assistant', name: 'Charalyn Parlee', email: 'charalyn.parlee@edmonton.ca', image: '/images/Portraits/Charalyn.webp' },
+      { role: 'Strategic Coordinator', name: 'Andrew Clark', email: 'andrew.clark@edmonton.ca', image: '/images/Portraits/Andrew.webp' },
     ]
   };
 
@@ -37,7 +37,7 @@ export default function LeadershipPage() {
       section: 'Business Solutions',
       link: '/business-solutions',
       members: [
-        { role: 'Director', name: 'Robert Dufresne', email: 'robert.dufresne@edmonton.ca', image: '/images/Portraits/Bob.png' },
+        { role: 'Director', name: 'Robert Dufresne', email: 'robert.dufresne@edmonton.ca', image: '/images/Portraits/Bob.webp' },
         { role: 'Program Manager', name: 'Matthew Raven', email: 'matthew.raven@edmonton.ca' },
         { role: 'Program Manager', name: 'Margaret Cieslak-Olmos', email: 'margaret.cieslak-olmos@edmonton.ca' },
         { role: 'Program Manager', name: 'Ken Merkel', email: 'ken.merkel@edmonton.ca' },
@@ -47,7 +47,7 @@ export default function LeadershipPage() {
       section: 'Corporate Information and Security Office',
       link: '/corporate-information-security',
       members: [
-        { role: 'Director', name: 'Daniel Pedersen', email: 'daniel.pedersen@edmonton.ca', image: '/images/Portraits/Daniel.png' },
+        { role: 'Director', name: 'Daniel Pedersen', email: 'daniel.pedersen@edmonton.ca', image: '/images/Portraits/Daniel.webp' },
         { role: 'Program Manager', name: 'Andrea Buchholz', email: 'andrea.buchholz@edmonton.ca' },
         { role: 'Program Manager', name: 'David Malone', email: 'david.malone@edmonton.ca' },
         { role: 'Program Manager', name: 'Jack Truong', email: 'jack.truong@edmonton.ca' },
@@ -58,7 +58,7 @@ export default function LeadershipPage() {
       section: 'Integrated Technology Solutions',
       link: '/integrated-technology-solutions',
       members: [
-        { role: 'Director', name: 'Mike Fryer', email: 'mike.fryer@edmonton.ca', image: '/images/Portraits/Mike.png' },
+        { role: 'Director', name: 'Mike Fryer', email: 'mike.fryer@edmonton.ca', image: '/images/Portraits/Mike.webp' },
         { role: 'Program Manager', name: 'Josh McGillis', email: 'josh.mcgillis@edmonton.ca' },
         { role: 'Program Manager', name: 'Greg Krol', email: 'greg.krol@edmonton.ca' },
         { role: 'Program Manager', name: 'Tim Hoffman', email: 'tim.hoffman@edmonton.ca' },
@@ -70,7 +70,7 @@ export default function LeadershipPage() {
       section: 'Project Management Office',
       link: '/project-management-office',
       members: [
-        { role: 'Director', name: 'Nisreen Hussain', email: 'nisreen.hussain@edmonton.ca', image: '/images/Portraits/Nisreen.png' },
+        { role: 'Director', name: 'Nisreen Hussain', email: 'nisreen.hussain@edmonton.ca', image: '/images/Portraits/Nisreen.webp' },
         { role: 'Program Manager', name: 'Liviu Jalba', email: 'liviu.jalba@edmonton.ca' },
         { role: 'Program Manager', name: 'Shengxi Jin', email: 'shengxi.jin@edmonton.ca' },
       ]
@@ -79,7 +79,7 @@ export default function LeadershipPage() {
       section: 'Technology Planning',
       link: '/technology-planning',
       members: [
-        { role: 'Director', name: 'Troy Murray', email: 'troy.murray@edmonton.ca', image: '/images/Portraits/Troy.png' },
+        { role: 'Director', name: 'Troy Murray', email: 'troy.murray@edmonton.ca', image: '/images/Portraits/Troy.webp' },
         { role: 'Program Manager', name: 'Liza Wong', email: 'liza.wong@edmonton.ca' },
         { role: 'Program Manager', name: 'Mike Meraw', email: 'mike.meraw@edmonton.ca' },
         { role: 'Program Manager', name: 'Romelia Fernandez', email: 'romelia.fernandez@edmonton.ca' },
@@ -122,6 +122,7 @@ export default function LeadershipPage() {
                         alt={member.name}
                         width={96}
                         height={96}
+                        sizes="96px"
                         className="w-24 h-24 rounded-lg object-cover"
                       />
                     </div>
@@ -190,6 +191,7 @@ export default function LeadershipPage() {
                                   alt={director.name}
                                   width={96}
                                   height={96}
+                                  sizes="96px"
                                   className="w-24 h-24 rounded-lg object-cover"
                                 />
                               </div>

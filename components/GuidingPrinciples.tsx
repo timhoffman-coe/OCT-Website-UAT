@@ -5,14 +5,14 @@ export default function GuidingPrinciples() {
     {
       label: 'MISSION',
       color: 'bg-complement-sea-green',
-      icon: '/images/oct-mission.png',
+      icon: '/images/oct-mission.webp',
       title: 'Our Mission',
       content: 'Inspiring innovation and empowering the City and Edmontonians through data and technology.',
     },
     {
       label: 'MOTTO',
       color: 'bg-complement-empire-blue',
-      icon: '/images/oct-motto.png',
+      icon: '/images/oct-motto.webp',
       title: 'Our Motto',
       content: '"Think YES"',
       subContent: 'We think "Yes" to help problem-solve and deliver solutions.',
@@ -20,7 +20,7 @@ export default function GuidingPrinciples() {
     {
       label: 'VISION',
       color: 'bg-complement-sunrise',
-      icon: '/images/oct-vision.png',
+      icon: '/images/oct-vision.webp',
       title: 'Our Vision',
       content: 'High-performing, creative, sought-after thought leaders, building a connected City.',
     },
@@ -45,6 +45,7 @@ export default function GuidingPrinciples() {
                     alt={principle.label}
                     width={200}
                     height={200}
+                    sizes="160px"
                     className="w-40 h-40 object-cover rounded-full"
                   />
                   <div className="absolute bottom-4 right-4 text-white opacity-70">

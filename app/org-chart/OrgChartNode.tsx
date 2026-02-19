@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { OrgPerson } from './types';
 import { FaUser, FaLink, FaChevronDown, FaChevronRight } from 'react-icons/fa';
 
@@ -50,9 +51,12 @@ export const OrgChartNode: React.FC<OrgChartNodeProps> = ({ person, isExpanded =
         {/* Profile Picture/Avatar */}
         <div className="flex justify-center mb-2">
           {person.imageUrl ? (
-            <img
+            <Image
               src={person.imageUrl}
               alt={person.name}
+              width={48}
+              height={48}
+              sizes="48px"
               className="w-12 h-12 rounded-full object-cover border-2 border-[#005087]"
             />
           ) : (

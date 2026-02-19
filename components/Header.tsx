@@ -55,10 +55,11 @@ export default function Header() {
               {/* Edmonton Logo */}
               <a href="/" title="City of Edmonton Home">
                 <Image
-                  src="/images/EDM_logo_Blue.png"
+                  src="/images/EDM_logo_Blue.webp"
                   alt="City of Edmonton Logo"
                   width={56}
                   height={56}
+                  sizes="56px"
                   className="h-14 w-14"
                   priority
                 />
@@ -76,10 +77,11 @@ export default function Header() {
               <div className="hidden md:flex items-center space-x-4">
                 <a href="/" className="flex items-center space-x-2 text-white hover:text-gray-200 transition-colors">
                   <Image
-                    src="/images/EDM_logo_Blue.png"
+                    src="/images/EDM_logo_Blue.webp"
                     alt="City of Edmonton Logo"
                     width={32}
                     height={32}
+                    sizes="32px"
                     className="h-8 w-8"
                   />
                   <span className="font-sans text-sm font-semibold">OCT</span>

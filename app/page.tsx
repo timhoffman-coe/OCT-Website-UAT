@@ -31,9 +31,10 @@ export default function Home() {
             {/* Image on Left (approx 1/2 width to prevent cropping of gradient) */}
             <div className="absolute inset-y-0 left-0 w-1/3 md:w-1/2">
               <Image
-                src="/images/Technology-v1.jpg"
+                src="/images/Technology-v1.webp"
                 alt="Technology"
                 fill
+                sizes="(max-width: 768px) 33vw, 50vw"
                 className="object-cover object-left"
               />
               {/* Gradient fade to blend into the blue background */}

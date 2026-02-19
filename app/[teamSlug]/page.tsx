@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { fetchSectionData } from '@/lib/data/fetch-team';
@@ -7,6 +8,25 @@ import SectionTemplate from '@/components/SectionTemplate';
 import ITSTeamPageTemplate from '@/components/its-shared/ITSTeamPageTemplate';
 
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ teamSlug: string }>;
+}): Promise<Metadata> {
+  const { teamSlug } = await params;
+  const team = await prisma.team.findUnique({
+    where: { slug: teamSlug, isPublished: true },
+    select: { teamName: true, pageDescription: true },
+  });
+
+  if (!team) return {};
+
+  return {
+    title: team.teamName,
+    description: team.pageDescription || `Learn about ${team.teamName} at the City of Edmonton.`,
+  };
+}
 
 export default async function DynamicTeamPage({
   params,

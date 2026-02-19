@@ -5,9 +5,10 @@ export default function Hero() {
     <section className="relative bg-gray-900 h-80 md:h-96">
       {/* Edmonton skyline image */}
       <Image
-        src="/images/skyline.png"
+        src="/images/skyline.webp"
         alt="Edmonton skyline and river valley"
         fill
+        sizes="100vw"
         className="object-cover opacity-50"
         priority
       />

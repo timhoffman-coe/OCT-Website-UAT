@@ -74,9 +74,10 @@ export default function AboutPage() {
             <div className="flex-shrink-0">
               <div className="w-48 h-64 md:w-56 md:h-72 relative rounded-lg overflow-hidden shadow-md">
                 <Image
-                  src="/images/Daryl.png"
+                  src="/images/Daryl.webp"
                   alt="Daryl Croft, Branch Manager"
                   fill
+                  sizes="(max-width: 768px) 192px, 224px"
                   className="object-cover"
                   priority
                 />

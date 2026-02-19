@@ -6,7 +6,7 @@ export default function Sections() {
     {
       title: 'Technology Planning',
       href: '/technology-planning',
-      image: '/images/TechPlan.png',
+      image: '/images/TechPlan.webp',
       bgColor: 'bg-complement-empire-blue',
       footerColor: 'bg-primary-blue',
       giantText: 'strategy',
@@ -15,7 +15,7 @@ export default function Sections() {
     {
       title: 'Business Solutions',
       href: '/business-solutions',
-      image: '/images/BS.png',
+      image: '/images/BS.webp',
       bgColor: 'bg-complement-spring-mist',
       footerColor: 'bg-complement-sea-green',
       giantText: 'applications',
@@ -24,7 +24,7 @@ export default function Sections() {
     {
       title: 'Integrated Technology Solutions',
       href: '/integrated-technology-solutions',
-      image: '/images/ITS.png',
+      image: '/images/ITS.webp',
       bgColor: 'bg-complement-sea-green',
       footerColor: 'bg-teal-800',
       giantText: 'infrastructure',
@@ -33,7 +33,7 @@ export default function Sections() {
     {
       title: 'Project Management Office',
       href: '/project-management-office',
-      image: '/images/PMO.png',
+      image: '/images/PMO.webp',
       bgColor: 'bg-complement-sunrise',
       footerColor: 'bg-amber-700',
       giantText: 'projects',
@@ -44,7 +44,7 @@ export default function Sections() {
     {
       title: 'Corporate Information Security',
       href: '/corporate-information-security',
-      image: '/images/CISO.png',
+      image: '/images/CISO.webp',
       bgColor: 'bg-complement-grey-flannel',
       footerColor: 'bg-gray-700',
       giantText: 'security',
@@ -70,6 +70,7 @@ export default function Sections() {
               src={unit.image}
               alt={unit.title}
               fill
+              sizes="(max-width: 768px) 100vw, 20vw"
               className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
 
