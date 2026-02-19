@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { OrgPerson } from './types';
-import { FaUser, FaLink, FaChevronDown, FaChevronRight } from 'react-icons/fa';
+import { User, Link, ChevronDown, ChevronRight } from 'lucide-react';
 
 interface OrgChartNodeProps {
   person: OrgPerson;
@@ -43,7 +43,7 @@ export const OrgChartNode: React.FC<OrgChartNodeProps> = ({ person, isExpanded =
       {/* Link Icon - Top Left */}
       {person.hasLink && (
         <div className="absolute -top-2 -left-2 bg-gray-600 text-white p-1.5 rounded-full">
-          <FaLink className="w-3 h-3" />
+          <Link className="w-3 h-3" />
         </div>
       )}
 
@@ -64,7 +64,7 @@ export const OrgChartNode: React.FC<OrgChartNodeProps> = ({ person, isExpanded =
               w-12 h-12 rounded-full flex items-center justify-center
               ${isCIO ? 'bg-[#005087]' : isBranchOffice ? 'bg-[#193A5A]' : 'bg-gray-300'}
             `}>
-              <FaUser className={`
+              <User className={`
                 w-6 h-6
                 ${isCIO || isBranchOffice ? 'text-white' : 'text-gray-600'}
               `} />
@@ -95,9 +95,9 @@ export const OrgChartNode: React.FC<OrgChartNodeProps> = ({ person, isExpanded =
       {hasSubordinates && (
         <div className="border-t border-gray-200 bg-gray-50 py-2 px-3 flex items-center justify-center gap-2">
           {isExpanded ? (
-            <FaChevronDown className="w-3 h-3 text-[#005087]" />
+            <ChevronDown className="w-3 h-3 text-[#005087]" />
           ) : (
-            <FaChevronRight className="w-3 h-3 text-[#005087]" />
+            <ChevronRight className="w-3 h-3 text-[#005087]" />
           )}
           <span className="text-xs text-gray-600 font-medium">
             {subordinateCount} {subordinateCount === 1 ? 'report' : 'reports'}

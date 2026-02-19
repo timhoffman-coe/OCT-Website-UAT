@@ -1,15 +1,17 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useBudgetTransactions } from './useBudgetTransactions';
 import { PROGRAMS, TEAMS, CATEGORIES, YEARS } from './constants';
 import { TransactionStatus, BudgetType } from './types';
 import KPICard from './KPICard';
 import { DollarSign, PieChart as PieIcon, Activity, TrendingUp, RefreshCw, Briefcase, BarChart3 } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-// Brand Palette for Charts
-const COLORS = ['#0081BC', '#109D7E', '#FAB840', '#EA5853', '#99479A', '#2F63AD'];
+const BudgetPieCharts = dynamic(
+  () => import('./BudgetPieCharts'),
+  { ssr: false, loading: () => <div className="grid grid-cols-1 lg:grid-cols-3 gap-6"><div className="h-64 bg-gray-100 rounded animate-pulse" /><div className="h-64 bg-gray-100 rounded animate-pulse" /><div className="h-64 bg-gray-100 rounded animate-pulse" /></div> }
+);
 
 interface DashboardProps {
     focusedType?: BudgetType;
@@ -345,95 +347,12 @@ const Dashboard: React.FC<DashboardProps> = ({ focusedType }) => {
                     )}
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                    {/* Approved Funding By Program */}
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                        <h3 className="text-lg font-bold text-[#212529] mb-4 font-sans">Funding by Program</h3>
-                        <div className="h-64">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={chartData.fundingByProgram}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        paddingAngle={5}
-                                        dataKey="value"
-                                    >
-                                        {chartData.fundingByProgram.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip
-                                        formatter={(value) => formatCurrency(Number(value))}
-                                        contentStyle={{ backgroundColor: '#fff', borderColor: '#ccc', color: '#000' }}
-                                    />
-                                    <Legend verticalAlign="bottom" height={36} />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
-
-                    {/* Spend by Program */}
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                        <h3 className="text-lg font-bold text-[#212529] mb-4 font-sans">Spending by Program</h3>
-                        <div className="h-64">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={chartData.spendingByProgram}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        paddingAngle={5}
-                                        dataKey="value"
-                                    >
-                                        {chartData.spendingByProgram.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip
-                                        formatter={(value) => formatCurrency(Number(value))}
-                                        contentStyle={{ backgroundColor: '#fff', borderColor: '#ccc', color: '#000' }}
-                                    />
-                                    <Legend verticalAlign="bottom" height={36} />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
-
-                    {/* Spend by Year */}
-                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                        <h3 className="text-lg font-bold text-[#212529] mb-4 font-sans">Spending by Fiscal Year</h3>
-                        <div className="h-64">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <PieChart>
-                                    <Pie
-                                        data={chartData.spendingByYear}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        paddingAngle={5}
-                                        dataKey="value"
-                                    >
-                                        {chartData.spendingByYear.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Pie>
-                                    <Tooltip
-                                        formatter={(value) => formatCurrency(Number(value))}
-                                        contentStyle={{ backgroundColor: '#fff', borderColor: '#ccc', color: '#000' }}
-                                    />
-                                    <Legend verticalAlign="bottom" height={36} />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
-                </div>
+                <BudgetPieCharts
+                    fundingByProgram={chartData.fundingByProgram}
+                    spendingByProgram={chartData.spendingByProgram}
+                    spendingByYear={chartData.spendingByYear}
+                    formatCurrency={formatCurrency}
+                />
             </div>
         </div>
     );

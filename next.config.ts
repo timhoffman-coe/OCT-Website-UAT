@@ -3,6 +3,9 @@ import withSerwistInit from "@serwist/next";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'recharts'],
+  },
   images: {
     remotePatterns: [
       {
