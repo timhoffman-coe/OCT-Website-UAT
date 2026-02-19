@@ -26,24 +26,28 @@ export const DashedEdge = memo(function DashedEdge({
 
   return (
     <>
-      {/* Glow layer */}
+      {/* Subtle base line */}
       <path
         d={edgePath}
-        fill="none"
-        stroke="rgba(34, 211, 238, 0.12)"
-        strokeWidth={4}
-        strokeDasharray="8 4"
         className="react-flow__edge-path"
+        style={{
+          fill: 'none',
+          stroke: 'rgba(251, 191, 36, 0.15)',
+          strokeWidth: 5,
+        }}
       />
-      {/* Main dashed path */}
+      {/* Animated packet flow */}
       <path
         id={id}
         d={edgePath}
-        fill="none"
-        stroke="rgba(34, 211, 238, 0.5)"
-        strokeWidth={1.5}
-        strokeDasharray="8 4"
-        className="react-flow__edge-path"
+        className="animated-flow-edge-slow"
+        style={{
+          fill: 'none',
+          stroke: 'rgba(251, 191, 36, 0.8)',
+          strokeWidth: 2.5,
+          strokeDasharray: '4 14',
+          strokeLinecap: 'round',
+        }}
       />
       {label && (
         <EdgeLabelRenderer>

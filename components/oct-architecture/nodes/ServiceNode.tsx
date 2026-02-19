@@ -6,24 +6,38 @@ import { Handle, Position, type NodeProps } from '@xyflow/react';
 export const ServiceNode = memo(function ServiceNode({ data }: NodeProps) {
   const label = data.label as string;
   const sublabel = data.sublabel as string | undefined;
+  const icon = data.icon as string | undefined;
+  const accent = (data.accent as string) || '#0891b2';
+  const hasSubDiagram = data.hasSubDiagram as boolean | undefined;
 
   return (
     <div
-      className="relative px-4 py-2.5 rounded-md text-center min-w-[130px]"
+      className="relative rounded-lg min-w-[160px] cursor-pointer transition-all duration-200 hover:scale-[1.03] hover:brightness-110"
       style={{
-        background: 'linear-gradient(180deg, #1a2744 0%, #0f1a2e 100%)',
-        border: '1px solid rgb(8, 145, 178)',
-        boxShadow: '0 0 12px rgba(8, 145, 178, 0.15), inset 0 1px 0 rgba(8, 145, 178, 0.1)',
+        background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+        border: '1px solid rgba(100, 116, 139, 0.3)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+        borderLeft: `3px solid ${accent}`,
       }}
     >
-      <div className="text-cyan-100 text-[11px] font-semibold font-sans leading-tight">{label}</div>
-      {sublabel && (
-        <div className="text-cyan-500/50 text-[9px] mt-0.5 font-sans leading-tight">{sublabel}</div>
+      <div className="px-4 py-3">
+        {icon && (
+          <div className="text-xl mb-1.5">{icon}</div>
+        )}
+        <div className="text-white text-[13px] font-bold font-sans leading-tight">{label}</div>
+        {sublabel && (
+          <div className="text-slate-400 text-[10px] mt-1 font-sans leading-snug">{sublabel}</div>
+        )}
+      </div>
+      {hasSubDiagram && (
+        <div className="absolute top-1.5 right-2 text-[9px] text-cyan-400/50 font-sans">
+          ⤢
+        </div>
       )}
-      <Handle type="target" position={Position.Top} className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
-      <Handle type="source" position={Position.Bottom} className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
-      <Handle type="target" position={Position.Left} id="left" className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
-      <Handle type="source" position={Position.Right} id="right" className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
+      <Handle type="target" position={Position.Top} className="!bg-cyan-500 !w-2 !h-2 !border-2 !border-slate-900 !min-w-0 !min-h-0" />
+      <Handle type="source" position={Position.Bottom} className="!bg-cyan-500 !w-2 !h-2 !border-2 !border-slate-900 !min-w-0 !min-h-0" />
+      <Handle type="target" position={Position.Left} id="left" className="!bg-cyan-500 !w-2 !h-2 !border-2 !border-slate-900 !min-w-0 !min-h-0" />
+      <Handle type="source" position={Position.Right} id="right" className="!bg-cyan-500 !w-2 !h-2 !border-2 !border-slate-900 !min-w-0 !min-h-0" />
     </div>
   );
 });

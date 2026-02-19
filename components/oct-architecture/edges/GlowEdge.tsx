@@ -30,20 +30,35 @@ export const GlowEdge = memo(function GlowEdge({
       {/* Glow layer */}
       <path
         d={edgePath}
-        fill="none"
-        stroke="rgba(8, 145, 178, 0.25)"
-        strokeWidth={5}
-        className="react-flow__edge-path"
+        style={{
+          fill: 'none',
+          stroke: 'rgba(8, 145, 178, 0.15)',
+          strokeWidth: 6,
+        }}
       />
-      {/* Main path */}
+      {/* Subtle base line */}
+      <path
+        d={edgePath}
+        className="react-flow__edge-path"
+        style={{
+          fill: 'none',
+          stroke: 'rgba(8, 145, 178, 0.3)',
+          strokeWidth: 1.5,
+          ...style,
+        }}
+      />
+      {/* Animated packet flow */}
       <path
         id={id}
         d={edgePath}
-        fill="none"
-        stroke="rgb(8, 145, 178)"
-        strokeWidth={1.5}
-        className="react-flow__edge-path"
-        style={style}
+        className="animated-flow-edge"
+        style={{
+          fill: 'none',
+          stroke: 'rgba(34, 211, 238, 0.9)',
+          strokeWidth: 2.5,
+          strokeDasharray: '4 14',
+          strokeLinecap: 'round',
+        }}
       />
       {label && (
         <EdgeLabelRenderer>

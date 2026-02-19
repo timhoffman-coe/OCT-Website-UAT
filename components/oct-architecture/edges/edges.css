@@ -1,0 +1,13 @@
+@keyframes flowDash {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+.animated-flow-edge {
+  animation: flowDash 0.8s linear infinite;
+}
+
+.animated-flow-edge-slow {
+  animation: flowDash 1.4s linear infinite;
+}

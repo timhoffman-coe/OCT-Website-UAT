@@ -40,7 +40,9 @@ export const GroupNode = memo(function GroupNode({ data }: NodeProps) {
       <Handle type="target" position={Position.Top} className="!bg-transparent !border-0 !w-0 !h-0" />
       <Handle type="source" position={Position.Bottom} className="!bg-transparent !border-0 !w-0 !h-0" />
       <Handle type="target" position={Position.Left} id="left" className="!bg-transparent !border-0 !w-0 !h-0" />
+      <Handle type="source" position={Position.Left} id="left-source" className="!bg-transparent !border-0 !w-0 !h-0" />
       <Handle type="source" position={Position.Right} id="right" className="!bg-transparent !border-0 !w-0 !h-0" />
+      <Handle type="target" position={Position.Right} id="right-target" className="!bg-transparent !border-0 !w-0 !h-0" />
     </div>
   );
 });

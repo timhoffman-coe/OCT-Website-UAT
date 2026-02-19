@@ -7,14 +7,14 @@ export const initialNodes: Node[] = [
   {
     id: 'coe-remote-users',
     type: 'userGroup',
-    position: { x: 180, y: 0 },
-    data: { label: 'COE Remote Users' },
+    position: { x: 200, y: 0 },
+    data: { label: 'COE Remote Users', icon: '👨‍💻', sublabel: 'VPN & Remote Access', accent: '#8b5cf6' },
   },
   {
     id: 'public-edmonton-users',
     type: 'userGroup',
-    position: { x: 550, y: 0 },
-    data: { label: 'Public Edmonton Users' },
+    position: { x: 600, y: 0 },
+    data: { label: 'Public Edmonton Users', icon: '🌍', sublabel: 'Public Internet Access', accent: '#06b6d4' },
   },
 
   // ═══════════════════════════════════════════
@@ -23,7 +23,7 @@ export const initialNodes: Node[] = [
   {
     id: 'internet',
     type: 'cloud',
-    position: { x: 380, y: 110 },
+    position: { x: 400, y: 120 },
     data: { label: 'Internet' },
   },
 
@@ -33,34 +33,52 @@ export const initialNodes: Node[] = [
   {
     id: 'security-gateway-group',
     type: 'group',
-    position: { x: 60, y: 230 },
+    position: { x: 40, y: 260 },
     data: { label: 'Security & Access Gateway Layer' },
-    style: { width: 620, height: 130 },
+    style: { width: 1060, height: 180 },
   },
   {
     id: 'ivanti-vpn',
     type: 'service',
-    position: { x: 20, y: 45 },
-    data: { label: 'Ivanti VPN' },
+    position: { x: 420, y: 40 },
+    data: { label: 'Ivanti VPN', icon: '🔐', sublabel: 'Remote Access', accent: '#8b5cf6' },
     parentId: 'security-gateway-group',
     extent: 'parent' as const,
   },
   {
     id: 'cloudflare',
     type: 'service',
-    position: { x: 200, y: 45 },
-    data: { label: 'Cloudflare' },
+    position: { x: 630, y: 40 },
+    data: { label: 'Cloudflare', icon: '🛡️', sublabel: 'WAF & CDN', accent: '#f97316' },
     parentId: 'security-gateway-group',
     extent: 'parent' as const,
   },
   {
     id: 'ws1-access',
     type: 'service',
-    position: { x: 380, y: 45 },
+    position: { x: 840, y: 40 },
     data: {
       label: 'Workspace One Access',
-      sublabel: 'Required Path: Cloudflare in-front of WS1',
+      icon: '🔑',
+      sublabel: 'Cloudflare in-front of WS1',
+      accent: '#06b6d4',
     },
+    parentId: 'security-gateway-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'lenovo-portal',
+    type: 'decommission',
+    position: { x: 20, y: 40 },
+    data: { label: 'Lenovo Portal', icon: '💻', badge: 'Decommissioning' },
+    parentId: 'security-gateway-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'citrix-gateway',
+    type: 'decommission',
+    position: { x: 210, y: 40 },
+    data: { label: 'Citrix Gateway', icon: '🌐', badge: 'Decommissioning' },
     parentId: 'security-gateway-group',
     extent: 'parent' as const,
   },
@@ -71,82 +89,93 @@ export const initialNodes: Node[] = [
   {
     id: 'coe-internal-group',
     type: 'group',
-    position: { x: 60, y: 410 },
+    position: { x: 40, y: 590 },
     data: { label: 'COE Internal Environment' },
-    style: { width: 620, height: 420 },
+    style: { width: 800, height: 640 },
   },
 
-  // Security appliances row
+  // Campus Network (left side)
+  {
+    id: 'campus-network',
+    type: 'userGroup',
+    position: { x: 20, y: 50 },
+    data: { label: 'Campus Network', icon: '🏛️', sublabel: 'On-Premise Users', accent: '#10b981', hasSubDiagram: true },
+    parentId: 'coe-internal-group',
+    extent: 'parent' as const,
+  },
+
+  // Security appliances (stacked vertically, right of campus)
   {
     id: 'edge-firewall',
     type: 'service',
-    position: { x: 20, y: 50 },
-    data: { label: 'Edge Firewall Cluster' },
+    position: { x: 280, y: 50 },
+    data: { label: 'Edge Firewall Cluster', icon: '🧱', sublabel: 'Perimeter Defense', accent: '#ef4444' },
     parentId: 'coe-internal-group',
     extent: 'parent' as const,
   },
   {
     id: 'trellix-nx',
     type: 'service',
-    position: { x: 200, y: 50 },
-    data: { label: 'Trellix (FireEye) NX' },
+    position: { x: 280, y: 160 },
+    data: { label: 'Trellix (FireEye) NX', icon: '🔍', sublabel: 'Threat Detection', accent: '#f97316' },
     parentId: 'coe-internal-group',
     extent: 'parent' as const,
   },
   {
     id: 'f5-adcs',
     type: 'service',
-    position: { x: 400, y: 50 },
-    data: { label: 'F5 ADCs' },
+    position: { x: 280, y: 270 },
+    data: { label: 'F5 ADCs', icon: '⚖️', sublabel: 'Load Balancing', accent: '#06b6d4' },
     parentId: 'coe-internal-group',
     extent: 'parent' as const,
   },
 
-  // Decommissioning items
-  {
-    id: 'lenovo-portal',
-    type: 'decommission',
-    position: { x: 380, y: 130 },
-    data: { label: 'Lenovo Portal', badge: 'Decommissioning' },
-    parentId: 'coe-internal-group',
-    extent: 'parent' as const,
-  },
-  {
-    id: 'citrix-gateway',
-    type: 'decommission',
-    position: { x: 380, y: 200 },
-    data: { label: 'Citrix Gateway', badge: 'Decommissioning' },
-    parentId: 'coe-internal-group',
-    extent: 'parent' as const,
-  },
-
-  // Campus Network
-  {
-    id: 'campus-network',
-    type: 'userGroup',
-    position: { x: 20, y: 145 },
-    data: { label: 'Campus Network' },
-    parentId: 'coe-internal-group',
-    extent: 'parent' as const,
-  },
-
-  // Data Centers
+  // Data Centers (nested groups)
   {
     id: 'primary-dc',
-    type: 'service',
-    position: { x: 30, y: 280 },
-    data: { label: 'Primary Data Center', sublabel: 'Internal City Applications' },
+    type: 'group',
+    position: { x: 20, y: 390 },
+    data: { label: 'Primary Data Center' },
+    style: { width: 350, height: 170 },
     parentId: 'coe-internal-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'primary-fw-cluster',
+    type: 'service',
+    position: { x: 80, y: 45 },
+    data: { label: 'Firewall Cluster', icon: '🔥', sublabel: 'Primary DC', accent: '#10b981' },
+    parentId: 'primary-dc',
     extent: 'parent' as const,
   },
   {
     id: 'dr-dc',
-    type: 'service',
-    position: { x: 280, y: 280 },
-    data: { label: 'DR Data Center', sublabel: 'Internal City Applications' },
+    type: 'group',
+    position: { x: 420, y: 390 },
+    data: { label: 'DR Data Center' },
+    style: { width: 350, height: 170 },
     parentId: 'coe-internal-group',
     extent: 'parent' as const,
   },
+  {
+    id: 'dr-fw-cluster',
+    type: 'service',
+    position: { x: 80, y: 45 },
+    data: { label: 'Firewall Cluster', icon: '🔥', sublabel: 'DR DC', accent: '#10b981' },
+    parentId: 'dr-dc',
+    extent: 'parent' as const,
+  },
+
+  // Internal City Applications (spans both data centers)
+  {
+    id: 'internal-city-apps',
+    type: 'service',
+    position: { x: 305, y: 490 },
+    data: { label: 'Internal City Applications', icon: '🏙️', sublabel: 'Shared Services', accent: '#f59e0b' },
+    parentId: 'coe-internal-group',
+    extent: 'parent' as const,
+  },
+
 
   // ═══════════════════════════════════════════
   // SAAS PUBLIC CLOUD (group, right side)
@@ -154,23 +183,23 @@ export const initialNodes: Node[] = [
   {
     id: 'saas-cloud-group',
     type: 'group',
-    position: { x: 770, y: 230 },
+    position: { x: 1160, y: 260 },
     data: { label: 'SaaS Public Cloud', sublabel: 'Google Workspace: Endpoint Compliance Required' },
-    style: { width: 340, height: 280 },
+    style: { width: 420, height: 200 },
   },
   {
     id: 'saas-city-apps',
     type: 'service',
     position: { x: 20, y: 60 },
-    data: { label: 'SaaS Cloud\nCity Applications' },
+    data: { label: 'SaaS Cloud', icon: '☁️', sublabel: 'City Applications', accent: '#06b6d4' },
     parentId: 'saas-cloud-group',
     extent: 'parent' as const,
   },
   {
     id: 'saas-non-city-apps',
     type: 'service',
-    position: { x: 185, y: 60 },
-    data: { label: 'SaaS Cloud\nNon-City Applications' },
+    position: { x: 220, y: 60 },
+    data: { label: 'SaaS Cloud', icon: '☁️', sublabel: 'Non-City Applications', accent: '#8b5cf6' },
     parentId: 'saas-cloud-group',
     extent: 'parent' as const,
   },
@@ -181,23 +210,23 @@ export const initialNodes: Node[] = [
   {
     id: 'iaas-cloud-group',
     type: 'group',
-    position: { x: 770, y: 580 },
+    position: { x: 1160, y: 780 },
     data: { label: 'IaaS Public Cloud' },
-    style: { width: 340, height: 210 },
+    style: { width: 420, height: 200 },
   },
   {
     id: 'iaas-city-apps',
     type: 'service',
-    position: { x: 20, y: 55 },
-    data: { label: 'IaaS Cloud Apps\nCity Applications' },
+    position: { x: 20, y: 60 },
+    data: { label: 'IaaS Cloud Apps', icon: '🖥️', sublabel: 'City Applications', accent: '#06b6d4' },
     parentId: 'iaas-cloud-group',
     extent: 'parent' as const,
   },
   {
     id: 'paas-city-apps',
     type: 'service',
-    position: { x: 185, y: 55 },
-    data: { label: 'PaaS Cloud Apps\nCity Applications' },
+    position: { x: 220, y: 60 },
+    data: { label: 'PaaS Cloud Apps', icon: '⚙️', sublabel: 'City Applications', accent: '#10b981' },
     parentId: 'iaas-cloud-group',
     extent: 'parent' as const,
   },
@@ -208,8 +237,8 @@ export const initialNodes: Node[] = [
   {
     id: 'equinix',
     type: 'service',
-    position: { x: 720, y: 690 },
-    data: { label: 'Equinix\nExpress Links' },
+    position: { x: 910, y: 950 },
+    data: { label: 'Equinix Express Links', icon: '🔗', sublabel: 'Direct Connect', accent: '#3b82f6' },
   },
 
   // ═══════════════════════════════════════════
@@ -218,17 +247,19 @@ export const initialNodes: Node[] = [
   {
     id: 'partner-group',
     type: 'group',
-    position: { x: 60, y: 890 },
+    position: { x: 40, y: 1380 },
     data: { label: 'Partner Networks' },
-    style: { width: 1050, height: 130 },
+    style: { width: 1300, height: 160 },
   },
   {
     id: 'b2b-firewall',
     type: 'service',
-    position: { x: 20, y: 50 },
+    position: { x: 20, y: 45 },
     data: {
-      label: 'Future B2B Firewall Cluster',
+      label: 'Future B2B Firewall',
+      icon: '🔥',
       sublabel: 'ACL Controlled',
+      accent: '#ef4444',
     },
     parentId: 'partner-group',
     extent: 'parent' as const,
@@ -236,57 +267,25 @@ export const initialNodes: Node[] = [
   {
     id: 'ahs',
     type: 'service',
-    position: { x: 310, y: 50 },
-    data: { label: 'Alberta Health Services' },
+    position: { x: 310, y: 45 },
+    data: { label: 'Alberta Health Services', icon: '🏥', accent: '#10b981' },
     parentId: 'partner-group',
     extent: 'parent' as const,
   },
   {
     id: 'eps',
     type: 'service',
-    position: { x: 540, y: 50 },
-    data: { label: 'Edmonton Police Service' },
+    position: { x: 580, y: 45 },
+    data: { label: 'Edmonton Police Service', icon: '🚔', accent: '#3b82f6' },
     parentId: 'partner-group',
     extent: 'parent' as const,
   },
   {
     id: 'epcor',
     type: 'service',
-    position: { x: 770, y: 50 },
-    data: { label: 'EPCOR' },
+    position: { x: 850, y: 45 },
+    data: { label: 'EPCOR', icon: '⚡', accent: '#eab308' },
     parentId: 'partner-group',
     extent: 'parent' as const,
-  },
-
-  // ═══════════════════════════════════════════
-  // ANNOTATION LABELS (floating labels for connections)
-  // ═══════════════════════════════════════════
-  {
-    id: 'label-temp-path',
-    type: 'service',
-    position: { x: 780, y: 140 },
-    data: {
-      label: 'Temporary Direct Path',
-      sublabel: 'To Be Removed',
-    },
-    style: {
-      background: 'transparent',
-      border: 'none',
-      boxShadow: 'none',
-    },
-  },
-  {
-    id: 'label-federated',
-    type: 'service',
-    position: { x: 710, y: 440 },
-    data: {
-      label: 'Federated Identity /',
-      sublabel: 'Shared Data',
-    },
-    style: {
-      background: 'transparent',
-      border: 'none',
-      boxShadow: 'none',
-    },
   },
 ];

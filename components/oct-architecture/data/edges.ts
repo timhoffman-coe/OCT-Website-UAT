@@ -8,12 +8,14 @@ export const initialEdges: Edge[] = [
     id: 'e-remote-internet',
     source: 'coe-remote-users',
     target: 'internet',
+    targetHandle: 'left',
     type: 'glow',
   },
   {
     id: 'e-public-internet',
     source: 'public-edmonton-users',
     target: 'internet',
+    targetHandle: 'right-target',
     type: 'glow',
   },
 
@@ -25,19 +27,6 @@ export const initialEdges: Edge[] = [
     source: 'internet',
     target: 'cloudflare',
     type: 'glow',
-  },
-
-  // ═══════════════════════════════════════════
-  // SECURITY GATEWAY internal connections
-  // ═══════════════════════════════════════════
-  {
-    id: 'e-remote-vpn',
-    source: 'coe-remote-users',
-    target: 'ivanti-vpn',
-    type: 'glow',
-    sourceHandle: 'right',
-    targetHandle: 'left',
-    data: { label: '' },
   },
   {
     id: 'e-cloudflare-ws1',
@@ -69,31 +58,35 @@ export const initialEdges: Edge[] = [
   // COE INTERNAL flow
   // ═══════════════════════════════════════════
   {
+    id: 'e-campus-firewall',
+    source: 'campus-network',
+    sourceHandle: 'right',
+    target: 'edge-firewall',
+    targetHandle: 'left',
+    type: 'glow',
+  },
+  {
     id: 'e-firewall-trellix',
     source: 'edge-firewall',
-    sourceHandle: 'right',
     target: 'trellix-nx',
-    targetHandle: 'left',
     type: 'glow',
   },
   {
     id: 'e-trellix-f5',
     source: 'trellix-nx',
-    sourceHandle: 'right',
     target: 'f5-adcs',
-    targetHandle: 'left',
     type: 'glow',
   },
   {
-    id: 'e-f5-primary',
+    id: 'e-f5-primary-fw',
     source: 'f5-adcs',
-    target: 'primary-dc',
+    target: 'primary-fw-cluster',
     type: 'glow',
   },
   {
-    id: 'e-f5-dr',
+    id: 'e-f5-dr-fw',
     source: 'f5-adcs',
-    target: 'dr-dc',
+    target: 'dr-fw-cluster',
     type: 'glow',
   },
 
@@ -115,9 +108,9 @@ export const initialEdges: Edge[] = [
   {
     id: 'e-internal-saas',
     source: 'saas-cloud-group',
-    sourceHandle: 'left',
+    sourceHandle: 'left-source',
     target: 'coe-internal-group',
-    targetHandle: 'right',
+    targetHandle: 'right-target',
     type: 'glow',
     data: { label: 'Federated Identity / Shared Data' },
   },

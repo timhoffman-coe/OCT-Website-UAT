@@ -38,6 +38,7 @@ export const CloudNode = memo(function CloudNode({ data }: NodeProps) {
       <Handle type="target" position={Position.Top} className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
       <Handle type="source" position={Position.Bottom} className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
       <Handle type="source" position={Position.Right} id="right" className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
+      <Handle type="target" position={Position.Right} id="right-target" className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
       <Handle type="target" position={Position.Left} id="left" className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
     </div>
   );

@@ -5,50 +5,39 @@ import { Handle, Position, type NodeProps } from '@xyflow/react';
 
 export const UserGroupNode = memo(function UserGroupNode({ data }: NodeProps) {
   const label = data.label as string;
+  const sublabel = data.sublabel as string | undefined;
+  const icon = data.icon as string | undefined;
+  const accent = (data.accent as string) || '#06b6d4';
+  const hasSubDiagram = data.hasSubDiagram as boolean | undefined;
 
   return (
-    <div className="flex flex-col items-center gap-1.5">
-      {/* Computer/User icon */}
-      <div
-        className="w-12 h-10 rounded-md flex items-center justify-center"
-        style={{
-          background: 'linear-gradient(180deg, #1a2744 0%, #0f1a2e 100%)',
-          border: '1px solid rgba(8, 145, 178, 0.6)',
-          boxShadow: '0 0 10px rgba(8, 145, 178, 0.15)',
-        }}
-      >
-        <svg
-          width="24"
-          height="20"
-          viewBox="0 0 24 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="text-cyan-400"
-        >
-          {/* Monitor */}
-          <rect x="3" y="1" width="18" height="12" rx="1.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
-          {/* Screen */}
-          <rect x="5" y="3" width="14" height="8" rx="0.5" fill="currentColor" opacity="0.15" />
-          {/* Stand */}
-          <path d="M8 15H16M12 13V15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          {/* Person */}
-          <circle cx="12" cy="6" r="1.5" fill="currentColor" opacity="0.5" />
-          <path d="M9 10C9 8.5 10.3 7.5 12 7.5C13.7 7.5 15 8.5 15 10" stroke="currentColor" strokeWidth="1" opacity="0.5" />
-        </svg>
+    <div
+      className="relative rounded-lg min-w-[160px] cursor-pointer transition-all duration-200 hover:scale-[1.03] hover:brightness-110"
+      style={{
+        background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+        border: '1px solid rgba(100, 116, 139, 0.3)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+        borderLeft: `3px solid ${accent}`,
+      }}
+    >
+      <div className="px-4 py-3">
+        {icon && (
+          <div className="text-xl mb-1.5">{icon}</div>
+        )}
+        <div className="text-white text-[13px] font-bold font-sans leading-tight">{label}</div>
+        {sublabel && (
+          <div className="text-slate-400 text-[10px] mt-1 font-sans leading-snug">{sublabel}</div>
+        )}
       </div>
-      <div
-        className="px-3 py-1 rounded text-center"
-        style={{
-          background: 'rgba(8, 145, 178, 0.08)',
-          border: '1px solid rgba(8, 145, 178, 0.3)',
-        }}
-      >
-        <span className="text-cyan-300 text-[10px] font-semibold font-sans whitespace-nowrap">{label}</span>
-      </div>
-      <Handle type="source" position={Position.Bottom} className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
-      <Handle type="target" position={Position.Top} className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
-      <Handle type="source" position={Position.Right} id="right" className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
-      <Handle type="target" position={Position.Left} id="left" className="!bg-cyan-500 !w-1.5 !h-1.5 !border-0 !min-w-0 !min-h-0" />
+      {hasSubDiagram && (
+        <div className="absolute top-1.5 right-2 text-[9px] text-cyan-400/50 font-sans">
+          ⤢
+        </div>
+      )}
+      <Handle type="source" position={Position.Bottom} className="!bg-cyan-500 !w-2 !h-2 !border-2 !border-slate-900 !min-w-0 !min-h-0" />
+      <Handle type="target" position={Position.Top} className="!bg-cyan-500 !w-2 !h-2 !border-2 !border-slate-900 !min-w-0 !min-h-0" />
+      <Handle type="source" position={Position.Right} id="right" className="!bg-cyan-500 !w-2 !h-2 !border-2 !border-slate-900 !min-w-0 !min-h-0" />
+      <Handle type="target" position={Position.Left} id="left" className="!bg-cyan-500 !w-2 !h-2 !border-2 !border-slate-900 !min-w-0 !min-h-0" />
     </div>
   );
 });
