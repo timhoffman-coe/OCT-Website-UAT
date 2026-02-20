@@ -1,13 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Cloud, Calendar, AlertTriangle, Inbox, Zap, ChevronLeft, ChevronRight, CheckCircle2, Phone, ArrowRight } from 'lucide-react';
+import { Cloud, Calendar, AlertTriangle, Inbox, Zap, ChevronLeft, ChevronRight, CheckCircle2, Phone, ArrowRight, XCircle, Wrench } from 'lucide-react';
+import { useServiceHealth } from '@/hooks/useServiceHealth';
 
 export default function ServiceHealthPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const { data: healthData, isLoading: healthLoading } = useServiceHealth();
+
+  const activeOutages = healthData?.groups.filter(g => g.status === 'outage' || g.status === 'degraded') ?? [];
+  const hasIssues = activeOutages.length > 0;
 
   // Calendar navigation
   const goToToday = () => {
@@ -80,13 +85,6 @@ export default function ServiceHealthPage() {
     <div className="bg-white min-h-screen">
       <Header />
 
-      {/* Sample Data Warning Banner */}
-      <div className="bg-red-600 text-white text-center py-3 px-4">
-        <p className="font-sans text-lg font-bold uppercase tracking-wide">
-          ⚠️ SAMPLE DATA ONLY - NOT LIVE ⚠️
-        </p>
-      </div>
-
       <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-structural-light-gray">
         <div className="max-w-7xl mx-auto">
           <header className="mb-8">
@@ -112,13 +110,37 @@ export default function ServiceHealthPage() {
                       View All Service Health
                     </a>
                   </div>
-                  <div className="mt-6 flex flex-col items-center justify-center text-center p-8 bg-structural-light-gray rounded-md">
-                    <CheckCircle2 className="text-complement-sea-green" size={48} />
-                    <p className="font-sans mt-4 text-lg font-medium text-text-dark">All systems are operational.</p>
-                    <p className="font-sans mt-1 text-sm text-text-secondary">
-                      There are no current service outages.
-                    </p>
-                  </div>
+                  {healthLoading ? (
+                    <div className="mt-6 flex flex-col items-center justify-center text-center p-8 bg-structural-light-gray rounded-md animate-pulse">
+                      <div className="w-12 h-12 bg-gray-200 rounded-full" />
+                      <div className="mt-4 h-5 w-48 bg-gray-200 rounded" />
+                      <div className="mt-2 h-4 w-64 bg-gray-200 rounded" />
+                    </div>
+                  ) : !hasIssues ? (
+                    <div className="mt-6 flex flex-col items-center justify-center text-center p-8 bg-structural-light-gray rounded-md">
+                      <CheckCircle2 className="text-complement-sea-green" size={48} />
+                      <p className="font-sans mt-4 text-lg font-medium text-text-dark">All systems are operational.</p>
+                      <p className="font-sans mt-1 text-sm text-text-secondary">
+                        There are no current service outages.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="mt-6 space-y-3">
+                      {activeOutages.map(group => (
+                        <div key={group.id} className={`flex items-start gap-3 p-4 rounded-md ${group.status === 'outage' ? 'bg-red-50 border border-red-200' : 'bg-yellow-50 border border-yellow-200'}`}>
+                          {group.status === 'outage' ? (
+                            <XCircle className="text-red-600 flex-shrink-0 mt-0.5" size={20} />
+                          ) : (
+                            <AlertTriangle className="text-complement-sunrise flex-shrink-0 mt-0.5" size={20} />
+                          )}
+                          <div>
+                            <p className="font-sans font-medium text-text-dark">{group.name}</p>
+                            <p className="font-sans text-sm text-text-secondary">{group.message}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div className="mt-4 text-center">
                     <p className="text-sm text-text-secondary mb-3">
                       Experiencing issues? To report an outage, please contact the Service Desk.

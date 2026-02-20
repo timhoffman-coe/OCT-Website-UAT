@@ -2,143 +2,305 @@ import type { Node, Edge } from '@xyflow/react';
 
 export const campusNetworkNodes: Node[] = [
   // ═══════════════════════════════════════════
-  // WAN UPLINK (top)
+  // CORE AREA (left side)
   // ═══════════════════════════════════════════
   {
-    id: 'wan-uplink',
-    type: 'service',
-    position: { x: 300, y: 0 },
-    data: { label: 'WAN / Internet Uplink', icon: '🌐', sublabel: 'To Edge Firewall', accent: '#ef4444' },
-  },
-
-  // ═══════════════════════════════════════════
-  // CORE LAYER (group)
-  // ═══════════════════════════════════════════
-  {
-    id: 'core-layer-group',
+    id: 'core-area-group',
     type: 'group',
-    position: { x: 50, y: 130 },
-    data: { label: 'Core Layer' },
-    style: { width: 700, height: 180 },
-  },
-  {
-    id: 'core-sw-a',
-    type: 'service',
-    position: { x: 30, y: 50 },
-    data: { label: 'Core Switch A', icon: '🔀', sublabel: 'Primary - HA Pair', accent: '#10b981' },
-    parentId: 'core-layer-group',
-    extent: 'parent' as const,
-  },
-  {
-    id: 'core-sw-b',
-    type: 'service',
-    position: { x: 260, y: 50 },
-    data: { label: 'Core Switch B', icon: '🔀', sublabel: 'Redundant - HA Pair', accent: '#10b981' },
-    parentId: 'core-layer-group',
-    extent: 'parent' as const,
-  },
-  {
-    id: 'wlan-controller',
-    type: 'service',
-    position: { x: 490, y: 50 },
-    data: { label: 'WLAN Controller', icon: '📡', sublabel: 'Wireless Management', accent: '#8b5cf6' },
-    parentId: 'core-layer-group',
-    extent: 'parent' as const,
-  },
-
-  // ═══════════════════════════════════════════
-  // SERVICES (middle)
-  // ═══════════════════════════════════════════
-  {
-    id: 'nac-server',
-    type: 'service',
-    position: { x: 100, y: 370 },
-    data: { label: 'NAC Server', icon: '🔒', sublabel: 'Network Access Control', accent: '#f97316' },
-  },
-  {
-    id: 'voip-gateway',
-    type: 'service',
-    position: { x: 500, y: 370 },
-    data: { label: 'VoIP Gateway', icon: '📞', sublabel: 'Voice Services', accent: '#06b6d4' },
-  },
-
-  // ═══════════════════════════════════════════
-  // DISTRIBUTION / ACCESS LAYER (group)
-  // ═══════════════════════════════════════════
-  {
-    id: 'dist-layer-group',
-    type: 'group',
-    position: { x: 20, y: 500 },
-    data: { label: 'Distribution / Access Layer' },
-    style: { width: 780, height: 190 },
-  },
-  {
-    id: 'city-hall',
-    type: 'service',
-    position: { x: 20, y: 50 },
-    data: { label: 'City Hall', icon: '🏛️', sublabel: 'Floor Switches & APs', accent: '#06b6d4' },
-    parentId: 'dist-layer-group',
-    extent: 'parent' as const,
-  },
-  {
-    id: 'edmonton-tower',
-    type: 'service',
-    position: { x: 210, y: 50 },
-    data: { label: 'Edmonton Tower', icon: '🏢', sublabel: 'Floor Switches & APs', accent: '#06b6d4' },
-    parentId: 'dist-layer-group',
-    extent: 'parent' as const,
+    position: { x: 0, y: 350 },
+    data: { label: 'Core Area — OSPF Area 0' },
+    style: { width: 420, height: 300 },
   },
   {
     id: 'century-place',
     type: 'service',
-    position: { x: 400, y: 50 },
-    data: { label: 'Century Place', icon: '🏗️', sublabel: 'Floor Switches & APs', accent: '#06b6d4' },
-    parentId: 'dist-layer-group',
+    position: { x: 20, y: 50 },
+    data: { label: 'Century Place', icon: '🔀', sublabel: 'Core L3 Switch', accent: '#10b981' },
+    parentId: 'core-area-group',
     extent: 'parent' as const,
   },
   {
-    id: 'field-offices',
+    id: 'city-hall',
     type: 'service',
-    position: { x: 590, y: 50 },
-    data: { label: 'Field Offices', icon: '🏘️', sublabel: 'Remote Sites', accent: '#f97316' },
-    parentId: 'dist-layer-group',
+    position: { x: 220, y: 50 },
+    data: { label: 'City Hall', icon: '🔀', sublabel: 'Core L3 Switch', accent: '#10b981' },
+    parentId: 'core-area-group',
     extent: 'parent' as const,
+  },
+  {
+    id: 'corepk',
+    type: 'service',
+    position: { x: 120, y: 170 },
+    data: { label: 'CorePK', icon: '🔀', sublabel: 'Core L3 Switch', accent: '#10b981' },
+    parentId: 'core-area-group',
+    extent: 'parent' as const,
+  },
+
+  // ═══════════════════════════════════════════
+  // CAMPUS SITES (top-right)
+  // ═══════════════════════════════════════════
+  {
+    id: 'campus-sites-group',
+    type: 'group',
+    position: { x: 520, y: 0 },
+    data: { label: 'Campus Sites' },
+    style: { width: 700, height: 350 },
+  },
+
+  // City Fiber Wired Sites
+  {
+    id: 'fiber-sites-group',
+    type: 'group',
+    position: { x: 20, y: 40 },
+    data: { label: 'City Fiber Wired Sites' },
+    style: { width: 460, height: 280 },
+    parentId: 'campus-sites-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'area-7',
+    type: 'service',
+    position: { x: 20, y: 45 },
+    data: { label: 'Area 7', icon: '🔀', sublabel: 'OSPF Area', accent: '#06b6d4' },
+    parentId: 'fiber-sites-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'area-207',
+    type: 'service',
+    position: { x: 260, y: 45 },
+    data: { label: 'Area 207', icon: '🔀', sublabel: 'OSPF Area', accent: '#06b6d4' },
+    parentId: 'fiber-sites-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'area-21',
+    type: 'service',
+    position: { x: 20, y: 160 },
+    data: { label: 'Area 21', icon: '🔀', sublabel: 'OSPF Area', accent: '#06b6d4' },
+    parentId: 'fiber-sites-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'area-221',
+    type: 'service',
+    position: { x: 260, y: 160 },
+    data: { label: 'Area 221', icon: '🔀', sublabel: 'OSPF Area', accent: '#06b6d4' },
+    parentId: 'fiber-sites-group',
+    extent: 'parent' as const,
+  },
+
+  // Telus MPLS & site count
+  {
+    id: 'telus-mpls',
+    type: 'service',
+    position: { x: 510, y: 80 },
+    data: { label: 'Telus MPLS Sites', icon: '☁️', sublabel: 'WAN Provider', accent: '#8b5cf6' },
+    parentId: 'campus-sites-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'site-count-fiber',
+    type: 'service',
+    position: { x: 510, y: 210 },
+    data: { label: '70+ Sites', icon: '🏢', sublabel: 'Dual Uplink Redundancy', accent: '#3b82f6' },
+    parentId: 'campus-sites-group',
+    extent: 'parent' as const,
+  },
+
+  // ═══════════════════════════════════════════
+  // WIRELESS TOWER NETWORK (middle-right)
+  // ═══════════════════════════════════════════
+  {
+    id: 'wireless-group',
+    type: 'group',
+    position: { x: 520, y: 400 },
+    data: { label: 'Wireless Tower Network' },
+    style: { width: 700, height: 300 },
+  },
+  {
+    id: 'poundmaker-tower',
+    type: 'service',
+    position: { x: 20, y: 50 },
+    data: { label: 'Poundmaker Tower', icon: '📡', sublabel: 'Radio Tower', accent: '#f97316' },
+    parentId: 'wireless-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'westwood-tower',
+    type: 'service',
+    position: { x: 20, y: 170 },
+    data: { label: 'Westwood Tower', icon: '📡', sublabel: 'Radio Tower', accent: '#f97316' },
+    parentId: 'wireless-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'kennedale-tower',
+    type: 'service',
+    position: { x: 230, y: 50 },
+    data: { label: 'Kennedale Tower', icon: '📡', sublabel: 'Radio Tower', accent: '#f97316' },
+    parentId: 'wireless-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'century-tower',
+    type: 'service',
+    position: { x: 230, y: 170 },
+    data: { label: 'Century Tower', icon: '📡', sublabel: 'Radio Tower', accent: '#f97316' },
+    parentId: 'wireless-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'ubiquiti-sites',
+    type: 'service',
+    position: { x: 460, y: 50 },
+    data: { label: 'Ubiquiti Wireless', icon: '📶', sublabel: 'Bridged Sites', accent: '#eab308' },
+    parentId: 'wireless-group',
+    extent: 'parent' as const,
+  },
+  {
+    id: 'site-count-wireless',
+    type: 'service',
+    position: { x: 460, y: 170 },
+    data: { label: '50+ Sites', icon: '📡', sublabel: 'L2 Extension', accent: '#3b82f6' },
+    parentId: 'wireless-group',
+    extent: 'parent' as const,
+  },
+
+  // ═══════════════════════════════════════════
+  // LoRaWAN (bottom-right)
+  // ═══════════════════════════════════════════
+  {
+    id: 'lorawan',
+    type: 'service',
+    position: { x: 960, y: 750 },
+    data: { label: 'LoRaWAN', icon: '🌐', sublabel: 'IoT Network', accent: '#10b981' },
   },
 ];
 
 export const campusNetworkEdges: Edge[] = [
-  // WAN → Core
-  { id: 'e-wan-core-a', source: 'wan-uplink', target: 'core-sw-a', type: 'glow' },
-  { id: 'e-wan-core-b', source: 'wan-uplink', target: 'core-sw-b', type: 'glow' },
-
-  // Core HA pair
+  // ═══════════════════════════════════════════
+  // CORE AREA — Full Mesh
+  // ═══════════════════════════════════════════
   {
-    id: 'e-core-ha',
-    source: 'core-sw-a',
+    id: 'e-cp-ch',
+    source: 'century-place',
     sourceHandle: 'right',
-    target: 'core-sw-b',
-    targetHandle: 'left',
-    type: 'glow',
-    data: { label: 'HA Pair' },
-  },
-
-  // Core → WLAN
-  {
-    id: 'e-core-wlan',
-    source: 'core-sw-b',
-    sourceHandle: 'right',
-    target: 'wlan-controller',
+    target: 'city-hall',
     targetHandle: 'left',
     type: 'glow',
   },
+  {
+    id: 'e-cp-corepk',
+    source: 'century-place',
+    target: 'corepk',
+    type: 'glow',
+  },
+  {
+    id: 'e-ch-corepk',
+    source: 'city-hall',
+    target: 'corepk',
+    type: 'glow',
+  },
 
-  // Core → Services
-  { id: 'e-core-nac', source: 'core-sw-a', target: 'nac-server', type: 'glow' },
-  { id: 'e-core-voip', source: 'core-sw-b', target: 'voip-gateway', type: 'glow' },
+  // ═══════════════════════════════════════════
+  // CORE → CAMPUS SITES
+  // ═══════════════════════════════════════════
+  {
+    id: 'e-core-fiber',
+    source: 'city-hall',
+    sourceHandle: 'right',
+    target: 'fiber-sites-group',
+    targetHandle: 'left',
+    type: 'glow',
+  },
 
-  // Core → Distribution
-  { id: 'e-core-city', source: 'core-sw-a', target: 'city-hall', type: 'glow' },
-  { id: 'e-core-tower', source: 'core-sw-a', target: 'edmonton-tower', type: 'glow' },
-  { id: 'e-core-century', source: 'core-sw-b', target: 'century-place', type: 'glow' },
-  { id: 'e-core-field', source: 'core-sw-b', target: 'field-offices', type: 'glow' },
+  // Fiber Sites — Ext Redistribution
+  {
+    id: 'e-area7-207',
+    source: 'area-7',
+    sourceHandle: 'right',
+    target: 'area-207',
+    targetHandle: 'left',
+    type: 'glow',
+    data: { label: 'Ext Redistribution' },
+  },
+  {
+    id: 'e-area21-221',
+    source: 'area-21',
+    sourceHandle: 'right',
+    target: 'area-221',
+    targetHandle: 'left',
+    type: 'glow',
+    data: { label: 'Ext Redistribution' },
+  },
+
+  // Areas → Telus MPLS
+  {
+    id: 'e-207-telus',
+    source: 'area-207',
+    sourceHandle: 'right',
+    target: 'telus-mpls',
+    targetHandle: 'left',
+    type: 'glow',
+  },
+
+  // ═══════════════════════════════════════════
+  // CORE → WIRELESS
+  // ═══════════════════════════════════════════
+  {
+    id: 'e-core-wireless',
+    source: 'corepk',
+    sourceHandle: 'right',
+    target: 'wireless-group',
+    targetHandle: 'left',
+    type: 'glow',
+  },
+
+  // Tower interconnections (L2 Extension)
+  {
+    id: 'e-pound-kenn',
+    source: 'poundmaker-tower',
+    sourceHandle: 'right',
+    target: 'kennedale-tower',
+    targetHandle: 'left',
+    type: 'glow',
+    data: { label: 'L2 Extension' },
+  },
+  {
+    id: 'e-west-century',
+    source: 'westwood-tower',
+    sourceHandle: 'right',
+    target: 'century-tower',
+    targetHandle: 'left',
+    type: 'glow',
+  },
+
+  // Towers → Ubiquiti
+  {
+    id: 'e-kenn-ubiquiti',
+    source: 'kennedale-tower',
+    sourceHandle: 'right',
+    target: 'ubiquiti-sites',
+    targetHandle: 'left',
+    type: 'glow',
+  },
+  {
+    id: 'e-century-sites',
+    source: 'century-tower',
+    sourceHandle: 'right',
+    target: 'site-count-wireless',
+    targetHandle: 'left',
+    type: 'glow',
+  },
+
+  // ═══════════════════════════════════════════
+  // CORE → LoRaWAN
+  // ═══════════════════════════════════════════
+  {
+    id: 'e-core-lorawan',
+    source: 'corepk',
+    target: 'lorawan',
+    type: 'glow',
+  },
 ];

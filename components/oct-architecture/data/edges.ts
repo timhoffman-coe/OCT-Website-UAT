@@ -61,7 +61,7 @@ export const initialEdges: Edge[] = [
     id: 'e-campus-firewall',
     source: 'campus-network',
     sourceHandle: 'right',
-    target: 'edge-firewall',
+    target: 'internet-access-zone',
     targetHandle: 'left',
     type: 'glow',
   },
@@ -87,6 +87,24 @@ export const initialEdges: Edge[] = [
     id: 'e-f5-dr-fw',
     source: 'f5-adcs',
     target: 'dr-fw-cluster',
+    type: 'glow',
+  },
+
+  // Data Center ↔ Internal City Applications
+  {
+    id: 'e-primary-dc-city-apps',
+    source: 'primary-dc-apps',
+    sourceHandle: 'right',
+    target: 'internal-city-apps',
+    targetHandle: 'left',
+    type: 'glow',
+  },
+  {
+    id: 'e-city-apps-dr-dc',
+    source: 'internal-city-apps',
+    sourceHandle: 'right',
+    target: 'dr-dc-apps',
+    targetHandle: 'left',
     type: 'glow',
   },
 

@@ -16,101 +16,48 @@ import {
     CheckCircle,
     AlertTriangle,
     XCircle,
+    Wrench,
+    HelpCircle,
     ArrowRight,
-    ChevronLeft
+    ChevronLeft,
+    type LucideIcon
 } from 'lucide-react';
 import Link from 'next/link';
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
+import { useServiceHealth } from '@/hooks/useServiceHealth';
+import type { ServiceStatus } from '@/lib/service-health/types';
+import { SERVICE_ICON_MAP } from '@/lib/service-health/constants';
 
-// Static data for sparklines to avoid hydration mismatches with random generation
-const generateStaticData = (baseVal: number, volatility: number) => {
+// Icon lookup table
+const iconComponents: Record<string, LucideIcon> = {
+    Shield, Users, Briefcase, CreditCard, Flame, Network, FileText, Database, Bus,
+};
+
+function getIconForService(name: string): LucideIcon {
+    const iconName = SERVICE_ICON_MAP[name];
+    return (iconName && iconComponents[iconName]) || Database;
+}
+
+// Generate sparkline data from uptime percentage
+function generateSparklineData(uptimePercent: number, status: ServiceStatus) {
+    const baseVal = uptimePercent * 0.9;
+    const volatility = status === 'operational' ? 5 : status === 'degraded' ? 15 : 25;
     const data = [];
     for (let i = 0; i < 20; i++) {
-        // Generate pseudo-random-looking but deterministic data
-        const y = Math.max(10, Math.min(90, baseVal + Math.sin(i) * volatility + (i % 3) * 5));
+        const y = Math.max(10, Math.min(90, baseVal + Math.sin(i) * volatility + (i % 3) * 2));
         data.push({ x: i, y });
     }
     return data;
+}
+
+// Overall status display config
+const overallStatusConfig: Record<ServiceStatus, { label: string; color: string; bg: string }> = {
+    operational: { label: 'All Operational', color: 'text-complement-sea-green', bg: 'bg-complement-sea-green' },
+    degraded: { label: 'Partial Outage', color: 'text-complement-sunrise', bg: 'bg-complement-sunrise' },
+    outage: { label: 'Major Outage', color: 'text-red-600', bg: 'bg-red-600' },
+    maintenance: { label: 'Maintenance', color: 'text-primary-blue', bg: 'bg-primary-blue' },
+    unknown: { label: 'Status Unknown', color: 'text-complement-grey-flannel', bg: 'bg-complement-grey-flannel' },
 };
-
-const operationalData = generateStaticData(70, 10);
-const degradedData = generateStaticData(50, 20);
-const outageData = generateStaticData(30, 15);
-
-const services = [
-    {
-        id: 'ciso',
-        name: 'CISO',
-        icon: Shield,
-        status: 'operational',
-        message: 'Security services are functioning normally.',
-        data: operationalData,
-    },
-    {
-        id: 'citizen',
-        name: 'Citizen Services',
-        icon: Users,
-        status: 'operational',
-        message: 'Public-facing portals and services are online.',
-        data: operationalData,
-    },
-    {
-        id: 'corporate',
-        name: 'Corporate Services',
-        icon: Briefcase,
-        status: 'degraded',
-        message: 'Internal HR portal experiencing high latency.',
-        data: degradedData,
-    },
-    {
-        id: 'financial',
-        name: 'Financial Services',
-        icon: CreditCard,
-        status: 'operational',
-        message: 'All payment and billing systems are normal.',
-        data: operationalData,
-    },
-    {
-        id: 'fire',
-        name: 'Fire Rescue',
-        icon: Flame,
-        status: 'outage',
-        message: 'Dispatch system offline. Using backup protocol.',
-        data: outageData,
-    },
-    {
-        id: 'network',
-        name: 'Network Services',
-        icon: Network,
-        status: 'operational',
-        message: 'Core network infrastructure is stable.',
-        data: operationalData,
-    },
-    {
-        id: 'posse',
-        name: 'POSSE',
-        icon: FileText,
-        status: 'operational',
-        message: 'Permitting and licensing systems are working.',
-        data: operationalData,
-    },
-    {
-        id: 'enterprise',
-        name: 'Enterprise Systems',
-        icon: Database,
-        status: 'operational',
-        message: 'ERP and CRM platforms are fully operational.',
-        data: operationalData,
-    },
-    {
-        id: 'transit',
-        name: 'Transit Services',
-        icon: Bus,
-        status: 'operational',
-        message: 'Real-time tracking and scheduling are online.',
-        data: operationalData,
-    },
-];
 
 const StatusIcon = ({ status }: { status: string }) => {
     switch (status) {
@@ -120,40 +67,40 @@ const StatusIcon = ({ status }: { status: string }) => {
             return <AlertTriangle className="text-complement-sunrise" size={24} />;
         case 'outage':
             return <XCircle className="text-red-600" size={24} />;
+        case 'maintenance':
+            return <Wrench className="text-primary-blue" size={24} />;
+        case 'unknown':
+            return <HelpCircle className="text-complement-grey-flannel" size={24} />;
         default:
             return null;
     }
 };
 
 const StatusBadge = ({ status }: { status: string }) => {
-    switch (status) {
-        case 'operational':
-            return (
-                <div className="flex items-center gap-2 text-sm font-medium text-complement-sea-green">
-                    <StatusIcon status={status} />
-                </div>
-            );
-        case 'degraded':
-            return (
-                <div className="flex items-center gap-2 text-sm font-medium text-complement-sunrise">
-                    <StatusIcon status={status} />
-                </div>
-            );
-        case 'outage':
-            return (
-                <div className="flex items-center gap-2 text-sm font-medium text-red-600">
-                    <StatusIcon status={status} />
-                </div>
-            );
-        default:
-            return null;
-    }
+    const colorMap: Record<string, string> = {
+        operational: 'text-complement-sea-green',
+        degraded: 'text-complement-sunrise',
+        outage: 'text-red-600',
+        maintenance: 'text-primary-blue',
+        unknown: 'text-complement-grey-flannel',
+    };
+    const color = colorMap[status] || 'text-complement-grey-flannel';
+    return (
+        <div className={`flex items-center gap-2 text-sm font-medium ${color}`}>
+            <StatusIcon status={status} />
+        </div>
+    );
 };
 
-const Sparkline = ({ data, status }: { data: any[]; status: string }) => {
-    let color = '#109D7E'; // sea-green
-    if (status === 'degraded') color = '#FAB840'; // sunrise
-    if (status === 'outage') color = '#DC2626'; // red-600
+const Sparkline = ({ data, status }: { data: { x: number; y: number }[]; status: string }) => {
+    const colorMap: Record<string, string> = {
+        operational: '#109D7E',
+        degraded: '#FAB840',
+        outage: '#DC2626',
+        maintenance: '#004A8F',
+        unknown: '#6B7280',
+    };
+    const color = colorMap[status] || '#6B7280';
 
     return (
         <div className="w-full h-16">
@@ -180,7 +127,40 @@ const Sparkline = ({ data, status }: { data: any[]; status: string }) => {
     );
 };
 
+function LoadingSkeleton() {
+    return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="bg-white border border-structural-gray-blue rounded-xl p-5 animate-pulse">
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                            <div className="w-6 h-6 bg-gray-200 rounded" />
+                            <div className="h-5 w-32 bg-gray-200 rounded" />
+                        </div>
+                        <div className="w-6 h-6 bg-gray-200 rounded-full" />
+                    </div>
+                    <div className="h-4 w-full bg-gray-200 rounded mb-4" />
+                    <div className="h-16 bg-gray-100 rounded" />
+                </div>
+            ))}
+        </div>
+    );
+}
+
 export default function ServiceHealthDashboard() {
+    const { data, isLoading, error } = useServiceHealth();
+
+    const services = data?.groups.map(group => ({
+        id: group.id,
+        name: group.name,
+        icon: getIconForService(group.name),
+        status: group.status,
+        message: group.message,
+        data: generateSparklineData(group.uptimePercentage, group.status),
+    })) ?? [];
+
+    const overall = data ? overallStatusConfig[data.overallStatus] : null;
+
     return (
         <div className="bg-white min-h-screen font-sans">
             <Header />
@@ -200,13 +180,18 @@ export default function ServiceHealthDashboard() {
                         </div>
 
                         <div className="mt-6 md:mt-0 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                            <div className="flex items-center gap-3 bg-white border border-structural-gray-blue rounded-lg px-4 py-2 shadow-sm">
-                                <div className="relative flex h-3 w-3">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-complement-sunrise opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-3 w-3 bg-complement-sunrise"></span>
+                            {overall && (
+                                <div className="flex items-center gap-3 bg-white border border-structural-gray-blue rounded-lg px-4 py-2 shadow-sm">
+                                    <div className="relative flex h-3 w-3">
+                                        <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${overall.bg} opacity-75`}></span>
+                                        <span className={`relative inline-flex rounded-full h-3 w-3 ${overall.bg}`}></span>
+                                    </div>
+                                    <span className={`font-semibold ${overall.color}`}>{overall.label}</span>
                                 </div>
-                                <span className="font-semibold text-complement-sunrise">Partial Outage</span>
-                            </div>
+                            )}
+                            {error && (
+                                <span className="text-xs text-complement-grey-flannel">Using cached data</span>
+                            )}
                             <a className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-primary-blue transition-colors" href="#">
                                 <span>View Incident Log</span>
                                 <ArrowRight size={16} />
@@ -215,32 +200,36 @@ export default function ServiceHealthDashboard() {
                     </header>
 
                     {/* Grid Content */}
-                    <main className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {services.map((service) => (
-                            <div
-                                key={service.id}
-                                className={`
-                  bg-white border rounded-xl p-5 flex flex-col justify-between group 
-                  transition-all duration-300 transform hover:-translate-y-1 shadow-sm hover:shadow-md
-                  ${service.status === 'outage' ? 'border-red-200 hover:border-red-500' :
-                                        service.status === 'degraded' ? 'border-yellow-200 hover:border-complement-sunrise' :
-                                            'border-structural-gray-blue hover:border-primary-blue'}
-                `}
-                            >
-                                <div>
-                                    <div className="flex items-center justify-between mb-3">
-                                        <div className="flex items-center gap-3">
-                                            <service.icon className="text-text-secondary" size={24} />
-                                            <h2 className="text-lg font-semibold text-text-dark">{service.name}</h2>
+                    {isLoading ? (
+                        <LoadingSkeleton />
+                    ) : (
+                        <main className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            {services.map((service) => (
+                                <div
+                                    key={service.id}
+                                    className={`
+                                        bg-white border rounded-xl p-5 flex flex-col justify-between group
+                                        transition-all duration-300 transform hover:-translate-y-1 shadow-sm hover:shadow-md
+                                        ${service.status === 'outage' ? 'border-red-200 hover:border-red-500' :
+                                            service.status === 'degraded' ? 'border-yellow-200 hover:border-complement-sunrise' :
+                                                'border-structural-gray-blue hover:border-primary-blue'}
+                                    `}
+                                >
+                                    <div>
+                                        <div className="flex items-center justify-between mb-3">
+                                            <div className="flex items-center gap-3">
+                                                <service.icon className="text-text-secondary" size={24} />
+                                                <h2 className="text-lg font-semibold text-text-dark">{service.name}</h2>
+                                            </div>
+                                            <StatusBadge status={service.status} />
                                         </div>
-                                        <StatusBadge status={service.status} />
+                                        <p className="text-text-secondary text-sm mb-4">{service.message}</p>
                                     </div>
-                                    <p className="text-text-secondary text-sm mb-4">{service.message}</p>
+                                    <Sparkline data={service.data} status={service.status} />
                                 </div>
-                                <Sparkline data={service.data} status={service.status} />
-                            </div>
-                        ))}
-                    </main>
+                            ))}
+                        </main>
+                    )}
 
                 </div>
             </div>

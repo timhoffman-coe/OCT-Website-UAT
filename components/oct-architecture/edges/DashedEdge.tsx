@@ -1,7 +1,7 @@
 'use client';
 
 import { memo } from 'react';
-import { type EdgeProps, getBezierPath, EdgeLabelRenderer } from '@xyflow/react';
+import { type EdgeProps, getSmoothStepPath, EdgeLabelRenderer } from '@xyflow/react';
 
 export const DashedEdge = memo(function DashedEdge({
   id,
@@ -13,13 +13,14 @@ export const DashedEdge = memo(function DashedEdge({
   targetPosition,
   data,
 }: EdgeProps) {
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const [edgePath, labelX, labelY] = getSmoothStepPath({
     sourceX,
     sourceY,
     targetX,
     targetY,
     sourcePosition,
     targetPosition,
+    borderRadius: 16,
   });
 
   const label = data?.label as string | undefined;

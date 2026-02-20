@@ -33,6 +33,11 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/pg-pool ./node_modul
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/pg-protocol ./node_modules/pg-protocol
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/pg-types ./node_modules/pg-types
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/pgpass ./node_modules/pgpass
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/google-auth-library ./node_modules/google-auth-library
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gaxios ./node_modules/gaxios
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gcp-metadata ./node_modules/gcp-metadata
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gtoken ./node_modules/gtoken
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/jws ./node_modules/jws
 
 USER nextjs
 

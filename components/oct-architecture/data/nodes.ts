@@ -91,7 +91,7 @@ export const initialNodes: Node[] = [
     type: 'group',
     position: { x: 40, y: 590 },
     data: { label: 'COE Internal Environment' },
-    style: { width: 800, height: 640 },
+    style: { width: 930, height: 750 },
   },
 
   // Campus Network (left side)
@@ -104,29 +104,40 @@ export const initialNodes: Node[] = [
     extent: 'parent' as const,
   },
 
-  // Security appliances (stacked vertically, right of campus)
+  // Internet Access Zone (nested group)
+  {
+    id: 'internet-access-zone',
+    type: 'group',
+    position: { x: 350, y: 30 },
+    data: { label: 'Internet Access Zone' },
+    style: { width: 230, height: 350 },
+    parentId: 'coe-internal-group',
+    extent: 'parent' as const,
+  },
+
+  // Security appliances (stacked vertically inside Internet Access Zone)
   {
     id: 'edge-firewall',
     type: 'service',
-    position: { x: 280, y: 50 },
+    position: { x: 20, y: 40 },
     data: { label: 'Edge Firewall Cluster', icon: '🧱', sublabel: 'Perimeter Defense', accent: '#ef4444' },
-    parentId: 'coe-internal-group',
+    parentId: 'internet-access-zone',
     extent: 'parent' as const,
   },
   {
     id: 'trellix-nx',
     type: 'service',
-    position: { x: 280, y: 160 },
+    position: { x: 20, y: 140 },
     data: { label: 'Trellix (FireEye) NX', icon: '🔍', sublabel: 'Threat Detection', accent: '#f97316' },
-    parentId: 'coe-internal-group',
+    parentId: 'internet-access-zone',
     extent: 'parent' as const,
   },
   {
     id: 'f5-adcs',
     type: 'service',
-    position: { x: 280, y: 270 },
+    position: { x: 20, y: 240 },
     data: { label: 'F5 ADCs', icon: '⚖️', sublabel: 'Load Balancing', accent: '#06b6d4' },
-    parentId: 'coe-internal-group',
+    parentId: 'internet-access-zone',
     extent: 'parent' as const,
   },
 
@@ -136,7 +147,7 @@ export const initialNodes: Node[] = [
     type: 'group',
     position: { x: 20, y: 390 },
     data: { label: 'Primary Data Center' },
-    style: { width: 350, height: 170 },
+    style: { width: 350, height: 280 },
     parentId: 'coe-internal-group',
     extent: 'parent' as const,
   },
@@ -149,11 +160,19 @@ export const initialNodes: Node[] = [
     extent: 'parent' as const,
   },
   {
+    id: 'primary-dc-apps',
+    type: 'service',
+    position: { x: 80, y: 155 },
+    data: { label: 'Data Center', icon: '🏢', sublabel: 'Primary Infrastructure', accent: '#3b82f6' },
+    parentId: 'primary-dc',
+    extent: 'parent' as const,
+  },
+  {
     id: 'dr-dc',
     type: 'group',
-    position: { x: 420, y: 390 },
+    position: { x: 560, y: 390 },
     data: { label: 'DR Data Center' },
-    style: { width: 350, height: 170 },
+    style: { width: 350, height: 280 },
     parentId: 'coe-internal-group',
     extent: 'parent' as const,
   },
@@ -165,12 +184,20 @@ export const initialNodes: Node[] = [
     parentId: 'dr-dc',
     extent: 'parent' as const,
   },
+  {
+    id: 'dr-dc-apps',
+    type: 'service',
+    position: { x: 80, y: 155 },
+    data: { label: 'Data Center', icon: '🏢', sublabel: 'DR Infrastructure', accent: '#3b82f6' },
+    parentId: 'dr-dc',
+    extent: 'parent' as const,
+  },
 
   // Internal City Applications (spans both data centers)
   {
     id: 'internal-city-apps',
     type: 'service',
-    position: { x: 305, y: 490 },
+    position: { x: 370, y: 545 },
     data: { label: 'Internal City Applications', icon: '🏙️', sublabel: 'Shared Services', accent: '#f59e0b' },
     parentId: 'coe-internal-group',
     extent: 'parent' as const,
@@ -183,7 +210,7 @@ export const initialNodes: Node[] = [
   {
     id: 'saas-cloud-group',
     type: 'group',
-    position: { x: 1160, y: 260 },
+    position: { x: 1350, y: 670 },
     data: { label: 'SaaS Public Cloud', sublabel: 'Google Workspace: Endpoint Compliance Required' },
     style: { width: 420, height: 200 },
   },
@@ -210,7 +237,7 @@ export const initialNodes: Node[] = [
   {
     id: 'iaas-cloud-group',
     type: 'group',
-    position: { x: 1160, y: 780 },
+    position: { x: 1350, y: 950 },
     data: { label: 'IaaS Public Cloud' },
     style: { width: 420, height: 200 },
   },
@@ -237,7 +264,7 @@ export const initialNodes: Node[] = [
   {
     id: 'equinix',
     type: 'service',
-    position: { x: 910, y: 950 },
+    position: { x: 1100, y: 1000 },
     data: { label: 'Equinix Express Links', icon: '🔗', sublabel: 'Direct Connect', accent: '#3b82f6' },
   },
 
