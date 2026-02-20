@@ -40,7 +40,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  serverExternalPackages: ['pdf-parse', '@napi-rs/canvas', 'google-auth-library'],
+  serverExternalPackages: ['pdf-parse', '@napi-rs/canvas', 'google-auth-library', '@prisma/client'],
 };
 
 const withSerwist = withSerwistInit({

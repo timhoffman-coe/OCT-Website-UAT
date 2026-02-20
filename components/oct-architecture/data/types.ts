@@ -21,6 +21,15 @@ export interface CloudNodeData {
   label: string;
 }
 
+export interface LandingZoneNodeData {
+  label: string;
+  sublabel?: string;
+  icon?: string;
+  variant: 'userGroup' | 'cloud' | 'securityBar' | 'blueZone' | 'partnerZone';
+  accent?: string;
+  clickable?: boolean;
+}
+
 export interface GlowEdgeData {
   label?: string;
 }

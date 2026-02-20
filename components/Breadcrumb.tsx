@@ -7,7 +7,7 @@ const routeMap: Record<string, { label: string; parent: string | null }> = {
   '/': { label: 'Home', parent: null },
   '/about': { label: 'Branch Overview', parent: '/' },
   '/leadership': { label: 'Our Leadership', parent: '/about' },
-  '/about/oct-architecture': { label: 'OCT Architecture', parent: '/about' },
+  '/about/how-oct-works': { label: 'How OCT Works', parent: '/about' },
   '/contact': { label: 'Contact', parent: '/' },
   '/search': { label: 'Search', parent: '/' },
   '/service-health': { label: 'Service Health', parent: '/' },

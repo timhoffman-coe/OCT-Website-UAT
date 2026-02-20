@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'OCT Architecture | Open City & Technology',
-  description: 'Interactive network architecture diagram for Open City & Technology.',
+  title: 'How OCT Works | Open City & Technology',
+  description: 'A technical overview of OCT\'s infrastructure, systems, and operations.',
 };
 
 export default function OCTArchitectureLayout({

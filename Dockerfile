@@ -8,7 +8,7 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
-RUN npx prisma generate
+RUN npx prisma generate && echo "=== PRISMA GENERATED ===" && ls -la node_modules/.prisma/client/default.js
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
@@ -38,6 +38,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gaxios ./node_module
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gcp-metadata ./node_modules/gcp-metadata
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gtoken ./node_modules/gtoken
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/jws ./node_modules/jws
+
+RUN echo "=== STANDALONE node_modules ===" && ls node_modules/.prisma/client/default.js 2>/dev/null && echo "FOUND" || echo "MISSING .prisma in standalone"
+RUN echo "=== AFTER ALL COPIES ===" && ls -la node_modules/.prisma/client/ && echo "=== @prisma/client ===" && cat node_modules/@prisma/client/default.js
 
 USER nextjs
 

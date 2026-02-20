@@ -22,10 +22,10 @@ export default function OCTArchitecturePage() {
           {/* Page Header */}
           <div className="mb-4">
             <h1 className="font-sans text-2xl md:text-3xl font-bold text-white">
-              OCT Network Architecture
+              How OCT Works
             </h1>
             <p className="font-sans text-sm text-cyan-500/60 mt-1">
-              City of Edmonton — Enterprise Network Topology
+              A technical overview of OCT&apos;s infrastructure, systems, and operations.
             </p>
           </div>
 

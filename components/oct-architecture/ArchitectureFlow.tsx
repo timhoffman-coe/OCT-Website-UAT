@@ -11,18 +11,20 @@ import {
   BackgroundVariant,
   useReactFlow,
   type Node,
+  type Edge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import './edges/edges.css';
 
-import { initialNodes } from './data/nodes';
-import { initialEdges } from './data/edges';
+import { landingNodes } from './data/landing-nodes';
+import { landingEdges } from './data/landing-edges';
 import { subDiagrams } from './data/sub-diagrams';
 import { GroupNode } from './nodes/GroupNode';
 import { ServiceNode } from './nodes/ServiceNode';
 import { DecommissionNode } from './nodes/DecommissionNode';
 import { UserGroupNode } from './nodes/UserGroupNode';
 import { CloudNode } from './nodes/CloudNode';
+import { LandingZoneNode } from './nodes/LandingZoneNode';
 import { GlowEdge } from './edges/GlowEdge';
 import { DashedEdge } from './edges/DashedEdge';
 
@@ -32,12 +34,20 @@ const nodeTypes = {
   decommission: DecommissionNode,
   userGroup: UserGroupNode,
   cloud: CloudNode,
+  landingZone: LandingZoneNode,
 };
 
 const edgeTypes = {
   glow: GlowEdge,
   dashed: DashedEdge,
 };
+
+interface NavEntry {
+  id: string;
+  label: string;
+  nodes: Node[];
+  edges: Edge[];
+}
 
 /** Compute absolute position for a node (handles nested parents) */
 function getAbsolutePosition(nodeId: string, nodes: Node[]): { x: number; y: number } {
@@ -59,9 +69,9 @@ function getAbsolutePosition(nodeId: string, nodes: Node[]): { x: number; y: num
 function ArchitectureFlowInner() {
   const { setCenter, fitView } = useReactFlow();
 
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
-  const [navStack, setNavStack] = useState<{ id: string; label: string }[]>([]);
+  const [nodes, setNodes] = useState<Node[]>(landingNodes);
+  const [edges, setEdges] = useState<Edge[]>(landingEdges);
+  const [navStack, setNavStack] = useState<NavEntry[]>([]);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const transitionRef = useRef(false);
 
@@ -73,6 +83,10 @@ function ArchitectureFlowInner() {
       if (!sub) return;
 
       transitionRef.current = true;
+
+      // Save current state before transitioning
+      const currentNodes = nodes;
+      const currentEdges = edges;
 
       // Get absolute position of the clicked node
       const absPos = getAbsolutePosition(node.id, nodes);
@@ -87,7 +101,10 @@ function ArchitectureFlowInner() {
       setTimeout(() => {
         setNodes(sub.nodes);
         setEdges(sub.edges);
-        setNavStack((prev) => [...prev, { id: node.id, label: sub.label }]);
+        setNavStack((prev) => [
+          ...prev,
+          { id: node.id, label: sub.label, nodes: currentNodes, edges: currentEdges },
+        ]);
 
         // Step 4: Fade back in + fitView
         setTimeout(() => {
@@ -97,30 +114,44 @@ function ArchitectureFlowInner() {
         }, 50);
       }, 650);
     },
-    [nodes, setCenter, fitView],
+    [nodes, edges, setCenter, fitView],
   );
 
-  const handleBack = useCallback(() => {
-    if (transitionRef.current || navStack.length === 0) return;
-    transitionRef.current = true;
+  const handleBack = useCallback(
+    (targetLevel: number) => {
+      if (transitionRef.current || navStack.length === 0) return;
+      transitionRef.current = true;
 
-    // Fade out
-    setIsTransitioning(true);
+      // Fade out
+      setIsTransitioning(true);
 
-    // Swap back after fade
-    setTimeout(() => {
-      setNodes(initialNodes);
-      setEdges(initialEdges);
-      setNavStack([]);
-
-      // Fade in + fitView
+      // Swap back after fade
       setTimeout(() => {
-        setIsTransitioning(false);
-        fitView({ duration: 600, padding: 0.12 });
-        transitionRef.current = false;
-      }, 50);
-    }, 250);
-  }, [navStack, fitView]);
+        if (targetLevel === 0) {
+          // Go back to landing
+          setNodes(landingNodes);
+          setEdges(landingEdges);
+          setNavStack([]);
+        } else {
+          // Go back to a specific level — restore that level's saved state
+          const entry = navStack[targetLevel];
+          if (entry) {
+            setNodes(entry.nodes);
+            setEdges(entry.edges);
+          }
+          setNavStack((prev) => prev.slice(0, targetLevel));
+        }
+
+        // Fade in + fitView
+        setTimeout(() => {
+          setIsTransitioning(false);
+          fitView({ duration: 600, padding: 0.12 });
+          transitionRef.current = false;
+        }, 50);
+      }, 250);
+    },
+    [navStack, fitView],
+  );
 
   return (
     <div className="relative w-full h-full">
@@ -165,15 +196,24 @@ function ArchitectureFlowInner() {
             <Panel position="top-left">
               <div className="flex items-center gap-2 bg-gray-900/95 border border-cyan-900/50 rounded-lg px-4 py-2 shadow-lg backdrop-blur-sm">
                 <button
-                  onClick={handleBack}
+                  onClick={() => handleBack(0)}
                   className="text-cyan-400 hover:text-cyan-300 text-sm font-sans font-medium transition-colors cursor-pointer"
                 >
-                  Main
+                  Overview
                 </button>
-                {navStack.map((item) => (
+                {navStack.map((item, idx) => (
                   <span key={item.id} className="flex items-center gap-2">
                     <span className="text-gray-600 text-xs">/</span>
-                    <span className="text-white text-sm font-sans font-medium">{item.label}</span>
+                    {idx < navStack.length - 1 ? (
+                      <button
+                        onClick={() => handleBack(idx + 1)}
+                        className="text-cyan-400 hover:text-cyan-300 text-sm font-sans font-medium transition-colors cursor-pointer"
+                      >
+                        {item.label}
+                      </button>
+                    ) : (
+                      <span className="text-white text-sm font-sans font-medium">{item.label}</span>
+                    )}
                   </span>
                 ))}
               </div>
