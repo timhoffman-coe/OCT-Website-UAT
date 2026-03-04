@@ -40,7 +40,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: builder
-    command: npx prisma migrate deploy
+    command: npx prisma migrate deploy --config prisma/prisma.config.ts
     environment:
       - DATABASE_URL=postgresql://coe_admin:${POSTGRES_PASSWORD}@postgres:5432/coe_cms
     depends_on:
