@@ -1,6 +1,6 @@
 --
 -- Full database export (schema + data)
--- Generated: 2026-03-09T13:56:02.751Z
+-- Generated: 2026-03-09T15:18:08.793Z
 -- Usage: psql -d <dbname> -f db_full_export.sql
 --
 
@@ -334,8 +334,10 @@ ALTER TABLE "WidgetInstance" ADD CONSTRAINT "WidgetInstance_teamId_fkey" FOREIGN
 ALTER TABLE "WidgetInstance" ADD CONSTRAINT "WidgetInstance_widgetDefinitionId_fkey" FOREIGN KEY ("widgetDefinitionId") REFERENCES "WidgetDefinition"("id") ON UPDATE CASCADE ON DELETE RESTRICT;
 
 -- ============================================================
--- DATA
+-- DATA (FK checks deferred for safe insert ordering)
 -- ============================================================
+
+SET session_replication_role = replica;
 
 -- User: 1 rows
 INSERT INTO "User" ("id", "email", "name", "role", "createdAt", "updatedAt") VALUES ('cmlvenss100006en28dunyuef', 'dev@edmonton.ca', 'Dev Admin', 'SUPER_ADMIN', '2026-02-20T21:31:55.568Z', '2026-02-20T21:31:55.568Z');
@@ -1007,3 +1009,5 @@ INSERT INTO "TeamQuickLink" ("id", "teamId", "label", "description", "href", "is
 INSERT INTO "TeamQuickLink" ("id", "teamId", "label", "description", "href", "isSecure", "sortOrder") VALUES ('cmlvenu6b00cf6en2dxhd10n1', 'cmlvenu5100c66en2zn8wq782', 'VM Request Form', 'Request new virtual machines.', '#', FALSE, 0);
 INSERT INTO "TeamQuickLink" ("id", "teamId", "label", "description", "href", "isSecure", "sortOrder") VALUES ('cmlvenu6g00cg6en2rh0hura4', 'cmlvenu5100c66en2zn8wq782', 'vCenter Dashboard', 'Monitor virtualization infrastructure.', '#', FALSE, 1);
 INSERT INTO "TeamQuickLink" ("id", "teamId", "label", "description", "href", "isSecure", "sortOrder") VALUES ('cmlvenu6l00ch6en2ke9egllp', 'cmlvenu5100c66en2zn8wq782', 'VDI Access Request', 'Request virtual desktop access.', '#', TRUE, 2);
+
+SET session_replication_role = DEFAULT;

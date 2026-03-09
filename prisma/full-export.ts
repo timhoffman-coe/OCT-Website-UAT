@@ -245,8 +245,10 @@ async function main() {
   ];
 
   out.push('-- ============================================================');
-  out.push('-- DATA');
+  out.push('-- DATA (FK checks deferred for safe insert ordering)');
   out.push('-- ============================================================');
+  out.push('');
+  out.push('SET session_replication_role = replica;');
   out.push('');
 
   for (const table of insertOrder) {
@@ -266,6 +268,9 @@ async function main() {
     }
     out.push('');
   }
+
+  out.push('SET session_replication_role = DEFAULT;');
+  out.push('');
 
   // ============================================================
   // 8. Prisma migrations record (if exists)
