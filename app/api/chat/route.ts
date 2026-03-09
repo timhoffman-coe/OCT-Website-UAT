@@ -24,6 +24,28 @@ const getAIClient = () => {
   return new GoogleGenAI({ apiKey });
 };
 
+// Circuit breaker for Gemini API
+let geminiFailures = 0;
+let circuitOpenUntil = 0;
+const FAILURE_THRESHOLD = 3;
+const RECOVERY_MS = 60_000; // 1 minute
+
+function isCircuitOpen(): boolean {
+  return Date.now() < circuitOpenUntil;
+}
+
+function recordGeminiFailure() {
+  geminiFailures++;
+  if (geminiFailures >= FAILURE_THRESHOLD) {
+    circuitOpenUntil = Date.now() + RECOVERY_MS;
+    geminiFailures = 0;
+  }
+}
+
+function recordGeminiSuccess() {
+  geminiFailures = 0;
+}
+
 // Intent Classification
 async function classifyIntent(question: string, ai: GoogleGenAI): Promise<'HR' | 'IT' | 'SiteSearch' | 'General'> {
   const prompt = `
@@ -90,6 +112,13 @@ export async function POST(request: NextRequest) {
       if (typeof msg.content !== 'string' || msg.content.length > MAX_HISTORY_CONTENT_LENGTH) {
         return NextResponse.json({ error: 'Invalid history message content' }, { status: 400 });
       }
+    }
+
+    // Circuit breaker: return friendly message if Gemini is repeatedly failing
+    if (isCircuitOpen()) {
+      return NextResponse.json({
+        response: 'The AI assistant is temporarily unavailable. Please try again in a minute, or contact the Service Desk at 780-944-4311 for immediate help.',
+      });
     }
 
     const ai = getAIClient();
@@ -215,11 +244,14 @@ IMPORTANT: Analyze the CONVERSATION HISTORY to see if the user has already provi
       },
     });
 
+    recordGeminiSuccess();
+
     return NextResponse.json({
       response: response.text || 'No response generated.'
     });
 
   } catch (error) {
+    recordGeminiFailure();
     console.error('Unified Chat API Error:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
     return NextResponse.json(
       { error: 'An unexpected error occurred processing your request.' },

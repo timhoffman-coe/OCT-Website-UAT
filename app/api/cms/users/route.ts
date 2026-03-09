@@ -17,7 +17,9 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(users);
+    const response = NextResponse.json(users);
+    response.headers.set('Cache-Control', 'private, no-store');
+    return response;
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Internal error';
     const status = message.includes('Unauthorized') ? 401 : message.includes('Forbidden') ? 403 : 500;

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getIncidentMetrics } from '@/lib/data/data-portal';
 import type { DataPortalResponse, IncidentMetric } from '@/lib/data/data-portal-types';
 
-export const revalidate = 300; // Cache for 5 minutes
+export const revalidate = 300; // 5 min — analytical data, freshness less critical than health monitoring
 
 export async function GET(request: NextRequest) {
   try {

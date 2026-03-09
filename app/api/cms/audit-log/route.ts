@@ -31,7 +31,9 @@ export async function GET(request: NextRequest) {
       prisma.auditLog.count({ where }),
     ]);
 
-    return NextResponse.json({ logs, total });
+    const response = NextResponse.json({ logs, total });
+    response.headers.set('Cache-Control', 'private, max-age=10');
+    return response;
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Internal error';
     const status = message.includes('Unauthorized') ? 401 : message.includes('Forbidden') ? 403 : 500;

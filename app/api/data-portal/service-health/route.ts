@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServiceHealth } from '@/lib/data/data-portal';
 import type { DataPortalResponse, ServiceHealthRecord } from '@/lib/data/data-portal-types';
 
-export const revalidate = 60; // Cache for 1 minute (health data should be fresher)
+export const revalidate = 60; // 1 min — near-real-time monitoring, needs freshest data
 
 export async function GET() {
   try {

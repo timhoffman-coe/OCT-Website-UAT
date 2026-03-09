@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getBudgetActuals } from '@/lib/data/data-portal';
 import type { DataPortalResponse, BudgetActual } from '@/lib/data/data-portal-types';
 
-export const revalidate = 300; // Cache for 5 minutes
+export const revalidate = 300; // 5 min — financial data updated infrequently, freshness less critical
 
 export async function GET(request: NextRequest) {
   try {

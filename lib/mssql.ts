@@ -15,15 +15,17 @@ const config: sql.config = {
     },
   },
   options: {
-    encrypt: false,
-    trustServerCertificate: true,
+    encrypt: process.env.MSSQL_ENCRYPT !== 'false', // default: true (TLS enabled)
+    trustServerCertificate: process.env.MSSQL_TRUST_CERT === 'true', // default: false (require valid CA cert)
     readOnlyIntent: true,
   },
   pool: {
-    min: 0,
+    min: 2,
     max: 10,
     idleTimeoutMillis: 30000,
   },
+  connectionTimeout: 15000,
+  requestTimeout: 30000,
 };
 
 export async function getPool(): Promise<sql.ConnectionPool> {
