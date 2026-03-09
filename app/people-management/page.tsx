@@ -79,7 +79,7 @@ export default function PeopleManagementPage() {
                             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 w-full max-w-6xl">
                                 {[
                                     'Technology Planning',
-                                    'Business Solutions',
+                                    'Application Technology Services',
                                     'Integrated Technology Solutions',
                                     'Project Management Office',
                                     'Corporate Information Security'

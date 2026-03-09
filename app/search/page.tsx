@@ -27,9 +27,9 @@ const searchablePages = [
     description: 'Technology Investment & Governance, Business Engagement & Intake, Vendor & Contract Management, IT Asset Management.'
   },
   {
-    title: 'Business Solutions',
-    url: '/business-solutions',
-    keywords: ['business solutions', 'application development', 'support', 'artificial intelligence', 'ai', 'software'],
+    title: 'Application Technology Services',
+    url: '/application-technology-services',
+    keywords: ['application technology services', 'application development', 'support', 'artificial intelligence', 'ai', 'software'],
     description: 'Application Development & Support, and Artificial Intelligence solutions.'
   },
   {

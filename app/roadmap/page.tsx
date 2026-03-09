@@ -22,7 +22,7 @@ import RoadmapBar from '@/components/roadmap/RoadmapBar';
 const INITIAL_SECTIONS: RoadmapSection[] = [
   {
     id: 'sec-2',
-    title: 'Business Solutions',
+    title: 'Application Technology Services',
     color: 'sea-green',
     projects: [
       { id: 'p3', name: 'ERP Migration Phase 1', owner: 'Steve', startYear: 1, endYear: 1, startQuarter: 2, endQuarter: 4, progress: 10 },
@@ -123,7 +123,7 @@ export default function RoadmapPage() {
   const getSectionIcon = (title: string) => {
     switch (title) {
       case 'Cyber Security': return <ShieldCheck className="w-5 h-5" />;
-      case 'Business Solutions': return <Briefcase className="w-5 h-5" />;
+      case 'Application Technology Services': return <Briefcase className="w-5 h-5" />;
       case 'Integrated Technology Solutions': return <Cpu className="w-5 h-5" />;
       case 'Project Management Office': return <LayoutDashboard className="w-5 h-5" />;
       default: return <Rocket className="w-5 h-5" />;

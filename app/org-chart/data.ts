@@ -184,7 +184,7 @@ export const octOrgData: OrgChartData = {
       {
         id: 'robert-dufresne',
         name: 'Robert Dufresne',
-        title: 'Director, Business Solutions',
+        title: 'Director, Application Technology Services',
         employeeNumber: '55',
         hasLink: true,
         subordinates: [

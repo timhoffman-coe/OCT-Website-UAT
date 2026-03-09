@@ -18,7 +18,7 @@ export default function BudgetPage() {
 
   const capitalSectionData = [
     { name: 'Tech Planning', Budgeted: 2.5, Actual: 1.8 },
-    { name: 'Business Solutions', Budgeted: 4.0, Actual: 2.2 },
+    { name: 'App Tech Services', Budgeted: 4.0, Actual: 2.2 },
     { name: 'Integrated Tech', Budgeted: 5.5, Actual: 4.1 },
     { name: 'PMO', Budgeted: 1.5, Actual: 0.8 },
     { name: 'Corp Security', Budgeted: 1.5, Actual: 0.6 },
@@ -31,7 +31,7 @@ export default function BudgetPage() {
 
   const operatingSectionData = [
     { name: 'Tech Planning', Budgeted: 12.0, Actual: 9.5 },
-    { name: 'Business Solutions', Budgeted: 25.0, Actual: 18.0 },
+    { name: 'App Tech Services', Budgeted: 25.0, Actual: 18.0 },
     { name: 'Integrated Tech', Budgeted: 35.0, Actual: 28.0 },
     { name: 'PMO', Budgeted: 5.0, Actual: 3.5 },
     { name: 'Corp Security', Budgeted: 8.0, Actual: 4.0 },

@@ -13,7 +13,7 @@ const routeMap: Record<string, { label: string; parent: string | null }> = {
   '/service-health': { label: 'Service Health', parent: '/' },
   '/services': { label: 'All Teams', parent: '/' },
   '/technology-planning': { label: 'Technology Planning', parent: '/' },
-  '/business-solutions': { label: 'Business Solutions', parent: '/' },
+  '/application-technology-services': { label: 'Application Technology Services', parent: '/' },
   '/integrated-technology-solutions': { label: 'Integrated Technology Solutions', parent: '/' },
   '/project-management-office': { label: 'Project Management Office', parent: '/' },
   '/corporate-information-security': { label: 'Corporate Information Security', parent: '/' },

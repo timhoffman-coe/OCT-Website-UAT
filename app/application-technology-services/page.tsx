@@ -3,7 +3,7 @@ import { fetchSectionData } from '@/lib/data/fetch-team';
 import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 
 export const metadata = {
-  title: 'Business Solutions | Open City & Technology',
+  title: 'Application Technology Services | Open City & Technology',
   description: 'Developing, implementing, and supporting the applications that power City services.',
 };
 
@@ -70,7 +70,7 @@ It provides comprehensive communication, collaboration, cloud storage, and conte
   },
   {
     id: 'branch-solutions',
-    title: 'Business Solutions for City Branches',
+    title: 'Application Technology Services for City Branches',
     shortDescription: 'Technical support for branch-specific applications including troubleshooting, updates, upgrades, roadmapping, and low-code/no-code app creation.',
     fullDescription: `Technical support for the identified business areas' applications. Services include troubleshooting, problem-solving, software updates, application upgrades and maintenance, application roadmapping, and low-code/no-code application creation.
 
@@ -100,13 +100,13 @@ Experience the power of streamlined workflows, captivating apps, and optimized p
   },
 ];
 
-const fallbackTitle = 'Business Solutions';
+const fallbackTitle = 'Application Technology Services';
 const fallbackDescription = 'IT business solutions encompass a range of software, applications, programs, and services designed to assist in achieving business goals. From 311 to internal tools, we develop, implement, and support the applications that power City services.';
 
-export default async function BusinessSolutionsPage() {
+export default async function ApplicationTechnologyServicesPage() {
   const [data, widgetOrder] = await Promise.all([
-    fetchSectionData('business-solutions'),
-    fetchWidgetOrder('business-solutions'),
+    fetchSectionData('application-technology-services'),
+    fetchWidgetOrder('application-technology-services'),
   ]);
   return (
     <SectionTemplate

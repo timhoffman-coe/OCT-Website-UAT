@@ -35,8 +35,8 @@ export default function ServicesPage() {
       ],
     },
     {
-      section: 'Business Solutions',
-      sectionUrl: '/business-solutions',
+      section: 'Application Technology Services',
+      sectionUrl: '/application-technology-services',
       services: [
         {
           title: 'Application Development & Support',

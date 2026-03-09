@@ -23,8 +23,8 @@ export default function WhoWeAre() {
     },
     {
       title: 'Services',
-      content: 'Explore the comprehensive range of technology services we provide through our five business units: Technology Planning, Business Solutions, Integrated Technology Solutions, Project Management Office, and Corporate Information Security.',
-      link: '/business-solutions',
+      content: 'Explore the comprehensive range of technology services we provide through our five business units: Technology Planning, Application Technology Services, Integrated Technology Solutions, Project Management Office, and Corporate Information Security.',
+      link: '/application-technology-services',
     },
     {
       title: 'Technology Strategies & Directives',

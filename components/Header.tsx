@@ -142,7 +142,7 @@ export default function Header() {
                     </a>
                     <div className="hidden group-hover/sections:block absolute left-full top-0 ml-0 w-72 bg-white rounded-md shadow-lg py-1 border border-gray-200">
                       <a href="/technology-planning" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">Technology Planning</a>
-                      <a href="/business-solutions" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">Business Solutions</a>
+                      <a href="/application-technology-services" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">Application Technology Services</a>
                       <div className="relative group/its">
                         <a href="/integrated-technology-solutions" className="w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 flex items-center justify-between">
                           <span>Integrated Technology Solutions</span>
@@ -266,7 +266,7 @@ export default function Header() {
                 </button>
                 <div className={`${openDropdown === 'mobile-sections' ? '' : 'hidden'} bg-gray-50 rounded-md mt-1`}>
                   <a href="/technology-planning" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Technology Planning</a>
-                  <a href="/business-solutions" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Business Solutions</a>
+                  <a href="/application-technology-services" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Application Technology Services</a>
                   <button
                     onClick={() => toggleDropdown('mobile-its')}
                     className="w-full text-left px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 flex items-center justify-between"

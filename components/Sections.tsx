@@ -13,8 +13,8 @@ export default function Sections() {
       description: 'Strategizing and roadmapping the future of technology for the City. We align technology investments with corporate goals to ensure Edmonton is ready for tomorrow\'s challenges.',
     },
     {
-      title: 'Business Solutions',
-      href: '/business-solutions',
+      title: 'Application Technology Services',
+      href: '/application-technology-services',
       image: '/images/BS.webp',
       bgColor: 'bg-complement-spring-mist',
       footerColor: 'bg-complement-sea-green',

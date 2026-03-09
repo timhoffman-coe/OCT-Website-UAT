@@ -154,16 +154,16 @@ export default function ContactPage() {
               </a>
             </div>
 
-            {/* Business Solutions */}
+            {/* Application Technology Services */}
             <div className="bg-white border-2 border-[#F4F2F1] rounded-lg p-6 hover:shadow-lg transition-shadow">
               <h3 className="font-sans text-xl font-bold text-[#212529] mb-3">
-                Business Solutions
+                Application Technology Services
               </h3>
               <p className="font-sans text-sm text-[#495057] mb-4">
                 Application development, support, and AI solutions
               </p>
               <a
-                href="/business-solutions"
+                href="/application-technology-services"
                 className="font-sans text-base font-semibold text-primary-blue hover:text-complement-sea-green transition-colors"
               >
                 Learn More →

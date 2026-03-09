@@ -34,8 +34,8 @@ export default function LeadershipPage() {
 
   const businessUnits = [
     {
-      section: 'Business Solutions',
-      link: '/business-solutions',
+      section: 'Application Technology Services',
+      link: '/application-technology-services',
       members: [
         { role: 'Director', name: 'Robert Dufresne', email: 'robert.dufresne@edmonton.ca', image: '/images/Portraits/Bob.webp' },
         { role: 'Program Manager', name: 'Matthew Raven', email: 'matthew.raven@edmonton.ca' },

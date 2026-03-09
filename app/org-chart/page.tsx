@@ -34,7 +34,7 @@ const orgData: OrgNode = {
     },
     {
       id: 'biz-solutions',
-      title: 'Business Solutions',
+      title: 'Application Technology Services',
       children: [
         { id: 'bs-dir', title: 'Director', name: 'Director Name', role: 'Director' },
         { id: 'bs-lead1', title: 'Solution Delivery', name: 'Delivery Lead', role: 'Manager' },

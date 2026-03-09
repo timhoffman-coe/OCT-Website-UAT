@@ -59,12 +59,13 @@ export const siteMapData: SitePage[] = [
     ]
   },
   {
-    "title": "Business Solutions",
-    "path": "/business-solutions",
-    "description": "Page for Business Solutions",
+    "title": "Application Technology Services",
+    "path": "/application-technology-services",
+    "description": "Page for Application Technology Services",
     "keywords": [
-      "business",
-      "solutions"
+      "application",
+      "technology",
+      "services"
     ]
   },
   {

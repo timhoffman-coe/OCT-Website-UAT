@@ -665,16 +665,16 @@ async function main() {
   // 5. Seed SectionTemplate Teams
   // ============================================================
 
-  // --- Business Solutions ---
+  // --- Application Technology Services ---
   await prisma.team.upsert({
-    where: { slug: 'business-solutions' },
+    where: { slug: 'application-technology-services' },
     update: {},
     create: {
-      slug: 'business-solutions',
-      teamName: 'Business Solutions',
-      teamShortName: 'Business Solutions',
+      slug: 'application-technology-services',
+      teamName: 'Application Technology Services',
+      teamShortName: 'Application Technology Services',
       pageTemplate: PageTemplate.SECTION,
-      pageTitle: 'Business Solutions',
+      pageTitle: 'Application Technology Services',
       pageDescription: 'IT business solutions encompass a range of software, applications, programs, and services designed to assist in achieving business goals. From 311 to internal tools, we develop, implement, and support the applications that power City services.',
       sortOrder: 3,
       serviceAreas: {
@@ -704,7 +704,7 @@ async function main() {
             features: ['Communication: Gmail, Contacts, Calendar, Meet, Chat', 'Cloud Storage: Google Drive', 'Content Creation: Docs, Sheets, Slides, Forms', 'Collaboration: Sites, Drawings, Keep', 'Enterprise-wide deployment'],
           },
           {
-            serviceAreaId: 'branch-solutions', title: 'Business Solutions for City Branches', sortOrder: 4,
+            serviceAreaId: 'branch-solutions', title: 'Application Technology Services for City Branches', sortOrder: 4,
             shortDescription: 'Technical support for branch-specific applications including troubleshooting, updates, upgrades, roadmapping, and low-code/no-code app creation.',
             fullDescription: 'Technical support for the identified business areas\' applications. Services include troubleshooting, problem-solving, software updates, application upgrades and maintenance, application roadmapping, and low-code/no-code application creation.\n\nWe work directly with City branches to deliver tailored solutions that meet their unique business needs.',
             features: ['Application troubleshooting and problem-solving', 'Software updates and application upgrades', 'Application maintenance and support', 'Application roadmapping and planning', 'Low-code/no-code application development'],
@@ -719,7 +719,7 @@ async function main() {
       },
     },
   });
-  console.log('Created team: Business Solutions');
+  console.log('Created team: Application Technology Services');
 
   // --- Corporate Information Security ---
   await prisma.team.upsert({

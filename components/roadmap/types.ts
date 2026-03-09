@@ -7,7 +7,7 @@ export enum Quarter {
 
 export type CategoryType =
   | 'Cyber Security'
-  | 'Business Solutions'
+  | 'Application Technology Services'
   | 'Integrated Technology Solutions'
   | 'Project Management Office';
 
