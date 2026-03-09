@@ -16,7 +16,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { teamSlug } = await params;
   const team = await prisma.team.findUnique({
-    where: { slug: teamSlug, isPublished: true },
+    where: { slug: teamSlug, isPublished: true, archivedAt: null },
     select: { teamName: true, pageDescription: true },
   });
 
@@ -36,7 +36,7 @@ export default async function DynamicTeamPage({
   const { teamSlug } = await params;
 
   const team = await prisma.team.findUnique({
-    where: { slug: teamSlug, isPublished: true },
+    where: { slug: teamSlug, isPublished: true, archivedAt: null },
     select: { pageTemplate: true, teamName: true },
   });
 

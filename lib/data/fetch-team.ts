@@ -8,7 +8,7 @@ export async function fetchITSTeamData(
 ): Promise<ITSTeamPageData | null> {
   try {
     const team = await prisma.team.findUnique({
-      where: { slug, isPublished: true },
+      where: { slug, isPublished: true, archivedAt: null },
       include: {
         portfolios: { orderBy: { sortOrder: 'asc' } },
         teamTabs: {
@@ -86,7 +86,7 @@ export async function fetchSubTeamData(
 ): Promise<SubTeamPageData | null> {
   try {
     const team = await prisma.team.findUnique({
-      where: { slug, isPublished: true },
+      where: { slug, isPublished: true, archivedAt: null },
       include: {
         parent: { select: { teamName: true, slug: true } },
         teamServices: { orderBy: { sortOrder: 'asc' } },
@@ -137,7 +137,7 @@ export async function fetchSectionData(slug: string): Promise<{
 } | null> {
   try {
     const team = await prisma.team.findUnique({
-      where: { slug, isPublished: true },
+      where: { slug, isPublished: true, archivedAt: null },
       include: {
         serviceAreas: { orderBy: { sortOrder: 'asc' } },
       },

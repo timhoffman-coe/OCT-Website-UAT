@@ -28,9 +28,9 @@ The site has ~40+ pages covering OCT's five main sections (Technology Planning, 
 - [ ] Zero test coverage
 - [ ] No CI/CD pipeline
 - [ ] No project documentation beyond default README
-- [ ] 17 security findings (2 critical, 4 high)
-- [ ] 10 performance findings (2 high)
-- [ ] 12 enterprise best practice gaps (4 high)
+- [x] 17 security findings (2 critical, 4 high) — 9 of 10 fixed; 1 critical remains (hardcoded secrets)
+- [x] 10 performance findings (2 high) — 5 of 10 fixed; 3 medium + 2 low remain
+- [x] 12 enterprise best practice gaps (4 high) — 7 of 12 fixed; 5 low/medium remain
 
 ---
 
@@ -623,6 +623,15 @@ Priority: **P3** | Final quality pass before full launch.
 | `/oct-assistant` | Complete | Gemini API | — |
 | `/admin` | Complete | PostgreSQL | — |
 | `/login` | Complete | Password auth | Move to IAP |
+
+---
+
+## Upcoming Tasks
+
+- [ ] Main page: Add "Learn more about OCT" and Key Initiatives Spotlight sections
+- [ ] Technology Roadmap: Add user roles for add/edit permissions and conditional rendering
+- [ ] Finish updating diagram on "How OCT Works" page
+- [ ] Tie in OCT Org Chart
 
 ---
 

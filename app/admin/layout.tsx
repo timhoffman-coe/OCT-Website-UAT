@@ -19,13 +19,14 @@ export default async function AdminLayout({
   let teams;
   if (user.role === 'SUPER_ADMIN') {
     teams = await prisma.team.findMany({
+      where: { archivedAt: null },
       orderBy: { sortOrder: 'asc' },
       select: { id: true, teamName: true, slug: true, pageTemplate: true, parentId: true },
     });
   } else {
     const teamIds = user.teamPermissions.map((p) => p.teamId);
     teams = await prisma.team.findMany({
-      where: { id: { in: teamIds } },
+      where: { id: { in: teamIds }, archivedAt: null },
       orderBy: { sortOrder: 'asc' },
       select: { id: true, teamName: true, slug: true, pageTemplate: true, parentId: true },
     });

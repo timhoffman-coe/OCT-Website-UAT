@@ -13,10 +13,16 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const entity = searchParams.get('entity');
+    const teamId = searchParams.get('teamId');
     const limit = parseInt(searchParams.get('limit') || '50', 10);
     const offset = parseInt(searchParams.get('offset') || '0', 10);
 
-    const where = entity ? { entity } : {};
+    const where: Record<string, unknown> = {};
+    if (entity) where.entity = entity;
+    if (teamId) {
+      where.entity = 'Team';
+      where.entityId = teamId;
+    }
 
     const [logs, total] = await Promise.all([
       prisma.auditLog.findMany({

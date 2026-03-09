@@ -1,9 +1,13 @@
 'use client';
 
+import { useTransition } from 'react';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Archive, RotateCcw } from 'lucide-react';
+import { restoreTeam } from '@/lib/actions/team-actions';
 import LayoutEditor from './LayoutEditor';
 import SubTeamsEditor from './SubTeamsEditor';
+import TeamHistory from './TeamHistory';
 import TeamServicesEditor from './TeamServicesEditor';
 import TeamInitiativesEditor from './TeamInitiativesEditor';
 import TeamContactsEditor from './TeamContactsEditor';
@@ -38,6 +42,8 @@ type TeamWithRelations = {
   pageTitle: string | null;
   pageDescription: string | null;
   isPublished: boolean;
+  archivedAt: Date | null;
+  iconName: string | null;
   portfolios: Array<{
     id: string;
     iconName: string;
@@ -130,7 +136,7 @@ type TeamWithRelations = {
     isPublished: boolean;
     sortOrder: number;
   }>;
-  parent: { id: string; teamName: string } | null;
+  parent: { id: string; teamName: string; slug: string } | null;
 };
 
 interface TeamDetailClientProps {
@@ -151,6 +157,9 @@ function getTemplateLabel(template: string): string {
 }
 
 export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetailClientProps) {
+  const router = useRouter();
+  const [isRestoring, startRestoreTransition] = useTransition();
+
   const filteredDefinitions = (() => {
     switch (team.pageTemplate) {
       case 'SECTION':
@@ -177,21 +186,55 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         </Link>
       )}
 
+      {/* Archived Banner */}
+      {team.archivedAt && (
+        <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Archive className="w-5 h-5 text-red-600" />
+            <div>
+              <p className="font-sans text-sm font-semibold text-red-800">This team is archived</p>
+              <p className="font-sans text-xs text-red-600">
+                Archived on {new Date(team.archivedAt).toLocaleDateString()}. Not visible on the public site or admin sidebar.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              startRestoreTransition(async () => {
+                await restoreTeam(team.id);
+                router.refresh();
+              });
+            }}
+            disabled={isRestoring}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-sans font-medium text-white bg-red-600 rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            {isRestoring ? 'Restoring...' : 'Restore'}
+          </button>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-1">
           <h1 className="font-sans text-3xl font-bold text-primary-blue">
             {team.teamName}
           </h1>
-          <span
-            className={`text-xs font-sans px-2 py-0.5 rounded ${
-              team.isPublished
-                ? 'bg-green-100 text-green-800'
-                : 'bg-yellow-100 text-yellow-800'
-            }`}
-          >
-            {team.isPublished ? 'Published' : 'Draft'}
-          </span>
+          {team.archivedAt ? (
+            <span className="text-xs font-sans px-2 py-0.5 rounded bg-red-100 text-red-800">
+              Archived
+            </span>
+          ) : (
+            <span
+              className={`text-xs font-sans px-2 py-0.5 rounded ${
+                team.isPublished
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-yellow-100 text-yellow-800'
+              }`}
+            >
+              {team.isPublished ? 'Published' : 'Draft'}
+            </span>
+          )}
         </div>
         <p className="font-sans text-sm text-gray-500">
           /{team.slug} &middot; {getTemplateLabel(team.pageTemplate)}
@@ -203,6 +246,7 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         teamSlug={team.slug}
         teamName={team.teamName}
         teamShortName={team.teamShortName}
+        isPublished={team.isPublished}
         instances={team.widgetInstances}
         definitions={filteredDefinitions}
         portfolios={team.portfolios}
@@ -211,6 +255,16 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         teamMembers={team.teamMembers}
         serviceAreas={team.serviceAreas}
         accordionGroups={team.accordionGroups}
+        teamDescription={team.pageDescription}
+        teamIconName={team.iconName}
+        parentTeamName={team.parent?.teamName ?? null}
+        parentTeamSlug={team.parent?.slug ?? null}
+        teamServices={team.teamServices}
+        teamInitiatives={team.teamInitiatives}
+        teamContacts={team.teamContacts}
+        teamQuickLinks={team.teamQuickLinks}
+        hasChildren={team.children.length > 0}
+        isArchived={!!team.archivedAt}
       />
 
       {/* Sub-Teams section for SECTION pages */}
@@ -232,6 +286,9 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
           </div>
         </div>
       )}
+
+      {/* Change History */}
+      <TeamHistory teamId={team.id} />
     </div>
   );
 }

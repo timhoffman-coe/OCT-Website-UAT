@@ -3,8 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Plus, ExternalLink } from 'lucide-react';
+import { Plus, ExternalLink, Archive } from 'lucide-react';
 import { createChildTeam } from '@/lib/actions/team-actions';
+import ArchiveConfirmDialog from './ArchiveConfirmDialog';
 
 interface ChildTeam {
   id: string;
@@ -28,6 +29,7 @@ export default function SubTeamsEditor({ parentId, children }: SubTeamsEditorPro
   const [teamShortName, setTeamShortName] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [archiveTarget, setArchiveTarget] = useState<ChildTeam | null>(null);
 
   const handleCreate = async () => {
     if (!slug.trim() || !teamName.trim() || !teamShortName.trim()) {
@@ -134,19 +136,21 @@ export default function SubTeamsEditor({ parentId, children }: SubTeamsEditorPro
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {children.map((child) => (
-            <Link
+            <div
               key={child.id}
-              href={`/admin/teams/${child.id}`}
               className="bg-white border border-gray-200 rounded-lg p-4 hover:border-primary-blue hover:shadow-sm transition-all group"
             >
               <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0">
+                <Link
+                  href={`/admin/teams/${child.id}`}
+                  className="flex-1 min-w-0"
+                >
                   <h3 className="font-sans font-semibold text-primary-blue text-sm truncate group-hover:underline">
                     {child.teamName}
                   </h3>
                   <p className="font-sans text-xs text-gray-500 mt-0.5">/{child.slug}</p>
-                </div>
-                <div className="flex items-center gap-2 ml-2 flex-shrink-0">
+                </Link>
+                <div className="flex items-center gap-1.5 ml-2 flex-shrink-0">
                   <span
                     className={`text-xs font-sans px-1.5 py-0.5 rounded ${
                       child.isPublished
@@ -156,12 +160,38 @@ export default function SubTeamsEditor({ parentId, children }: SubTeamsEditorPro
                   >
                     {child.isPublished ? 'Published' : 'Draft'}
                   </span>
-                  <ExternalLink className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-blue" />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setArchiveTarget(child);
+                    }}
+                    className="p-1 text-gray-400 hover:text-red-600 rounded hover:bg-gray-100 transition-colors"
+                    title="Archive team"
+                  >
+                    <Archive className="w-3.5 h-3.5" />
+                  </button>
+                  <Link
+                    href={`/admin/teams/${child.id}`}
+                    className="p-1 text-gray-400 hover:text-primary-blue"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </Link>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
+      )}
+
+      {/* Archive Confirmation Dialog */}
+      {archiveTarget && (
+        <ArchiveConfirmDialog
+          isOpen={!!archiveTarget}
+          onClose={() => setArchiveTarget(null)}
+          teamId={archiveTarget.id}
+          teamName={archiveTarget.teamName}
+          hasChildren={false}
+        />
       )}
     </div>
   );

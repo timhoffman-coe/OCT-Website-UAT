@@ -29,6 +29,8 @@ import {
   CheckCircle2,
   Save,
   RotateCcw,
+  Globe,
+  Archive,
 } from 'lucide-react';
 import { resolveIcon } from '@/lib/icon-resolver';
 import {
@@ -38,12 +40,14 @@ import {
   updateWidgetConfig,
   resetWidgetsToDefault,
 } from '@/lib/actions/widget-actions';
+import { updateTeam } from '@/lib/actions/team-actions';
 import PortfolioEditor from './PortfolioEditor';
 import TeamTabEditor from './TeamTabEditor';
 import TrelloBoardEditor from './TrelloBoardEditor';
 import TeamMemberEditor from './TeamMemberEditor';
 import ServiceAreaEditor from './ServiceAreaEditor';
 import AccordionLinksEditor from './AccordionLinksEditor';
+import ArchiveConfirmDialog from './ArchiveConfirmDialog';
 import PageHeaderWidget from '@/components/widgets/PageHeaderWidget';
 import PortfoliosWidget from '@/components/widgets/PortfoliosWidget';
 import TeamTabsWidget from '@/components/widgets/TeamTabsWidget';
@@ -53,6 +57,11 @@ import OngoingProjectsWidget from '@/components/widgets/OngoingProjectsWidget';
 import BudgetSpendWidget from '@/components/widgets/BudgetSpendWidget';
 import TeamMembersWidget from '@/components/widgets/TeamMembersWidget';
 import ServiceAreasWidget from '@/components/widgets/ServiceAreasWidget';
+import SubTeamHeaderWidget from '@/components/widgets/SubTeamHeaderWidget';
+import SubTeamServicesWidget from '@/components/widgets/SubTeamServicesWidget';
+import SubTeamInitiativesWidget from '@/components/widgets/SubTeamInitiativesWidget';
+import SubTeamContactsWidget from '@/components/widgets/SubTeamContactsWidget';
+import SubTeamQuickLinksWidget from '@/components/widgets/SubTeamQuickLinksWidget';
 
 // ── Types ──────────────────────────────────────────────
 
@@ -81,6 +90,7 @@ interface LayoutEditorProps {
   teamSlug: string;
   teamName: string;
   teamShortName: string;
+  isPublished: boolean;
   instances: WidgetInstanceData[];
   definitions: WidgetDefinitionData[];
   portfolios: Array<{
@@ -138,6 +148,41 @@ interface LayoutEditorProps {
     sortOrder: number;
     links: Array<{ id: string; label: string; href: string; sortOrder: number }>;
   }>;
+  // Sub-team data
+  teamDescription: string | null;
+  teamIconName: string | null;
+  parentTeamName: string | null;
+  parentTeamSlug: string | null;
+  teamServices: Array<{
+    id: string;
+    title: string;
+    items: string[];
+    sortOrder: number;
+  }>;
+  teamInitiatives: Array<{
+    id: string;
+    title: string;
+    description: string;
+    href: string;
+    sortOrder: number;
+  }>;
+  teamContacts: Array<{
+    id: string;
+    name: string;
+    role: string;
+    email: string;
+    sortOrder: number;
+  }>;
+  teamQuickLinks: Array<{
+    id: string;
+    label: string;
+    description: string;
+    href: string;
+    isSecure: boolean;
+    sortOrder: number;
+  }>;
+  hasChildren: boolean;
+  isArchived: boolean;
 }
 
 // ── Widget Preview Data ────────────────────────────────
@@ -659,6 +704,14 @@ function WidgetInlinePreview({
   teamMembers,
   serviceAreas,
   accordionGroups,
+  teamDescription,
+  teamIconName,
+  parentTeamName,
+  parentTeamSlug,
+  teamServices,
+  teamInitiatives,
+  teamContacts,
+  teamQuickLinks,
 }: {
   widgetType: string;
   config: unknown;
@@ -670,6 +723,14 @@ function WidgetInlinePreview({
   teamMembers: LayoutEditorProps['teamMembers'];
   serviceAreas: LayoutEditorProps['serviceAreas'];
   accordionGroups: LayoutEditorProps['accordionGroups'];
+  teamDescription: string | null;
+  teamIconName: string | null;
+  parentTeamName: string | null;
+  parentTeamSlug: string | null;
+  teamServices: LayoutEditorProps['teamServices'];
+  teamInitiatives: LayoutEditorProps['teamInitiatives'];
+  teamContacts: LayoutEditorProps['teamContacts'];
+  teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
 }) {
   const cfg = (config as Record<string, string>) || {};
 
@@ -759,6 +820,40 @@ function WidgetInlinePreview({
           }))}
         />
       ) : <EmptyWidgetPlaceholder />;
+    case 'subteam_header':
+      return (teamIconName && teamDescription) ? (
+        <SubTeamHeaderWidget
+          teamName={teamName}
+          description={teamDescription}
+          iconName={teamIconName}
+          parentTeam={parentTeamName || ''}
+          parentTeamHref={parentTeamSlug ? `/${parentTeamSlug}` : '#'}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    case 'subteam_services':
+      return teamServices.length > 0 ? (
+        <SubTeamServicesWidget
+          services={teamServices.map(s => ({ title: s.title, items: s.items }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    case 'subteam_initiatives':
+      return teamInitiatives.length > 0 ? (
+        <SubTeamInitiativesWidget
+          initiatives={teamInitiatives.map(i => ({ title: i.title, description: i.description, href: i.href }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    case 'subteam_contacts':
+      return teamContacts.length > 0 ? (
+        <SubTeamContactsWidget
+          contacts={teamContacts.map(c => ({ name: c.name, role: c.role, email: c.email }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    case 'subteam_quick_links':
+      return teamQuickLinks.length > 0 ? (
+        <SubTeamQuickLinksWidget
+          quickLinks={teamQuickLinks.map(ql => ({ label: ql.label, description: ql.description, href: ql.href, isSecure: ql.isSecure }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
     default:
       return null;
   }
@@ -780,6 +875,14 @@ function SortableWidgetItem({
   teamMembers,
   serviceAreas,
   accordionGroups,
+  teamDescription,
+  teamIconName,
+  parentTeamName,
+  parentTeamSlug,
+  teamServices,
+  teamInitiatives,
+  teamContacts,
+  teamQuickLinks,
 }: {
   instance: WidgetInstanceData;
   onRemove: (id: string) => void;
@@ -794,6 +897,14 @@ function SortableWidgetItem({
   teamMembers: LayoutEditorProps['teamMembers'];
   serviceAreas: LayoutEditorProps['serviceAreas'];
   accordionGroups: LayoutEditorProps['accordionGroups'];
+  teamDescription: string | null;
+  teamIconName: string | null;
+  parentTeamName: string | null;
+  parentTeamSlug: string | null;
+  teamServices: LayoutEditorProps['teamServices'];
+  teamInitiatives: LayoutEditorProps['teamInitiatives'];
+  teamContacts: LayoutEditorProps['teamContacts'];
+  teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
 }) {
   const {
     attributes,
@@ -885,6 +996,14 @@ function SortableWidgetItem({
           teamMembers={teamMembers}
           serviceAreas={serviceAreas}
           accordionGroups={accordionGroups}
+          teamDescription={teamDescription}
+          teamIconName={teamIconName}
+          parentTeamName={parentTeamName}
+          parentTeamSlug={parentTeamSlug}
+          teamServices={teamServices}
+          teamInitiatives={teamInitiatives}
+          teamContacts={teamContacts}
+          teamQuickLinks={teamQuickLinks}
         />
       </div>
     </div>
@@ -898,6 +1017,7 @@ export default function LayoutEditor({
   teamSlug,
   teamName,
   teamShortName,
+  isPublished: initialIsPublished,
   instances: initialInstances,
   definitions,
   portfolios,
@@ -906,6 +1026,16 @@ export default function LayoutEditor({
   teamMembers,
   serviceAreas,
   accordionGroups,
+  teamDescription,
+  teamIconName,
+  parentTeamName,
+  parentTeamSlug,
+  teamServices,
+  teamInitiatives,
+  teamContacts,
+  teamQuickLinks,
+  hasChildren,
+  isArchived,
 }: LayoutEditorProps) {
   const [instances, setInstances] = useState(initialInstances);
   const [isPending, startTransition] = useTransition();
@@ -915,6 +1045,17 @@ export default function LayoutEditor({
     label: string;
   } | null>(null);
   const [editingWidget, setEditingWidget] = useState<WidgetInstanceData | null>(null);
+  const [isPublished, setIsPublished] = useState(initialIsPublished);
+  const [publishPending, startPublishTransition] = useTransition();
+  const [showArchiveDialog, setShowArchiveDialog] = useState(false);
+
+  function handleTogglePublish() {
+    const newValue = !isPublished;
+    startPublishTransition(async () => {
+      await updateTeam(teamId, { isPublished: newValue });
+      setIsPublished(newValue);
+    });
+  }
 
   // Save state indicator
   const [showSaved, setShowSaved] = useState(false);
@@ -1065,8 +1206,42 @@ export default function LayoutEditor({
               <ExternalLink className="w-3.5 h-3.5" />
               Preview Page
             </a>
+            {/* Publish / Unpublish button */}
+            <button
+              onClick={handleTogglePublish}
+              disabled={publishPending}
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${
+                isPublished
+                  ? 'bg-white border border-gray-300 text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700'
+                  : 'bg-green-600 text-white hover:bg-green-700'
+              }`}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              {publishPending
+                ? (isPublished ? 'Unpublishing...' : 'Publishing...')
+                : (isPublished ? 'Unpublish' : 'Publish')}
+            </button>
+            {/* Archive button */}
+            {!isArchived && (
+              <button
+                onClick={() => setShowArchiveDialog(true)}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors"
+              >
+                <Archive className="w-3.5 h-3.5" />
+                Archive
+              </button>
+            )}
           </div>
         </div>
+
+        {/* Archive Confirmation Dialog */}
+        <ArchiveConfirmDialog
+          isOpen={showArchiveDialog}
+          onClose={() => setShowArchiveDialog(false)}
+          teamId={teamId}
+          teamName={teamName}
+          hasChildren={hasChildren}
+        />
         <p className="font-sans text-sm text-gray-500 mb-4">
           Drag to reorder sections. Click the pencil to edit widget content.
         </p>
@@ -1104,6 +1279,14 @@ export default function LayoutEditor({
                     teamMembers={teamMembers}
                     serviceAreas={serviceAreas}
                     accordionGroups={accordionGroups}
+                    teamDescription={teamDescription}
+                    teamIconName={teamIconName}
+                    parentTeamName={parentTeamName}
+                    parentTeamSlug={parentTeamSlug}
+                    teamServices={teamServices}
+                    teamInitiatives={teamInitiatives}
+                    teamContacts={teamContacts}
+                    teamQuickLinks={teamQuickLinks}
                   />
                 ))}
               </div>

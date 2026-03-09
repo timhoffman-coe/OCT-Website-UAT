@@ -18,7 +18,7 @@ export default async function UsersPage() {
     }),
     prisma.team.findMany({
       orderBy: { sortOrder: 'asc' },
-      select: { id: true, teamName: true },
+      select: { id: true, teamName: true, parentId: true },
     }),
   ]);
 

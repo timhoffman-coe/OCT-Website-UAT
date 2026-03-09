@@ -55,7 +55,7 @@ export default async function TeamDetailPage({
           select: { id: true, slug: true, teamName: true, teamShortName: true, isPublished: true, sortOrder: true },
         },
         parent: {
-          select: { id: true, teamName: true },
+          select: { id: true, teamName: true, slug: true },
         },
       },
     }),

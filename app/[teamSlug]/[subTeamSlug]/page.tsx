@@ -15,7 +15,7 @@ export default async function SubTeamPage({
 
   // Verify the sub-team exists and its parent matches the URL
   const subTeam = await prisma.team.findUnique({
-    where: { slug: subTeamSlug, isPublished: true },
+    where: { slug: subTeamSlug, isPublished: true, archivedAt: null },
     select: {
       id: true,
       pageTemplate: true,

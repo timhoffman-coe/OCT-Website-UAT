@@ -9,8 +9,8 @@ export default async function AdminDashboard() {
 
   // Fetch teams based on role
   const teamWhere = user.role === 'SUPER_ADMIN'
-    ? {}
-    : { id: { in: user.teamPermissions.map((p: { teamId: string }) => p.teamId) } };
+    ? { archivedAt: null }
+    : { id: { in: user.teamPermissions.map((p: { teamId: string }) => p.teamId) }, archivedAt: null };
   const teams = await prisma.team.findMany({
     where: teamWhere,
     orderBy: { sortOrder: 'asc' },

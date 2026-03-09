@@ -21,7 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const teams = await prisma.team.findMany({
-    where: { isPublished: true },
+    where: { isPublished: true, archivedAt: null },
     select: { slug: true, updatedAt: true },
   });
 

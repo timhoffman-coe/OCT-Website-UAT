@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, ClipboardList, ChevronRight, ChevronDown } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown } from 'lucide-react';
 
 interface Team {
   id: string;
@@ -213,6 +213,17 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
             >
               <ClipboardList className="w-4 h-4" />
               Audit Log
+            </Link>
+            <Link
+              href="/admin/trash"
+              className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                isActive('/admin/trash')
+                  ? 'bg-primary-blue text-white'
+                  : 'text-white/80 hover:bg-white/10'
+              }`}
+            >
+              <Trash2 className="w-4 h-4" />
+              Trash
             </Link>
           </div>
         )}
