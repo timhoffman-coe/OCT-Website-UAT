@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: coe_cms
+      POSTGRES_USER: coe_admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U coe_admin -d coe_cms"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: ghcr.io/jmcgilliscoe/oct-website:latest
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://coe_admin:${POSTGRES_PASSWORD}@postgres:5432/coe_cms
+    volumes:
+      - ./service-account.json:/app/service-account.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  migrate:
+    image: ghcr.io/jmcgilliscoe/oct-website:builder
+    command: npx prisma migrate deploy --config prisma/prisma.config.ts
+    environment:
+      - DATABASE_URL=postgresql://coe_admin:${POSTGRES_PASSWORD}@postgres:5432/coe_cms
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - tools
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  pgdata:
