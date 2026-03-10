@@ -144,18 +144,37 @@ export async function fetchSectionData(slug: string): Promise<{
     });
     if (!team || !team.pageTitle) return null;
 
+    // Collect slugs from service area links (e.g. "/some-slug" → "some-slug")
+    const linkedSlugs = team.serviceAreas
+      .map((sa) => sa.link?.replace(/^\//, ''))
+      .filter((s): s is string => !!s);
+
+    // Find which of those linked teams are actually published
+    const publishedTeams = linkedSlugs.length > 0
+      ? await prisma.team.findMany({
+          where: { slug: { in: linkedSlugs }, isPublished: true, archivedAt: null },
+          select: { slug: true },
+        })
+      : [];
+    const publishedSlugs = new Set(publishedTeams.map((t) => t.slug));
+
     return {
       pageTitle: team.pageTitle,
       pageDescription: team.pageDescription || '',
-      serviceAreas: team.serviceAreas.map((sa) => ({
-        id: sa.serviceAreaId,
-        title: sa.title,
-        icon: sa.icon || undefined,
-        shortDescription: sa.shortDescription,
-        fullDescription: sa.fullDescription,
-        features: sa.features,
-        link: sa.link || undefined,
-      })),
+      serviceAreas: team.serviceAreas.map((sa) => {
+        const linkedSlug = sa.link?.replace(/^\//, '');
+        // Only include the link if the target team is published
+        const isLinkPublished = linkedSlug ? publishedSlugs.has(linkedSlug) : false;
+        return {
+          id: sa.serviceAreaId,
+          title: sa.title,
+          icon: sa.icon || undefined,
+          shortDescription: sa.shortDescription,
+          fullDescription: sa.fullDescription,
+          features: sa.features,
+          link: isLinkPublished ? sa.link || undefined : undefined,
+        };
+      }),
     };
   } catch {
     return null;
