@@ -106,6 +106,8 @@ model Team {
   teamInitiatives TeamInitiative[]
   teamContacts    TeamContact[]
   teamQuickLinks  TeamQuickLink[]
+  whoWeAreItems   WhoWeAreItem[]
+  keyInitiativeSlides KeyInitiativeSlide[]
 
   linkedFromPortfolio Portfolio? @relation("PortfolioLinkedTeam")
 
@@ -378,6 +380,42 @@ model TeamQuickLink {
   description String
   href        String
   isSecure    Boolean @default(false)
+  sortOrder   Int     @default(0)
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+}
+
+// ============================================================
+// CONTENT: WHO WE ARE (SectionTemplate pages)
+// ============================================================
+
+model WhoWeAreItem {
+  id          String @id @default(cuid())
+  teamId      String
+  title       String
+  description String
+  linkText    String @default("Learn More")
+  linkUrl     String
+  sortOrder   Int    @default(0)
+
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@index([teamId])
+}
+
+// ============================================================
+// CONTENT: KEY INITIATIVE SLIDES (SectionTemplate pages)
+// ============================================================
+
+model KeyInitiativeSlide {
+  id          String  @id @default(cuid())
+  teamId      String
+  title       String
+  description String
+  imageUrl    String?
+  imageAlt    String  @default("")
   sortOrder   Int     @default(0)
 
   team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)

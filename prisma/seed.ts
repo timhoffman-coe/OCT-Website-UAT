@@ -930,6 +930,8 @@ async function main() {
     { widgetType: 'budget_spend', label: 'Budget & Spend', description: 'Budget overview card with link to financial reports', icon: 'BarChart3' },
     { widgetType: 'team_members', label: 'Who We Are', description: 'Team member cards grid with contact info', icon: 'Users' },
     { widgetType: 'service_areas', label: 'Service Areas', description: 'Service area cards with modal detail views', icon: 'Layers' },
+    { widgetType: 'who_we_are', label: 'Who We Are', description: 'Two-column layout with video placeholder and accordion items', icon: 'Info' },
+    { widgetType: 'key_initiatives', label: 'Key Initiatives', description: 'Carousel spotlight of key initiatives with images', icon: 'Rocket' },
     { widgetType: 'subteam_header', label: 'Sub-Team Header', description: 'Hero section with icon, title, and breadcrumb', icon: 'LayoutGrid' },
     { widgetType: 'subteam_services', label: 'Our Services', description: 'Grid of service cards with bullet items', icon: 'Briefcase' },
     { widgetType: 'subteam_initiatives', label: 'Current Initiatives', description: 'Initiative cards with descriptions and links', icon: 'Rocket' },

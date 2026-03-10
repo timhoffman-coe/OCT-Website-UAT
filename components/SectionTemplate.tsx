@@ -17,6 +17,8 @@ interface SectionTemplateProps {
   pageTitle: string;
   pageDescription: string;
   serviceAreas: ServiceArea[];
+  whoWeAreItems?: { title: string; description: string; linkText: string; linkUrl: string }[];
+  keyInitiativeSlides?: { title: string; description: string; imageUrl?: string; imageAlt: string }[];
   widgetOrder?: string[];
 }
 
@@ -24,6 +26,8 @@ export default function SectionTemplate({
   pageTitle,
   pageDescription,
   serviceAreas,
+  whoWeAreItems,
+  keyInitiativeSlides,
   widgetOrder,
 }: SectionTemplateProps) {
   const order = widgetOrder || [...DEFAULT_SECTION_WIDGETS];
@@ -32,6 +36,8 @@ export default function SectionTemplate({
     pageTitle,
     pageDescription,
     serviceAreas,
+    whoWeAreItems,
+    keyInitiativeSlides,
   };
 
   return (

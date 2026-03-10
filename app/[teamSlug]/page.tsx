@@ -52,6 +52,8 @@ export default async function DynamicTeamPage({
         pageTitle={data?.pageTitle || team.teamName}
         pageDescription={data?.pageDescription || ''}
         serviceAreas={data?.serviceAreas || []}
+        whoWeAreItems={data?.whoWeAreItems || []}
+        keyInitiativeSlides={data?.keyInitiativeSlides || []}
         widgetOrder={widgetOrder || undefined}
       />
     );

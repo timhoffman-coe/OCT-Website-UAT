@@ -134,12 +134,16 @@ export async function fetchSectionData(slug: string): Promise<{
   pageTitle: string;
   pageDescription: string;
   serviceAreas: ServiceArea[];
+  whoWeAreItems: { title: string; description: string; linkText: string; linkUrl: string }[];
+  keyInitiativeSlides: { title: string; description: string; imageUrl?: string; imageAlt: string }[];
 } | null> {
   try {
     const team = await prisma.team.findUnique({
       where: { slug, isPublished: true, archivedAt: null },
       include: {
         serviceAreas: { orderBy: { sortOrder: 'asc' } },
+        whoWeAreItems: { orderBy: { sortOrder: 'asc' } },
+        keyInitiativeSlides: { orderBy: { sortOrder: 'asc' } },
       },
     });
     if (!team || !team.pageTitle) return null;
@@ -175,6 +179,18 @@ export async function fetchSectionData(slug: string): Promise<{
           link: isLinkPublished ? sa.link || undefined : undefined,
         };
       }),
+      whoWeAreItems: team.whoWeAreItems.map((item) => ({
+        title: item.title,
+        description: item.description,
+        linkText: item.linkText,
+        linkUrl: item.linkUrl,
+      })),
+      keyInitiativeSlides: team.keyInitiativeSlides.map((slide) => ({
+        title: slide.title,
+        description: slide.description,
+        imageUrl: slide.imageUrl || undefined,
+        imageAlt: slide.imageAlt,
+      })),
     };
   } catch {
     return null;

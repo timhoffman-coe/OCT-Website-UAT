@@ -128,6 +128,22 @@ type TeamWithRelations = {
     isSecure: boolean;
     sortOrder: number;
   }>;
+  whoWeAreItems: Array<{
+    id: string;
+    title: string;
+    description: string;
+    linkText: string;
+    linkUrl: string;
+    sortOrder: number;
+  }>;
+  keyInitiativeSlides: Array<{
+    id: string;
+    title: string;
+    description: string;
+    imageUrl: string | null;
+    imageAlt: string;
+    sortOrder: number;
+  }>;
   children: Array<{
     id: string;
     slug: string;
@@ -144,7 +160,7 @@ interface TeamDetailClientProps {
   widgetDefinitions: WidgetDefinitionData[];
 }
 
-const SECTION_WIDGET_TYPES = ['service_areas'];
+const SECTION_WIDGET_TYPES = ['service_areas', 'who_we_are', 'key_initiatives'];
 const SUB_TEAM_WIDGET_TYPES = ['subteam_header', 'subteam_services', 'subteam_initiatives', 'subteam_contacts', 'subteam_quick_links'];
 
 function getTemplateLabel(template: string): string {
@@ -255,6 +271,8 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         teamMembers={team.teamMembers}
         serviceAreas={team.serviceAreas}
         accordionGroups={team.accordionGroups}
+        pageTitle={team.pageTitle}
+        pageDescription={team.pageDescription}
         teamDescription={team.pageDescription}
         teamIconName={team.iconName}
         parentTeamName={team.parent?.teamName ?? null}
@@ -263,6 +281,8 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         teamInitiatives={team.teamInitiatives}
         teamContacts={team.teamContacts}
         teamQuickLinks={team.teamQuickLinks}
+        whoWeAreItems={team.whoWeAreItems}
+        keyInitiativeSlides={team.keyInitiativeSlides}
         hasChildren={team.children.length > 0}
         isArchived={!!team.archivedAt}
       />

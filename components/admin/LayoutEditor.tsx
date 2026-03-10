@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useRef, useEffect, useCallback } from 'react';
+import { useState, useTransition, useRef, useEffect, useCallback, useId } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -46,6 +46,8 @@ import TeamTabEditor from './TeamTabEditor';
 import TrelloBoardEditor from './TrelloBoardEditor';
 import TeamMemberEditor from './TeamMemberEditor';
 import ServiceAreaEditor from './ServiceAreaEditor';
+import WhoWeAreEditor from './WhoWeAreEditor';
+import KeyInitiativesEditor from './KeyInitiativesEditor';
 import AccordionLinksEditor from './AccordionLinksEditor';
 import ArchiveConfirmDialog from './ArchiveConfirmDialog';
 import PageHeaderWidget from '@/components/widgets/PageHeaderWidget';
@@ -57,6 +59,8 @@ import OngoingProjectsWidget from '@/components/widgets/OngoingProjectsWidget';
 import BudgetSpendWidget from '@/components/widgets/BudgetSpendWidget';
 import TeamMembersWidget from '@/components/widgets/TeamMembersWidget';
 import ServiceAreasWidget from '@/components/widgets/ServiceAreasWidget';
+import WhoWeAreWidget from '@/components/widgets/WhoWeAreWidget';
+import KeyInitiativesWidget from '@/components/widgets/KeyInitiativesWidget';
 import SubTeamHeaderWidget from '@/components/widgets/SubTeamHeaderWidget';
 import SubTeamServicesWidget from '@/components/widgets/SubTeamServicesWidget';
 import SubTeamInitiativesWidget from '@/components/widgets/SubTeamInitiativesWidget';
@@ -181,6 +185,24 @@ interface LayoutEditorProps {
     isSecure: boolean;
     sortOrder: number;
   }>;
+  pageTitle: string | null;
+  pageDescription: string | null;
+  whoWeAreItems: Array<{
+    id: string;
+    title: string;
+    description: string;
+    linkText: string;
+    linkUrl: string;
+    sortOrder: number;
+  }>;
+  keyInitiativeSlides: Array<{
+    id: string;
+    title: string;
+    description: string;
+    imageUrl: string | null;
+    imageAlt: string;
+    sortOrder: number;
+  }>;
   hasChildren: boolean;
   isArchived: boolean;
 }
@@ -296,6 +318,29 @@ const WIDGET_PREVIEWS: Record<string, WidgetPreviewInfo> = {
       'Click to open detail modal with features and links',
     ],
     schematic: '3-col',
+  },
+  who_we_are: {
+    description:
+      'A two-column layout with a video placeholder on the left and an accordion of information items on the right.',
+    layoutType: 'Two-column with accordion',
+    contents: [
+      '"Who We Are" section heading',
+      'Video placeholder area',
+      'Expandable accordion items with descriptions and links',
+    ],
+    schematic: '2-col',
+  },
+  key_initiatives: {
+    description:
+      'A carousel spotlight showcasing key initiatives with images, titles, and descriptions. Includes navigation dots and prev/next buttons.',
+    layoutType: 'Carousel slider',
+    contents: [
+      '"Key Initiatives Spotlight" heading',
+      'Slide images with overlay text',
+      'Previous/Next navigation buttons',
+      'Dot indicators for slide navigation',
+    ],
+    schematic: 'full-width',
   },
 };
 
@@ -575,6 +620,8 @@ function WidgetEditorModal({
   teamMembers,
   serviceAreas,
   accordionGroups,
+  whoWeAreItems,
+  keyInitiativeSlides,
 }: {
   instance: WidgetInstanceData;
   teamId: string;
@@ -586,6 +633,8 @@ function WidgetEditorModal({
   teamMembers: LayoutEditorProps['teamMembers'];
   serviceAreas: LayoutEditorProps['serviceAreas'];
   accordionGroups: LayoutEditorProps['accordionGroups'];
+  whoWeAreItems: LayoutEditorProps['whoWeAreItems'];
+  keyInitiativeSlides: LayoutEditorProps['keyInitiativeSlides'];
 }) {
   const IconComponent = resolveIcon(instance.widgetDefinition.icon);
   const widgetType = instance.widgetDefinition.widgetType;
@@ -629,6 +678,10 @@ function WidgetEditorModal({
         return <TeamMemberEditor teamId={teamId} members={teamMembers} />;
       case 'service_areas':
         return <ServiceAreaEditor teamId={teamId} areas={serviceAreas} />;
+      case 'who_we_are':
+        return <WhoWeAreEditor teamId={teamId} items={whoWeAreItems} />;
+      case 'key_initiatives':
+        return <KeyInitiativesEditor teamId={teamId} slides={keyInitiativeSlides} />;
       case 'accordion_links':
         return <AccordionLinksEditor teamId={teamId} groups={accordionGroups} />;
       default:
@@ -712,6 +765,8 @@ function WidgetInlinePreview({
   teamInitiatives,
   teamContacts,
   teamQuickLinks,
+  whoWeAreItems,
+  keyInitiativeSlides,
 }: {
   widgetType: string;
   config: unknown;
@@ -731,6 +786,8 @@ function WidgetInlinePreview({
   teamInitiatives: LayoutEditorProps['teamInitiatives'];
   teamContacts: LayoutEditorProps['teamContacts'];
   teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
+  whoWeAreItems: LayoutEditorProps['whoWeAreItems'];
+  keyInitiativeSlides: LayoutEditorProps['keyInitiativeSlides'];
 }) {
   const cfg = (config as Record<string, string>) || {};
 
@@ -820,6 +877,28 @@ function WidgetInlinePreview({
           }))}
         />
       ) : <EmptyWidgetPlaceholder />;
+    case 'who_we_are':
+      return whoWeAreItems.length > 0 ? (
+        <WhoWeAreWidget
+          items={whoWeAreItems.map((i) => ({
+            title: i.title,
+            description: i.description,
+            linkText: i.linkText,
+            linkUrl: i.linkUrl,
+          }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
+    case 'key_initiatives':
+      return keyInitiativeSlides.length > 0 ? (
+        <KeyInitiativesWidget
+          slides={keyInitiativeSlides.map((s) => ({
+            title: s.title,
+            description: s.description,
+            imageUrl: s.imageUrl || undefined,
+            imageAlt: s.imageAlt,
+          }))}
+        />
+      ) : <EmptyWidgetPlaceholder />;
     case 'subteam_header':
       return (teamIconName && teamDescription) ? (
         <SubTeamHeaderWidget
@@ -883,6 +962,8 @@ function SortableWidgetItem({
   teamInitiatives,
   teamContacts,
   teamQuickLinks,
+  whoWeAreItems,
+  keyInitiativeSlides,
 }: {
   instance: WidgetInstanceData;
   onRemove: (id: string) => void;
@@ -905,6 +986,8 @@ function SortableWidgetItem({
   teamInitiatives: LayoutEditorProps['teamInitiatives'];
   teamContacts: LayoutEditorProps['teamContacts'];
   teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
+  whoWeAreItems: LayoutEditorProps['whoWeAreItems'];
+  keyInitiativeSlides: LayoutEditorProps['keyInitiativeSlides'];
 }) {
   const {
     attributes,
@@ -1004,6 +1087,8 @@ function SortableWidgetItem({
           teamInitiatives={teamInitiatives}
           teamContacts={teamContacts}
           teamQuickLinks={teamQuickLinks}
+          whoWeAreItems={whoWeAreItems}
+          keyInitiativeSlides={keyInitiativeSlides}
         />
       </div>
     </div>
@@ -1026,6 +1111,8 @@ export default function LayoutEditor({
   teamMembers,
   serviceAreas,
   accordionGroups,
+  pageTitle: initialPageTitle,
+  pageDescription: initialPageDescription,
   teamDescription,
   teamIconName,
   parentTeamName,
@@ -1034,9 +1121,12 @@ export default function LayoutEditor({
   teamInitiatives,
   teamContacts,
   teamQuickLinks,
+  whoWeAreItems,
+  keyInitiativeSlides,
   hasChildren,
   isArchived,
 }: LayoutEditorProps) {
+  const dndId = useId();
   const [instances, setInstances] = useState(initialInstances);
   const [isPending, startTransition] = useTransition();
   const [previewWidget, setPreviewWidget] = useState<{
@@ -1048,12 +1138,26 @@ export default function LayoutEditor({
   const [isPublished, setIsPublished] = useState(initialIsPublished);
   const [publishPending, startPublishTransition] = useTransition();
   const [showArchiveDialog, setShowArchiveDialog] = useState(false);
+  const [pageTitle, setPageTitle] = useState(initialPageTitle || '');
+  const [pageDescription, setPageDescription] = useState(initialPageDescription || '');
+  const [editingPageText, setEditingPageText] = useState(false);
+  const [pageTextPending, startPageTextTransition] = useTransition();
 
   function handleTogglePublish() {
     const newValue = !isPublished;
     startPublishTransition(async () => {
       await updateTeam(teamId, { isPublished: newValue });
       setIsPublished(newValue);
+    });
+  }
+
+  function handleSavePageText() {
+    startPageTextTransition(async () => {
+      await updateTeam(teamId, {
+        pageTitle: pageTitle || undefined,
+        pageDescription: pageDescription || undefined,
+      });
+      setEditingPageText(false);
     });
   }
 
@@ -1242,6 +1346,71 @@ export default function LayoutEditor({
           teamName={teamName}
           hasChildren={hasChildren}
         />
+        {/* Page Text Editor */}
+        {(initialPageTitle !== null || initialPageDescription !== null) && (
+          <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="font-sans text-sm font-semibold text-gray-900">Page Header Text</h4>
+              {!editingPageText ? (
+                <button
+                  onClick={() => setEditingPageText(true)}
+                  className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-gray-100"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+              ) : (
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSavePageText}
+                    disabled={pageTextPending}
+                    className="flex items-center gap-1 bg-primary-blue text-white text-sm px-3 py-1.5 rounded hover:bg-dark-blue disabled:opacity-50"
+                  >
+                    <Save className="w-3 h-3" /> Save
+                  </button>
+                  <button
+                    onClick={() => {
+                      setPageTitle(initialPageTitle || '');
+                      setPageDescription(initialPageDescription || '');
+                      setEditingPageText(false);
+                    }}
+                    className="flex items-center gap-1 text-gray-600 text-sm px-3 py-1.5 rounded hover:bg-gray-100"
+                  >
+                    <X className="w-3 h-3" /> Cancel
+                  </button>
+                </div>
+              )}
+            </div>
+            {editingPageText ? (
+              <div className="space-y-3">
+                <div>
+                  <label className="block font-sans text-xs text-gray-500 mb-1">Page Title</label>
+                  <input
+                    value={pageTitle}
+                    onChange={(e) => setPageTitle(e.target.value)}
+                    className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
+                    placeholder="e.g. Infrastructure Technology"
+                  />
+                </div>
+                <div>
+                  <label className="block font-sans text-xs text-gray-500 mb-1">Page Description</label>
+                  <textarea
+                    value={pageDescription}
+                    onChange={(e) => setPageDescription(e.target.value)}
+                    rows={3}
+                    className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
+                    placeholder="A short description of the section..."
+                  />
+                </div>
+              </div>
+            ) : (
+              <div>
+                <p className="font-sans font-semibold text-gray-900">{pageTitle || <span className="text-gray-400 italic">No title set</span>}</p>
+                <p className="font-sans text-sm text-gray-500 mt-1">{pageDescription || <span className="text-gray-400 italic">No description set</span>}</p>
+              </div>
+            )}
+          </div>
+        )}
+
         <p className="font-sans text-sm text-gray-500 mb-4">
           Drag to reorder sections. Click the pencil to edit widget content.
         </p>
@@ -1254,6 +1423,7 @@ export default function LayoutEditor({
           </div>
         ) : (
           <DndContext
+            id={dndId}
             sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
@@ -1287,6 +1457,8 @@ export default function LayoutEditor({
                     teamInitiatives={teamInitiatives}
                     teamContacts={teamContacts}
                     teamQuickLinks={teamQuickLinks}
+                    whoWeAreItems={whoWeAreItems}
+                    keyInitiativeSlides={keyInitiativeSlides}
                   />
                 ))}
               </div>
@@ -1373,6 +1545,8 @@ export default function LayoutEditor({
           teamMembers={teamMembers}
           serviceAreas={serviceAreas}
           accordionGroups={accordionGroups}
+          whoWeAreItems={whoWeAreItems}
+          keyInitiativeSlides={keyInitiativeSlides}
         />
       )}
     </div>

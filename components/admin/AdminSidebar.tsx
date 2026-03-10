@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink } from 'lucide-react';
 
 interface Team {
   id: string;
@@ -68,10 +68,19 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
     <aside className="w-64 bg-dark-blue min-h-screen flex flex-col text-white flex-shrink-0">
       {/* Header */}
       <div className="p-4 border-b border-white/10">
-        <Link href="/admin" className="block">
-          <h2 className="font-sans text-lg font-bold">OCT CMS</h2>
-          <p className="font-sans text-xs text-white/60">Content Management</p>
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/admin" className="block">
+            <h2 className="font-sans text-lg font-bold">OCT CMS</h2>
+            <p className="font-sans text-xs text-white/60">Content Management</p>
+          </Link>
+          <Link
+            href="/"
+            className="p-1.5 text-white/50 hover:text-white hover:bg-white/10 rounded transition-colors"
+            title="View Website"
+          >
+            <ExternalLink className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
 
       {/* Navigation */}

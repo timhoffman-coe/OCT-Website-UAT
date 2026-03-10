@@ -20,7 +20,7 @@ if [ ! -f "Dockerfile" ]; then
   exit 1
 fi
 
-if ! docker login ghcr.io --get-login >/dev/null 2>&1; then
+if ! grep -q "ghcr.io" ~/.docker/config.json 2>/dev/null; then
   echo "ERROR: Not logged in to ghcr.io. Run:"
   echo '  echo "YOUR_PAT" | docker login ghcr.io -u JmcgillisCOE --password-stdin'
   exit 1

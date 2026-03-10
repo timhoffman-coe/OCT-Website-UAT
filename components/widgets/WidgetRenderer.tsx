@@ -7,6 +7,8 @@ import OngoingProjectsWidget from './OngoingProjectsWidget';
 import BudgetSpendWidget from './BudgetSpendWidget';
 import TeamMembersWidget from './TeamMembersWidget';
 import ServiceAreasWidget from './ServiceAreasWidget';
+import WhoWeAreWidget from './WhoWeAreWidget';
+import KeyInitiativesWidget from './KeyInitiativesWidget';
 import SubTeamHeaderWidget from './SubTeamHeaderWidget';
 import SubTeamServicesWidget from './SubTeamServicesWidget';
 import SubTeamInitiativesWidget from './SubTeamInitiativesWidget';
@@ -49,6 +51,8 @@ export interface WidgetDataBag {
   pageTitle?: string;
   pageDescription?: string;
   serviceAreas?: ServiceArea[];
+  whoWeAreItems?: { title: string; description: string; linkText: string; linkUrl: string }[];
+  keyInitiativeSlides?: { title: string; description: string; imageUrl?: string; imageAlt: string }[];
   widgetConfigs?: Record<string, Record<string, string>>;
   // Sub-team fields
   parentTeam?: string;
@@ -119,6 +123,16 @@ export default function WidgetRenderer({ widgetOrder, data }: WidgetRendererProp
           case 'service_areas':
             return data.serviceAreas?.length ? (
               <ServiceAreasWidget key={index} serviceAreas={data.serviceAreas} />
+            ) : null;
+
+          case 'who_we_are':
+            return data.whoWeAreItems?.length ? (
+              <WhoWeAreWidget key={index} items={data.whoWeAreItems} />
+            ) : null;
+
+          case 'key_initiatives':
+            return data.keyInitiativeSlides?.length ? (
+              <KeyInitiativesWidget key={index} slides={data.keyInitiativeSlides} />
             ) : null;
 
           case 'subteam_header':

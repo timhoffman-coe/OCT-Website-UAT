@@ -38,6 +38,8 @@ export default async function TeamDetailPage({
         trelloBoards: { orderBy: { sortOrder: 'asc' } },
         teamMembers: { orderBy: { sortOrder: 'asc' } },
         serviceAreas: { orderBy: { sortOrder: 'asc' } },
+        whoWeAreItems: { orderBy: { sortOrder: 'asc' } },
+        keyInitiativeSlides: { orderBy: { sortOrder: 'asc' } },
         accordionGroups: {
           orderBy: { sortOrder: 'asc' },
           include: { links: { orderBy: { sortOrder: 'asc' } } },
