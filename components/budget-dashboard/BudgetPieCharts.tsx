@@ -7,6 +7,7 @@ const COLORS = ['#0081BC', '#109D7E', '#FAB840', '#EA5853', '#99479A', '#2F63AD'
 interface ChartDataItem {
   name: string;
   value: number;
+  [key: string]: string | number;
 }
 
 interface BudgetPieChartsProps {

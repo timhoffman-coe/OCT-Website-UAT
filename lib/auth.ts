@@ -8,7 +8,7 @@ export async function getCurrentUser() {
 
   const user = await prisma.user.findUnique({
     where: { email },
-    include: { teamPermissions: true },
+    include: { teamPermissions: true, roadmapPermission: true },
   });
 
   return user;
@@ -38,6 +38,20 @@ export async function requireSuperAdmin() {
   if (user.role !== 'SUPER_ADMIN') {
     throw new Error('Forbidden: Super admin required');
   }
+  return user;
+}
+
+export async function canEditRoadmap(): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user) return false;
+  if (user.role === 'SUPER_ADMIN') return true;
+  return !!user.roadmapPermission;
+}
+
+export async function requireRoadmapAccess() {
+  const user = await requireUser();
+  if (user.role === 'SUPER_ADMIN') return user;
+  if (!user.roadmapPermission) throw new Error('Forbidden: No roadmap edit access');
   return user;
 }
 

@@ -1073,6 +1073,66 @@ async function main() {
     console.log('Sub-teams already exist, skipping migration...');
   }
 
+  // ============================================================
+  // 9. Seed Roadmap Sections & Sample Projects
+  // ============================================================
+  const existingRoadmapSections = await prisma.roadmapSection.count();
+  if (existingRoadmapSections === 0) {
+    const roadmapSections = [
+      {
+        title: 'Application Technology Services',
+        color: 'sea-green',
+        sortOrder: 0,
+        projects: [
+          { name: 'ERP Migration Phase 1', owner: 'Steve', startYear: 1, endYear: 1, startQuarter: 2, endQuarter: 4, progress: 10, sortOrder: 0 },
+          { name: 'Cloud Transition', owner: 'Team Cloud', startYear: 1, endYear: 2, startQuarter: 4, endQuarter: 3, progress: 0, sortOrder: 1 },
+        ],
+      },
+      {
+        title: 'Cyber Security',
+        color: 'watermelon',
+        sortOrder: 1,
+        projects: [
+          { name: 'Identity Access Mgmt', owner: 'Jonathan', startYear: 1, endYear: 1, startQuarter: 1, endQuarter: 2, progress: 20, sortOrder: 0 },
+          { name: 'Penetration Testing', owner: 'Maria', startYear: 1, endYear: 1, startQuarter: 3, endQuarter: 3, progress: 0, sortOrder: 1 },
+        ],
+      },
+      {
+        title: 'Integrated Technology Solutions',
+        color: 'empire-blue',
+        sortOrder: 2,
+        projects: [
+          { name: 'API Gateway Setup', owner: 'Sophie', startYear: 1, endYear: 1, startQuarter: 1, endQuarter: 2, progress: 60, sortOrder: 0 },
+          { name: 'Legacy Decommission', owner: 'Sophie', startYear: 2, endYear: 3, startQuarter: 1, endQuarter: 4, progress: 0, sortOrder: 1 },
+        ],
+      },
+      {
+        title: 'Project Management Office',
+        color: 'violet-night',
+        sortOrder: 3,
+        projects: [
+          { name: 'Agile Transformation', owner: 'Andy', startYear: 1, endYear: 1, startQuarter: 1, endQuarter: 4, progress: 35, sortOrder: 0 },
+        ],
+      },
+    ];
+
+    for (const section of roadmapSections) {
+      await prisma.roadmapSection.create({
+        data: {
+          title: section.title,
+          color: section.color,
+          sortOrder: section.sortOrder,
+          projects: {
+            create: section.projects,
+          },
+        },
+      });
+    }
+    console.log('Created roadmap sections with sample projects');
+  } else {
+    console.log('Roadmap sections already exist, skipping...');
+  }
+
   console.log('Seeding complete!');
 }
 

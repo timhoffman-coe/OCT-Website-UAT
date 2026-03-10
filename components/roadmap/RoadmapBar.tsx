@@ -2,15 +2,15 @@
 
 import React from 'react';
 import { Project } from './types';
-// import { Edit2, Trash2 } from 'lucide-react'; // Commented out for future RBAC integration
+import { Edit2, Trash2 } from 'lucide-react';
 
 interface RoadmapBarProps {
   project: Project;
   colorBase: string;
   left: number; // Percentage
   width: number; // Percentage
-  // onClick: () => void; // Commented out for future RBAC integration
-  // onDelete: (e: React.MouseEvent) => void; // Commented out for future RBAC integration
+  onClick?: () => void;
+  onDelete?: (e: React.MouseEvent) => void;
 }
 
 // Map color bases to specific hex codes from the brand palette
@@ -25,43 +25,49 @@ const getColorClasses = (base: string) => {
   }
 };
 
-const RoadmapBar: React.FC<RoadmapBarProps> = ({ project, colorBase, left, width }) => {
+const RoadmapBar: React.FC<RoadmapBarProps> = ({ project, colorBase, left, width, onClick, onDelete }) => {
   return (
     <div
-      className="absolute h-8 top-1.5 rounded-md shadow-md cursor-default group transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden"
+      className={`absolute h-8 top-1.5 rounded-md shadow-md group transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden ${
+        onClick ? 'cursor-pointer' : 'cursor-default'
+      }`}
       style={{
         left: `${left}%`,
         width: `${width}%`,
         marginLeft: '2px',
         maxWidth: `calc(${width}% - 4px)` // Prevent overlap issues with tiny gaps
       }}
-      // onClick={onClick} // Commented out for future RBAC integration
+      onClick={onClick}
     >
       <div className={`w-full h-full ${getColorClasses(colorBase)} border-b-2 flex items-center justify-between px-3`}>
         <span className="text-white text-xs font-bold truncate tracking-wide drop-shadow-sm">
           {project.name.toUpperCase()}
         </span>
 
-        {/* Edit/Delete buttons - Commented out for future RBAC integration
-        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button
-            className="text-white/80 hover:text-white"
-            title="Edit"
-          >
-            <Edit2 size={12} />
-          </button>
-          <button
-            className="text-white/80 hover:text-white"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(e);
-            }}
-            title="Delete"
-          >
-            <Trash2 size={12} />
-          </button>
-        </div>
-        */}
+        {(onClick || onDelete) && (
+          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            {onClick && (
+              <button
+                className="text-white/80 hover:text-white"
+                title="Edit"
+              >
+                <Edit2 size={12} />
+              </button>
+            )}
+            {onDelete && (
+              <button
+                className="text-white/80 hover:text-white"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(e);
+                }}
+                title="Delete"
+              >
+                <Trash2 size={12} />
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Glossy overlay effect */}

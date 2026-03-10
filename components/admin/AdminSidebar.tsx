@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket } from 'lucide-react';
 
 interface Team {
   id: string;
@@ -214,6 +214,17 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
             </Link>
             {userRole === 'SUPER_ADMIN' && (
               <>
+                <Link
+                  href="/admin/roadmap-editors"
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                    isActive('/admin/roadmap-editors')
+                      ? 'bg-primary-blue text-white'
+                      : 'text-white/80 hover:bg-white/10'
+                  }`}
+                >
+                  <Rocket className="w-4 h-4" />
+                  Roadmap Editors
+                </Link>
                 <Link
                   href="/admin/audit-log"
                   className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
