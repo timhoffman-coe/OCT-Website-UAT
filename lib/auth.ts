@@ -40,3 +40,12 @@ export async function requireSuperAdmin() {
   }
   return user;
 }
+
+// Get team IDs that a TEAM_ADMIN can delegate (children of their assigned teams)
+export async function getManageableTeamIds(userTeamIds: string[]): Promise<string[]> {
+  const childTeams = await prisma.team.findMany({
+    where: { parentId: { in: userTeamIds } },
+    select: { id: true },
+  });
+  return childTeams.map((t) => t.id);
+}

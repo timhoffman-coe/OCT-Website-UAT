@@ -25,11 +25,23 @@ export default async function AdminLayout({
     });
   } else {
     const teamIds = user.teamPermissions.map((p) => p.teamId);
-    teams = await prisma.team.findMany({
+    const assignedTeams = await prisma.team.findMany({
       where: { id: { in: teamIds }, archivedAt: null },
       orderBy: { sortOrder: 'asc' },
       select: { id: true, teamName: true, slug: true, pageTemplate: true, parentId: true },
     });
+    // Also fetch parent teams for sidebar grouping (so sub-teams appear under their section)
+    const parentIds = [...new Set(
+      assignedTeams.map((t) => t.parentId).filter((id): id is string => !!id && !teamIds.includes(id))
+    )];
+    const parentTeams = parentIds.length > 0
+      ? await prisma.team.findMany({
+          where: { id: { in: parentIds }, archivedAt: null },
+          orderBy: { sortOrder: 'asc' },
+          select: { id: true, teamName: true, slug: true, pageTemplate: true, parentId: true },
+        })
+      : [];
+    teams = [...parentTeams, ...assignedTeams];
   }
 
   return (

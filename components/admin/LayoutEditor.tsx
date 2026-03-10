@@ -1198,7 +1198,7 @@ export default function LayoutEditor({
             </button>
             {/* Preview Page button */}
             <a
-              href={`/${teamSlug}`}
+              href={parentTeamSlug ? `/${parentTeamSlug}/${teamSlug}` : `/${teamSlug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-primary-blue hover:text-primary-blue transition-colors"

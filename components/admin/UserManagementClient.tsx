@@ -46,9 +46,11 @@ const ROLE_INFO: Record<Role, { label: string; description: string; color: strin
 export default function UserManagementClient({
   users,
   teams,
+  currentUserRole,
 }: {
   users: UserWithPermissions[];
   teams: Team[];
+  currentUserRole: Role;
 }) {
   const [editing, setEditing] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
@@ -65,13 +67,17 @@ export default function UserManagementClient({
   const childrenOf = (parentId: string) =>
     teams.filter((t) => t.parentId === parentId);
 
+  // Set of team IDs available in the UI (for filtering during edit)
+  const availableTeamIds = new Set(teams.map((t) => t.id));
+
   function startEdit(u: UserWithPermissions) {
     setEditing(u.id);
     setForm({
       email: u.email,
       name: u.name,
       role: u.role,
-      teamIds: u.teamPermissions.map((p) => p.team.id),
+      // Only include teams within the available scope (server preserves the rest on save)
+      teamIds: u.teamPermissions.map((p) => p.team.id).filter((id) => availableTeamIds.has(id)),
     });
   }
 
@@ -165,8 +171,8 @@ export default function UserManagementClient({
         {/* Role Selection - Card Style */}
         <div>
           <label className="block font-sans text-xs font-medium text-gray-700 mb-2">Role</label>
-          <div className="grid grid-cols-3 gap-2">
-            {(Object.entries(ROLE_INFO) as [Role, typeof ROLE_INFO[Role]][]).map(([role, info]) => {
+          <div className={`grid ${currentUserRole === 'SUPER_ADMIN' ? 'grid-cols-3' : 'grid-cols-2'} gap-2`}>
+            {(Object.entries(ROLE_INFO) as [Role, typeof ROLE_INFO[Role]][]).filter(([role]) => currentUserRole === 'SUPER_ADMIN' || role !== 'SUPER_ADMIN').map(([role, info]) => {
               const Icon = info.icon;
               const isSelected = form.role === role;
               return (
@@ -386,13 +392,15 @@ export default function UserManagementClient({
                   >
                     <Pencil className="w-4 h-4" />
                   </button>
-                  <button
-                    onClick={() => handleDelete(u.id)}
-                    disabled={isPending}
-                    className="p-1.5 text-gray-400 hover:text-red-600 rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  {currentUserRole === 'SUPER_ADMIN' && (
+                    <button
+                      onClick={() => handleDelete(u.id)}
+                      disabled={isPending}
+                      className="p-1.5 text-gray-400 hover:text-red-600 rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             )}

@@ -186,8 +186,8 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
           })}
         </div>
 
-        {/* Admin Section (Super Admin Only) */}
-        {userRole === 'SUPER_ADMIN' && (
+        {/* Admin Section */}
+        {(userRole === 'SUPER_ADMIN' || userRole === 'TEAM_ADMIN') && (
           <div className="pt-4">
             <p className="px-3 text-xs font-sans font-semibold text-white/40 uppercase tracking-wider mb-2">
               Administration
@@ -203,28 +203,32 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
               <Users className="w-4 h-4" />
               User Management
             </Link>
-            <Link
-              href="/admin/audit-log"
-              className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
-                isActive('/admin/audit-log')
-                  ? 'bg-primary-blue text-white'
-                  : 'text-white/80 hover:bg-white/10'
-              }`}
-            >
-              <ClipboardList className="w-4 h-4" />
-              Audit Log
-            </Link>
-            <Link
-              href="/admin/trash"
-              className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
-                isActive('/admin/trash')
-                  ? 'bg-primary-blue text-white'
-                  : 'text-white/80 hover:bg-white/10'
-              }`}
-            >
-              <Trash2 className="w-4 h-4" />
-              Trash
-            </Link>
+            {userRole === 'SUPER_ADMIN' && (
+              <>
+                <Link
+                  href="/admin/audit-log"
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                    isActive('/admin/audit-log')
+                      ? 'bg-primary-blue text-white'
+                      : 'text-white/80 hover:bg-white/10'
+                  }`}
+                >
+                  <ClipboardList className="w-4 h-4" />
+                  Audit Log
+                </Link>
+                <Link
+                  href="/admin/trash"
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                    isActive('/admin/trash')
+                      ? 'bg-primary-blue text-white'
+                      : 'text-white/80 hover:bg-white/10'
+                  }`}
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Trash
+                </Link>
+              </>
+            )}
           </div>
         )}
       </nav>
