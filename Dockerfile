@@ -38,9 +38,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gaxios ./node_module
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gcp-metadata ./node_modules/gcp-metadata
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gtoken ./node_modules/gtoken
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/jws ./node_modules/jws
-
-RUN echo "=== STANDALONE node_modules ===" && ls node_modules/.prisma/client/default.js 2>/dev/null && echo "FOUND" || echo "MISSING .prisma in standalone"
-RUN echo "=== AFTER ALL COPIES ===" && ls -la node_modules/.prisma/client/ && echo "=== @prisma/client ===" && cat node_modules/@prisma/client/default.js
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma/engines ./node_modules/@prisma/engines
 
 USER nextjs
 
