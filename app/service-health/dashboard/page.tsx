@@ -3,6 +3,7 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import {
     Shield,
     Users,
@@ -163,6 +164,7 @@ export default function ServiceHealthDashboard() {
 
     return (
         <div className="bg-white min-h-screen font-sans">
+            <DashboardDisclaimer dashboardName="Service Health Dashboard" />
             <Header />
 
             <div className="bg-structural-light-gray min-h-screen py-8 md:py-12">

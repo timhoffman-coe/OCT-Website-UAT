@@ -1,5 +1,6 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 
 export const metadata = {
   title: 'Dashboards | Open City & Technology',
@@ -48,6 +49,7 @@ export default function DashboardsPage() {
 
   return (
     <div className="bg-white min-h-screen">
+      <DashboardDisclaimer dashboardName="Dashboards" />
       <Header />
 
       <main className="container mx-auto max-w-7xl py-12 md:py-16 px-4 sm:px-6 lg:px-8">

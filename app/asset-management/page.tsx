@@ -2,6 +2,7 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 export default function AssetManagementPage() {
@@ -43,6 +44,7 @@ export default function AssetManagementPage() {
 
     return (
         <div className="bg-gray-100 min-h-screen font-sans">
+            <DashboardDisclaimer dashboardName="Asset Management" />
             <Header />
 
             {/* Sample Data Warning Banner */}

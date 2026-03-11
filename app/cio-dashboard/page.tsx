@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import MetricCard from '@/components/dashboard/MetricCard';
 import IncidentsTrendChart from '@/components/dashboard/IncidentsTrendChart';
 
@@ -20,6 +21,7 @@ export default function CIODashboardPage() {
 
   return (
     <div className="bg-gray-100 min-h-screen">
+      <DashboardDisclaimer dashboardName="CIO Dashboard" />
       <Header />
 
       {/* Sample Data Warning Banner */}

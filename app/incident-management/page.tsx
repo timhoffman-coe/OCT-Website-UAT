@@ -2,6 +2,7 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
 export default function IncidentManagementPage() {
@@ -39,6 +40,7 @@ export default function IncidentManagementPage() {
 
     return (
         <div className="bg-gray-50 min-h-screen font-sans">
+            <DashboardDisclaimer dashboardName="Incident Management" />
             <Header />
 
             {/* Sample Data Warning Banner */}

@@ -2,6 +2,7 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function PeopleManagementPage() {
@@ -33,6 +34,7 @@ export default function PeopleManagementPage() {
 
     return (
         <div className="bg-white min-h-screen">
+            <DashboardDisclaimer dashboardName="People Management" />
             <Header />
 
             {/* Sample Data Warning Banner */}

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import { ChevronDown, ChevronRight, User, Users, Building } from 'lucide-react';
 
 // Types for the Org Tree
@@ -147,6 +148,7 @@ const OrgTreeNode = ({ node, level = 0 }: { node: OrgNode; level?: number }) => 
 export default function OrgChartPage() {
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
+      <DashboardDisclaimer dashboardName="OCT Org Chart" />
       <Header />
 
       <main className="container mx-auto max-w-5xl py-12 px-4 sm:px-6 lg:px-8">

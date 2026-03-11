@@ -13,6 +13,7 @@ import { DashboardFilters, KPIData, RiskLevel, Vendor } from '@/components/vendo
 import { fetchSheetData } from './actions';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 
 export default function VendorCommandCenter() {
     const [vendors, setVendors] = useState<Vendor[]>([]);
@@ -133,6 +134,7 @@ export default function VendorCommandCenter() {
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
+            <DashboardDisclaimer dashboardName="Vendor Command Centre" />
             <Header />
 
             {isUsingMock && (

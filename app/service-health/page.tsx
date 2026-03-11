@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import { Cloud, Calendar, AlertTriangle, Inbox, Zap, ChevronLeft, ChevronRight, CheckCircle2, Phone, ArrowRight, XCircle, Wrench } from 'lucide-react';
 import { useServiceHealth } from '@/hooks/useServiceHealth';
 
@@ -83,6 +84,7 @@ export default function ServiceHealthPage() {
 
   return (
     <div className="bg-white min-h-screen">
+      <DashboardDisclaimer dashboardName="Service Health" />
       <Header />
 
       <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-structural-light-gray">

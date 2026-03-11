@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
+import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 
 const BudgetCharts = dynamic(
   () => import('@/components/budget-dashboard/BudgetCharts'),
@@ -41,6 +42,7 @@ export default function BudgetPage() {
 
   return (
     <div className="bg-white min-h-screen">
+      <DashboardDisclaimer dashboardName="Budget" />
       <Header />
 
       {/* Sample Data Warning Banner */}
