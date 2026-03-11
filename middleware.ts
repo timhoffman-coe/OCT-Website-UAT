@@ -134,26 +134,28 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Simple password auth via cookie (pre-IAP fallback)
-  const adminPassword = process.env.ADMIN_PASSWORD;
-  if (adminPassword) {
-    const session = request.cookies.get('admin_session')?.value;
-    // Accept current or previous 8-hour time slot to avoid edge-case lockouts at rotation
-    const currentSlot = Math.floor(Date.now() / (8 * 60 * 60 * 1000)).toString();
-    const previousSlot = (Math.floor(Date.now() / (8 * 60 * 60 * 1000)) - 1).toString();
-    const currentHash = await hashPassword(adminPassword + currentSlot);
-    const previousHash = await hashPassword(adminPassword + previousSlot);
+  // Password auth fallback — only available in dev mode
+  if (process.env.DEV_BYPASS_IAP === 'true') {
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (adminPassword) {
+      const session = request.cookies.get('admin_session')?.value;
+      // Accept current or previous 8-hour time slot to avoid edge-case lockouts at rotation
+      const currentSlot = Math.floor(Date.now() / (8 * 60 * 60 * 1000)).toString();
+      const previousSlot = (Math.floor(Date.now() / (8 * 60 * 60 * 1000)) - 1).toString();
+      const currentHash = await hashPassword(adminPassword + currentSlot);
+      const previousHash = await hashPassword(adminPassword + previousSlot);
 
-    if (session && (session === currentHash || session === previousHash)) {
-      const response = NextResponse.next();
-      response.headers.set(
-        'x-user-email',
-        process.env.ADMIN_EMAIL || 'admin@edmonton.ca'
-      );
-      return response;
+      if (session && (session === currentHash || session === previousHash)) {
+        const response = NextResponse.next();
+        response.headers.set(
+          'x-user-email',
+          process.env.ADMIN_EMAIL || 'admin@edmonton.ca'
+        );
+        return response;
+      }
+      // Redirect to login page
+      return NextResponse.redirect(new URL('/login', request.url));
     }
-    // Redirect to login page
-    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   return new NextResponse('Unauthorized: Missing IAP headers', {

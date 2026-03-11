@@ -3,6 +3,14 @@ import { createHash } from 'crypto';
 import { logger } from '@/lib/logger';
 
 export async function POST(request: Request) {
+  // Password login is only available in dev mode; production uses IAP
+  if (process.env.DEV_BYPASS_IAP !== 'true') {
+    return NextResponse.json(
+      { error: 'Password login is disabled in production. Use IAP authentication.' },
+      { status: 403 }
+    );
+  }
+
   const { password } = await request.json();
   const adminPassword = process.env.ADMIN_PASSWORD;
   const ip = request.headers.get('x-real-ip')

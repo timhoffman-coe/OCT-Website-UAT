@@ -26,21 +26,6 @@ Our team provides critical services supporting the City's database environment, 
     link: '/technology-infrastructure-operations',
   },
   {
-    id: 'telecom-iot',
-    title: 'Telecom and Internet of Things (IoT)',
-    shortDescription: 'Communication services including wireline, VoIP, cellular wireless, M2M, LoRaWAN IoT network and Cisco Call Center solutions.',
-    fullDescription: `Telecommunications provides various communication services including wireline & VoIP (Voice over IP) phone, cellular wireless, M2M (machine to machine), LoRaWAN IoT network and a Cisco Call Center solution to serve and support all City business areas.
-
-The Internet of Things (IoT) refers to networked devices embedded with sensors and software, allowing them to collect and share data that can be processed and utilized for various purposes across the City.`,
-    features: [
-      'Wireline & VoIP phone services',
-      'Cellular wireless and M2M communications',
-      'LoRaWAN IoT network infrastructure',
-      'Cisco Call Center solutions',
-      'IoT device management and data collection',
-    ],
-  },
-  {
     id: 'data-technology',
     title: 'Data Technology',
     shortDescription: 'Core networking, data center operations, and application delivery services enabling seamless connectivity across the City.',
