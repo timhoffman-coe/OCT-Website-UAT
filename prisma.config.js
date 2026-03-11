@@ -1,12 +1,10 @@
-import { defineConfig, env } from 'prisma/config';
-
-export default defineConfig({
-  schema: './schema.prisma',
+module.exports = {
+  schema: './prisma/schema.prisma',
   migrations: {
     seed: 'npx tsx prisma/seed.ts',
   },
   datasource: {
-    url: env('DATABASE_URL'),
+    url: process.env.DATABASE_URL,
     shadowDatabaseUrl: process.env.SHADOW_DATABASE_URL || undefined,
   },
-});
+};

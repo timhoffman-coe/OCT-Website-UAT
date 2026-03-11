@@ -18,6 +18,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
@@ -39,12 +40,15 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gcp-metadata ./node_
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gtoken ./node_modules/gtoken
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/jws ./node_modules/jws
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma/engines ./node_modules/@prisma/engines
+COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.js ./prisma.config.js
+RUN mkdir -p /app/prisma-cli && cd /app/prisma-cli && npm init -y > /dev/null 2>&1 && npm install prisma@7.4.1 > /dev/null 2>&1
+ENV PATH="/app/prisma-cli/node_modules/.bin:${PATH}"
+RUN chown -R nextjs:nodejs /app/prisma-cli
 
 USER nextjs
 
 ENV HOME=/app
+ENV npm_config_cache=/tmp/.npm
 
 EXPOSE 3000
 
