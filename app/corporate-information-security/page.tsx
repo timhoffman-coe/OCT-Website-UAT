@@ -1,6 +1,7 @@
 import SectionTemplate, { ServiceArea } from '@/components/SectionTemplate';
-import { fetchSectionData } from '@/lib/data/fetch-team';
+import { fetchUnifiedTeamData } from '@/lib/data/fetch-team';
 import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
+import type { WidgetDataBag } from '@/components/widgets/WidgetRenderer';
 
 export const metadata = {
   title: 'Corporate Information Security | Open City & Technology',
@@ -107,15 +108,20 @@ const fallbackTitle = 'Corporate Information Security';
 const fallbackDescription = "Protecting the City's data, assets, and information from cyber threats. We safeguard citizen privacy and ensure the integrity of municipal operations against evolving risks through comprehensive security services, incident response, and continuous monitoring.";
 
 export default async function CorporateInformationSecurityPage() {
-  const [data, widgetOrder] = await Promise.all([
-    fetchSectionData('corporate-information-security'),
+  const [result, widgetOrder] = await Promise.all([
+    fetchUnifiedTeamData('corporate-information-security'),
     fetchWidgetOrder('corporate-information-security'),
   ]);
+
+  const fallbackDataBag: WidgetDataBag = {
+    serviceAreas: fallbackAreas,
+  };
+
   return (
     <SectionTemplate
-      pageTitle={data?.pageTitle || fallbackTitle}
-      pageDescription={data?.pageDescription || fallbackDescription}
-      serviceAreas={data?.serviceAreas || fallbackAreas}
+      pageTitle={result?.pageTitle || fallbackTitle}
+      pageDescription={result?.pageDescription || fallbackDescription}
+      dataBag={result?.dataBag || fallbackDataBag}
       widgetOrder={widgetOrder || undefined}
     />
   );

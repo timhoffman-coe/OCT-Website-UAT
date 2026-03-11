@@ -160,9 +160,6 @@ interface TeamDetailClientProps {
   widgetDefinitions: WidgetDefinitionData[];
 }
 
-const SECTION_WIDGET_TYPES = ['service_areas', 'who_we_are', 'key_initiatives'];
-const SUB_TEAM_WIDGET_TYPES = ['subteam_header', 'subteam_services', 'subteam_initiatives', 'subteam_contacts', 'subteam_quick_links'];
-
 function getTemplateLabel(template: string): string {
   switch (template) {
     case 'ITS_TEAM': return 'ITS Team Page';
@@ -175,19 +172,6 @@ function getTemplateLabel(template: string): string {
 export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetailClientProps) {
   const router = useRouter();
   const [isRestoring, startRestoreTransition] = useTransition();
-
-  const filteredDefinitions = (() => {
-    switch (team.pageTemplate) {
-      case 'SECTION':
-        return widgetDefinitions.filter((d) => SECTION_WIDGET_TYPES.includes(d.widgetType));
-      case 'SUB_TEAM':
-        return widgetDefinitions.filter((d) => SUB_TEAM_WIDGET_TYPES.includes(d.widgetType));
-      default:
-        return widgetDefinitions.filter(
-          (d) => !SECTION_WIDGET_TYPES.includes(d.widgetType) && !SUB_TEAM_WIDGET_TYPES.includes(d.widgetType)
-        );
-    }
-  })();
 
   return (
     <div className="p-8">
@@ -264,7 +248,7 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         teamShortName={team.teamShortName}
         isPublished={team.isPublished}
         instances={team.widgetInstances}
-        definitions={filteredDefinitions}
+        definitions={widgetDefinitions}
         portfolios={team.portfolios}
         teamTabs={team.teamTabs}
         trelloBoards={team.trelloBoards}
@@ -287,24 +271,9 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         isArchived={!!team.archivedAt}
       />
 
-      {/* Sub-Teams section for SECTION pages */}
-      {team.pageTemplate === 'SECTION' && (
+      {/* Sub-Teams section for pages with children */}
+      {team.children.length > 0 && (
         <SubTeamsEditor parentId={team.id} children={team.children} />
-      )}
-
-      {/* Sub-Team content editors */}
-      {team.pageTemplate === 'SUB_TEAM' && (
-        <div className="mt-8 space-y-8">
-          <div className="border-t border-gray-200 pt-8">
-            <h2 className="font-sans text-xl font-bold text-gray-900 mb-6">Sub-Team Content</h2>
-            <div className="space-y-8">
-              <TeamServicesEditor teamId={team.id} services={team.teamServices} />
-              <TeamInitiativesEditor teamId={team.id} initiatives={team.teamInitiatives} />
-              <TeamContactsEditor teamId={team.id} contacts={team.teamContacts} />
-              <TeamQuickLinksEditor teamId={team.id} quickLinks={team.teamQuickLinks} />
-            </div>
-          </div>
-        </div>
       )}
 
       {/* Change History */}

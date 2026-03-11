@@ -16,29 +16,17 @@ export interface ServiceArea {
 interface SectionTemplateProps {
   pageTitle: string;
   pageDescription: string;
-  serviceAreas: ServiceArea[];
-  whoWeAreItems?: { title: string; description: string; linkText: string; linkUrl: string }[];
-  keyInitiativeSlides?: { title: string; description: string; imageUrl?: string; imageAlt: string }[];
+  dataBag: WidgetDataBag;
   widgetOrder?: string[];
 }
 
 export default function SectionTemplate({
   pageTitle,
   pageDescription,
-  serviceAreas,
-  whoWeAreItems,
-  keyInitiativeSlides,
+  dataBag,
   widgetOrder,
 }: SectionTemplateProps) {
   const order = widgetOrder || [...DEFAULT_SECTION_WIDGETS];
-
-  const dataBag: WidgetDataBag = {
-    pageTitle,
-    pageDescription,
-    serviceAreas,
-    whoWeAreItems,
-    keyInitiativeSlides,
-  };
 
   return (
     <div className="bg-white min-h-screen">

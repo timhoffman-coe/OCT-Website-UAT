@@ -1,6 +1,7 @@
 import SectionTemplate, { ServiceArea } from '@/components/SectionTemplate';
-import { fetchSectionData } from '@/lib/data/fetch-team';
+import { fetchUnifiedTeamData } from '@/lib/data/fetch-team';
 import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
+import type { WidgetDataBag } from '@/components/widgets/WidgetRenderer';
 
 export const metadata = {
   title: 'Application Technology Services | Open City & Technology',
@@ -104,15 +105,20 @@ const fallbackTitle = 'Application Technology Services';
 const fallbackDescription = 'IT business solutions encompass a range of software, applications, programs, and services designed to assist in achieving business goals. From 311 to internal tools, we develop, implement, and support the applications that power City services.';
 
 export default async function ApplicationTechnologyServicesPage() {
-  const [data, widgetOrder] = await Promise.all([
-    fetchSectionData('application-technology-services'),
+  const [result, widgetOrder] = await Promise.all([
+    fetchUnifiedTeamData('application-technology-services'),
     fetchWidgetOrder('application-technology-services'),
   ]);
+
+  const fallbackDataBag: WidgetDataBag = {
+    serviceAreas: fallbackAreas,
+  };
+
   return (
     <SectionTemplate
-      pageTitle={data?.pageTitle || fallbackTitle}
-      pageDescription={data?.pageDescription || fallbackDescription}
-      serviceAreas={data?.serviceAreas || fallbackAreas}
+      pageTitle={result?.pageTitle || fallbackTitle}
+      pageDescription={result?.pageDescription || fallbackDescription}
+      dataBag={result?.dataBag || fallbackDataBag}
       widgetOrder={widgetOrder || undefined}
     />
   );

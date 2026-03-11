@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { fetchSubTeamData } from '@/lib/data/fetch-team';
+import { fetchUnifiedTeamData } from '@/lib/data/fetch-team';
 import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 import SubTeamPageTemplate from '@/components/its-shared/SubTeamPageTemplate';
 
@@ -25,16 +25,16 @@ export default async function SubTeamPage({
 
   if (!subTeam || subTeam.parent?.slug !== teamSlug) notFound();
 
-  const [data, widgetOrder] = await Promise.all([
-    fetchSubTeamData(subTeamSlug),
+  const [result, widgetOrder] = await Promise.all([
+    fetchUnifiedTeamData(subTeamSlug),
     fetchWidgetOrder(subTeamSlug),
   ]);
 
-  if (!data) notFound();
+  if (!result) notFound();
 
   return (
     <SubTeamPageTemplate
-      data={data}
+      dataBag={result.dataBag}
       widgetOrder={widgetOrder || undefined}
     />
   );

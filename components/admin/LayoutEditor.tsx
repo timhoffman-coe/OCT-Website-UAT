@@ -49,6 +49,10 @@ import ServiceAreaEditor from './ServiceAreaEditor';
 import WhoWeAreEditor from './WhoWeAreEditor';
 import KeyInitiativesEditor from './KeyInitiativesEditor';
 import AccordionLinksEditor from './AccordionLinksEditor';
+import TeamServicesEditor from './TeamServicesEditor';
+import TeamInitiativesEditor from './TeamInitiativesEditor';
+import TeamContactsEditor from './TeamContactsEditor';
+import TeamQuickLinksEditor from './TeamQuickLinksEditor';
 import ArchiveConfirmDialog from './ArchiveConfirmDialog';
 import PageHeaderWidget from '@/components/widgets/PageHeaderWidget';
 import PortfoliosWidget from '@/components/widgets/PortfoliosWidget';
@@ -622,6 +626,10 @@ function WidgetEditorModal({
   accordionGroups,
   whoWeAreItems,
   keyInitiativeSlides,
+  teamServices,
+  teamInitiatives,
+  teamContacts,
+  teamQuickLinks,
 }: {
   instance: WidgetInstanceData;
   teamId: string;
@@ -635,6 +643,10 @@ function WidgetEditorModal({
   accordionGroups: LayoutEditorProps['accordionGroups'];
   whoWeAreItems: LayoutEditorProps['whoWeAreItems'];
   keyInitiativeSlides: LayoutEditorProps['keyInitiativeSlides'];
+  teamServices: LayoutEditorProps['teamServices'];
+  teamInitiatives: LayoutEditorProps['teamInitiatives'];
+  teamContacts: LayoutEditorProps['teamContacts'];
+  teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
 }) {
   const IconComponent = resolveIcon(instance.widgetDefinition.icon);
   const widgetType = instance.widgetDefinition.widgetType;
@@ -684,6 +696,14 @@ function WidgetEditorModal({
         return <KeyInitiativesEditor teamId={teamId} slides={keyInitiativeSlides} />;
       case 'accordion_links':
         return <AccordionLinksEditor teamId={teamId} groups={accordionGroups} />;
+      case 'subteam_services':
+        return <TeamServicesEditor teamId={teamId} services={teamServices} />;
+      case 'subteam_initiatives':
+        return <TeamInitiativesEditor teamId={teamId} initiatives={teamInitiatives} />;
+      case 'subteam_contacts':
+        return <TeamContactsEditor teamId={teamId} contacts={teamContacts} />;
+      case 'subteam_quick_links':
+        return <TeamQuickLinksEditor teamId={teamId} quickLinks={teamQuickLinks} />;
       default:
         return (
           <p className="font-sans text-sm text-gray-500">
@@ -1547,6 +1567,10 @@ export default function LayoutEditor({
           accordionGroups={accordionGroups}
           whoWeAreItems={whoWeAreItems}
           keyInitiativeSlides={keyInitiativeSlides}
+          teamServices={teamServices}
+          teamInitiatives={teamInitiatives}
+          teamContacts={teamContacts}
+          teamQuickLinks={teamQuickLinks}
         />
       )}
     </div>

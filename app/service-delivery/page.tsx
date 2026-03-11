@@ -1,9 +1,9 @@
 import ITSTeamPageTemplate from '@/components/its-shared/ITSTeamPageTemplate';
-import { fetchITSTeamData } from '@/lib/data/fetch-team';
+import { fetchUnifiedTeamData } from '@/lib/data/fetch-team';
 import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
-import type { ITSTeamPageData } from '@/lib/data/its-shared';
+import type { WidgetDataBag } from '@/components/widgets/WidgetRenderer';
 
-const fallbackData: ITSTeamPageData = {
+const fallbackDataBag: WidgetDataBag = {
   teamName: 'Service Delivery and Analytics',
   teamShortName: 'Service Delivery',
   portfolios: [
@@ -153,13 +153,13 @@ const fallbackData: ITSTeamPageData = {
 };
 
 export default async function ServiceDeliveryPage() {
-  const [data, widgetOrder] = await Promise.all([
-    fetchITSTeamData('service-delivery'),
+  const [result, widgetOrder] = await Promise.all([
+    fetchUnifiedTeamData('service-delivery'),
     fetchWidgetOrder('service-delivery'),
   ]);
   return (
     <ITSTeamPageTemplate
-      data={data || fallbackData}
+      dataBag={result?.dataBag || fallbackDataBag}
       widgetOrder={widgetOrder || undefined}
     />
   );

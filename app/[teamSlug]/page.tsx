@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
-import { fetchSectionData } from '@/lib/data/fetch-team';
-import { fetchITSTeamData } from '@/lib/data/fetch-team';
+import { fetchUnifiedTeamData } from '@/lib/data/fetch-team';
 import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 import SectionTemplate from '@/components/SectionTemplate';
 import ITSTeamPageTemplate from '@/components/its-shared/ITSTeamPageTemplate';
@@ -35,37 +34,28 @@ export default async function DynamicTeamPage({
 }) {
   const { teamSlug } = await params;
 
-  const team = await prisma.team.findUnique({
-    where: { slug: teamSlug, isPublished: true, archivedAt: null },
-    select: { pageTemplate: true, teamName: true },
-  });
+  const [result, widgetOrder] = await Promise.all([
+    fetchUnifiedTeamData(teamSlug),
+    fetchWidgetOrder(teamSlug),
+  ]);
 
-  if (!team) notFound();
+  if (!result) notFound();
 
-  if (team.pageTemplate === 'SECTION') {
-    const [data, widgetOrder] = await Promise.all([
-      fetchSectionData(teamSlug),
-      fetchWidgetOrder(teamSlug),
-    ]);
+  const { dataBag, pageTitle, pageDescription, pageTemplate } = result;
+
+  if (pageTemplate === 'SECTION') {
     return (
       <SectionTemplate
-        pageTitle={data?.pageTitle || team.teamName}
-        pageDescription={data?.pageDescription || ''}
-        serviceAreas={data?.serviceAreas || []}
-        whoWeAreItems={data?.whoWeAreItems || []}
-        keyInitiativeSlides={data?.keyInitiativeSlides || []}
+        pageTitle={pageTitle}
+        pageDescription={pageDescription}
+        dataBag={dataBag}
         widgetOrder={widgetOrder || undefined}
       />
     );
   } else {
-    const [data, widgetOrder] = await Promise.all([
-      fetchITSTeamData(teamSlug),
-      fetchWidgetOrder(teamSlug),
-    ]);
-    if (!data) notFound();
     return (
       <ITSTeamPageTemplate
-        data={data}
+        dataBag={dataBag}
         widgetOrder={widgetOrder || undefined}
       />
     );
