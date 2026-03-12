@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { fetchDriveDocuments } from '../../oct-assistant/services/documentService';
 import { siteMapData } from '@/lib/siteMapData';
+import { logger } from '@/lib/logger';
+
+const log = logger.child({ module: 'chat' });
 
 interface Document {
   name: string;
@@ -72,7 +75,7 @@ async function classifyIntent(question: string, ai: GoogleGenAI): Promise<'HR' |
     if (text === 'HR' || text === 'IT' || text === 'SiteSearch') return text;
     return 'General';
   } catch (e) {
-    console.error('Classification failed', e);
+    log.error('Intent classification failed', { error: e instanceof Error ? e.message : String(e) });
     return 'General';
   }
 }
@@ -127,7 +130,7 @@ export async function POST(request: NextRequest) {
     // Use last few messages for better intent classification context if needed, 
     // but for now, primarily classify the latest question.
     let intent = await classifyIntent(question, ai);
-    console.log(`[Unified Chat] Intent detected: ${intent}`);
+    log.info('Intent detected', { intent });
 
     // 2. Fetch Relevant Context
     let documents: Document[] = [];
@@ -252,7 +255,7 @@ IMPORTANT: Analyze the CONVERSATION HISTORY to see if the user has already provi
 
   } catch (error) {
     recordGeminiFailure();
-    console.error('Unified Chat API Error:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
+    log.error('Chat API error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       { error: 'An unexpected error occurred processing your request.' },
       { status: 500 }

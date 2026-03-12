@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { reportError } from '@/lib/report-client-error';
 import type { ServiceHealthDashboardData } from '@/lib/service-health/types';
 import { MOCK_DASHBOARD_DATA } from '@/lib/service-health/constants';
 
@@ -23,7 +24,7 @@ export function useServiceHealth(pollInterval = POLL_INTERVAL_MS) {
       setError(null);
       hasRealData.current = true;
     } catch (err) {
-      console.error('Failed to fetch service health data:', err);
+      reportError(err instanceof Error ? err : String(err), { module: 'service-health' });
       setError(err instanceof Error ? err.message : 'Unknown error');
       // Only fall back to mock data if we never received real data
       if (!hasRealData.current) {

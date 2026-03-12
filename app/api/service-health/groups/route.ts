@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { fetchFromIAPService } from '@/lib/service-health/iap-client';
 import { API_ENDPOINTS } from '@/lib/service-health/constants';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +19,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('Monitor groups API error:', error);
+    logger.error('Monitor groups API error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       { error: 'Failed to fetch monitor groups' },
       { status: 500 }

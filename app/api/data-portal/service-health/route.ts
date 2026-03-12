@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServiceHealth } from '@/lib/data/data-portal';
+import { logger } from '@/lib/logger';
 import type { DataPortalResponse, ServiceHealthRecord } from '@/lib/data/data-portal-types';
 
 export const revalidate = 60; // 1 min — near-real-time monitoring, needs freshest data
@@ -16,7 +17,7 @@ export async function GET() {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Data portal service-health error:', error);
+    logger.error('Data portal service-health error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       { error: 'Failed to fetch service health data' },
       { status: 500 }

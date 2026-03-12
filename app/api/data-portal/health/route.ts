@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getPool } from '@/lib/mssql';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,7 +16,7 @@ export async function GET() {
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     // Log details server-side only — never expose to clients
-    console.error('SQL Server health check failed:', message);
+    logger.error('SQL Server health check failed', { error: message });
 
     return NextResponse.json(
       {

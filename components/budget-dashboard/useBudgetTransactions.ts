@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Transaction, TransactionStatus, DeploymentStatus, BudgetType } from './types';
 import { MOCK_TRANSACTIONS, GOOGLE_SHEET_CSV_URL } from './constants';
+import { reportError } from '@/lib/report-client-error';
 
 export const useBudgetTransactions = () => {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -136,11 +137,11 @@ export const useBudgetTransactions = () => {
                 if (parsedData.length > 0) {
                     setTransactions(parsedData);
                 } else {
-                    console.warn("Sheet is empty or failed to parse. Using mock data.");
+                    reportError('Sheet is empty or failed to parse, using mock data', { module: 'budget-dashboard' });
                     setTransactions(MOCK_TRANSACTIONS);
                 }
             } catch (error) {
-                console.error("Error loading Google Sheet data:", error);
+                reportError(error instanceof Error ? error : String(error), { module: 'budget-dashboard' });
                 // Fallback to mock data on error (e.g., CORS issues or private sheet)
                 setTransactions(MOCK_TRANSACTIONS);
             } finally {

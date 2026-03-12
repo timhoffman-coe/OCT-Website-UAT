@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getIncidentMetrics } from '@/lib/data/data-portal';
+import { logger } from '@/lib/logger';
 import type { DataPortalResponse, IncidentMetric } from '@/lib/data/data-portal-types';
 
 export const revalidate = 300; // 5 min — analytical data, freshness less critical than health monitoring
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Data portal incidents error:', error);
+    logger.error('Data portal incidents error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       { error: 'Failed to fetch incident metrics' },
       { status: 500 }

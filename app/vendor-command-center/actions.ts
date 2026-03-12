@@ -2,6 +2,9 @@
 
 import { GoogleGenAI } from "@google/genai";
 import { Vendor, KPIData } from '@/components/vendor-dashboard/types';
+import { logger } from '@/lib/logger';
+
+const log = logger.child({ module: 'vendor-actions' });
 
 // Constants for Sheet Access
 const SHEET_ID = '1U_xa5CS4pobPJyM1GaOz8SsqniXkOrhiB_xz181dBns';
@@ -10,7 +13,7 @@ const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?forma
 
 export const fetchSheetData = async (): Promise<Vendor[]> => {
     try {
-        console.log("Attempting to fetch sheet data from server...");
+        log.info('Fetching sheet data from server');
 
         const response = await fetch(CSV_URL, { cache: 'no-store' });
 
@@ -21,11 +24,11 @@ export const fetchSheetData = async (): Promise<Vendor[]> => {
         const text = await response.text();
         const parsedData = parseCSV(text);
 
-        console.log(`Successfully parsed ${parsedData.length} rows.`);
+        log.info('Successfully parsed sheet data', { rows: parsedData.length });
         return parsedData;
 
     } catch (error) {
-        console.error("Error fetching sheet data:", error);
+        log.error('Error fetching sheet data', { error: error instanceof Error ? error.message : String(error) });
         // Return empty array to trigger fallback on client
         return [];
     }
@@ -74,7 +77,7 @@ export const generateDashboardAnalysis = async (
 
         return response.text || "No insights generated.";
     } catch (error) {
-        console.error("Error calling Gemini API:", error);
+        log.error('Error calling Gemini API', { error: error instanceof Error ? error.message : String(error) });
         return "Unable to generate AI insights at this time. Please try again later.";
     }
 };
@@ -129,7 +132,7 @@ const parseCSV = (csvText: string): Vendor[] => {
                 description: getValue(['description', 'notes', 'comments'])
             });
         } catch (e) {
-            console.warn(`Skipping invalid row ${i}`, e);
+            log.warn('Skipping invalid row', { row: i, error: e instanceof Error ? e.message : String(e) });
         }
     }
 

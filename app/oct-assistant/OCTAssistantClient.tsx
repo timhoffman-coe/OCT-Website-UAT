@@ -7,6 +7,7 @@ import ChatWindow from '@/components/oct-assistant/ChatWindow';
 import BotIcon from '@/components/icons/BotIcon';
 import { Message } from './types';
 import { generateAnswer } from './services/chatService';
+import { reportError } from '@/lib/report-client-error';
 
 export default function OCTAssistantClient() {
   const [messages, setMessages] = useState<Message[]>([
@@ -38,7 +39,7 @@ export default function OCTAssistantClient() {
       };
       setMessages((prevMessages) => [...prevMessages, newModelMessage]);
     } catch (error) {
-      console.error(error);
+      reportError(error instanceof Error ? error : String(error), { module: 'oct-assistant' });
       const errorMessage: Message = {
         id: crypto.randomUUID(),
         role: 'model',

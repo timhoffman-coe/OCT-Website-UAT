@@ -2,6 +2,9 @@
 
 import { Document, Category } from '../types';
 import { listSharedFolders, listFilesInFolder, getFileContent, getDriveClient } from '../../lib/google-drive';
+import { logger } from '@/lib/logger';
+
+const log = logger.child({ module: 'document-service' });
 
 interface MockDoc extends Document {
   category: Category;
@@ -156,7 +159,7 @@ A one-time stipend of $500 is available for home office equipment (monitor, chai
 export const fetchDriveDocuments = async (category: string): Promise<Document[]> => {
   if (category === 'HR Policies') {
     try {
-      console.log('Fetching HR Policies from Google Drive...');
+      log.info('Fetching HR Policies from Google Drive');
       const folders = await listSharedFolders();
       const hrFolder = folders.find(f => f.name === 'HR_FILES');
 
@@ -178,7 +181,7 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
                 content: typeof content === 'string' ? content : JSON.stringify(content),
               };
             } catch (err) {
-              console.error(`Failed to fetch content for ${file.name} (ID: ${file.id}, Type: ${file.mimeType})`, err);
+              log.error('Failed to fetch file content', { fileName: file.name, fileId: file.id, mimeType: file.mimeType, error: err instanceof Error ? err.message : String(err) });
               return null;
             }
           });
@@ -186,34 +189,34 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
         const results = await Promise.all(documentPromises);
         const documents = results.filter((doc): doc is Document => doc !== null);
 
-        console.log(`Returning ${documents.length} documents from Drive:`, documents.map(d => d.name));
+        log.info('Returning documents from Drive', { count: documents.length, names: documents.map(d => d.name) });
         return documents;
       } else {
         throw new Error("HR_FILES folder not found in Google Drive.");
       }
     } catch (error) {
-      console.error('Error fetching from Drive:', error);
+      log.error('Error fetching from Drive', { error: error instanceof Error ? error.message : String(error) });
       throw error; // Re-throw to prevent fallback to mock data
     }
   }
 
   if (category === 'IT Service Desk') {
     try {
-      console.log('Fetching IT Service Desk documents from Google Drive...');
+      log.info('Fetching IT Service Desk documents from Google Drive');
 
       let sdFolderId = process.env.SERVICE_DESK_FOLDER_ID;
-      console.log(`[DEBUG] SERVICE_DESK_FOLDER_ID env var: ${sdFolderId}`);
+      log.debug('SERVICE_DESK_FOLDER_ID env var', { sdFolderId });
 
       // If no ID provided, try to find by name (fallback/backward compatibility)
       if (!sdFolderId) {
-        console.log('[DEBUG] No ID found in env, searching by name...');
+        log.debug('No ID found in env, searching by name');
         const drive = getDriveClient();
         const res = await drive.files.list({
           q: "mimeType = 'application/vnd.google-apps.folder' and name = 'Service_Desk' and trashed = false",
           fields: 'files(id, name)',
         });
         const sdFolder = res.data.files?.[0];
-        console.log(`[DEBUG] Search by name found:`, sdFolder);
+        log.debug('Search by name found', { sdFolder });
         sdFolderId = sdFolder?.id || undefined;
       }
 
@@ -235,7 +238,7 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
             try {
               return await processFolder(folder.id!);
             } catch (err) {
-              console.error(`Failed to process subfolder ${folder.name} (${folder.id})`, err);
+              log.error('Failed to process subfolder', { folderName: folder.name, folderId: folder.id, error: err instanceof Error ? err.message : String(err) });
               return [];
             }
           });
@@ -248,7 +251,7 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
                 content: typeof content === 'string' ? content : JSON.stringify(content),
               };
             } catch (err) {
-              console.error(`Failed to fetch content for ${file.name} (ID: ${file.id}, Type: ${file.mimeType})`, err);
+              log.error('Failed to fetch file content', { fileName: file.name, fileId: file.id, mimeType: file.mimeType, error: err instanceof Error ? err.message : String(err) });
               return null;
             }
           });
@@ -268,13 +271,13 @@ export const fetchDriveDocuments = async (category: string): Promise<Document[]>
 
         const documents = await processFolder(sdFolderId);
 
-        console.log(`Returning ${documents.length} documents from Drive:`, documents.map(d => d.name));
+        log.info('Returning documents from Drive', { count: documents.length, names: documents.map(d => d.name) });
         return documents;
       } else {
         throw new Error("Service_Desk folder not found in Google Drive.");
       }
     } catch (error) {
-      console.error('Error fetching from Drive:', error);
+      log.error('Error fetching from Drive', { error: error instanceof Error ? error.message : String(error) });
       throw error;
     }
   }

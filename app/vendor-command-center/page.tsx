@@ -11,6 +11,7 @@ import ForecastSection from '@/components/vendor-dashboard/ForecastSection';
 import { MOCK_VENDORS } from '@/components/vendor-dashboard/constants';
 import { DashboardFilters, KPIData, RiskLevel, Vendor } from '@/components/vendor-dashboard/types';
 import { fetchSheetData } from './actions';
+import { reportError } from '@/lib/report-client-error';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import DashboardDisclaimer from '@/components/DashboardDisclaimer';
@@ -34,12 +35,12 @@ export default function VendorCommandCenter() {
                     setIsUsingMock(false);
                 } else {
                     // Fallback if sheet is empty but accessible
-                    console.warn("Sheet data empty, using mock.");
+                    reportError('Sheet data empty, using mock', { module: 'vendor-dashboard' });
                     setVendors(MOCK_VENDORS);
                     setIsUsingMock(true);
                 }
             } catch (error) {
-                console.error("Failed to load sheet data, using mock:", error);
+                reportError(error instanceof Error ? error : String(error), { module: 'vendor-dashboard' });
                 setVendors(MOCK_VENDORS);
                 setIsUsingMock(true);
             } finally {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { reportError } from '@/lib/report-client-error';
 
 export default function AdminError({
   error,
@@ -10,7 +11,7 @@ export default function AdminError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error('Admin error:', error);
+    reportError(error, { module: 'admin-error-boundary', digest: error.digest });
   }, [error]);
 
   return (

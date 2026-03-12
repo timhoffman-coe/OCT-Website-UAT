@@ -1,5 +1,8 @@
 import { google } from 'googleapis';
 import path from 'path';
+import { logger } from '@/lib/logger';
+
+const log = logger.child({ module: 'google-drive' });
 
 // Use environment variable if available, otherwise fallback to relative path
 const KEY_FILE_PATH = process.env.GOOGLE_APPLICATION_CREDENTIALS || path.join(process.cwd(), 'service-account.json');
@@ -34,7 +37,7 @@ export const listSharedFolders = async () => {
 
         return allFiles;
     } catch (error) {
-        console.error('Error listing folders:', error);
+        log.error('Error listing folders', { error: error instanceof Error ? error.message : String(error) });
         throw error;
     }
 };
@@ -60,7 +63,7 @@ export const listFilesInFolder = async (folderId: string) => {
 
         return allFiles;
     } catch (error) {
-        console.error(`Error listing files in folder ${folderId}:`, error);
+        log.error('Error listing files in folder', { folderId, error: error instanceof Error ? error.message : String(error) });
         throw error;
     }
 };
@@ -76,7 +79,7 @@ export const getFileContent = async (fileId: string, mimeType: string) => {
             });
             return res.data;
         } else if (mimeType === 'application/pdf') {
-            console.log(`Processing PDF file: ${fileId}`);
+            log.debug('Processing PDF file', { fileId });
             const res = await drive.files.get({
                 fileId,
                 alt: 'media',
@@ -143,7 +146,7 @@ export const getFileContent = async (fileId: string, mimeType: string) => {
                 }
             }
 
-            console.log('PDF Text Length:', text?.length);
+            log.debug('PDF text extracted', { textLength: text?.length });
             return text;
         } else if (mimeType.startsWith('text/')) {
             const res = await drive.files.get({
@@ -154,7 +157,7 @@ export const getFileContent = async (fileId: string, mimeType: string) => {
         }
         return 'Unsupported file type for content extraction';
     } catch (error) {
-        console.error(`Error getting content for file ${fileId}:`, error);
+        log.error('Error getting content for file', { fileId, error: error instanceof Error ? error.message : String(error) });
         throw error;
     }
 };

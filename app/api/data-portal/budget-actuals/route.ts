@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getBudgetActuals } from '@/lib/data/data-portal';
+import { logger } from '@/lib/logger';
 import type { DataPortalResponse, BudgetActual } from '@/lib/data/data-portal-types';
 
 export const revalidate = 300; // 5 min — financial data updated infrequently, freshness less critical
@@ -26,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Data portal budget-actuals error:', error);
+    logger.error('Data portal budget-actuals error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       { error: 'Failed to fetch budget actuals' },
       { status: 500 }

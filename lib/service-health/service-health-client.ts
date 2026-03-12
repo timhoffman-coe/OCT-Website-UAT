@@ -1,5 +1,8 @@
 import { fetchFromIAPService } from './iap-client';
 import { API_ENDPOINTS, CACHE_TTL_SECONDS, MOCK_DASHBOARD_DATA } from './constants';
+import { logger } from '@/lib/logger';
+
+const log = logger.child({ module: 'service-health' });
 import type {
   UptrendsMonitorGroup,
   UptrendsGroupStatus,
@@ -91,7 +94,7 @@ export async function fetchServiceHealthData(): Promise<ServiceHealthDashboardDa
             lastUpdated: new Date().toISOString(),
           };
         } catch (err) {
-          console.error(`Failed to fetch status for group ${group.Description}:`, err);
+          log.error('Failed to fetch status for group', { group: group.Description, error: err instanceof Error ? err.message : String(err) });
           return {
             id: group.MonitorGroupGuid,
             name: group.Description,
@@ -116,7 +119,7 @@ export async function fetchServiceHealthData(): Promise<ServiceHealthDashboardDa
     cache = { data: result, timestamp: Date.now() };
     return result;
   } catch (error) {
-    console.error('Failed to fetch service health data, using mock data:', error);
+    log.error('Failed to fetch service health data, using mock data', { error: error instanceof Error ? error.message : String(error) });
     return MOCK_DASHBOARD_DATA;
   }
 }

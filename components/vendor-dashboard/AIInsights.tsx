@@ -5,6 +5,7 @@ import DOMPurify from 'dompurify';
 import { generateDashboardAnalysis } from '@/app/vendor-command-center/actions';
 import { KPIData, Vendor } from './types';
 import { Sparkles, RefreshCw } from 'lucide-react';
+import { reportError } from '@/lib/report-client-error';
 
 interface AIInsightsProps {
     kpiData: KPIData;
@@ -21,7 +22,7 @@ const AIInsights: React.FC<AIInsightsProps> = ({ kpiData, criticalVendors }) => 
             const result = await generateDashboardAnalysis(kpiData, criticalVendors);
             setAnalysis(result);
         } catch (error) {
-            console.error("AI Generation failed", error);
+            reportError(error instanceof Error ? error : String(error), { module: 'ai-insights' });
         } finally {
             setLoading(false);
         }

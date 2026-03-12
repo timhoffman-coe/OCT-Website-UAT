@@ -1,4 +1,4 @@
-import { Document } from '../types';
+import { reportError } from '@/lib/report-client-error';
 
 export const generateAnswer = async (
   question: string
@@ -20,7 +20,7 @@ export const generateAnswer = async (
     const data = await response.json();
     return data.response;
   } catch (error) {
-    console.error('Chat service error:', error);
+    reportError(error instanceof Error ? error : String(error), { module: 'chat-service' });
     if (error instanceof Error) {
       return `Sorry, I encountered an error: ${error.message}`;
     }

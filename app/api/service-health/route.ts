@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { fetchServiceHealthData } from '@/lib/service-health/service-health-client';
+import { logger } from '@/lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +14,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error('Service health API error:', error);
+    logger.error('Service health API error', { error: error instanceof Error ? error.message : String(error) });
     return NextResponse.json(
       { error: 'Failed to fetch service health data' },
       { status: 500 }

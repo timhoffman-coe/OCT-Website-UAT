@@ -5,6 +5,7 @@ import { Search, X, Send, Loader2, MessageSquare, MessageSquarePlus, FileText, Q
 import ReactMarkdown from 'react-markdown';
 import { createPortal } from 'react-dom';
 import { CometButton } from './CometButton';
+import { reportError } from '@/lib/report-client-error';
 
 interface Message {
     role: 'user' | 'assistant';
@@ -215,7 +216,7 @@ export default function GeminiSearch({ isOpen: externalIsOpen, onOpenChange }: G
             try {
                 setMessages(JSON.parse(saved));
             } catch (e) {
-                console.error("Failed to load chat history", e);
+                reportError(e instanceof Error ? e : String(e), { module: 'gemini-search' });
             }
         }
     }, []);
@@ -306,7 +307,7 @@ export default function GeminiSearch({ isOpen: externalIsOpen, onOpenChange }: G
                 setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }]);
             }
         } catch (error) {
-            console.error('Search error:', error);
+            reportError(error instanceof Error ? error : String(error), { module: 'gemini-search' });
             setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, something went wrong. Please check your connection.' }]);
         } finally {
             setIsLoading(false);

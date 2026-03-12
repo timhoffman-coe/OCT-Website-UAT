@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { reportError } from '@/lib/report-client-error';
 import type {
   DataPortalResponse,
   IncidentMetric,
@@ -39,7 +40,7 @@ function useDataPortalFetch<T>(url: string): UseDataPortalResult<T> {
       })
       .catch(err => {
         if (!cancelled) {
-          console.error(`Data portal fetch error (${url}):`, err);
+          reportError(err instanceof Error ? err : String(err), { module: 'data-portal' });
           setError(err.message);
         }
       })
