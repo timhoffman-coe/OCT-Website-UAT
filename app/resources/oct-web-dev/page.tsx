@@ -11,6 +11,7 @@ import Footer from '@/components/Footer';
 const DOCUMENTS = [
   { slug: 'cicd-pipeline', title: 'CI/CD Pipeline', description: 'Local build to GCP production deployment' },
   { slug: 'prisma-migration-workflow', title: 'Prisma Migrations', description: 'Schema change lifecycle and rollback procedures' },
+  { slug: 'cms-overview', title: 'CMS Overview', description: 'How the content management system works' },
 ];
 
 const TABS = [

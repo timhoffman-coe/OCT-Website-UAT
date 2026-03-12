@@ -8,6 +8,7 @@ export const dynamic = 'force-dynamic';
 const ALLOWED_DOCS: Record<string, string> = {
   'cicd-pipeline': 'docs/deployment/cicd-pipeline.md',
   'prisma-migration-workflow': 'docs/deployment/prisma-migration-workflow.md',
+  'cms-overview': 'docs/deployment/cms-overview.md',
 };
 
 export async function GET(
