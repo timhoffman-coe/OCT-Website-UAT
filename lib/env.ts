@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { logger } from '@/lib/logger';
 
 const envSchema = z.object({
   // Database (required)
@@ -39,6 +40,9 @@ const envSchema = z.object({
   FF_DATA_PORTAL: z.enum(['true', 'false']).optional(),
   FF_VENDOR_DASHBOARD: z.enum(['true', 'false']).optional(),
 
+  // Logging
+  LOG_LEVEL: z.enum(['DEBUG', 'INFO', 'WARN', 'ERROR', 'SILENT']).optional(),
+
   // System
   NODE_ENV: z.enum(['development', 'production', 'test']).optional(),
 });
@@ -51,7 +55,7 @@ function validateEnv(): Env {
     const formatted = result.error.issues
       .map((i) => `  ${i.path.join('.')}: ${i.message}`)
       .join('\n');
-    console.error(`Environment validation failed:\n${formatted}`);
+    logger.warn('Environment validation failed', { issues: formatted });
     // Don't crash during build — only fail at runtime when vars are actually needed
     return process.env as unknown as Env;
   }

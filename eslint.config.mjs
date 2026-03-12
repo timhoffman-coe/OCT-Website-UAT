@@ -7,7 +7,13 @@ const eslintConfig = defineConfig([
   ...nextTs,
   {
     rules: {
-      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "no-console": ["error"],
+    },
+  },
+  {
+    files: ["prisma/**/*.ts", "scripts/**/*.ts"],
+    rules: {
+      "no-console": "off",
     },
   },
   // Override default ignores of eslint-config-next.
