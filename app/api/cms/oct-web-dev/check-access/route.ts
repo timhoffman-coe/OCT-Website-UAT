@@ -7,7 +7,8 @@ export async function GET() {
   try {
     const hasAccess = await canViewOctWebDev();
     return NextResponse.json({ canView: hasAccess });
-  } catch {
+  } catch (err) {
+    console.error('[check-access] error:', err);
     return NextResponse.json({ canView: false });
   }
 }

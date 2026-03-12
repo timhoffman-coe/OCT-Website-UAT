@@ -11,8 +11,16 @@ export default function Header() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [canViewOctWebDev, setCanViewOctWebDev] = useState(false);
 
   const isScrolledRef = useRef(false);
+
+  useEffect(() => {
+    fetch('/api/cms/oct-web-dev/check-access')
+      .then(res => res.ok ? res.json() : { canView: false })
+      .then(data => setCanViewOctWebDev(data.canView))
+      .catch(() => setCanViewOctWebDev(false));
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -197,7 +205,6 @@ export default function Header() {
                 <div className="hidden group-hover:block absolute z-10 right-0 top-full w-56 bg-white rounded-md shadow-lg py-1">
                   <a href="/resources/app-library" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">App Library</a>
                   <a href="/resources/nic" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Network Information Center</a>
-
                   <a href="/branch-templates" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Branch Templates</a>
                   <a href="/technology-strategies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Strategies</a>
                   <a href="/budget" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget & Spend</a>
@@ -205,7 +212,12 @@ export default function Header() {
                   <a href="/ai-resources" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">AI Resources</a>
                   <a href="https://data.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Open Data Portal</a>
                   <a href="/links" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Links</a>
-                  <a href="/resources/oct-web-dev" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">OCT-Web-Dev</a>
+                  {canViewOctWebDev && (
+                    <>
+                      <div className="border-b border-gray-200 my-1" />
+                      <a href="/resources/oct-web-dev" className="block px-4 py-2 text-sm font-semibold text-[#005087] hover:bg-[#005087]/10">OCT Web Development</a>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -327,7 +339,6 @@ export default function Header() {
               </button>
               <div className={`${openDropdown === 'mobile-resources' ? '' : 'hidden'} mt-1 pl-4`}>
                 <a href="/resources/app-library" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">App Library</a>
-
                 <a href="/branch-templates" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Branch Templates</a>
                 <a href="/technology-strategies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Strategies</a>
                 <a href="/budget" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Budget & Spend</a>
@@ -335,7 +346,12 @@ export default function Header() {
                 <a href="/ai-resources" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">AI Resources</a>
                 <a href="https://data.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Open Data Portal</a>
                 <a href="/links" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Links</a>
-                <a href="/resources/oct-web-dev" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">OCT-Web-Dev</a>
+                {canViewOctWebDev && (
+                  <>
+                    <div className="border-b border-gray-200 my-1" />
+                    <a href="/resources/oct-web-dev" className="block px-3 py-2 rounded-md text-sm font-semibold text-[#005087] hover:bg-[#005087]/10">OCT Web Development</a>
+                  </>
+                )}
               </div>
             </div>
 

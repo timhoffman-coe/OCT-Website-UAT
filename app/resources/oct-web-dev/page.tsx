@@ -1,10 +1,24 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import ReactMarkdown from 'react-markdown';
 import { Lock, Map, CheckCircle2, Circle, Loader2, ChevronDown } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AnimatedSection from '@/components/AnimatedSection';
+
+const WebsiteArchFlow = dynamic(
+  () => import('@/components/WebsiteArchFlow'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center bg-[#111827]">
+        <span className="text-cyan-500/60 text-sm font-sans animate-pulse">Loading architecture diagram...</span>
+      </div>
+    ),
+  }
+);
 
 const PHASE_COLORS = [
   { border: 'border-l-[#005087]', bg: 'bg-[#005087]/5', badge: 'bg-[#005087]', bar: '#005087' },
@@ -96,14 +110,14 @@ export default function OctWebDevPage() {
       <Header />
 
       {/* Page Header */}
-      <div className="bg-[#193A5A] text-white shadow-lg pt-24 md:pt-28">
+      <div className="bg-[#193A5A] text-white shadow-lg">
         <div className="max-w-5xl mx-auto px-4 py-6">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-[#005087] rounded-lg shadow-lg shadow-[#005087]/50">
               <Map className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold tracking-tight">OCT-Web-Dev</h1>
+              <h1 className="text-2xl font-bold tracking-tight">OCT Web Development</h1>
               <p className="text-xs text-[#839899] font-medium tracking-widest uppercase">OCT Website Development Progress</p>
             </div>
             {canView && totalItems > 0 && (
@@ -141,6 +155,42 @@ export default function OctWebDevPage() {
             </div>
           </div>
         ) : (
+          <>
+          {/* Architecture Diagram */}
+          <AnimatedSection className="mb-8">
+            <div className="bg-[#111827] rounded-xl border border-cyan-900/30 overflow-hidden shadow-lg">
+              <div className="px-4 py-3 border-b border-cyan-900/20">
+                <h3 className="text-sm font-bold text-white font-sans">Request Lifecycle</h3>
+                <p className="text-[11px] text-cyan-500/60 font-sans">How a request flows through this application</p>
+              </div>
+              <div className="h-[500px]">
+                <WebsiteArchFlow />
+              </div>
+              <div className="px-4 py-3 border-t border-cyan-900/20">
+                <p className="text-[10px] text-cyan-400/60 font-sans uppercase tracking-wider font-semibold text-center mb-2.5">Also powered by</p>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                {[
+                  { icon: '🐳', label: 'Docker Compose', sub: '3 containers' },
+                  { icon: '🔄', label: 'GitHub', sub: 'Source control & CI/CD' },
+                  { icon: '🧪', label: 'Dev Environment', sub: 'Local Docker stack' },
+                  { icon: '🚀', label: 'Production', sub: 'GCP Linux Compute' },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-3 py-1.5"
+                  >
+                    <span className="text-sm">{item.icon}</span>
+                    <div>
+                      <span className="text-[11px] text-white font-sans font-semibold">{item.label}</span>
+                      <span className="text-[10px] text-gray-400 font-sans ml-1.5">{item.sub}</span>
+                    </div>
+                  </div>
+                ))}
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+
           <div className="space-y-3">
             {phases.map((phase, i) => {
               const colors = PHASE_COLORS[i % PHASE_COLORS.length];
@@ -216,6 +266,7 @@ export default function OctWebDevPage() {
               );
             })}
           </div>
+          </>
         )}
       </main>
 
