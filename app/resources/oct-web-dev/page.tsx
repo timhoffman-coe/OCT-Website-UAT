@@ -147,6 +147,7 @@ export default function OctWebDevPage() {
   const [activeTab, setActiveTab] = useState<TabId>('design');
   const [openPhases, setOpenPhases] = useState<Set<number>>(new Set());
   const [docs, setDocs] = useState<Record<string, string>>({});
+  const [failedDocs, setFailedDocs] = useState<Set<string>>(new Set());
   const [activeDoc, setActiveDoc] = useState<string | null>(null);
   const docScrollRef = useRef<HTMLDivElement>(null);
 
@@ -164,12 +165,18 @@ export default function OctWebDevPage() {
             DOCUMENTS.map(d =>
               fetch(`/api/cms/oct-web-dev/docs/${d.slug}`)
                 .then(r => r.ok ? r.json() : null)
-                .then(data => data ? [d.slug, data.content] as const : null)
+                .then(data => data ? [d.slug, data.content, true] as const : [d.slug, null, false] as const)
+                .catch(() => [d.slug, null, false] as const)
             )
           ).then(results => {
             const docMap: Record<string, string> = {};
-            for (const r of results) if (r) docMap[r[0]] = r[1];
+            const failed = new Set<string>();
+            for (const r of results) {
+              if (r[2] && r[1]) docMap[r[0]] = r[1];
+              else failed.add(r[0]);
+            }
             setDocs(docMap);
+            setFailedDocs(failed);
           });
 
           return Promise.all([checklistFetch, docsFetch]);
@@ -379,6 +386,12 @@ export default function OctWebDevPage() {
                     <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                       {docs[activeDoc]}
                     </ReactMarkdown>
+                  ) : failedDocs.has(activeDoc) ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                      <FileText className="w-8 h-8 mb-2 text-gray-300" />
+                      <span className="text-sm font-sans font-medium text-gray-500">Document unavailable</span>
+                      <span className="text-xs font-sans mt-1">This document could not be loaded. It may not be deployed yet.</span>
+                    </div>
                   ) : (
                     <div className="flex items-center justify-center py-12 text-gray-400">
                       <Loader2 className="w-5 h-5 animate-spin mr-2" />
