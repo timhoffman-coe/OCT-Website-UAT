@@ -146,6 +146,13 @@
 - [ ] Replace fallback data with real team member names, emails, and roles
 - [ ] Populate Service Management Office, Monitoring & Analytics, and Digital Workplace Catalog
 
+### Main Page Enhancements
+- [ ] Add "Learn more about OCT" section to main page
+- [ ] Add Key Initiatives Spotlight section to main page
+
+### Org Chart Integration
+- [ ] Tie in OCT Org Chart with existing pages
+
 ## Team Pages & CMS Content Population
 
 ### Section Pages
@@ -170,6 +177,29 @@
 - [ ] Verify [teamSlug] renders correctly for all team slugs
 - [ ] Verify [teamSlug]/[subTeamSlug] renders for all sub-teams
 - [ ] Add proper 404 handling for invalid slugs
+
+### OCT Leadership Page
+- [ ] Create dedicated leadership page for branch manager and directors
+- [ ] Add role-based conditional rendering (only visible to leadership group members)
+- [ ] Populate leadership profiles via CMS admin
+
+### Project Page Template
+- [ ] Create project page template as sub-page type under teams
+- [ ] Add project fields (description, status, team members, timeline)
+- [ ] Wire into dynamic team routes ([teamSlug]/projects/[projectSlug])
+- [ ] Allow teams to showcase active project work
+
+### News & Announcements Section
+- [ ] Create news/blog page with chronological post listing
+- [ ] Add CMS editor for creating and editing posts (non-technical users)
+- [ ] Support rich text, images, and categorization/tagging
+- [ ] Add "What's New" widget or feed to main page
+
+### Branch Idea Submission
+- [ ] Create idea submission form accessible to all branch members
+- [ ] Store submissions in database with submitter, description, and status
+- [ ] Add admin review interface for managing submitted ideas
+- [ ] Add notification or visibility for leadership on new submissions
 
 ### Content Completeness
 - [ ] Service area descriptions are accurate and complete
@@ -467,9 +497,47 @@
 - [ ] Test navigation/menu behavior on small screens
 - [ ] Ensure tables are horizontally scrollable on mobile
 
-## Upcoming Tasks
+## Anchor Point Integration
 
-- [ ] Main page: Add "Learn more about OCT" and Key Initiatives Spotlight sections
-- [ ] Technology Roadmap: Add user roles for add/edit permissions and conditional rendering
-- [ ] Finish updating diagram on "How OCT Works" page
-- [ ] Tie in OCT Org Chart
+### Archive Existing Gemini Assistant
+- [ ] Create _archive/oct-assistant-gemini/ directory
+- [ ] Move app/api/chat/route.ts to archive
+- [ ] Move app/oct-assistant/services/chatService.ts to archive
+- [ ] Move app/oct-assistant/services/documentService.ts to archive
+- [ ] Move app/oct-assistant/services/categoryService.ts to archive
+- [ ] Move app/lib/google-drive.ts to archive
+- [ ] Move scripts/verify-service.ts and verify-service-desk.ts to archive
+- [ ] Add README to archive explaining how to restore
+
+### Environment & Configuration
+- [ ] Add ANCHOR_POINT_URL env var to lib/env.ts Zod schema
+- [ ] Add ANCHOR_POINT_STORE_ID env var to lib/env.ts Zod schema
+- [ ] Add FF_ANCHOR_POINT feature flag to lib/env.ts
+- [ ] Add new env vars to .env.local for development
+
+### Anchor Point Client Service
+- [ ] Create lib/anchor-point/types.ts with request/response interfaces
+- [ ] Create lib/anchor-point/client.ts with query method and session management
+- [ ] Implement per-user rate limiting (3000ms min between queries, 300/day cap)
+- [ ] Implement circuit breaker pattern (matching existing Gemini pattern)
+- [ ] Add structured logging throughout client module
+
+### API Route (Replace Chat Route)
+- [ ] Create app/api/chat/route.ts as new Anchor Point-backed endpoint
+- [ ] Add authentication gate (getCurrentUser)
+- [ ] Add feature flag gate (FF_ANCHOR_POINT)
+- [ ] Add input validation and rate limiting in middleware
+
+### UI Wiring
+- [ ] Update chatService.ts to call new chat API endpoint
+- [ ] Add source attribution display for Anchor Point responses
+- [ ] Show rate limit feedback (cooldown timer, remaining daily queries)
+- [ ] Handle errors with user-friendly messages
+
+### Health Check & Testing
+- [ ] Add Anchor Point connectivity check to /api/health endpoint
+- [ ] Test rate limiting enforces 3000ms gap and 300/day cap
+- [ ] Test circuit breaker and graceful degradation
+- [ ] Test feature flag correctly gates all functionality
+- [ ] Verify archived Gemini assistant can be restored
+
