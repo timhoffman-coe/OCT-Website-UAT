@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import withSerwistInit from "@serwist/next";
+import { InjectManifest } from "workbox-webpack-plugin";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
           { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://placehold.co; font-src 'self'; connect-src 'self' https://servicehealth-prod.edmonton.ca https://docs.google.com; frame-ancestors 'none';",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://placehold.co; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://servicehealth-prod.edmonton.ca https://docs.google.com; frame-ancestors 'none';",
           },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
         ],
@@ -56,12 +56,19 @@ const nextConfig: NextConfig = {
     ];
   },
   serverExternalPackages: ['pdf-parse', '@napi-rs/canvas', 'google-auth-library', '@prisma/client'],
+  webpack: (config, { isServer, dev }) => {
+    if (!isServer && !dev) {
+      config.plugins.push(
+        new InjectManifest({
+          swSrc: './app/sw.ts',
+          swDest: '../public/sw.js',
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+          exclude: [/\.map$/, /^manifest.*\.js$/],
+        })
+      );
+    }
+    return config;
+  },
 };
 
-const withSerwist = withSerwistInit({
-  swSrc: "app/sw.ts",
-  swDest: "public/sw.js",
-  disable: process.env.NODE_ENV === "development",
-});
-
-export default withSerwist(nextConfig);
+export default nextConfig;

@@ -61,7 +61,13 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <meta name="theme-color" content="#004A8F" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="OCT" />
+        <meta name="msapplication-TileColor" content="#004A8F" />
+        <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
       </head>
       <body
         className={`${openSans.variable} ${ptSerif.variable} antialiased`}

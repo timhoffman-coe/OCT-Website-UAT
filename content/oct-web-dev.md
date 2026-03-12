@@ -245,10 +245,10 @@
 - [ ] CMS admin user guide
 
 ### PWA / Service Worker
-- [ ] Validate Serwist service worker configuration
-- [ ] Test offline behavior and caching strategy
-- [ ] Verify manifest and icons for installability
-- [ ] Configure production caching strategy
+- [x] Validate service worker configuration (migrated from Serwist to Google Workbox)
+- [x] Test offline behavior and caching strategy
+- [x] Verify manifest and icons for installability
+- [x] Configure production caching strategy
 
 ### Database
 - [ ] Review Prisma migrations for production readiness
@@ -363,10 +363,10 @@
 - [ ] Audit for oversized images
 
 ### Service Worker Production Config
-- [ ] Define cache-first strategy for static assets
-- [ ] Define network-first strategy for API data
-- [ ] Add offline fallback page
-- [ ] Test service worker lifecycle
+- [x] Define cache-first strategy for static assets
+- [x] Define network-first strategy for API data
+- [x] Add offline fallback page
+- [x] Test service worker lifecycle
 
 ### Lighthouse Performance Audit
 - [ ] Run Lighthouse CI on all major pages

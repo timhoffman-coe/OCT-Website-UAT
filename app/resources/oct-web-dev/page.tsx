@@ -237,6 +237,16 @@ export default function OctWebDevPage() {
                           li: ({ children }) => {
                             const text = String(children);
                             const isChecked = text.startsWith('[x]') || text.includes('✅');
+                            // Strip [x] and [ ] checkbox markers from displayed text
+                            const stripped = typeof children === 'string'
+                              ? children.replace(/^\[[ x]\]\s*/, '')
+                              : Array.isArray(children)
+                                ? children.map((child, idx) =>
+                                    idx === 0 && typeof child === 'string'
+                                      ? child.replace(/^\[[ x]\]\s*/, '')
+                                      : child
+                                  )
+                                : children;
                             return (
                               <li className="flex items-start gap-2.5 text-sm font-sans">
                                 {isChecked ? (
@@ -244,7 +254,7 @@ export default function OctWebDevPage() {
                                 ) : (
                                   <Circle className="w-4.5 h-4.5 text-gray-300 flex-shrink-0 mt-0.5" />
                                 )}
-                                <span className={isChecked ? 'text-gray-400 line-through' : 'text-gray-700'}>{children}</span>
+                                <span className={isChecked ? 'text-gray-400 line-through' : 'text-gray-700'}>{stripped}</span>
                               </li>
                             );
                           },
