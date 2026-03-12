@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket, Map } from 'lucide-react';
 
 interface Team {
   id: string;
@@ -224,6 +224,17 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
                 >
                   <Rocket className="w-4 h-4" />
                   Roadmap Editors
+                </Link>
+                <Link
+                  href="/admin/oct-web-dev-viewers"
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                    isActive('/admin/oct-web-dev-viewers')
+                      ? 'bg-primary-blue text-white'
+                      : 'text-white/80 hover:bg-white/10'
+                  }`}
+                >
+                  <Map className="w-4 h-4" />
+                  OCT-Web-Dev Viewers
                 </Link>
                 <Link
                   href="/admin/audit-log"

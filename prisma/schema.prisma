@@ -24,9 +24,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  teamPermissions   TeamPermission[]
-  auditLogs         AuditLog[]
-  roadmapPermission RoadmapPermission?
+  teamPermissions              TeamPermission[]
+  auditLogs                    AuditLog[]
+  roadmapPermission            RoadmapPermission?
+  octWebDevPermission          OctWebDevPermission?
 }
 
 model TeamPermission {
@@ -47,6 +48,16 @@ model RoadmapPermission {
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model OctWebDevPermission {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("OctWebDevPermission")
 }
 
 model AuditLog {

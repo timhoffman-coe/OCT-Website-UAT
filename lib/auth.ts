@@ -8,7 +8,7 @@ export async function getCurrentUser() {
 
   const user = await prisma.user.findUnique({
     where: { email },
-    include: { teamPermissions: true, roadmapPermission: true },
+    include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true },
   });
 
   return user;
@@ -33,6 +33,16 @@ export async function requireTeamAccess(teamId: string) {
   throw new Error('Forbidden: Insufficient role');
 }
 
+export async function requireTeamViewAccess(teamId: string) {
+  const user = await requireUser();
+  if (user.role === 'SUPER_ADMIN') return user;
+  const hasAccess = user.teamPermissions.some(
+    (p) => p.teamId === teamId
+  );
+  if (!hasAccess) throw new Error('Forbidden: No access to this team');
+  return user;
+}
+
 export async function requireSuperAdmin() {
   const user = await requireUser();
   if (user.role !== 'SUPER_ADMIN') {
@@ -52,6 +62,20 @@ export async function requireRoadmapAccess() {
   const user = await requireUser();
   if (user.role === 'SUPER_ADMIN') return user;
   if (!user.roadmapPermission) throw new Error('Forbidden: No roadmap edit access');
+  return user;
+}
+
+export async function canViewOctWebDev(): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user) return false;
+  if (user.role === 'SUPER_ADMIN') return true;
+  return !!user.octWebDevPermission;
+}
+
+export async function requireOctWebDevAccess() {
+  const user = await requireUser();
+  if (user.role === 'SUPER_ADMIN') return user;
+  if (!user.octWebDevPermission) throw new Error('Forbidden: No OCT-Web-Dev view access');
   return user;
 }
 

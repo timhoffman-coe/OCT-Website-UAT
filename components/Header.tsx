@@ -205,6 +205,7 @@ export default function Header() {
                   <a href="/ai-resources" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">AI Resources</a>
                   <a href="https://data.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Open Data Portal</a>
                   <a href="/links" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Links</a>
+                  <a href="/resources/oct-web-dev" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">OCT-Web-Dev</a>
                 </div>
               </div>
 
@@ -334,6 +335,7 @@ export default function Header() {
                 <a href="/ai-resources" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">AI Resources</a>
                 <a href="https://data.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Open Data Portal</a>
                 <a href="/links" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Links</a>
+                <a href="/resources/oct-web-dev" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">OCT-Web-Dev</a>
               </div>
             </div>
 

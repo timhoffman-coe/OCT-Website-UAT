@@ -4,11 +4,15 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install --maxsockets 1
 
+# Copy Prisma schema + config BEFORE generate so schema changes bust the cache
+COPY prisma ./prisma
+COPY prisma.config.js ./
+ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
+RUN npx prisma generate && echo "=== PRISMA GENERATED ===" && ls -la node_modules/.prisma/client/default.js
+
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV DATABASE_URL="postgresql://build:build@localhost:5432/build"
-RUN npx prisma generate && echo "=== PRISMA GENERATED ===" && ls -la node_modules/.prisma/client/default.js
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
@@ -39,6 +43,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gaxios ./node_module
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gcp-metadata ./node_modules/gcp-metadata
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gtoken ./node_modules/gtoken
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/jws ./node_modules/jws
+COPY --from=builder --chown=nextjs:nodejs /app/content ./content
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.js ./prisma.config.js
 RUN mkdir -p /app/prisma-cli && cd /app/prisma-cli && npm init -y > /dev/null 2>&1 && npm install prisma@7.4.1 > /dev/null 2>&1
