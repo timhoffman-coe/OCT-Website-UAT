@@ -273,7 +273,7 @@
 ### Brute Force Protection on Admin Login
 - [x] Rate limiter covers /api/admin-login
 - [x] Added /api/admin-login to middleware matcher
-- [ ] Log all login attempts to audit trail
+- [x] Log all login attempts to audit trail
 - [ ] Consider adding CAPTCHA after repeated failures
 
 ### IP Spoofing in Rate Limiter
@@ -312,8 +312,8 @@
 ### Audit Trail for Security Events
 - [x] Login success and failure events logged
 - [x] Added ipAddress and userAgent fields to AuditLog
-- [ ] Add before/after values to audit log entries
-- [ ] Log unauthorized access attempts
+- [x] Add before/after values to audit log entries
+- [x] Log unauthorized access attempts
 
 ### Credential Rotation Plan
 - [ ] Document all API keys and credentials needing rotation
@@ -386,15 +386,15 @@
 - [x] Log levels: DEBUG, INFO, WARN, ERROR
 - [x] Sensitive field sanitization
 - [x] GCP Cloud Logging compatible
-- [ ] Add correlation/request IDs for tracing
-- [ ] Migrate all console.log calls to use logger
+- [x] Add correlation/request IDs for tracing
+- [x] Migrate all console.log calls to use logger
 
 ### Error Boundaries
 - [x] Global error boundary with retry button
 - [x] Admin-specific error boundary
 - [x] 404 page with full design
 - [ ] Add error boundaries for individual dashboard pages
-- [ ] Log caught errors to structured logging
+- [x] Log caught errors to structured logging
 
 ### Environment Variable Validation
 - [x] Zod schema validating all environment variables
@@ -424,11 +424,11 @@
 - [ ] Add service status indicators in UI
 
 ### Enhanced Audit Logging
-- [ ] Make changes field required with before/after structure
-- [ ] Log failed operations
+- [x] Make changes field required with before/after structure
+- [x] Log failed operations
 - [x] Added ipAddress and userAgent fields
-- [ ] Add retention policy for audit logs
-- [ ] Add audit log export capability
+- [x] Add retention policy for audit logs
+- [x] Add audit log export capability
 
 ### ESLint Configuration
 - [x] Added no-console rule
@@ -450,10 +450,10 @@
 - [ ] Enable exactOptionalPropertyTypes
 
 ### Database Migration Strategy
-- [ ] Document Prisma migration workflow
+- [x] Document Prisma migration workflow
 - [ ] Set up migration CI check
-- [ ] Create seed data strategy
-- [ ] Add migration rollback procedures
+- [x] Create seed data strategy
+- [x] Add migration rollback procedures
 
 ### Incident Response Plan
 - [ ] Document security incident response procedures
