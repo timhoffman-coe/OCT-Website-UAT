@@ -3,24 +3,26 @@
 import { prisma } from '@/lib/prisma';
 import { requireTeamAccess } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
+import { slugify } from '@/lib/slugify';
 
 export async function createServiceArea(
   teamId: string,
   data: {
-    serviceAreaId: string;
     title: string;
     shortDescription: string;
     fullDescription: string;
     features: string[];
     icon?: string;
-    link?: string;
   }
 ) {
   const user = await requireTeamAccess(teamId);
   const count = await prisma.serviceArea.count({ where: { teamId } });
 
+  const serviceAreaId = slugify(data.title);
+  if (!serviceAreaId) throw new Error('Title must contain at least one alphanumeric character.');
+
   const area = await prisma.serviceArea.create({
-    data: { ...data, teamId, sortOrder: count },
+    data: { ...data, serviceAreaId, teamId, sortOrder: count },
   });
 
   await prisma.auditLog.create({
@@ -41,7 +43,6 @@ export async function updateServiceArea(
     fullDescription?: string;
     features?: string[];
     icon?: string;
-    link?: string;
     sortOrder?: number;
   }
 ) {

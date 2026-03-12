@@ -28,25 +28,21 @@ export default function ServiceAreaEditor({
   const [isPending, startTransition] = useTransition();
 
   const [form, setForm] = useState({
-    serviceAreaId: '',
     title: '',
     shortDescription: '',
     fullDescription: '',
     features: '',
     icon: '',
-    link: '',
   });
 
   function startEdit(a: ServiceArea) {
     setEditing(a.id);
     setForm({
-      serviceAreaId: a.serviceAreaId,
       title: a.title,
       shortDescription: a.shortDescription,
       fullDescription: a.fullDescription,
       features: a.features.join(', '),
       icon: a.icon || '',
-      link: a.link || '',
     });
   }
 
@@ -58,7 +54,6 @@ export default function ServiceAreaEditor({
         fullDescription: form.fullDescription,
         features: form.features.split(',').map((f) => f.trim()).filter(Boolean),
         icon: form.icon,
-        link: form.link,
       });
       setEditing(null);
     });
@@ -67,23 +62,19 @@ export default function ServiceAreaEditor({
   function handleCreate() {
     startTransition(async () => {
       await createServiceArea(teamId, {
-        serviceAreaId: form.serviceAreaId,
         title: form.title,
         shortDescription: form.shortDescription,
         fullDescription: form.fullDescription,
         features: form.features.split(',').map((f) => f.trim()).filter(Boolean),
         icon: form.icon,
-        link: form.link,
       });
       setAdding(false);
       setForm({
-        serviceAreaId: '',
         title: '',
         shortDescription: '',
         fullDescription: '',
         features: '',
         icon: '',
-        link: '',
       });
     });
   }
@@ -105,13 +96,11 @@ export default function ServiceAreaEditor({
           onClick={() => {
             setAdding(true);
             setForm({
-              serviceAreaId: '',
               title: '',
               shortDescription: '',
               fullDescription: '',
               features: '',
               icon: '',
-              link: '',
             });
           }}
           className="flex items-center gap-1 bg-primary-blue text-white text-sm font-sans px-3 py-1.5 rounded hover:bg-dark-blue transition-colors"
@@ -161,23 +150,13 @@ export default function ServiceAreaEditor({
                     className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block font-sans text-xs text-gray-500 mb-1">Icon (optional)</label>
-                    <input
-                      value={form.icon}
-                      onChange={(e) => setForm({ ...form, icon: e.target.value })}
-                      className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-sans text-xs text-gray-500 mb-1">Link (optional)</label>
-                    <input
-                      value={form.link}
-                      onChange={(e) => setForm({ ...form, link: e.target.value })}
-                      className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
-                    />
-                  </div>
+                <div>
+                  <label className="block font-sans text-xs text-gray-500 mb-1">Icon (optional)</label>
+                  <input
+                    value={form.icon}
+                    onChange={(e) => setForm({ ...form, icon: e.target.value })}
+                    className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
+                  />
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -240,24 +219,13 @@ export default function ServiceAreaEditor({
         {/* Add Form */}
         {adding && (
           <div className="bg-white border-2 border-dashed border-primary-blue rounded-lg p-4 space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block font-sans text-xs text-gray-500 mb-1">Service Area ID</label>
-                <input
-                  value={form.serviceAreaId}
-                  onChange={(e) => setForm({ ...form, serviceAreaId: e.target.value })}
-                  placeholder="e.g. network-services"
-                  className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
-                />
-              </div>
-              <div>
-                <label className="block font-sans text-xs text-gray-500 mb-1">Title</label>
-                <input
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
-                />
-              </div>
+            <div>
+              <label className="block font-sans text-xs text-gray-500 mb-1">Title</label>
+              <input
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
+              />
             </div>
             <div>
               <label className="block font-sans text-xs text-gray-500 mb-1">Short Description</label>
@@ -285,28 +253,18 @@ export default function ServiceAreaEditor({
                 className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block font-sans text-xs text-gray-500 mb-1">Icon (optional)</label>
-                <input
-                  value={form.icon}
-                  onChange={(e) => setForm({ ...form, icon: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
-                />
-              </div>
-              <div>
-                <label className="block font-sans text-xs text-gray-500 mb-1">Link (optional)</label>
-                <input
-                  value={form.link}
-                  onChange={(e) => setForm({ ...form, link: e.target.value })}
-                  className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
-                />
-              </div>
+            <div>
+              <label className="block font-sans text-xs text-gray-500 mb-1">Icon (optional)</label>
+              <input
+                value={form.icon}
+                onChange={(e) => setForm({ ...form, icon: e.target.value })}
+                className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
+              />
             </div>
             <div className="flex gap-2">
               <button
                 onClick={handleCreate}
-                disabled={isPending || !form.title || !form.serviceAreaId}
+                disabled={isPending || !form.title}
                 className="flex items-center gap-1 bg-primary-blue text-white text-sm px-3 py-1.5 rounded hover:bg-dark-blue disabled:opacity-50"
               >
                 <Plus className="w-3 h-3" /> Create

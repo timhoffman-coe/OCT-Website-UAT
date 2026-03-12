@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Plus, ExternalLink, Archive } from 'lucide-react';
 import { createChildTeam } from '@/lib/actions/team-actions';
+import { slugify } from '@/lib/slugify';
 import ArchiveConfirmDialog from './ArchiveConfirmDialog';
 
 interface ChildTeam {
@@ -25,7 +26,6 @@ interface SubTeamsEditorProps {
 export default function SubTeamsEditor({ parentId, children, readOnly = false }: SubTeamsEditorProps) {
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
-  const [slug, setSlug] = useState('');
   const [teamName, setTeamName] = useState('');
   const [teamShortName, setTeamShortName] = useState('');
   const [saving, setSaving] = useState(false);
@@ -33,19 +33,14 @@ export default function SubTeamsEditor({ parentId, children, readOnly = false }:
   const [archiveTarget, setArchiveTarget] = useState<ChildTeam | null>(null);
 
   const handleCreate = async () => {
-    if (!slug.trim() || !teamName.trim() || !teamShortName.trim()) {
+    if (!teamName.trim() || !teamShortName.trim()) {
       setError('All fields are required.');
-      return;
-    }
-    if (!/^[a-z0-9-]+$/.test(slug)) {
-      setError('Slug must be lowercase letters, numbers, and hyphens only.');
       return;
     }
     setSaving(true);
     setError('');
     try {
-      await createChildTeam(parentId, { slug, teamName, teamShortName });
-      setSlug('');
+      await createChildTeam(parentId, { teamName, teamShortName });
       setTeamName('');
       setTeamShortName('');
       setShowForm(false);
@@ -78,7 +73,7 @@ export default function SubTeamsEditor({ parentId, children, readOnly = false }:
       {showForm && (
         <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
           <h3 className="font-sans text-sm font-semibold text-gray-700 mb-3">New Team</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-2">
             <div>
               <label className="block font-sans text-xs text-gray-500 mb-1">Team Name</label>
               <input
@@ -99,17 +94,12 @@ export default function SubTeamsEditor({ parentId, children, readOnly = false }:
                 className="w-full px-3 py-1.5 border rounded text-sm font-sans"
               />
             </div>
-            <div>
-              <label className="block font-sans text-xs text-gray-500 mb-1">URL Slug</label>
-              <input
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                placeholder="e.g. network-services"
-                className="w-full px-3 py-1.5 border rounded text-sm font-sans font-mono"
-              />
-            </div>
           </div>
+          {teamName.trim() && (
+            <p className="font-sans text-xs text-gray-400 mb-3">
+              URL slug: <span className="font-mono text-gray-600">/{slugify(teamName)}</span>
+            </p>
+          )}
           {error && <p className="font-sans text-xs text-red-600 mb-2">{error}</p>}
           <div className="flex gap-2">
             <button

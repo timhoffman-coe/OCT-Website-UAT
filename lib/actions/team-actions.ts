@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { requireTeamAccess, requireSuperAdmin } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
+import { slugify } from '@/lib/slugify';
 
 export async function updateTeam(
   teamId: string,
@@ -66,7 +67,6 @@ export async function createTeam(data: {
 export async function createChildTeam(
   parentId: string,
   data: {
-    slug: string;
     teamName: string;
     teamShortName: string;
   }
@@ -76,10 +76,19 @@ export async function createChildTeam(
   const parent = await prisma.team.findUniqueOrThrow({ where: { id: parentId } });
   const childCount = await prisma.team.count({ where: { parentId } });
 
+  // Auto-generate a unique slug from the team name
+  let slug = slugify(data.teamName);
+  if (!slug) throw new Error('Team name must contain at least one alphanumeric character.');
+  let suffix = 2;
+  while (await prisma.team.findUnique({ where: { slug } })) {
+    slug = `${slugify(data.teamName)}-${suffix}`;
+    suffix++;
+  }
+
   // Create the child team as a draft ITS_TEAM
   const team = await prisma.team.create({
     data: {
-      slug: data.slug,
+      slug,
       teamName: data.teamName,
       teamShortName: data.teamShortName,
       pageTemplate: 'ITS_TEAM',
@@ -111,12 +120,12 @@ export async function createChildTeam(
   await prisma.serviceArea.create({
     data: {
       teamId: parentId,
-      serviceAreaId: data.slug,
+      serviceAreaId: slug,
       title: data.teamName,
       shortDescription: '',
       fullDescription: '',
       features: [],
-      link: `/${data.slug}`,
+      link: `/${slug}`,
       sortOrder: saCount,
     },
   });
