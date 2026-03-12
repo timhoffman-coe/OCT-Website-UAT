@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { requireTeamAccess } from '@/lib/auth';
+import { requireTeamViewAccess } from '@/lib/auth';
 import { notFound } from 'next/navigation';
 import TeamDetailClient from '@/components/admin/TeamDetailClient';
 
@@ -12,11 +12,14 @@ export default async function TeamDetailPage({
 }) {
   const { teamId } = await params;
 
+  let user;
   try {
-    await requireTeamAccess(teamId);
+    user = await requireTeamViewAccess(teamId);
   } catch {
     notFound();
   }
+
+  const readOnly = user.role === 'VIEWER';
 
   const [team, widgetDefinitions] = await Promise.all([
     prisma.team.findUnique({
@@ -69,5 +72,5 @@ export default async function TeamDetailPage({
 
   if (!team) notFound();
 
-  return <TeamDetailClient team={team} widgetDefinitions={widgetDefinitions} />;
+  return <TeamDetailClient team={team} widgetDefinitions={widgetDefinitions} readOnly={readOnly} />;
 }

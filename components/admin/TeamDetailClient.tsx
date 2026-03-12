@@ -158,6 +158,7 @@ type TeamWithRelations = {
 interface TeamDetailClientProps {
   team: TeamWithRelations;
   widgetDefinitions: WidgetDefinitionData[];
+  readOnly?: boolean;
 }
 
 function getTemplateLabel(template: string): string {
@@ -169,7 +170,7 @@ function getTemplateLabel(template: string): string {
   }
 }
 
-export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetailClientProps) {
+export default function TeamDetailClient({ team, widgetDefinitions, readOnly = false }: TeamDetailClientProps) {
   const router = useRouter();
   const [isRestoring, startRestoreTransition] = useTransition();
 
@@ -198,19 +199,21 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
               </p>
             </div>
           </div>
-          <button
-            onClick={() => {
-              startRestoreTransition(async () => {
-                await restoreTeam(team.id);
-                router.refresh();
-              });
-            }}
-            disabled={isRestoring}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-sans font-medium text-white bg-red-600 rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            {isRestoring ? 'Restoring...' : 'Restore'}
-          </button>
+          {!readOnly && (
+            <button
+              onClick={() => {
+                startRestoreTransition(async () => {
+                  await restoreTeam(team.id);
+                  router.refresh();
+                });
+              }}
+              disabled={isRestoring}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-sans font-medium text-white bg-red-600 rounded hover:bg-red-700 disabled:opacity-50 transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              {isRestoring ? 'Restoring...' : 'Restore'}
+            </button>
+          )}
         </div>
       )}
 
@@ -269,11 +272,12 @@ export default function TeamDetailClient({ team, widgetDefinitions }: TeamDetail
         keyInitiativeSlides={team.keyInitiativeSlides}
         hasChildren={team.children.length > 0}
         isArchived={!!team.archivedAt}
+        readOnly={readOnly}
       />
 
       {/* Sub-Teams section for pages with children */}
       {team.children.length > 0 && (
-        <SubTeamsEditor parentId={team.id} children={team.children} />
+        <SubTeamsEditor parentId={team.id} children={team.children} readOnly={readOnly} />
       )}
 
       {/* Change History */}

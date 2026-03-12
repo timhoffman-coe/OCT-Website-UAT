@@ -209,6 +209,7 @@ interface LayoutEditorProps {
   }>;
   hasChildren: boolean;
   isArchived: boolean;
+  readOnly?: boolean;
 }
 
 // ── Widget Preview Data ────────────────────────────────
@@ -984,6 +985,7 @@ function SortableWidgetItem({
   teamQuickLinks,
   whoWeAreItems,
   keyInitiativeSlides,
+  readOnly,
 }: {
   instance: WidgetInstanceData;
   onRemove: (id: string) => void;
@@ -1008,6 +1010,7 @@ function SortableWidgetItem({
   teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
   whoWeAreItems: LayoutEditorProps['whoWeAreItems'];
   keyInitiativeSlides: LayoutEditorProps['keyInitiativeSlides'];
+  readOnly?: boolean;
 }) {
   const {
     attributes,
@@ -1016,7 +1019,7 @@ function SortableWidgetItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: instance.id });
+  } = useSortable({ id: instance.id, disabled: readOnly });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -1034,14 +1037,16 @@ function SortableWidgetItem({
     >
       {/* Header bar */}
       <div className="flex items-center gap-3 p-3 border-b border-gray-100 bg-gray-50">
-        <button
-          {...attributes}
-          {...listeners}
-          className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 touch-none"
-          aria-label="Drag to reorder"
-        >
-          <GripVertical className="w-5 h-5" />
-        </button>
+        {!readOnly && (
+          <button
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 touch-none"
+            aria-label="Drag to reorder"
+          >
+            <GripVertical className="w-5 h-5" />
+          </button>
+        )}
         <div className="w-7 h-7 rounded bg-[#D3ECEF] flex items-center justify-center flex-shrink-0">
           <IconComponent className="w-3.5 h-3.5 text-primary-blue" />
         </div>
@@ -1053,16 +1058,18 @@ function SortableWidgetItem({
             {instance.widgetDefinition.widgetType}
           </span>
         </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onEdit(instance);
-          }}
-          className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-white transition-colors"
-          aria-label={`Edit ${instance.widgetDefinition.label}`}
-        >
-          <Pencil className="w-4 h-4" />
-        </button>
+        {!readOnly && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(instance);
+            }}
+            className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-white transition-colors"
+            aria-label={`Edit ${instance.widgetDefinition.label}`}
+          >
+            <Pencil className="w-4 h-4" />
+          </button>
+        )}
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -1077,14 +1084,16 @@ function SortableWidgetItem({
         >
           <Eye className="w-4 h-4" />
         </button>
-        <button
-          onClick={() => onRemove(instance.id)}
-          disabled={isPending}
-          className="p-1.5 text-gray-400 hover:text-red-600 rounded hover:bg-white disabled:opacity-50 transition-colors"
-          aria-label={`Remove ${instance.widgetDefinition.label}`}
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+        {!readOnly && (
+          <button
+            onClick={() => onRemove(instance.id)}
+            disabled={isPending}
+            className="p-1.5 text-gray-400 hover:text-red-600 rounded hover:bg-white disabled:opacity-50 transition-colors"
+            aria-label={`Remove ${instance.widgetDefinition.label}`}
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        )}
       </div>
       {/* Inline widget preview */}
       <div className="pointer-events-none select-none">
@@ -1145,6 +1154,7 @@ export default function LayoutEditor({
   keyInitiativeSlides,
   hasChildren,
   isArchived,
+  readOnly = false,
 }: LayoutEditorProps) {
   const dndId = useId();
   const [instances, setInstances] = useState(initialInstances);
@@ -1296,30 +1306,34 @@ export default function LayoutEditor({
             Page Layout
           </h3>
           <div className="flex items-center gap-3 flex-shrink-0">
-            {/* Save indicator */}
-            <div className="h-6 flex items-center">
-              {isPending && (
-                <span className="font-sans text-sm text-gray-500 flex items-center gap-1.5 animate-pulse">
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Saving...
-                </span>
-              )}
-              {!isPending && showSaved && (
-                <span className="font-sans text-sm text-green-600 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  Saved
-                </span>
-              )}
-            </div>
-            {/* Reset to Default button */}
-            <button
-              onClick={handleReset}
-              disabled={isPending}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-primary-blue hover:text-primary-blue transition-colors disabled:opacity-50"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              Reset to Default
-            </button>
+            {!readOnly && (
+              <>
+                {/* Save indicator */}
+                <div className="h-6 flex items-center">
+                  {isPending && (
+                    <span className="font-sans text-sm text-gray-500 flex items-center gap-1.5 animate-pulse">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Saving...
+                    </span>
+                  )}
+                  {!isPending && showSaved && (
+                    <span className="font-sans text-sm text-green-600 flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      Saved
+                    </span>
+                  )}
+                </div>
+                {/* Reset to Default button */}
+                <button
+                  onClick={handleReset}
+                  disabled={isPending}
+                  className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-primary-blue hover:text-primary-blue transition-colors disabled:opacity-50"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Reset to Default
+                </button>
+              </>
+            )}
             {/* Preview Page button */}
             <a
               href={parentTeamSlug ? `/${parentTeamSlug}/${teamSlug}` : `/${teamSlug}`}
@@ -1330,30 +1344,34 @@ export default function LayoutEditor({
               <ExternalLink className="w-3.5 h-3.5" />
               Preview Page
             </a>
-            {/* Publish / Unpublish button */}
-            <button
-              onClick={handleTogglePublish}
-              disabled={publishPending}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${
-                isPublished
-                  ? 'bg-white border border-gray-300 text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700'
-                  : 'bg-green-600 text-white hover:bg-green-700'
-              }`}
-            >
-              <Globe className="w-3.5 h-3.5" />
-              {publishPending
-                ? (isPublished ? 'Unpublishing...' : 'Publishing...')
-                : (isPublished ? 'Unpublish' : 'Publish')}
-            </button>
-            {/* Archive button */}
-            {!isArchived && (
-              <button
-                onClick={() => setShowArchiveDialog(true)}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors"
-              >
-                <Archive className="w-3.5 h-3.5" />
-                Archive
-              </button>
+            {!readOnly && (
+              <>
+                {/* Publish / Unpublish button */}
+                <button
+                  onClick={handleTogglePublish}
+                  disabled={publishPending}
+                  className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 ${
+                    isPublished
+                      ? 'bg-white border border-gray-300 text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700'
+                      : 'bg-green-600 text-white hover:bg-green-700'
+                  }`}
+                >
+                  <Globe className="w-3.5 h-3.5" />
+                  {publishPending
+                    ? (isPublished ? 'Unpublishing...' : 'Publishing...')
+                    : (isPublished ? 'Unpublish' : 'Publish')}
+                </button>
+                {/* Archive button */}
+                {!isArchived && (
+                  <button
+                    onClick={() => setShowArchiveDialog(true)}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-red-50 hover:border-red-300 hover:text-red-700 transition-colors"
+                  >
+                    <Archive className="w-3.5 h-3.5" />
+                    Archive
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -1372,12 +1390,14 @@ export default function LayoutEditor({
             <div className="flex items-center justify-between mb-3">
               <h4 className="font-sans text-sm font-semibold text-gray-900">Page Header Text</h4>
               {!editingPageText ? (
-                <button
-                  onClick={() => setEditingPageText(true)}
-                  className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-gray-100"
-                >
-                  <Pencil className="w-4 h-4" />
-                </button>
+                !readOnly && (
+                  <button
+                    onClick={() => setEditingPageText(true)}
+                    className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-gray-100"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                )
               ) : (
                 <div className="flex gap-2">
                   <button
@@ -1432,7 +1452,9 @@ export default function LayoutEditor({
         )}
 
         <p className="font-sans text-sm text-gray-500 mb-4">
-          Drag to reorder sections. Click the pencil to edit widget content.
+          {readOnly
+            ? 'You have view-only access to this page.'
+            : 'Drag to reorder sections. Click the pencil to edit widget content.'}
         </p>
 
         {instances.length === 0 ? (
@@ -1479,6 +1501,7 @@ export default function LayoutEditor({
                     teamQuickLinks={teamQuickLinks}
                     whoWeAreItems={whoWeAreItems}
                     keyInitiativeSlides={keyInitiativeSlides}
+                    readOnly={readOnly}
                   />
                 ))}
               </div>
@@ -1488,7 +1511,7 @@ export default function LayoutEditor({
       </div>
 
       {/* Widget Picker */}
-      {availableDefinitions.length > 0 && (
+      {!readOnly && availableDefinitions.length > 0 && (
         <div>
           <h3 className="font-sans text-lg font-semibold text-gray-900 mb-1">
             Available Widgets

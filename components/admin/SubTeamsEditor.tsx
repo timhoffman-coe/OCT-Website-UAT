@@ -19,9 +19,10 @@ interface ChildTeam {
 interface SubTeamsEditorProps {
   parentId: string;
   children: ChildTeam[];
+  readOnly?: boolean;
 }
 
-export default function SubTeamsEditor({ parentId, children }: SubTeamsEditorProps) {
+export default function SubTeamsEditor({ parentId, children, readOnly = false }: SubTeamsEditorProps) {
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
   const [slug, setSlug] = useState('');
@@ -62,13 +63,15 @@ export default function SubTeamsEditor({ parentId, children }: SubTeamsEditorPro
         <h2 className="font-sans text-xl font-semibold text-gray-900">
           Sub-Teams
         </h2>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-sans font-medium text-white bg-primary-blue rounded hover:bg-primary-blue/90 transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Create Team
-        </button>
+        {!readOnly && (
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-sans font-medium text-white bg-primary-blue rounded hover:bg-primary-blue/90 transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            Create Team
+          </button>
+        )}
       </div>
 
       {/* Create Form */}
@@ -160,16 +163,18 @@ export default function SubTeamsEditor({ parentId, children }: SubTeamsEditorPro
                   >
                     {child.isPublished ? 'Published' : 'Draft'}
                   </span>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setArchiveTarget(child);
-                    }}
-                    className="p-1 text-gray-400 hover:text-red-600 rounded hover:bg-gray-100 transition-colors"
-                    title="Archive team"
-                  >
-                    <Archive className="w-3.5 h-3.5" />
-                  </button>
+                  {!readOnly && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setArchiveTarget(child);
+                      }}
+                      className="p-1 text-gray-400 hover:text-red-600 rounded hover:bg-gray-100 transition-colors"
+                      title="Archive team"
+                    >
+                      <Archive className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                   <Link
                     href={`/admin/teams/${child.id}`}
                     className="p-1 text-gray-400 hover:text-primary-blue"
