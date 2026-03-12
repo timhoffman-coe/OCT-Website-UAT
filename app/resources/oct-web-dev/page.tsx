@@ -12,6 +12,11 @@ const DOCUMENTS = [
   { slug: 'cicd-pipeline', title: 'CI/CD Pipeline', description: 'Local build to GCP production deployment' },
   { slug: 'prisma-migration-workflow', title: 'Prisma Migrations', description: 'Schema change lifecycle and rollback procedures' },
   { slug: 'cms-overview', title: 'CMS Overview', description: 'How the content management system works' },
+  { slug: 'api-reference', title: 'API Reference', description: 'Complete reference for all API routes' },
+  { slug: 'architecture-overview', title: 'Architecture Overview', description: 'System architecture, directory structure, and tech stack' },
+  { slug: 'development-setup', title: 'Development Setup', description: 'Local dev environment and tooling guide' },
+  { slug: 'deployment-guide', title: 'Deployment Guide', description: 'Production deployment and operations' },
+  { slug: 'cms-admin-guide', title: 'CMS Admin Guide', description: 'User guide for content editors' },
 ];
 
 const TABS = [

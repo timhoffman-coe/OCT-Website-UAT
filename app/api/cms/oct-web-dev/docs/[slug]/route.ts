@@ -9,6 +9,11 @@ const ALLOWED_DOCS: Record<string, string> = {
   'cicd-pipeline': 'docs/deployment/cicd-pipeline.md',
   'prisma-migration-workflow': 'docs/deployment/prisma-migration-workflow.md',
   'cms-overview': 'docs/deployment/cms-overview.md',
+  'api-reference': 'docs/deployment/api-reference.md',
+  'architecture-overview': 'docs/deployment/architecture-overview.md',
+  'development-setup': 'docs/deployment/development-setup.md',
+  'deployment-guide': 'docs/deployment/deployment-guide.md',
+  'cms-admin-guide': 'docs/deployment/cms-admin-guide.md',
 };
 
 export async function GET(

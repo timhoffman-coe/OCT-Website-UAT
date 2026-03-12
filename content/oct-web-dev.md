@@ -238,11 +238,11 @@
 - [ ] Remove hardcoded dev credentials before deploy
 
 ### Documentation
-- [ ] API documentation for all /api/* routes
-- [ ] Architecture overview
-- [ ] Development setup guide
-- [ ] Deployment guide
-- [ ] CMS admin user guide
+- [x] API documentation for all /api/* routes
+- [x] Architecture overview
+- [x] Development setup guide
+- [x] Deployment guide
+- [x] CMS admin user guide
 
 ### PWA / Service Worker
 - [x] Validate service worker configuration (migrated from Serwist to Google Workbox)
