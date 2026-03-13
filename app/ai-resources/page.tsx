@@ -81,6 +81,7 @@ export default function AIResourcesPage() {
                     alt="Gemini Logo"
                     width={64}
                     height={64}
+                    sizes="64px"
                     className="w-16 h-16 object-contain"
                   />
                 </div>
@@ -141,6 +142,7 @@ export default function AIResourcesPage() {
                     alt="Gemini Logo"
                     width={48}
                     height={48}
+                    sizes="48px"
                     className="w-12 h-12 object-contain"
                   />
                 </div>
@@ -170,6 +172,7 @@ export default function AIResourcesPage() {
                     alt="NotebookLM Logo"
                     width={48}
                     height={48}
+                    sizes="48px"
                     className="w-12 h-12 object-contain"
                   />
                 </div>
@@ -199,6 +202,7 @@ export default function AIResourcesPage() {
                     alt="Google Vids Logo"
                     width={48}
                     height={48}
+                    sizes="48px"
                     className="w-12 h-12 object-contain"
                   />
                 </div>
@@ -228,6 +232,7 @@ export default function AIResourcesPage() {
                     alt="Google AI Studio Logo"
                     width={48}
                     height={48}
+                    sizes="48px"
                     className="w-12 h-12 object-contain"
                   />
                 </div>

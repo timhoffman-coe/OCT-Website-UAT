@@ -48,6 +48,7 @@ export default function KeyInitiativesWidget({ slides }: { slides: KeyInitiative
                     alt={slide.imageAlt}
                     width={1200}
                     height={600}
+                    sizes="(max-width: 1024px) 100vw, 896px"
                     className="w-full h-96 object-cover opacity-30"
                   />
                 ) : (

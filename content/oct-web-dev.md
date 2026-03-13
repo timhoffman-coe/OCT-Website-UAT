@@ -355,11 +355,11 @@
 - [ ] Consider using ISR for dashboard pages
 
 ### Image Optimization
-- [ ] Add all external image domains to remotePatterns
-- [ ] Verify all images use next/image component
-- [ ] Add priority prop to above-the-fold images
-- [ ] Set appropriate sizes attribute for responsive images
-- [ ] Audit for oversized images
+- [x] Add all external image domains to remotePatterns
+- [x] Verify all images use next/image component
+- [x] Add priority prop to above-the-fold images
+- [x] Set appropriate sizes attribute for responsive images
+- [x] Audit for oversized images
 
 ### Service Worker Production Config
 - [x] Define cache-first strategy for static assets

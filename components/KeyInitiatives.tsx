@@ -59,6 +59,7 @@ export default function KeyInitiatives() {
                   alt={slide.alt}
                   width={1200}
                   height={600}
+                  sizes="(max-width: 1024px) 100vw, 896px"
                   className="w-full h-96 object-cover opacity-30"
                 />
                 <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12">

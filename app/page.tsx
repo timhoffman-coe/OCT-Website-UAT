@@ -35,6 +35,7 @@ export default function Home() {
                 alt="Technology"
                 fill
                 sizes="(max-width: 768px) 33vw, 50vw"
+                priority
                 className="object-cover object-left"
               />
               {/* Gradient fade to blend into the blue background */}

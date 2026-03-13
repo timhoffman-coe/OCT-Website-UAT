@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 
 export const dynamic = 'force-static';
@@ -90,7 +91,7 @@ export default function OfflinePage() {
       {/* Simplified static header — no API calls */}
       <header className="bg-primary-blue text-white px-4 sm:px-6 lg:px-8 py-4">
         <div className="max-w-7xl mx-auto flex items-center gap-3">
-          <img src="/icons/icon-72x72.png" alt="City of Edmonton" className="w-10 h-10" />
+          <Image src="/icons/icon-72x72.png" alt="City of Edmonton" width={40} height={40} />
           <span className="font-sans text-lg font-semibold">Open City &amp; Technology</span>
         </div>
       </header>

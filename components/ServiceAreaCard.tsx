@@ -28,6 +28,7 @@ export default function ServiceAreaCard({
             alt={title}
             width={60}
             height={60}
+            sizes="60px"
             className="rounded-lg"
           />
         </div>
