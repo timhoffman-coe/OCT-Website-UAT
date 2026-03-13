@@ -138,13 +138,153 @@
 - [ ] Add labels/descriptions to edges showing protocol/connection types
 
 ### Fix Placeholder Links
-- [ ] Audit /links page — replace all href="#" with real URLs
-- [ ] Audit /project-management-office page — replace placeholder resource links
-- [ ] Audit all other pages for remaining href="#" placeholders
 
-### Service Delivery Content
-- [ ] Replace fallback data with real team member names, emails, and roles
-- [ ] Populate Service Management Office, Monitoring & Analytics, and Digital Workplace Catalog
+#### /links page — LinksAccordion (40 links)
+
+**Incident & Problem Management:**
+- [ ] Helix (Remedy) SmartIT
+- [ ] Helix (Remedy) DWP
+- [ ] Incident Management Process
+- [ ] WO from Incident Ticket
+- [ ] Incident Management Flow Charts
+- [ ] Problem Mgmt Process Guide
+- [ ] Root Cause Analysis (RCA)
+
+**Change Management:**
+- [ ] OCT Change Management
+- [ ] OCT Schedule Outages
+- [ ] Severity 1 Procedures
+- [ ] OCT Change Management Definitions
+- [ ] Change Approval - Form
+- [ ] Work Order vs Change Ticket
+- [ ] Remedy Definitions
+- [ ] Change Ticket Cheat Sheet
+
+**Resource Management:**
+- [ ] Taleo
+- [ ] Recruitment Toolkit
+- [ ] Recruitment Approval Process User Guide
+- [ ] Recruitment Approval Form
+- [ ] SAP Time Entry Request
+- [ ] New Account Request
+- [ ] Phone Request
+- [ ] Offboarding Link
+- [ ] Supervisor Offboarding Checklist
+
+**OCT Team Sites & Resources:**
+- [ ] OCT Service Catalog
+- [ ] Technology Infrastructure Operations
+- [ ] Service Desk
+- [ ] Service Management Office
+- [ ] Enterprise Commons Project
+- [ ] OCT Employee Links
+- [ ] Technology PMO
+- [ ] Open City
+
+#### /project-management-office page (24 links)
+
+**Dashboards & Reports:**
+- [ ] ELT Watchlist
+- [ ] Tech Projects
+- [ ] Projects Dashboard
+- [ ] Active Risk Register
+
+**Engagement & Tools:**
+- [ ] Engagements
+- [ ] PMO-On-The-Go App
+- [ ] Time Machine
+
+**Status Reports:**
+- [ ] Status Reports Archive
+- [ ] Recent Status Reports
+
+**Project Framework:**
+- [ ] Project Framework
+- [ ] Overview
+- [ ] Responsibility Matrix
+- [ ] Guides
+- [ ] Samples
+- [ ] Standards
+- [ ] Processes
+- [ ] Video Tutorials
+- [ ] Sponsor Orientation
+
+**Tools — OnePlan PPM:**
+- [ ] OnePlan PPM
+- [ ] Request Access
+- [ ] Documentation
+
+**Tools — Azure DevOps:**
+- [ ] Azure DevOps
+- [ ] Request Access
+- [ ] Documentation
+
+#### /contact page (2 links)
+- [ ] "Start Technology Intake →" button
+- [ ] "Open Support Ticket →" button
+
+#### Header mobile nav (5 links)
+- [ ] Service & Infrastructure Health
+- [ ] People Management
+- [ ] Asset Management
+- [ ] Incident & Service Management
+- [ ] Leadership
+
+#### /service-health/dashboard (1 link)
+- [ ] "View Incident Log" link
+
+#### /resources/nic Quick Access (4 links)
+- [ ] View Network Map
+- [ ] Manage Towers
+- [ ] Carrier Services
+- [ ] Team Directory
+
+#### Portfolio subpages & template (11 links)
+
+**PortfolioSubpageTemplate (shared):**
+- [ ] "View Incident History" link
+
+**Service Delivery — Digital Workplace Catalog:**
+- [ ] Catalog Modernization (initiative)
+- [ ] Automated Fulfillment (initiative)
+- [ ] Digital Workplace Portal (quick link)
+- [ ] Service Request Status (quick link)
+- [ ] Catalog Feedback (quick link)
+
+**Partner Experience — Service Desk:**
+- [ ] AI-Powered Support Chat (initiative)
+- [ ] Self-Service Portal Enhancement (initiative)
+- [ ] Submit a Ticket (quick link)
+- [ ] Knowledge Base (quick link)
+- [ ] Track My Tickets (quick link)
+
+**Data Technology — Network Services:**
+- [ ] Next-Gen Firewall Upgrade (initiative)
+- [ ] Fibre Expansion Phase 4 (initiative)
+- [ ] Network Diagrams (quick link)
+- [ ] SolarWinds Dashboard (quick link)
+- [ ] IP Address Management (quick link)
+
+### Service Delivery Content — Replace Placeholder Team Members
+
+All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
+
+#### Service Delivery main page (fallbackDataBag)
+- [ ] Manager, Service Delivery and Analytics
+- [ ] Team Lead, Service Management Office
+- [ ] Team Lead, Monitoring & Analytics
+
+#### Service Management Office (contacts array)
+- [ ] Manager, Service Management Office
+- [ ] ITSM Process Lead
+
+#### Monitoring & Analytics (contacts array)
+- [ ] Manager, Monitoring & Analytics
+- [ ] Senior Monitoring Engineer
+
+#### Digital Workplace Catalog (contacts array)
+- [ ] Manager, Digital Workplace
+- [ ] Catalog Administrator
 
 ### Main Page Enhancements
 - [ ] Add "Learn more about OCT" section to main page
@@ -162,11 +302,11 @@
 - [ ] Project Management Office — 3 service areas
 - [ ] Corporate Information Security — 6 service areas
 
-### ITS Sub-Team Pages
-- [ ] Data Technology
-- [ ] Partner Experience
-- [ ] Service Delivery
-- [ ] Technology Infrastructure Operations
+### ITS Sub-Team Pages (handed off to content holders via CMS)
+- [x] Data Technology
+- [x] Partner Experience
+- [x] Service Delivery
+- [x] Technology Infrastructure Operations
 
 ### Team Member Directories
 - [ ] Populate team members for all 5 sections via CMS admin
@@ -258,11 +398,11 @@
 ### Hardcoded Secrets in Repository [CRITICAL]
 - [ ] Rotate the Gemini API key
 - [ ] Change the database password
-- [ ] Add .env.local to .gitignore
-- [ ] Scrub secrets from git history
-- [ ] Set up a secrets manager for production
-- [ ] Set up proper secret management for production
-- [ ] Remove hardcoded dev credentials before deploy
+- [x] Add .env.local to .gitignore
+- [x] Scrub secrets from git history
+- [x] Set up a secrets manager for production
+- [x] Set up proper secret management for production
+- [x] Remove hardcoded dev credentials before deploy
 
 ### MSSQL Connection Encryption
 - [x] Set encrypt: true in MSSQL connection config

@@ -20,13 +20,19 @@ services:
     image: ghcr.io/jmcgilliscoe/oct-website:latest
     ports:
       - "3000:3000"
-    env_file:
-      - .env.local
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://coe_admin:${POSTGRES_PASSWORD}@postgres:5432/coe_cms
-    volumes:
-      - ./service-account.json:/app/service-account.json:ro
+      - GCP_PROJECT_ID=ops-data-technology-dev
+      # Non-secret config (set values as needed)
+      - MSSQL_SERVER=${MSSQL_SERVER:-}
+      - MSSQL_DATABASE=${MSSQL_DATABASE:-}
+      - MSSQL_PORT=${MSSQL_PORT:-1433}
+      - MSSQL_DOMAIN=${MSSQL_DOMAIN:-}
+      - MSSQL_ENCRYPT=${MSSQL_ENCRYPT:-true}
+      - MSSQL_TRUST_CERT=${MSSQL_TRUST_CERT:-false}
+      - SERVICEHEALTH_API_BASE_URL=${SERVICEHEALTH_API_BASE_URL:-}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
     depends_on:
       postgres:
         condition: service_healthy

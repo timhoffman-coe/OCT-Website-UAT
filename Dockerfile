@@ -43,6 +43,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gaxios ./node_module
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gcp-metadata ./node_modules/gcp-metadata
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/gtoken ./node_modules/gtoken
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules/jws ./node_modules/jws
+COPY --from=builder --chown=nextjs:nodejs /app/entrypoint.js ./entrypoint.js
 COPY --from=builder --chown=nextjs:nodejs /app/content ./content
 COPY --from=builder --chown=nextjs:nodejs /app/docs ./docs
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
@@ -64,4 +65,4 @@ ENV HOSTNAME="0.0.0.0"
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"
 
-CMD ["node", "server.js"]
+CMD ["node", "entrypoint.js"]

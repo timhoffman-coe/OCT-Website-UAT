@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: coe_cms
       POSTGRES_USER: coe_admin
-      POSTGRES_PASSWORD: dev_password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_password}
     volumes:
       - pgdata_dev:/var/lib/postgresql/data
     ports:
@@ -29,7 +29,7 @@ services:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true
       - GOOGLE_APPLICATION_CREDENTIALS=/app/service-account.json
-      - DATABASE_URL=postgresql://coe_admin:dev_password@postgres:5432/coe_cms
+      - DATABASE_URL=postgresql://coe_admin:${POSTGRES_PASSWORD:-dev_password}@postgres:5432/coe_cms
       - DEV_BYPASS_IAP=true
       - DEV_USER_EMAIL=dev@edmonton.ca
       - DEV_USER_NAME=Dev User
