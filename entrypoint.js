@@ -1,3 +1,4 @@
+/* eslint-disable no-console, @typescript-eslint/no-require-imports */
 /**
  * Production entrypoint — fetches secrets from Google Secret Manager
  * before starting the Next.js server.
