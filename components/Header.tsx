@@ -60,7 +60,7 @@ export default function Header() {
         <div className="w-full max-w-[95%] mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`flex justify-between items-center transition-all duration-300 ${isScrolled ? 'py-2' : 'py-6'}`}>
             {/* Logo and Branch ID - hidden when scrolled on desktop */}
-            <div className={`flex items-center space-x-6 transition-all duration-300 ${isScrolled ? 'md:hidden' : ''}`}>
+            <div className={`flex items-center gap-4 xl:gap-6 flex-shrink-0 transition-all duration-300 ${isScrolled ? 'lg:hidden' : ''}`}>
               {/* Edmonton Logo */}
               <Link href="/" title="City of Edmonton Home">
                 <Image
@@ -76,14 +76,14 @@ export default function Header() {
 
               {/* Branch & Dept Name */}
               <div>
-                <h1 className="font-sans text-xl font-bold text-white">Open City & Technology</h1>
-                <h2 className="font-sans text-sm font-light text-gray-200" style={{ letterSpacing: '0.5px' }}>FINANCIAL AND CORPORATE SERVICES</h2>
+                <h1 className="font-sans text-lg xl:text-xl font-bold text-white whitespace-nowrap">Open City & Technology</h1>
+                <h2 className="font-sans text-xs xl:text-sm font-light text-gray-200 whitespace-nowrap" style={{ letterSpacing: '0.5px' }}>FINANCIAL AND CORPORATE SERVICES</h2>
               </div>
             </div>
 
             {/* Compact brand shown when scrolled on desktop */}
             {isScrolled && (
-              <div className="hidden md:flex items-center space-x-4">
+              <div className="hidden lg:flex items-center space-x-4">
                 <Link href="/" className="flex items-center space-x-2 text-white hover:text-gray-200 transition-colors">
                   <Image
                     src="/images/EDM_logo_Blue.webp"
@@ -111,7 +111,7 @@ export default function Header() {
             )}
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="text-gray-200 hover:text-white"
@@ -125,14 +125,14 @@ export default function Header() {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link href="/" className="font-sans text-base font-medium text-white hover:text-gray-300">Home</Link>
+            <nav className="hidden lg:flex items-center gap-3 xl:gap-6">
+              <Link href="/" className="font-sans text-sm xl:text-base font-medium text-white hover:text-gray-300">Home</Link>
 
               {/* About Us Dropdown */}
               <div className="relative group">
-                <Link href="/about" className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 py-2">
+                <Link href="/about" className="font-sans text-sm xl:text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 py-2">
                   <span>About Us</span>
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className="h-4 w-4 xl:h-5 xl:w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </Link>
@@ -177,9 +177,9 @@ export default function Header() {
 
               {/* Dashboards Dropdown */}
               <div className="relative group">
-                <Link href="/dashboards" className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 py-2">
+                <Link href="/dashboards" className="font-sans text-sm xl:text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 py-2">
                   <span>Dashboards</span>
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className="h-4 w-4 xl:h-5 xl:w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </Link>
@@ -197,9 +197,9 @@ export default function Header() {
 
               {/* Resources Dropdown */}
               <div className="relative group">
-                <div className="font-sans text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 cursor-pointer py-2">
+                <div className="font-sans text-sm xl:text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 cursor-pointer py-2">
                   <span>Resources</span>
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className="h-4 w-4 xl:h-5 xl:w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -223,12 +223,12 @@ export default function Header() {
               </div>
 
               {/* Contact Link */}
-              <Link href="/contact" className="font-sans text-base font-medium text-white hover:text-gray-300">Contact</Link>
+              <Link href="/contact" className="font-sans text-sm xl:text-base font-medium text-white hover:text-gray-300">Contact</Link>
 
               {/* Service Health Button */}
               <Link
                 href="/service-health"
-                className="font-sans text-base font-semibold bg-white text-primary-blue px-4 py-2 rounded-md hover:bg-gray-100 transition-colors"
+                className="font-sans text-sm xl:text-base font-semibold bg-white text-primary-blue px-3 xl:px-4 py-1.5 xl:py-2 rounded-md hover:bg-gray-100 transition-colors whitespace-nowrap"
               >
                 Service Health
               </Link>
@@ -236,7 +236,7 @@ export default function Header() {
           </div>
 
           {/* Breadcrumb and Search Bar Section - hidden when scrolled on desktop */}
-          <div className={`border-t border-white/20 py-2 transition-all duration-300 overflow-hidden ${isScrolled ? 'md:max-h-0 md:py-0 md:border-t-0' : 'max-h-20'}`}>
+          <div className={`border-t border-white/20 py-2 transition-all duration-300 overflow-hidden ${isScrolled ? 'lg:max-h-0 lg:py-0 lg:border-t-0' : 'max-h-20'}`}>
             <div className="flex items-center justify-between">
               {/* Breadcrumb - Left (hidden on mobile) */}
               <Breadcrumb />
@@ -248,7 +248,7 @@ export default function Header() {
         </div>
 
         {/* Mobile Menu (Dropdown) */}
-        <div className={`md:hidden ${mobileMenuOpen ? '' : 'hidden'} absolute top-full left-0 right-0 bg-white shadow-lg`}>
+        <div className={`lg:hidden ${mobileMenuOpen ? '' : 'hidden'} absolute top-full left-0 right-0 bg-white shadow-lg`}>
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link href="/" className="font-sans block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Home</Link>
 
@@ -370,7 +370,7 @@ export default function Header() {
         </div>
       </header>
       {/* Spacer to prevent content from being hidden behind fixed header */}
-      <div className={`transition-all duration-300 ${isScrolled ? 'h-16' : 'h-32 md:h-36'}`} />
+      <div className={`transition-all duration-300 ${isScrolled ? 'h-16' : 'h-32 lg:h-36'}`} />
     </>
   );
 }

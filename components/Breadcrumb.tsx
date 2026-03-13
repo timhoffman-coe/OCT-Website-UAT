@@ -53,7 +53,7 @@ export default function Breadcrumb() {
   const pathname = usePathname();
 
   // On home page, return empty placeholder to maintain flex spacing
-  if (pathname === '/') return <div className="hidden md:block" />;
+  if (pathname === '/') return <div className="hidden lg:block" />;
 
   // Build breadcrumb trail
   const trail: { path: string; label: string }[] = [];
@@ -71,7 +71,7 @@ export default function Breadcrumb() {
   }
 
   return (
-    <nav aria-label="Breadcrumb" className="hidden md:flex items-center text-sm text-white/80">
+    <nav aria-label="Breadcrumb" className="hidden lg:flex items-center text-sm text-white/80">
       {trail.map((item, index) => (
         <span key={item.path} className="flex items-center">
           {index > 0 && <ChevronRight className="h-4 w-4 mx-2 text-white/50" />}
