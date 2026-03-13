@@ -85,7 +85,7 @@ export default function WirelessTowers() {
 
                     <div className="flex-1 p-4 overflow-y-auto">
                         <div className="prose text-sm text-gray-600 leading-relaxed">
-                            Edmonton's flat terrain generally favors wireless propagation, but the North Saskatchewan River valley creates significant elevation changes (up to 60m depth) that can disrupt line-of-sight for small cells.
+                            Edmonton&apos;s flat terrain generally favors wireless propagation, but the North Saskatchewan River valley creates significant elevation changes (up to 60m depth) that can disrupt line-of-sight for small cells.
                             <br /><br />
                             Key considerations:
                             <ul className="list-disc pl-5 mt-2">

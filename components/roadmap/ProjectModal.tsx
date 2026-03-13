@@ -30,6 +30,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ isOpen, onClose, onSave, in
   useEffect(() => {
     if (isOpen) {
       if (initialData) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- sync form fields with modal open/initialData
         setName(initialData.name);
         setOwner(initialData.owner);
         setStartYear(initialData.startYear);

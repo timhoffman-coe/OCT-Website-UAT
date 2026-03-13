@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     const url =
       typeof body.url === 'string' ? body.url.slice(0, 500) : undefined;
 
-    const module =
+    const errorModule =
       typeof body.module === 'string' ? body.module.slice(0, 100) : undefined;
 
     const correlationId = request.headers.get('x-correlation-id') ?? undefined;
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       clientMessage: message,
       digest,
       url,
-      module,
+      module: errorModule,
       correlationId,
     });
 

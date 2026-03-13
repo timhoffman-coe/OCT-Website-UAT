@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
 const routeMap: Record<string, { label: string; parent: string | null }> = {
@@ -77,9 +78,9 @@ export default function Breadcrumb() {
           {index === trail.length - 1 ? (
             <span className="text-white font-medium">{item.label}</span>
           ) : (
-            <a href={item.path} className="hover:text-white hover:underline">
+            <Link href={item.path} className="hover:text-white hover:underline">
               {item.label}
-            </a>
+            </Link>
           )}
         </span>
       ))}

@@ -539,6 +539,7 @@ function WidgetPreviewModal({
   onClose: () => void;
 }) {
   const preview = WIDGET_PREVIEWS[widgetType];
+  // eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map
   const IconComponent = resolveIcon(icon);
 
   useEffect(() => {
@@ -567,6 +568,7 @@ function WidgetPreviewModal({
       >
         <div className="flex items-center gap-3 p-5 border-b border-gray-100">
           <div className="w-10 h-10 rounded-lg bg-[#D3ECEF] flex items-center justify-center flex-shrink-0">
+            {/* eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map */}
             <IconComponent className="w-5 h-5 text-primary-blue" />
           </div>
           <div className="flex-1 min-w-0">
@@ -649,6 +651,7 @@ function WidgetEditorModal({
   teamContacts: LayoutEditorProps['teamContacts'];
   teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
 }) {
+  // eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map
   const IconComponent = resolveIcon(instance.widgetDefinition.icon);
   const widgetType = instance.widgetDefinition.widgetType;
   const isConfigWidget = widgetType in WIDGET_CONFIG_FIELDS;
@@ -727,6 +730,7 @@ function WidgetEditorModal({
         {/* Header */}
         <div className="flex items-center gap-3 p-5 border-b border-gray-100 flex-shrink-0">
           <div className="w-10 h-10 rounded-lg bg-[#D3ECEF] flex items-center justify-center flex-shrink-0">
+            {/* eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map */}
             <IconComponent className="w-5 h-5 text-primary-blue" />
           </div>
           <div className="flex-1 min-w-0">
@@ -1027,6 +1031,7 @@ function SortableWidgetItem({
     opacity: isDragging ? 0.5 : 1,
   };
 
+  // eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map
   const IconComponent = resolveIcon(instance.widgetDefinition.icon);
 
   return (
@@ -1048,6 +1053,7 @@ function SortableWidgetItem({
           </button>
         )}
         <div className="w-7 h-7 rounded bg-[#D3ECEF] flex items-center justify-center flex-shrink-0">
+          {/* eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map */}
           <IconComponent className="w-3.5 h-3.5 text-primary-blue" />
         </div>
         <div className="flex-1 min-w-0">
@@ -1197,6 +1203,7 @@ export default function LayoutEditor({
 
   useEffect(() => {
     if (prevPendingRef.current && !isPending) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: show saved indicator after async transition completes
       setShowSaved(true);
       const timer = setTimeout(() => setShowSaved(false), 3000);
       return () => clearTimeout(timer);

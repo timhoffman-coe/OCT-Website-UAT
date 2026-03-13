@@ -277,7 +277,7 @@ export default function TeamDetailClient({ team, widgetDefinitions, readOnly = f
 
       {/* Sub-Teams section for pages with children */}
       {team.children.length > 0 && (
-        <SubTeamsEditor parentId={team.id} children={team.children} readOnly={readOnly} />
+        <SubTeamsEditor parentId={team.id} subTeams={team.children} readOnly={readOnly} />
       )}
 
       {/* Change History */}

@@ -66,10 +66,10 @@ const Sidebar: React.FC = () => {
                         <span className="truncate">Report Issue</span>
                     </button>
 
-                    <a className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors" href="/">
+                    <Link className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors" href="/">
                         <span className="material-symbols-outlined">logout</span>
                         <p className="text-sm font-medium">Exit NIC</p>
-                    </a>
+                    </Link>
                 </div>
             </div>
         </aside>

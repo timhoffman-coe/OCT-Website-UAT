@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -121,7 +122,7 @@ export default function ServicesPage() {
             Our Services
           </h1>
           <p className="font-serif text-lg md:text-xl text-[#495057] max-w-3xl mt-6">
-            Open City & Technology provides comprehensive technology services that support the City of Edmonton's operations and strategic objectives.
+            Open City & Technology provides comprehensive technology services that support the City of Edmonton&apos;s operations and strategic objectives.
           </p>
         </div>
 
@@ -178,12 +179,12 @@ export default function ServicesPage() {
           <p className="font-sans text-base text-[#495057] mb-6">
             For inquiries about any of our services, please visit our contact page or reach out to the appropriate service area directly.
           </p>
-          <a
+          <Link
             href="/contact"
             className="inline-block font-sans text-base font-semibold bg-primary-blue text-white px-6 py-3 rounded-md hover:bg-[#193A5A] transition-colors"
           >
             Contact Us
-          </a>
+          </Link>
         </div>
       </main>
 

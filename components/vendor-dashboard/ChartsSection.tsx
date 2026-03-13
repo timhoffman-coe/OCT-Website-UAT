@@ -63,7 +63,8 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
         riskLevel: v.riskLevel
     }));
 
-    const CustomTooltip = ({ active, payload }: any) => {
+    // eslint-disable-next-line react-hooks/static-components -- inline tooltip component for recharts, stateless
+    const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: { name: string; x: number; riskLevel: string; z?: number } }> }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
             return (
@@ -194,6 +195,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
                                 ticks={[1, 2, 3]}
                                 tickFormatter={(val) => val === 1 ? 'Low' : val === 2 ? 'Med' : 'High'}
                             />
+                            {/* eslint-disable-next-line react-hooks/static-components -- CustomTooltip is a stateless render function for recharts */}
                             <Tooltip content={<CustomTooltip />} />
                             <ZAxis type="number" dataKey="z" range={[50, 400]} name="Budget" />
                             <ReferenceLine x={50} stroke="red" strokeDasharray="3 3" label="Low SPM Threshold" />

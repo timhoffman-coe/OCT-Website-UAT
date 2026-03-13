@@ -48,7 +48,7 @@ const CitationTooltip: React.FC<{ citation: Citation; index: number }> = ({ cita
                     </div>
                     <div className="flex items-start gap-2">
                         <Quote className="w-3 h-3 text-gray-400 mt-0.5 shrink-0" />
-                        <p className="text-xs text-gray-600 italic leading-relaxed">"{citation.quote}"</p>
+                        <p className="text-xs text-gray-600 italic leading-relaxed">&quot;{citation.quote}&quot;</p>
                     </div>
                     {/* Triangle arrow */}
                     <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px w-2 h-2 bg-white border-b border-r border-gray-200 rotate-45"></div>

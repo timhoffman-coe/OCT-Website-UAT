@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -18,16 +19,16 @@ export default function ContactPage() {
             Contact Us
           </h1>
           <p className="font-serif text-lg md:text-xl text-[#495057] max-w-3xl mt-6">
-            Get in touch with Open City & Technology. We're here to help with your technology needs and inquiries.
+            Get in touch with Open City & Technology. We&apos;re here to help with your technology needs and inquiries.
           </p>
         </div>
 
         {/* Contact Information */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {/* Branch Manager's Office */}
+          {/* Branch Manager&apos;s Office */}
           <div className="bg-[#D3ECEF] rounded-lg p-8 flex flex-col">
             <h2 className="font-sans text-2xl font-bold text-[#212529] mb-8">
-              Branch Manager's Office
+              Branch Manager&apos;s Office
             </h2>
             <div className="space-y-8 flex-1">
               <div className="flex items-start">
@@ -73,12 +74,12 @@ export default function ContactPage() {
                 </div>
               </div>
             </div>
-            <a
+            <Link
               href="/leadership"
               className="mt-6 block w-full text-center font-sans text-base font-semibold bg-primary-blue text-white px-6 py-3 rounded-md hover:bg-[#193A5A] transition-colors"
             >
               See the Rest of Our Leadership Team →
-            </a>
+            </Link>
           </div>
 
           {/* General Information */}
@@ -146,12 +147,12 @@ export default function ContactPage() {
               <p className="font-sans text-sm text-[#495057] mb-4">
                 Strategic technology direction, investment, and governance
               </p>
-              <a
+              <Link
                 href="/technology-planning"
                 className="font-sans text-base font-semibold text-primary-blue hover:text-complement-sea-green transition-colors"
               >
                 Learn More →
-              </a>
+              </Link>
             </div>
 
             {/* Application Technology Services */}
@@ -162,12 +163,12 @@ export default function ContactPage() {
               <p className="font-sans text-sm text-[#495057] mb-4">
                 Application development, support, and AI solutions
               </p>
-              <a
+              <Link
                 href="/application-technology-services"
                 className="font-sans text-base font-semibold text-primary-blue hover:text-complement-sea-green transition-colors"
               >
                 Learn More →
-              </a>
+              </Link>
             </div>
 
             {/* Integrated Technology Solutions */}
@@ -178,12 +179,12 @@ export default function ContactPage() {
               <p className="font-sans text-sm text-[#495057] mb-4">
                 Infrastructure, networks, and end-user support
               </p>
-              <a
+              <Link
                 href="/integrated-technology-solutions"
                 className="font-sans text-base font-semibold text-primary-blue hover:text-complement-sea-green transition-colors"
               >
                 Learn More →
-              </a>
+              </Link>
             </div>
 
             {/* Project Management Office */}
@@ -194,12 +195,12 @@ export default function ContactPage() {
               <p className="font-sans text-sm text-[#495057] mb-4">
                 Project governance, delivery, and oversight
               </p>
-              <a
+              <Link
                 href="/project-management-office"
                 className="font-sans text-base font-semibold text-primary-blue hover:text-complement-sea-green transition-colors"
               >
                 Learn More →
-              </a>
+              </Link>
             </div>
 
             {/* Corporate Information Security */}
@@ -210,12 +211,12 @@ export default function ContactPage() {
               <p className="font-sans text-sm text-[#495057] mb-4">
                 Cybersecurity, risk management, and identity services
               </p>
-              <a
+              <Link
                 href="/corporate-information-security"
                 className="font-sans text-base font-semibold text-primary-blue hover:text-complement-sea-green transition-colors"
               >
                 Learn More →
-              </a>
+              </Link>
             </div>
 
             {/* Service Health */}
@@ -226,12 +227,12 @@ export default function ContactPage() {
               <p className="font-sans text-sm text-[#495057] mb-4">
                 Check current status of technology services
               </p>
-              <a
+              <Link
                 href="/service-health"
                 className="font-sans text-base font-semibold text-primary-blue hover:text-complement-sea-green transition-colors"
               >
                 View Status →
-              </a>
+              </Link>
             </div>
           </div>
         </div>

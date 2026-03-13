@@ -24,6 +24,7 @@ const Dashboard: React.FC<DashboardProps> = ({ focusedType }) => {
     // Update chart mode if focusedType changes (e.g. navigation)
     useEffect(() => {
         if (focusedType) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- sync local state with prop change
             setChartMode(focusedType);
         }
     }, [focusedType]);

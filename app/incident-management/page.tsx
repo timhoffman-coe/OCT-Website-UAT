@@ -5,38 +5,45 @@ import Footer from '@/components/Footer';
 import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
+// Simple seeded PRNG to avoid impure Math.random() during render
+function seededRandom(seed: number) {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+}
+
+// Sample data generated outside the component to keep render pure
+const openIncidentsData = Array.from({ length: 30 }, (_, i) => ({
+    day: i + 1,
+    open: 200 + seededRandom(i * 3) * 50,
+    notUpdated30d: 20 + seededRandom(i * 3 + 1) * 10,
+    notUpdated5d: 10 + seededRandom(i * 3 + 2) * 5,
+}));
+
+const indicatorsData = [
+    { name: 'Number of new incidents', d1: 49, d2: 53, d3: 15, d4: 37, d5: 41, d6: 40, d7: 38, change: -2, trend: [40, 45, 30, 50, 40, 38] },
+    { name: 'Number of resolved incidents', d1: 47, d2: 34, d3: 22, d4: 15, d5: 14, d6: 16, d7: 16, change: 2, trend: [40, 30, 20, 15, 16, 16] },
+    { name: 'Incident backlog growth', d1: 2, d2: 19, d3: -7, d4: 22, d5: 27, d6: 24, d7: 24, change: -3, trend: [5, 20, -5, 25, 24, 24] },
+    { name: 'Number of open incidents', d1: 202, d2: 221, d3: 214, d4: 201, d5: 190, d6: 174, d7: 174, change: -16, trend: [200, 220, 210, 190, 174, 174] },
+];
+
+const newIncidentsData = Array.from({ length: 40 }, (_, i) => ({
+    day: i + 1,
+    critical: seededRandom(i * 5) * 5,
+    high: seededRandom(i * 5 + 1) * 10,
+    moderate: seededRandom(i * 5 + 2) * 15,
+    low: seededRandom(i * 5 + 3) * 20,
+    planning: seededRandom(i * 5 + 4) * 10,
+}));
+
+const priorityData = [
+    { name: '1 - Critical', value: 2, color: '#E91E63' },
+    { name: '2 - High', value: 4, color: '#9C27B0' },
+    { name: '3 - Moderate', value: 5, color: '#FFC107' },
+    { name: '4 - Low', value: 13, color: '#4CAF50' },
+    { name: '5 - Planning', value: 14, color: '#2196F3' },
+];
+
 export default function IncidentManagementPage() {
-    // Sample Data
-    const openIncidentsData = Array.from({ length: 30 }, (_, i) => ({
-        day: i + 1,
-        open: 200 + Math.random() * 50,
-        notUpdated30d: 20 + Math.random() * 10,
-        notUpdated5d: 10 + Math.random() * 5,
-    }));
-
-    const indicatorsData = [
-        { name: 'Number of new incidents', d1: 49, d2: 53, d3: 15, d4: 37, d5: 41, d6: 40, d7: 38, change: -2, trend: [40, 45, 30, 50, 40, 38] },
-        { name: 'Number of resolved incidents', d1: 47, d2: 34, d3: 22, d4: 15, d5: 14, d6: 16, d7: 16, change: 2, trend: [40, 30, 20, 15, 16, 16] },
-        { name: 'Incident backlog growth', d1: 2, d2: 19, d3: -7, d4: 22, d5: 27, d6: 24, d7: 24, change: -3, trend: [5, 20, -5, 25, 24, 24] },
-        { name: 'Number of open incidents', d1: 202, d2: 221, d3: 214, d4: 201, d5: 190, d6: 174, d7: 174, change: -16, trend: [200, 220, 210, 190, 174, 174] },
-    ];
-
-    const newIncidentsData = Array.from({ length: 40 }, (_, i) => ({
-        day: i + 1,
-        critical: Math.random() * 5,
-        high: Math.random() * 10,
-        moderate: Math.random() * 15,
-        low: Math.random() * 20,
-        planning: Math.random() * 10,
-    }));
-
-    const priorityData = [
-        { name: '1 - Critical', value: 2, color: '#E91E63' },
-        { name: '2 - High', value: 4, color: '#9C27B0' },
-        { name: '3 - Moderate', value: 5, color: '#FFC107' },
-        { name: '4 - Low', value: 13, color: '#4CAF50' },
-        { name: '5 - Planning', value: 14, color: '#2196F3' },
-    ];
 
     return (
         <div className="bg-gray-50 min-h-screen font-sans">

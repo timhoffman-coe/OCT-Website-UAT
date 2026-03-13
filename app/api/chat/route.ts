@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
     // 1. Determine Intent
     // Use last few messages for better intent classification context if needed, 
     // but for now, primarily classify the latest question.
-    let intent = await classifyIntent(question, ai);
+    const intent = await classifyIntent(question, ai);
     log.info('Intent detected', { intent });
 
     // 2. Fetch Relevant Context

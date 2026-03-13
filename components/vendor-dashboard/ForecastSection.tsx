@@ -110,7 +110,7 @@ const ForecastSection: React.FC<ForecastSectionProps> = ({ vendors }) => {
                         <div className="p-8 flex flex-col items-center justify-center text-slate-400 text-sm gap-2">
                             <CalendarClock className="w-8 h-8 opacity-20" />
                             <span>No upcoming council presentations found.</span>
-                            <span className="text-xs opacity-75">Ensure "Council Date" column exists in sheet.</span>
+                            <span className="text-xs opacity-75">Ensure &quot;Council Date&quot; column exists in sheet.</span>
                         </div>
                     ) : (
                         <div className="divide-y divide-slate-100">

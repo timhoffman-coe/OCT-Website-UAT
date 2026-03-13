@@ -21,6 +21,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ isOpen, onClose, onSa
 
     useEffect(() => {
         if (initialData) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- sync form state with initialData prop
             setFormData(initialData);
         } else {
             // Reset for new entry

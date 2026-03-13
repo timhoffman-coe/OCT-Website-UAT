@@ -19,11 +19,11 @@ interface ChildTeam {
 
 interface SubTeamsEditorProps {
   parentId: string;
-  children: ChildTeam[];
+  subTeams: ChildTeam[];
   readOnly?: boolean;
 }
 
-export default function SubTeamsEditor({ parentId, children, readOnly = false }: SubTeamsEditorProps) {
+export default function SubTeamsEditor({ parentId, subTeams, readOnly = false }: SubTeamsEditorProps) {
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
   const [teamName, setTeamName] = useState('');
@@ -120,7 +120,7 @@ export default function SubTeamsEditor({ parentId, children, readOnly = false }:
       )}
 
       {/* Child Teams List */}
-      {children.length === 0 ? (
+      {subTeams.length === 0 ? (
         <div className="bg-gray-50 border border-dashed border-gray-300 rounded-lg p-8 text-center">
           <p className="font-sans text-sm text-gray-500">
             No sub-teams yet. Click &ldquo;Create Team&rdquo; to add one.
@@ -128,7 +128,7 @@ export default function SubTeamsEditor({ parentId, children, readOnly = false }:
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {children.map((child) => (
+          {subTeams.map((child) => (
             <div
               key={child.id}
               className="bg-white border border-gray-200 rounded-lg p-4 hover:border-primary-blue hover:shadow-sm transition-all group"

@@ -11,9 +11,10 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    files: ["prisma/**/*.ts", "scripts/**/*.ts"],
+    files: ["prisma/**/*.ts", "scripts/**/*.ts", "scripts/**/*.js", "scripts/**/*.mjs"],
     rules: {
       "no-console": "off",
+      "@typescript-eslint/no-require-imports": "off",
     },
   },
   // Override default ignores of eslint-config-next.
@@ -23,6 +24,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated files (Workbox service worker)
+    "public/sw.js",
+    "public/workbox-*.js",
   ]),
 ]);
 

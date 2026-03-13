@@ -97,7 +97,7 @@ const parseCSV = (csvText: string): Vendor[] => {
         const values = parseCSVLine(lines[i]);
         if (values.length < headers.length) continue;
 
-        const row: any = {};
+        const row: Record<string, string> = {};
         headers.forEach((header, index) => {
             row[header] = values[index];
         });
@@ -204,7 +204,7 @@ const mapRiskLevel = (val: string): RiskLevel => {
 
 const parseCurrency = (val: string): number => {
     if (!val) return 0;
-    let cleanVal = val.replace(/[$,\s]/g, '');
+    const cleanVal = val.replace(/[$,\s]/g, '');
     return parseFloat(cleanVal) || 0;
 };
 

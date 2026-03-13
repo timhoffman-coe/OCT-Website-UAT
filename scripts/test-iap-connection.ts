@@ -44,11 +44,13 @@ async function main() {
             console.log('\n❌ FAILED: Did not receive a 200 OK response.');
         }
 
-    } catch (error: any) {
-        console.error('\n❌ ERROR:', error.message);
-        if (error.response) {
-            console.error('Status:', error.response.status);
-            console.error('Data:', error.response.data);
+    } catch (error: unknown) {
+        const errMsg = error instanceof Error ? error.message : String(error);
+        console.error('\n❌ ERROR:', errMsg);
+        if (error && typeof error === 'object' && 'response' in error) {
+            const resp = (error as { response: { status: number; data: unknown } }).response;
+            console.error('Status:', resp.status);
+            console.error('Data:', resp.data);
         }
         console.log('\nTroubleshooting Tips:');
         console.log('1. Ensure you are authenticated (run "gcloud auth application-default login").');

@@ -21,7 +21,7 @@ const Transactions: React.FC<TransactionsProps> = ({ forcedType }) => {
 
     useEffect(() => {
         if (transactions.length > 0) {
-            // Initial sync
+            // eslint-disable-next-line react-hooks/set-state-in-effect -- sync local state with external data source
             setLocalTransactions(transactions);
         }
     }, [transactions]);
@@ -42,7 +42,9 @@ const Transactions: React.FC<TransactionsProps> = ({ forcedType }) => {
 
     // Reset filters if route changes
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- reset filters on route change
         setSearchTerm('');
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setProgramFilter('');
     }, [forcedType]);
 
@@ -101,6 +103,7 @@ const Transactions: React.FC<TransactionsProps> = ({ forcedType }) => {
     };
 
     // Logic
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization -- manual useMemo is intentional for complex filter/sort pipeline
     const processedData = useMemo(() => {
         let data = [...localTransactions];
 
@@ -128,9 +131,11 @@ const Transactions: React.FC<TransactionsProps> = ({ forcedType }) => {
         // Sort
         if (sortConfig) {
             data.sort((a, b) => {
-                // @ts-ignore
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore -- dynamic key access on Transaction type
                 const aVal = a[sortConfig.key];
-                // @ts-ignore
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore -- dynamic key access on Transaction type
                 const bVal = b[sortConfig.key];
 
                 if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;

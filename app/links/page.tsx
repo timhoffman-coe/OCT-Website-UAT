@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -170,14 +171,14 @@ export default function LinksPage() {
             Need Help?
           </h2>
           <p className="font-sans text-base text-[#495057] mb-4">
-            If you can't find the link you're looking for or need assistance accessing a resource, please contact the Service Desk or your team lead.
+            If you can&apos;t find the link you&apos;re looking for or need assistance accessing a resource, please contact the Service Desk or your team lead.
           </p>
-          <a
+          <Link
             href="/contact"
             className="inline-block font-sans text-base font-semibold bg-primary-blue text-white px-6 py-3 rounded-md hover:bg-[#193A5A] transition-colors"
           >
             Contact Us
-          </a>
+          </Link>
         </div>
       </main>
 

@@ -190,7 +190,7 @@ function SearchResults() {
             ) : (
               <div className="text-center py-12">
                 <p className="font-sans text-gray-600 text-lg mb-4">
-                  No results found for "<span className="font-semibold">{query}</span>"
+                  No results found for &quot;<span className="font-semibold">{query}</span>&quot;
                 </p>
                 <p className="font-sans text-gray-600">
                   Try different keywords or check the spelling.

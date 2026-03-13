@@ -1,4 +1,4 @@
-import { google } from 'googleapis';
+import { google, drive_v3 } from 'googleapis';
 import path from 'path';
 import { logger } from '@/lib/logger';
 
@@ -20,10 +20,11 @@ export const getDriveClient = () => {
 export const listSharedFolders = async () => {
     const drive = getDriveClient();
     try {
-        let allFiles: any[] = [];
+        let allFiles: drive_v3.Schema$File[] = [];
         let pageToken: string | undefined = undefined;
 
         do {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- googleapis return type has incompatible headers type
             const res: any = await drive.files.list({
                 q: "mimeType = 'application/vnd.google-apps.folder' and trashed = false",
                 fields: 'nextPageToken, files(id, name)',
@@ -45,10 +46,11 @@ export const listSharedFolders = async () => {
 export const listFilesInFolder = async (folderId: string) => {
     const drive = getDriveClient();
     try {
-        let allFiles: any[] = [];
+        let allFiles: drive_v3.Schema$File[] = [];
         let pageToken: string | undefined = undefined;
 
         do {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any -- googleapis return type has incompatible headers type
             const res: any = await drive.files.list({
                 q: `'${folderId}' in parents and trashed = false`,
                 fields: 'nextPageToken, files(id, name, mimeType, webViewLink)',
@@ -86,20 +88,22 @@ export const getFileContent = async (fileId: string, mimeType: string) => {
             }, { responseType: 'arraybuffer' });
 
             // Polyfill DOMMatrix for pdf-parse/pdf.js in Node environment
-            if (!(global as any).DOMMatrix) {
-                (global as any).DOMMatrix = class DOMMatrix {
+            const globalRecord = global as Record<string, unknown>;
+            if (!globalRecord.DOMMatrix) {
+                globalRecord.DOMMatrix = class DOMMatrix {
                     a: number; b: number; c: number; d: number; e: number; f: number;
                     constructor() {
                         this.a = 1; this.b = 0; this.c = 0; this.d = 1; this.e = 0; this.f = 0;
                     }
-                    setMatrixValue(str: string) { return this; }
-                    translate(tx: number, ty: number) { return this; }
-                    scale(sx: number, sy: number) { return this; }
-                    rotate(angle: number) { return this; }
-                    multiply(other: any) { return this; }
+                    setMatrixValue(_str: string) { return this; }
+                    translate(_tx: number, _ty: number) { return this; }
+                    scale(_sx: number, _sy: number) { return this; }
+                    rotate(_angle: number) { return this; }
+                    multiply(_other: DOMMatrix) { return this; }
                 };
             }
 
+            // eslint-disable-next-line @typescript-eslint/no-require-imports -- conditional require for pdf-parse which has inconsistent ESM/CJS exports
             let pdfParse = require('pdf-parse');
             // Handle different import structures (ESM/CJS/Next.js)
             if (typeof pdfParse !== 'function') {
@@ -110,6 +114,7 @@ export const getFileContent = async (fileId: string, mimeType: string) => {
                 }
             }
 
+            // eslint-disable-next-line @typescript-eslint/no-require-imports -- conditional require for Node.js Buffer
             const { Buffer } = require('buffer');
             let text = '';
 
@@ -117,8 +122,8 @@ export const getFileContent = async (fileId: string, mimeType: string) => {
                 // Try standard function call first (for some versions)
                 const data = await pdfParse(Buffer.from(res.data as ArrayBuffer));
                 text = data.text;
-            } catch (e: any) {
-                if (e.message && e.message.includes("Class constructors cannot be invoked without 'new'")) {
+            } catch (e: unknown) {
+                if (e instanceof Error && e.message.includes("Class constructors cannot be invoked without 'new'")) {
                     // Handle class-based usage (likely pdf-parse-fork or similar)
                     const uint8Data = new Uint8Array(Buffer.from(res.data as ArrayBuffer));
                     const parser = new pdfParse(uint8Data);
@@ -131,7 +136,7 @@ export const getFileContent = async (fileId: string, mimeType: string) => {
                     if (typeof parser.getText === 'function') {
                         const textData = await parser.getText();
                         if (textData && Array.isArray(textData.pages)) {
-                            text = textData.pages.map((p: any) => p.text).join('\n');
+                            text = textData.pages.map((p: { text: string }) => p.text).join('\n');
                         } else if (textData && typeof textData.text === 'string') {
                             text = textData.text;
                         } else {

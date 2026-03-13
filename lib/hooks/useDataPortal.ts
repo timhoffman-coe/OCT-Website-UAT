@@ -25,7 +25,9 @@ function useDataPortalFetch<T>(url: string): UseDataPortalResult<T> {
 
   useEffect(() => {
     let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- loading/error state before async fetch
     setIsLoading(true);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setError(null);
 
     fetch(url)

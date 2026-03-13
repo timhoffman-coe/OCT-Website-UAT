@@ -28,6 +28,7 @@ export default function TeamHistory({ teamId }: { teamId: string }) {
 
   useEffect(() => {
     if (!isOpen || entries.length > 0) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- loading state before async fetch
     setLoading(true);
     fetch(`/api/cms/audit-log?teamId=${teamId}`)
       .then((r) => r.json())

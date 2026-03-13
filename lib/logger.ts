@@ -129,8 +129,10 @@ function emit(
 
     const json = JSON.stringify(entry);
     if (level === 'ERROR') {
+      // eslint-disable-next-line no-console -- logger is the canonical console wrapper
       console.error(json);
     } else {
+      // eslint-disable-next-line no-console -- logger is the canonical console wrapper
       console.log(json);
     }
   } else {
@@ -138,12 +140,16 @@ function emit(
     const prefix = `[${level}]`;
     const ctx = sanitized ?? '';
     if (level === 'ERROR') {
+      // eslint-disable-next-line no-console -- logger is the canonical console wrapper
       console.error(prefix, message, ctx);
     } else if (level === 'WARN') {
+      // eslint-disable-next-line no-console -- logger is the canonical console wrapper
       console.warn(prefix, message, ctx);
     } else if (level === 'DEBUG') {
+      // eslint-disable-next-line no-console -- logger is the canonical console wrapper
       console.debug(prefix, message, ctx);
     } else {
+      // eslint-disable-next-line no-console -- logger is the canonical console wrapper
       console.log(prefix, message, ctx);
     }
   }

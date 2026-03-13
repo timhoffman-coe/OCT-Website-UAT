@@ -14,9 +14,15 @@ export default function DevelopmentDisclaimer() {
 
     // Show modal if never dismissed or dismissed on a different day
     if (lastDismissed !== today) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reading localStorage on mount to determine initial UI state
       setIsOpen(true);
     }
   }, []);
+
+  const handleClose = () => {
+    localStorage.setItem(STORAGE_KEY, new Date().toDateString());
+    setIsOpen(false);
+  };
 
   // Handle ESC key and body scroll
   useEffect(() => {
@@ -34,11 +40,6 @@ export default function DevelopmentDisclaimer() {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
-
-  const handleClose = () => {
-    localStorage.setItem(STORAGE_KEY, new Date().toDateString());
-    setIsOpen(false);
-  };
 
   if (!isOpen) return null;
 

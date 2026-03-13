@@ -87,10 +87,10 @@ export default function AboutPage() {
             {/* Message Content */}
             <div className="font-sans text-gray-700 space-y-4 flex-1">
               <p>
-                At the City of Edmonton, we continuously seek opportunities to understand, harness, and leverage technology's ever expanding capabilities to improve quality of life for all Edmontonians.
+                At the City of Edmonton, we continuously seek opportunities to understand, harness, and leverage technology&apos;s ever expanding capabilities to improve quality of life for all Edmontonians.
               </p>
               <p>
-                Our Open City and Technology branch is a key part in supporting the organization to deliver safe, secure and reliable data and efficient technology solutions for our business partners to optimize processes and deliver excellent services. The team is responsible for managing and maintaining the City's technology infrastructure, ensuring technology investments are prioritized, integrated and managed, and that technology is available and operates efficiently and effectively through process improvements and automation. The branch works with all business areas across the organization to make informed technology decisions that provide value to Edmontonians.
+                Our Open City and Technology branch is a key part in supporting the organization to deliver safe, secure and reliable data and efficient technology solutions for our business partners to optimize processes and deliver excellent services. The team is responsible for managing and maintaining the City&apos;s technology infrastructure, ensuring technology investments are prioritized, integrated and managed, and that technology is available and operates efficiently and effectively through process improvements and automation. The branch works with all business areas across the organization to make informed technology decisions that provide value to Edmontonians.
               </p>
               <p>
                 Over the last few years, technology has played a bigger role than ever in our lives. From working remotely to learning to use online services in new ways, many have experienced a shift in how we use technology to connect with the world around us.
@@ -109,7 +109,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto mb-8 bg-complement-empire-blue text-white rounded-lg shadow-lg p-6">
           <h2 className="font-sans text-xl font-bold mb-2">Corporate Outcome</h2>
           <p className="font-sans text-lg">
-            <strong>Technology and Data</strong> - The City of Edmonton's technology and data are leveraged to enable quality decision-making and enhance innovative service delivery.
+            <strong>Technology and Data</strong> - The City of Edmonton&apos;s technology and data are leveraged to enable quality decision-making and enhance innovative service delivery.
           </p>
         </div>
 
@@ -196,7 +196,7 @@ export default function AboutPage() {
                   Capital Projects
                 </h2>
                 <p className="font-sans text-gray-700 mb-6">
-                  The City's capital investments align with the City's strategic direction and are a balance of renewal and growth to maximize benefits, manage risk and maintain the services Edmontonians expect. The full list of capital projects can be found in the{' '}
+                  The City&apos;s capital investments align with the City&apos;s strategic direction and are a balance of renewal and growth to maximize benefits, manage risk and maintain the services Edmontonians expect. The full list of capital projects can be found in the{' '}
                   <a
                     href="https://www.edmonton.ca/city_government/budget-and-finances"
                     target="_blank"
@@ -287,10 +287,10 @@ export default function AboutPage() {
                 </div>
                 <div className="space-y-4 font-sans text-gray-700">
                   <p>
-                    <strong>Percent of Information Technology FTE to City FTE:</strong> This measure demonstrates IT support for employees and residents. Measurements from an agnostic third party indicate the ratio of Information Technology (IT) FTE to City FTE is ideally approximately 3.6%. Other departments and branches outside of the Open City and Technology Branch may assume information technology functions. This can include having dedicated FTEs building technology solutions (independent of the City's digital architecture and corporate priorities), to side-of-the-desk maintenance of department and branch applications.
+                    <strong>Percent of Information Technology FTE to City FTE:</strong> This measure demonstrates IT support for employees and residents. Measurements from an agnostic third party indicate the ratio of Information Technology (IT) FTE to City FTE is ideally approximately 3.6%. Other departments and branches outside of the Open City and Technology Branch may assume information technology functions. This can include having dedicated FTEs building technology solutions (independent of the City&apos;s digital architecture and corporate priorities), to side-of-the-desk maintenance of department and branch applications.
                   </p>
                   <p>
-                    <strong>Information Technology Spend per City FTE:</strong> Measurements from an agnostic third party indicates that the average Information Technology (IT) spending per employee is $10,212 and the City of Edmonton is much lower at $4,034 per employee. This measure indicates the amount of IT support the average employee receives. This result does not account for the City of Edmonton's full spend on IT due to the existence of shadow IT.
+                    <strong>Information Technology Spend per City FTE:</strong> Measurements from an agnostic third party indicates that the average Information Technology (IT) spending per employee is $10,212 and the City of Edmonton is much lower at $4,034 per employee. This measure indicates the amount of IT support the average employee receives. This result does not account for the City of Edmonton&apos;s full spend on IT due to the existence of shadow IT.
                   </p>
                 </div>
               </div>
@@ -310,7 +310,7 @@ export default function AboutPage() {
                 <div className="border-l-4 border-complement-sea-green pl-4">
                   <p className="font-semibold mb-2">Effective use of technology</p>
                   <p>
-                    that prioritizes economic, corporate, and business needs is crucial to ensure delivery of high value initiatives. Open City and Technology will strengthen strategic partnerships, increase alignment with business and corporate strategy, enhance citizen focus, and provide a system wide view to continuously improve the effectiveness of the City's technology investments.
+                    that prioritizes economic, corporate, and business needs is crucial to ensure delivery of high value initiatives. Open City and Technology will strengthen strategic partnerships, increase alignment with business and corporate strategy, enhance citizen focus, and provide a system wide view to continuously improve the effectiveness of the City&apos;s technology investments.
                   </p>
                 </div>
                 <div className="border-l-4 border-complement-sea-green pl-4">

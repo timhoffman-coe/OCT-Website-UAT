@@ -42,7 +42,7 @@ export default function AIResourcesPage() {
                       City of Edmonton AI Resources
                     </h2>
                     <p className="font-serif text-sm text-[#495057] mb-4">
-                      Visit the City's primary page on Artificial Intelligence on One City.
+                      Visit the City&apos;s primary page on Artificial Intelligence on One City.
                     </p>
                     <div className="flex items-center justify-center text-[#005087] font-semibold text-sm">
                       <span>Visit One City</span>

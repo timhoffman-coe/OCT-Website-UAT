@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import DashboardDisclaimer from '@/components/DashboardDisclaimer';
@@ -105,12 +106,12 @@ export default function ServiceHealthPage() {
                       <Cloud className="text-primary-blue" size={32} />
                       <h2 className="font-sans text-xl font-semibold text-text-dark">Current Service Outages</h2>
                     </div>
-                    <a
+                    <Link
                       href="/service-health/dashboard"
                       className="font-sans px-4 py-2 text-sm font-medium bg-primary-blue text-white rounded-md hover:bg-dark-blue transition-colors inline-block"
                     >
                       View All Service Health
-                    </a>
+                    </Link>
                   </div>
                   {healthLoading ? (
                     <div className="mt-6 flex flex-col items-center justify-center text-center p-8 bg-structural-light-gray rounded-md animate-pulse">

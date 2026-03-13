@@ -256,7 +256,7 @@ export default function LeadershipPage() {
             Contact Us
           </h2>
           <p className="font-sans text-gray-700 mb-4">
-            For general inquiries about Open City and Technology services, please reach out to the appropriate business unit or contact the Branch Manager's office.
+            For general inquiries about Open City and Technology services, please reach out to the appropriate business unit or contact the Branch Manager&apos;s office.
           </p>
           <p className="font-sans text-gray-600 text-sm">
             Updated: January 2025

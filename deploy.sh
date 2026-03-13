@@ -39,7 +39,7 @@ echo "Deploying commit: ${GIT_SHA}"
 #───────────────────────────────────────────────────────
 echo ""
 echo "=== Running linter ==="
-npm run lint || { echo "ERROR: Linting failed. Fix issues before deploying."; exit 1; }
+npm run lint || { echo "ERROR: Linting failed. Fix lint errors before deploying."; exit 1; }
 
 echo ""
 echo "=== Running type check ==="
