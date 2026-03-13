@@ -93,16 +93,16 @@ function parsePhases(md: string): Phase[] {
 
 const markdownComponents = {
   h1: ({ children }: { children?: React.ReactNode }) => (
-    <h1 className="text-xl font-bold text-gray-900 font-sans mb-4 mt-6 first:mt-0">{children}</h1>
+    <h1 className="text-xl lg:text-2xl font-bold text-gray-900 font-sans mb-4 mt-6 first:mt-0">{children}</h1>
   ),
   h2: ({ children }: { children?: React.ReactNode }) => (
-    <h2 className="text-lg font-bold text-gray-800 font-sans mb-3 mt-6 pb-2 border-b border-gray-200">{children}</h2>
+    <h2 className="text-lg lg:text-xl font-bold text-gray-800 font-sans mb-3 mt-6 pb-2 border-b border-gray-200">{children}</h2>
   ),
   h3: ({ children }: { children?: React.ReactNode }) => (
-    <h3 className="text-base font-semibold text-gray-700 font-sans mb-2 mt-4">{children}</h3>
+    <h3 className="text-base lg:text-lg font-semibold text-gray-700 font-sans mb-2 mt-4">{children}</h3>
   ),
   p: ({ children }: { children?: React.ReactNode }) => (
-    <p className="text-sm text-gray-600 font-sans leading-relaxed mb-3">{children}</p>
+    <p className="text-sm lg:text-base text-gray-600 font-sans leading-relaxed mb-3">{children}</p>
   ),
   ul: ({ children }: { children?: React.ReactNode }) => (
     <ul className="list-disc list-inside space-y-1 mb-3 text-sm text-gray-600 ml-1">{children}</ul>
@@ -206,13 +206,13 @@ export default function OctWebDevPage() {
 
       {/* Page Header */}
       <div className="bg-[#193A5A] text-white shadow-lg">
-        <div className="max-w-5xl mx-auto px-4 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-[#005087] rounded-lg shadow-lg shadow-[#005087]/50">
               <Map className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold tracking-tight">OCT Web Development</h1>
+              <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">OCT Web Development</h1>
               <p className="text-xs text-[#839899] font-medium tracking-widest uppercase">OCT Website Development Progress</p>
             </div>
             {canView && totalItems > 0 && (
@@ -231,7 +231,7 @@ export default function OctWebDevPage() {
 
         {/* Tab Bar */}
         {canView && !loading && (
-          <div className="max-w-5xl mx-auto px-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex gap-1 justify-center">
               {TABS.map((tab) => {
                 const Icon = tab.icon;
@@ -257,7 +257,7 @@ export default function OctWebDevPage() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
           <div className="flex items-center justify-center py-24 text-gray-400">
             <Loader2 className="w-6 h-6 animate-spin mr-3" />
@@ -284,7 +284,7 @@ export default function OctWebDevPage() {
                 <h3 className="text-sm font-bold text-white font-sans">Request Lifecycle</h3>
                 <p className="text-[11px] text-cyan-500/60 font-sans">How a request flows through this application</p>
               </div>
-              <div className="h-[500px]">
+              <div className="h-[500px] lg:h-[650px]">
                 <WebsiteArchFlow />
               </div>
               <div className="px-4 py-3 border-t border-cyan-900/20">
@@ -317,7 +317,7 @@ export default function OctWebDevPage() {
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="flex min-h-[600px]">
                 {/* Left Sidebar */}
-                <div className="w-56 flex-shrink-0 border-r border-gray-200 bg-gray-50/50">
+                <div className="w-56 lg:w-64 flex-shrink-0 border-r border-gray-200 bg-gray-50/50">
                   <div className="px-4 py-4 border-b border-gray-200">
                     <button
                       onClick={() => {
@@ -351,7 +351,7 @@ export default function OctWebDevPage() {
                 </div>
 
                 {/* Document Content */}
-                <div ref={docScrollRef} className="flex-1 px-6 py-5 overflow-y-auto max-h-[700px]">
+                <div ref={docScrollRef} className="flex-1 px-6 lg:px-10 py-5 overflow-y-auto max-h-[700px]">
                   {activeDoc === null ? (
                     <div className="space-y-6">
                       <div>
@@ -360,7 +360,7 @@ export default function OctWebDevPage() {
                           Runbooks and reference documentation for the OCT website. Select a document from the sidebar to get started.
                         </p>
                       </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {DOCUMENTS.map((doc) => (
                           <button
                             key={doc.slug}
