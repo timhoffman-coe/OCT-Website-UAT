@@ -294,7 +294,26 @@ export default function RoadmapPage() {
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
 
         {loading ? (
-          <div className="text-center text-gray-500 py-16">Loading roadmap...</div>
+          <div className="animate-pulse space-y-8 py-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-6 w-6 bg-gray-300 rounded" />
+                  <div className="h-6 w-48 bg-gray-300 rounded" />
+                </div>
+                <div className="space-y-3">
+                  {[1, 2, 3].map((j) => (
+                    <div key={j} className="flex items-center gap-4">
+                      <div className="h-4 w-32 bg-gray-200 rounded" />
+                      <div className="flex-1 h-8 bg-gray-100 rounded-full">
+                        <div className="h-8 bg-gray-200 rounded-full" style={{ width: `${30 + j * 15}%`, marginLeft: `${j * 10}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         ) : sections.length === 0 ? (
           <div className="text-center text-gray-500 py-16">No roadmap sections configured yet.</div>
         ) : (

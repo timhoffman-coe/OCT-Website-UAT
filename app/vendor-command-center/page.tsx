@@ -126,9 +126,36 @@ export default function VendorCommandCenter() {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-slate-500">
-                <Loader2 className="w-10 h-10 animate-spin text-indigo-600 mb-4" />
-                <p className="font-medium">Connecting to Vendor Database...</p>
+            <div className="min-h-screen bg-slate-50">
+                <Header />
+                <main className="animate-pulse p-4 md:p-8">
+                    <div className="max-w-7xl mx-auto mb-8">
+                        <div className="h-8 w-64 bg-gray-300 rounded mb-4" />
+                    </div>
+                    <div className="max-w-7xl mx-auto space-y-6">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} className="bg-white rounded-lg shadow p-4">
+                                    <div className="h-4 w-20 bg-gray-200 rounded mb-2" />
+                                    <div className="h-8 w-12 bg-gray-300 rounded mb-1" />
+                                    <div className="h-3 w-16 bg-gray-200 rounded" />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="bg-white rounded-lg shadow p-4">
+                            <div className="space-y-3">
+                                {[1, 2, 3, 4, 5, 6].map((i) => (
+                                    <div key={i} className="flex gap-4 items-center">
+                                        <div className="h-4 w-40 bg-gray-200 rounded" />
+                                        <div className="h-4 flex-1 bg-gray-100 rounded" />
+                                        <div className="h-4 w-24 bg-gray-200 rounded" />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <Footer />
             </div>
         );
     }

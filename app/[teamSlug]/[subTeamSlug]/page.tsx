@@ -4,7 +4,7 @@ import { fetchUnifiedTeamData } from '@/lib/data/fetch-team';
 import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 import SubTeamPageTemplate from '@/components/its-shared/SubTeamPageTemplate';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR: cache for 1 hour, on-demand invalidation via revalidatePath in server actions
 
 export default async function SubTeamPage({
   params,

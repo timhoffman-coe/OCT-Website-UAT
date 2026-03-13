@@ -4,6 +4,8 @@ import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 import { technologyInfrastructureOperationsData } from '@/lib/data/technology-infrastructure-operations';
 import type { WidgetDataBag } from '@/components/widgets/WidgetRenderer';
 
+export const revalidate = 3600; // ISR: cache for 1 hour, on-demand invalidation via revalidatePath in server actions
+
 const fallbackDataBag: WidgetDataBag = {
   teamName: technologyInfrastructureOperationsData.teamName,
   teamShortName: technologyInfrastructureOperationsData.teamShortName,

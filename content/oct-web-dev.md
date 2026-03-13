@@ -352,7 +352,7 @@
 
 ### Data Revalidation Strategy
 - [x] Documented revalidation strategy in route comments
-- [ ] Consider using ISR for dashboard pages
+- [x] ISR enabled for CMS-driven pages (1hr revalidation with on-demand invalidation)
 
 ### Image Optimization
 - [x] Add all external image domains to remotePatterns
@@ -373,10 +373,10 @@
 - [ ] Address LCP, CLS, and TBT issues
 
 ### Data Fetching Strategy Review
-- [ ] Audit pages for SSR vs SSG vs ISR vs client-side
-- [ ] Move static content pages to SSG
-- [ ] Use ISR for semi-dynamic content
-- [ ] Add loading skeletons for all client-side data fetching
+- [x] Audit pages for SSR vs SSG vs ISR vs client-side
+- [x] Move static content pages to SSG
+- [x] Use ISR for semi-dynamic content
+- [x] Add loading skeletons for all client-side data fetching
 
 ## Enterprise Best Practices
 

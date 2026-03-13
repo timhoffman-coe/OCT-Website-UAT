@@ -3,6 +3,8 @@ import { fetchUnifiedTeamData } from '@/lib/data/fetch-team';
 import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 import type { WidgetDataBag } from '@/components/widgets/WidgetRenderer';
 
+export const revalidate = 3600; // ISR: cache for 1 hour, on-demand invalidation via revalidatePath in server actions
+
 export const metadata = {
   title: 'Corporate Information Security | Open City & Technology',
   description: 'Protecting the City\'s data, assets, and information from cyber threats.',

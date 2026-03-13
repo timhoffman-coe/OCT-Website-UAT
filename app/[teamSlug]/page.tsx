@@ -6,7 +6,7 @@ import { fetchWidgetOrder } from '@/lib/data/fetch-widgets';
 import SectionTemplate from '@/components/SectionTemplate';
 import ITSTeamPageTemplate from '@/components/its-shared/ITSTeamPageTemplate';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600; // ISR: cache for 1 hour, on-demand invalidation via revalidatePath in server actions
 
 export async function generateMetadata({
   params,
