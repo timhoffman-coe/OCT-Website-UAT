@@ -35,7 +35,29 @@ GIT_SHA=$(git rev-parse --short HEAD)
 echo "Deploying commit: ${GIT_SHA}"
 
 #───────────────────────────────────────────────────────
-# Step 1: Build image
+# Step 1: Quality gates (lint, typecheck, test, build)
+#───────────────────────────────────────────────────────
+echo ""
+echo "=== Running linter ==="
+npm run lint || { echo "ERROR: Linting failed. Fix issues before deploying."; exit 1; }
+
+echo ""
+echo "=== Running type check ==="
+npx tsc --noEmit || { echo "ERROR: Type checking failed. Fix type errors before deploying."; exit 1; }
+
+echo ""
+echo "=== Running unit/integration tests ==="
+npm test || { echo "ERROR: Tests failed. Fix failing tests before deploying."; exit 1; }
+
+echo ""
+echo "=== Verifying build ==="
+npm run build || { echo "ERROR: Build failed. Fix build errors before deploying."; exit 1; }
+
+echo ""
+echo "=== All quality gates passed ==="
+
+#───────────────────────────────────────────────────────
+# Step 2: Build Docker image
 #───────────────────────────────────────────────────────
 echo ""
 echo "=== Building app image ==="
@@ -45,7 +67,7 @@ docker build \
   .
 
 #───────────────────────────────────────────────────────
-# Step 2: Push to ghcr.io
+# Step 3: Push to ghcr.io
 #───────────────────────────────────────────────────────
 echo ""
 echo "=== Pushing images to ghcr.io ==="

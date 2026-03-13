@@ -17,6 +17,7 @@ const DOCUMENTS = [
   { slug: 'development-setup', title: 'Development Setup', description: 'Local dev environment and tooling guide' },
   { slug: 'deployment-guide', title: 'Deployment Guide', description: 'Production deployment and operations' },
   { slug: 'cms-admin-guide', title: 'CMS Admin Guide', description: 'User guide for content editors' },
+  { slug: 'testing', title: 'Testing', description: 'Test framework, conventions, and how to run tests' },
 ];
 
 const TABS = [
