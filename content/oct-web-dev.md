@@ -232,10 +232,7 @@
 - [ ] Test RBAC flows end-to-end
 
 ### Environment Configuration
-- [ ] Create .env.example with all required variables
 - [ ] Document environment variable requirements
-- [ ] Set up proper secret management for production
-- [ ] Remove hardcoded dev credentials before deploy
 
 ### Documentation
 - [x] API documentation for all /api/* routes
@@ -264,6 +261,8 @@
 - [ ] Add .env.local to .gitignore
 - [ ] Scrub secrets from git history
 - [ ] Set up a secrets manager for production
+- [ ] Set up proper secret management for production
+- [ ] Remove hardcoded dev credentials before deploy
 
 ### MSSQL Connection Encryption
 - [x] Set encrypt: true in MSSQL connection config
