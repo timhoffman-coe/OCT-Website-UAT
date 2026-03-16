@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { LayoutDashboard, Route, RadioTower, Network, Users, Link as LinkIcon, LogOut, LucideIcon } from 'lucide-react';
 
 const Sidebar: React.FC = () => {
     const pathname = usePathname();
@@ -12,13 +13,13 @@ const Sidebar: React.FC = () => {
         return pathname.startsWith(path);
     };
 
-    const navItems = [
-        { path: '/resources/nic', icon: 'dashboard', label: 'Dashboard' },
-        { path: '/resources/nic/fibre-routes', icon: 'route', label: 'Fibre Routes' },
-        { path: '/resources/nic/wireless-towers', icon: 'cell_tower', label: 'Wireless Towers' },
-        { path: '/resources/nic/carrier-services', icon: 'lan', label: 'Carrier Services' },
-        { path: '/resources/nic/team-contacts', icon: 'group', label: 'Team Contacts' },
-        { path: '/resources/nic/quick-links', icon: 'link', label: 'Quick Links' },
+    const navItems: { path: string; Icon: LucideIcon; label: string }[] = [
+        { path: '/resources/nic', Icon: LayoutDashboard, label: 'Dashboard' },
+        { path: '/resources/nic/fibre-routes', Icon: Route, label: 'Fibre Routes' },
+        { path: '/resources/nic/wireless-towers', Icon: RadioTower, label: 'Wireless Towers' },
+        { path: '/resources/nic/carrier-services', Icon: Network, label: 'Carrier Services' },
+        { path: '/resources/nic/team-contacts', Icon: Users, label: 'Team Contacts' },
+        { path: '/resources/nic/quick-links', Icon: LinkIcon, label: 'Quick Links' },
     ];
 
     return (
@@ -50,11 +51,7 @@ const Sidebar: React.FC = () => {
                                     : 'text-gray-700 hover:bg-gray-50'}
               `}
                         >
-                            <span
-                                className={`material-symbols-outlined ${isActive(item.path) ? 'font-variation-settings-fill' : ''}`}
-                            >
-                                {item.icon}
-                            </span>
+                            <item.Icon className="w-5 h-5" />
                             <p className="text-sm">{item.label}</p>
                         </Link>
                     ))}
@@ -67,7 +64,7 @@ const Sidebar: React.FC = () => {
                     </button>
 
                     <Link className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors" href="/">
-                        <span className="material-symbols-outlined">logout</span>
+                        <LogOut className="w-5 h-5" />
                         <p className="text-sm font-medium">Exit NIC</p>
                     </Link>
                 </div>

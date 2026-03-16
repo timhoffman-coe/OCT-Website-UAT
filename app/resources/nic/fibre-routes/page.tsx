@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { AreaChart, Area, ResponsiveContainer } from 'recharts';
+import { Plus, Search, SlidersHorizontal, Share2, Trash2, MoreVertical } from 'lucide-react';
 
 const fibreRoutes = [
     { id: 'FIB-CORE-001', name: 'City Loop Main', status: 'Active', capacity: '288 strands', length: '45.2 km', location: 'Downtown' },
@@ -31,7 +32,7 @@ export default function FibreRoutes() {
                     <p className="text-gray-500">Manage backbone and distribution fibre assets</p>
                 </div>
                 <button className="flex items-center gap-2 bg-primary-blue text-white px-4 py-2 rounded-lg hover:bg-primary-blue/90 transition-colors font-medium text-sm">
-                    <span className="material-symbols-outlined text-lg">add</span>
+                    <Plus className="w-4 h-4" />
                     Add New Route
                 </button>
             </div>
@@ -40,7 +41,7 @@ export default function FibreRoutes() {
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-xl border border-gray-200">
                 <div className="flex items-center gap-2 flex-wrap flex-1">
                     <div className="relative min-w-[240px] max-w-sm flex-1">
-                        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <input
                             type="text"
                             placeholder="Search by route name, ID or region..."
@@ -48,16 +49,16 @@ export default function FibreRoutes() {
                         />
                     </div>
                     <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-lg">filter_list</span>
+                        <SlidersHorizontal className="w-4 h-4" />
                         <span>Filters</span>
                     </button>
                 </div>
                 <div className="flex items-center gap-2">
                     <button className="p-2 text-gray-500 hover:text-primary-blue hover:bg-gray-100 rounded-lg transition-colors">
-                        <span className="material-symbols-outlined">ios_share</span>
+                        <Share2 className="w-5 h-5" />
                     </button>
                     <button className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
-                        <span className="material-symbols-outlined">delete</span>
+                        <Trash2 className="w-5 h-5" />
                     </button>
                 </div>
             </div>
@@ -98,7 +99,7 @@ export default function FibreRoutes() {
                                         <td className="px-6 py-4 text-gray-500">{route.location}</td>
                                         <td className="px-6 py-4 text-right">
                                             <button className="text-gray-400 hover:text-gray-600">
-                                                <span className="material-symbols-outlined">more_vert</span>
+                                                <MoreVertical className="w-5 h-5" />
                                             </button>
                                         </td>
                                     </tr>

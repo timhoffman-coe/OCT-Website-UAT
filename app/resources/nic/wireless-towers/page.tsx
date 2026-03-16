@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, Tooltip } from 'recharts';
+import { Sheet, Plus, Globe, RadioTower } from 'lucide-react';
 
 const towers = [
     { id: 'TW-1001', name: 'Jasper Ave Hub', type: 'Rooftop', height: '45m', status: 'Active', coords: '53.5412° N, 113.4930° W' },
@@ -44,11 +45,11 @@ export default function WirelessTowers() {
                     <button
                         className="flex items-center justify-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-gray-50 transition-all shadow-sm"
                     >
-                        <span className="material-symbols-outlined text-green-600 text-xl">table_view</span>
+                        <Sheet className="w-5 h-5 text-green-600" />
                         <span>Sync with Sheet</span>
                     </button>
                     <button className="flex items-center justify-center gap-2 bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary-blue/90 transition-all shadow-md">
-                        <span className="material-symbols-outlined text-xl">add</span>
+                        <Plus className="w-5 h-5" />
                         <span>Add New Tower</span>
                     </button>
                 </div>
@@ -78,7 +79,7 @@ export default function WirelessTowers() {
                 <div className="h-96 rounded-xl border border-gray-200 bg-white shadow-sm flex flex-col overflow-hidden">
                     <div className="p-4 border-b border-gray-100 bg-gray-50">
                         <div className="flex items-center gap-2 text-primary-blue">
-                            <span className="material-symbols-outlined">travel_explore</span>
+                            <Globe className="w-5 h-5" />
                             <h3 className="font-bold text-sm uppercase tracking-wider">Location Intelligence</h3>
                         </div>
                     </div>
@@ -116,7 +117,7 @@ export default function WirelessTowers() {
                                         tower.status === 'Maintenance' ? 'bg-amber-100 text-amber-700' :
                                             'bg-gray-100 text-gray-500'}
                          `}>
-                                    <span className="material-symbols-outlined">cell_tower</span>
+                                    <RadioTower className="w-5 h-5" />
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-gray-900">{tower.name}</h3>

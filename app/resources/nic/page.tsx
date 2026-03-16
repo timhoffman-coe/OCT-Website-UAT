@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { AreaChart, Area, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { Search, Bell, Settings, TrendingUp, TrendingDown, XCircle, AlertTriangle, CheckCircle, Map, RadioTower, Briefcase, Users } from 'lucide-react';
 
 const trafficData = [
     { time: '12 AM', value: 20 },
@@ -33,7 +34,7 @@ export default function NICDashboard() {
                 <h2 className="text-2xl font-bold leading-tight tracking-tight text-gray-900">Network Dashboard</h2>
                 <div className="flex flex-1 justify-end items-center gap-4">
                     <label className="relative hidden md:block flex-grow max-w-md group">
-                        <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-blue">search</span>
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-blue w-4 h-4" />
                         <input
                             className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 h-10 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-blue/50 focus:border-primary-blue transition-all"
                             placeholder="Search devices, routes, contacts..."
@@ -41,10 +42,10 @@ export default function NICDashboard() {
                     </label>
                     <div className="flex gap-2">
                         <button className="flex items-center justify-center rounded-full h-10 w-10 text-gray-500 hover:bg-gray-100 transition-colors">
-                            <span className="material-symbols-outlined">notifications</span>
+                            <Bell className="w-5 h-5" />
                         </button>
                         <button className="flex items-center justify-center rounded-full h-10 w-10 text-gray-500 hover:bg-gray-100 transition-colors">
-                            <span className="material-symbols-outlined">settings</span>
+                            <Settings className="w-5 h-5" />
                         </button>
                     </div>
                     <div
@@ -68,7 +69,7 @@ export default function NICDashboard() {
                             <p className="text-base font-medium text-gray-500">{stat.label}</p>
                             <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
                             <p className={`text-sm font-medium flex items-center gap-1 ${stat.trendColor ? stat.trendColor : 'text-green-600'}`}>
-                                <span className="material-symbols-outlined text-lg">{stat.trendUp ? 'arrow_upward' : 'arrow_downward'}</span>
+                                {stat.trendUp ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                                 <span>{stat.trend}</span>
                             </p>
                         </div>
@@ -84,7 +85,7 @@ export default function NICDashboard() {
                             <div className="flex items-end gap-3 mt-1">
                                 <p className="text-3xl font-bold text-gray-900">Avg. 5.8 Gbps</p>
                                 <p className="text-green-600 text-sm font-medium flex items-center mb-1">
-                                    <span className="material-symbols-outlined text-base">arrow_upward</span>
+                                    <TrendingUp className="w-4 h-4" />
                                     <span>3.4%</span>
                                 </p>
                             </div>
@@ -172,7 +173,7 @@ export default function NICDashboard() {
                         <ul className="p-6 space-y-6">
                             <li className="flex gap-4">
                                 <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
-                                    <span className="material-symbols-outlined text-red-600">error</span>
+                                    <XCircle className="w-5 h-5 text-red-600" />
                                 </div>
                                 <div>
                                     <p className="font-medium text-gray-900">Core Switch SW-01 is down</p>
@@ -181,7 +182,7 @@ export default function NICDashboard() {
                             </li>
                             <li className="flex gap-4">
                                 <div className="w-10 h-10 rounded-full bg-yellow-50 flex items-center justify-center shrink-0">
-                                    <span className="material-symbols-outlined text-yellow-600">warning</span>
+                                    <AlertTriangle className="w-5 h-5 text-yellow-600" />
                                 </div>
                                 <div>
                                     <p className="font-medium text-gray-900">High latency on WAN link to Branch Office 3</p>
@@ -190,7 +191,7 @@ export default function NICDashboard() {
                             </li>
                             <li className="flex gap-4">
                                 <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center shrink-0">
-                                    <span className="material-symbols-outlined text-green-600">task_alt</span>
+                                    <CheckCircle className="w-5 h-5 text-green-600" />
                                 </div>
                                 <div>
                                     <p className="font-medium text-gray-900">Firewall FW-MAIN-A policy update successful</p>
@@ -205,13 +206,13 @@ export default function NICDashboard() {
                         <h3 className="text-base font-medium mb-4 text-gray-900">Quick Access</h3>
                         <div className="grid grid-cols-2 gap-4 h-[calc(100%-2.5rem)]">
                             {[
-                                { icon: 'map', label: 'View Network Map' },
-                                { icon: 'cell_tower', label: 'Manage Towers' },
-                                { icon: 'business_center', label: 'Carrier Services' },
-                                { icon: 'group', label: 'Team Directory' }
+                                { Icon: Map, label: 'View Network Map' },
+                                { Icon: RadioTower, label: 'Manage Towers' },
+                                { Icon: Briefcase, label: 'Carrier Services' },
+                                { Icon: Users, label: 'Team Directory' }
                             ].map((item, idx) => (
                                 <a key={idx} href="#" className="flex flex-col items-center justify-center p-6 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors text-center group">
-                                    <span className="material-symbols-outlined text-primary-blue text-3xl mb-2 group-hover:scale-110 transition-transform">{item.icon}</span>
+                                    <item.Icon className="text-primary-blue w-8 h-8 mb-2 group-hover:scale-110 transition-transform" />
                                     <span className="text-sm font-medium text-gray-700">{item.label}</span>
                                 </a>
                             ))}

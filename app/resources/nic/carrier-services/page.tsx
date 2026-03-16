@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Link2, Search, ChevronDown, Columns2, SlidersHorizontal, Download, MoreVertical } from 'lucide-react';
 
 const carriers = [
     { id: 'CKT-TELUS-102', provider: 'Telus', type: 'DIA', speed: '10 Gbps', status: 'Active', expiry: '2026-08-15', location: 'City Hall' },
@@ -19,7 +20,7 @@ export default function CarrierServices() {
                     <p className="text-gray-500">Manage third-party circuits and service agreements</p>
                 </div>
                 <button className="flex items-center gap-2 bg-primary-blue text-white px-4 py-2 rounded-lg hover:bg-primary-blue/90 transition-colors font-medium text-sm">
-                    <span className="material-symbols-outlined text-lg">add_link</span>
+                    <Link2 className="w-4 h-4" />
                     Add Circuit
                 </button>
             </div>
@@ -30,7 +31,7 @@ export default function CarrierServices() {
                     <div className="lg:col-span-2">
                         <div className="relative flex items-center w-full h-12 rounded-lg border border-gray-300 overflow-hidden focus-within:ring-2 focus-within:ring-primary-blue/50 focus-within:border-primary-blue">
                             <div className="flex items-center justify-center pl-4 pr-2 bg-gray-50 h-full border-r border-gray-300">
-                                <span className="material-symbols-outlined text-gray-500">search</span>
+                                <Search className="w-4 h-4 text-gray-500" />
                             </div>
                             <input
                                 type="text"
@@ -43,7 +44,7 @@ export default function CarrierServices() {
                         {['Carrier', 'Service Type', 'Status', 'Location'].map((filter) => (
                             <button key={filter} className="flex h-10 items-center gap-2 px-4 rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
                                 {filter}
-                                <span className="material-symbols-outlined text-lg text-gray-500">arrow_drop_down</span>
+                                <ChevronDown className="w-4 h-4 text-gray-500" />
                             </button>
                         ))}
                         <button className="text-sm font-medium text-primary-blue hover:underline px-2">Clear Filters</button>
@@ -52,11 +53,11 @@ export default function CarrierServices() {
 
                 <div className="mt-4 flex items-center justify-between pt-4 border-t border-gray-200">
                     <div className="flex gap-2">
-                        <button className="p-2 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50"><span className="material-symbols-outlined">view_column</span></button>
-                        <button className="p-2 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50"><span className="material-symbols-outlined">filter_list</span></button>
+                        <button className="p-2 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50"><Columns2 className="w-5 h-5" /></button>
+                        <button className="p-2 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50"><SlidersHorizontal className="w-5 h-5" /></button>
                     </div>
                     <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 text-white text-sm font-bold hover:opacity-90">
-                        <span className="material-symbols-outlined text-lg">download</span>
+                        <Download className="w-4 h-4" />
                         <span>Export to CSV</span>
                     </button>
                 </div>
@@ -105,7 +106,7 @@ export default function CarrierServices() {
                                     <td className="px-6 py-4 text-gray-500 font-mono">{carrier.expiry}</td>
                                     <td className="px-6 py-4 text-right">
                                         <button className="text-gray-400 hover:text-gray-600">
-                                            <span className="material-symbols-outlined">more_vert</span>
+                                            <MoreVertical className="w-5 h-5" />
                                         </button>
                                     </td>
                                 </tr>

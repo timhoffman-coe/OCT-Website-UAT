@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Plus, Search, ChevronDown, Mail, Phone } from 'lucide-react';
 
 const team = [
     { id: 1, name: 'Sarah Jenkins', role: 'Network Architect', dept: 'Infrastructure Strategy', email: 'sarah.jenkins@edmonton.ca', phone: '780-555-0101', status: 'Online' },
@@ -19,7 +20,7 @@ export default function TeamContacts() {
                     <p className="text-gray-500">Key contacts for network operations and support</p>
                 </div>
                 <button className="flex items-center justify-center gap-2 bg-primary-blue text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary-blue/90 shadow-sm">
-                    <span className="material-symbols-outlined text-lg">add</span>
+                    <Plus className="w-4 h-4" />
                     <span>Add New Contact</span>
                 </button>
             </div>
@@ -27,7 +28,7 @@ export default function TeamContacts() {
             {/* Toolbar */}
             <div className="flex flex-col gap-4 mb-8">
                 <div className="relative w-full">
-                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">search</span>
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
                     <input
                         type="text"
                         placeholder="Search by name, role, or department..."
@@ -41,7 +42,7 @@ export default function TeamContacts() {
                         {['All Departments', 'NOC', 'Field Ops', 'Engineering'].map((filter, idx) => (
                             <button key={filter} className={`px-4 h-9 rounded-lg border text-sm font-medium whitespace-nowrap flex items-center gap-1 hover:bg-gray-50 transition-colors ${idx === 0 ? 'bg-white border-gray-200 text-gray-800' : 'bg-white border-gray-200 text-gray-800'}`}>
                                 {filter}
-                                {idx === 0 && <span className="material-symbols-outlined text-lg">expand_more</span>}
+                                {idx === 0 && <ChevronDown className="w-4 h-4" />}
                             </button>
                         ))}
                     </div>
@@ -69,11 +70,11 @@ export default function TeamContacts() {
 
                             <div className="space-y-1">
                                 <a href={`mailto:${member.email}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-blue transition-colors">
-                                    <span className="material-symbols-outlined text-gray-400 text-lg">mail</span>
+                                    <Mail className="w-4 h-4 text-gray-400 shrink-0" />
                                     <span className="truncate">{member.email}</span>
                                 </a>
                                 <a href={`tel:${member.phone}`} className="flex items-center gap-2 text-sm text-gray-600 hover:text-primary-blue transition-colors">
-                                    <span className="material-symbols-outlined text-gray-400 text-lg">call</span>
+                                    <Phone className="w-4 h-4 text-gray-400 shrink-0" />
                                     <span>{member.phone}</span>
                                 </a>
                             </div>
