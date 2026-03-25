@@ -270,7 +270,7 @@ export default function TeamDetailClient({ team, widgetDefinitions, readOnly = f
         teamQuickLinks={team.teamQuickLinks}
         whoWeAreItems={team.whoWeAreItems}
         keyInitiativeSlides={team.keyInitiativeSlides}
-        children={team.children}
+        childTeams={team.children}
         isArchived={!!team.archivedAt}
         readOnly={readOnly}
       />
