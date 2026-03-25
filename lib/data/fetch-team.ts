@@ -11,7 +11,10 @@ export async function fetchITSTeamData(
     const team = await prisma.team.findUnique({
       where: { slug, isPublished: true, archivedAt: null },
       include: {
-        portfolios: { orderBy: { sortOrder: 'asc' } },
+        portfolios: {
+          orderBy: { sortOrder: 'asc' },
+          include: { linkedTeam: { select: { isPublished: true } } },
+        },
         teamTabs: {
           orderBy: { sortOrder: 'asc' },
           include: { diagramLinks: { orderBy: { sortOrder: 'asc' } } },
@@ -40,6 +43,7 @@ export async function fetchITSTeamData(
         title: p.title,
         description: p.description,
         href: p.href,
+        isPublished: p.linkedTeam?.isPublished ?? true,
       })),
       teamTabs: team.teamTabs.map((t) => ({
         id: t.tabId,
@@ -206,7 +210,10 @@ export async function fetchUnifiedTeamData(
       where: { slug, isPublished: true, archivedAt: null },
       include: {
         parent: { select: { teamName: true, slug: true } },
-        portfolios: { orderBy: { sortOrder: 'asc' } },
+        portfolios: {
+          orderBy: { sortOrder: 'asc' },
+          include: { linkedTeam: { select: { isPublished: true } } },
+        },
         teamTabs: {
           orderBy: { sortOrder: 'asc' },
           include: { diagramLinks: { orderBy: { sortOrder: 'asc' } } },
@@ -263,6 +270,7 @@ export async function fetchUnifiedTeamData(
         title: p.title,
         description: p.description,
         href: p.href,
+        isPublished: p.linkedTeam?.isPublished ?? true,
       })),
       teamTabs: team.teamTabs.map((t) => ({
         id: t.tabId,

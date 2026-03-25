@@ -1041,26 +1041,26 @@ function SortableWidgetItem({
       className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
     >
       {/* Header bar */}
-      <div className="flex items-center gap-3 p-3 border-b border-gray-100 bg-gray-50">
+      <div className="flex items-center gap-3 p-3 border-b border-primary-blue bg-primary-blue">
         {!readOnly && (
           <button
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 touch-none"
+            className="cursor-grab active:cursor-grabbing text-white/60 hover:text-white touch-none"
             aria-label="Drag to reorder"
           >
             <GripVertical className="w-5 h-5" />
           </button>
         )}
-        <div className="w-7 h-7 rounded bg-[#D3ECEF] flex items-center justify-center flex-shrink-0">
+        <div className="w-7 h-7 rounded bg-white/20 flex items-center justify-center flex-shrink-0">
           {/* eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map */}
-          <IconComponent className="w-3.5 h-3.5 text-primary-blue" />
+          <IconComponent className="w-3.5 h-3.5 text-white" />
         </div>
         <div className="flex-1 min-w-0">
-          <span className="font-sans font-semibold text-gray-900 text-sm">
+          <span className="font-sans font-semibold text-white text-sm">
             {instance.widgetDefinition.label}
           </span>
-          <span className="font-sans text-xs text-gray-400 ml-2">
+          <span className="font-sans text-xs text-white/50 ml-2">
             {instance.widgetDefinition.widgetType}
           </span>
         </div>
@@ -1070,7 +1070,7 @@ function SortableWidgetItem({
               e.stopPropagation();
               onEdit(instance);
             }}
-            className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-white transition-colors"
+            className="p-1.5 text-white/60 hover:text-white rounded hover:bg-white/20 transition-colors"
             aria-label={`Edit ${instance.widgetDefinition.label}`}
           >
             <Pencil className="w-4 h-4" />
@@ -1085,7 +1085,7 @@ function SortableWidgetItem({
               instance.widgetDefinition.label
             );
           }}
-          className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-white transition-colors"
+          className="p-1.5 text-white/60 hover:text-white rounded hover:bg-white/20 transition-colors"
           aria-label={`Preview ${instance.widgetDefinition.label}`}
         >
           <Eye className="w-4 h-4" />
@@ -1094,7 +1094,7 @@ function SortableWidgetItem({
           <button
             onClick={() => onRemove(instance.id)}
             disabled={isPending}
-            className="p-1.5 text-gray-400 hover:text-red-600 rounded hover:bg-white disabled:opacity-50 transition-colors"
+            className="p-1.5 text-white/60 hover:text-red-300 rounded hover:bg-white/20 disabled:opacity-50 transition-colors"
             aria-label={`Remove ${instance.widgetDefinition.label}`}
           >
             <Trash2 className="w-4 h-4" />
@@ -1102,7 +1102,7 @@ function SortableWidgetItem({
         )}
       </div>
       {/* Inline widget preview */}
-      <div className="pointer-events-none select-none">
+      <div className="pointer-events-none select-none opacity-50">
         <WidgetInlinePreview
           widgetType={instance.widgetDefinition.widgetType}
           config={instance.config}

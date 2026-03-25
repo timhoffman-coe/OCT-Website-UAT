@@ -4,6 +4,7 @@ export interface Portfolio {
   title: string;
   description: string;
   href: string;
+  isPublished?: boolean;
 }
 
 export interface DiagramLink {
