@@ -63,7 +63,7 @@ const nextConfig: NextConfig = {
           swSrc: './app/sw.ts',
           swDest: '../public/sw.js',
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-          exclude: [/\.map$/, /^manifest.*\.js$/],
+          exclude: [/\.map$/, /^manifest.*\.js$/, /middleware-build-manifest\.js$/, /middleware-manifest\.json$/],
         })
       );
     }
