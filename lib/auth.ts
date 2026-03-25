@@ -24,7 +24,7 @@ async function getTeamAncestorIds(teamId: string): Promise<string[]> {
   const ids: string[] = [teamId];
   let currentId: string | null = teamId;
   while (currentId) {
-    const team = await prisma.team.findUnique({
+    const team: { parentId: string | null } | null = await prisma.team.findUnique({
       where: { id: currentId },
       select: { parentId: true },
     });
