@@ -20,12 +20,31 @@ export async function requireUser() {
   return user;
 }
 
+async function getTeamAncestorIds(teamId: string): Promise<string[]> {
+  const ids: string[] = [teamId];
+  let currentId: string | null = teamId;
+  while (currentId) {
+    const team = await prisma.team.findUnique({
+      where: { id: currentId },
+      select: { parentId: true },
+    });
+    if (team?.parentId) {
+      ids.push(team.parentId);
+      currentId = team.parentId;
+    } else {
+      break;
+    }
+  }
+  return ids;
+}
+
 export async function requireTeamAccess(teamId: string) {
   const user = await requireUser();
   if (user.role === 'SUPER_ADMIN') return user;
   if (user.role === 'TEAM_ADMIN') {
+    const ancestorIds = await getTeamAncestorIds(teamId);
     const hasAccess = user.teamPermissions.some(
-      (p) => p.teamId === teamId
+      (p) => ancestorIds.includes(p.teamId)
     );
     if (!hasAccess) throw new Error('Forbidden: No access to this team');
     return user;
@@ -36,8 +55,9 @@ export async function requireTeamAccess(teamId: string) {
 export async function requireTeamViewAccess(teamId: string) {
   const user = await requireUser();
   if (user.role === 'SUPER_ADMIN') return user;
+  const ancestorIds = await getTeamAncestorIds(teamId);
   const hasAccess = user.teamPermissions.some(
-    (p) => p.teamId === teamId
+    (p) => ancestorIds.includes(p.teamId)
   );
   if (!hasAccess) throw new Error('Forbidden: No access to this team');
   return user;

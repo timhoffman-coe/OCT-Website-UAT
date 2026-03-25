@@ -82,11 +82,20 @@ export default async function AdminDashboard() {
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
+  let accessibleTeamIds = userTeamIds;
+  if (!isSuperAdmin && userTeamIds.length > 0) {
+    const childTeams = await prisma.team.findMany({
+      where: { parentId: { in: userTeamIds }, archivedAt: null },
+      select: { id: true },
+    });
+    accessibleTeamIds = [...userTeamIds, ...childTeams.map((t: { id: string }) => t.id)];
+  }
+
   const teamWhere = isSuperAdmin
     ? { archivedAt: null }
-    : { id: { in: userTeamIds }, archivedAt: null };
+    : { id: { in: accessibleTeamIds }, archivedAt: null };
 
-  const contentWhere = isSuperAdmin ? {} : { teamId: { in: userTeamIds } };
+  const contentWhere = isSuperAdmin ? {} : { teamId: { in: accessibleTeamIds } };
 
   // Run all queries in parallel
   const [

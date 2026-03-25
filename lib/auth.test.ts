@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 vi.mock('@/lib/prisma', () => ({
   prisma: {
     user: { findUnique: vi.fn() },
-    team: { findMany: vi.fn() },
+    team: { findUnique: vi.fn(), findMany: vi.fn() },
   },
 }));
 
@@ -100,8 +100,27 @@ describe('auth', () => {
           teamPermissions: [{ teamId: 'team-1' }],
         }) as never
       );
+      // team-1 has no parent
+      vi.mocked(prisma.team.findUnique).mockResolvedValue({ parentId: null } as never);
       const { requireTeamAccess } = await import('./auth');
       const user = await requireTeamAccess('team-1');
+      expect(user.role).toBe('TEAM_ADMIN');
+    });
+
+    it('TEAM_ADMIN with parent permission can access child team', async () => {
+      mockEmail('ta@edmonton.ca');
+      vi.mocked(prisma.user.findUnique).mockResolvedValue(
+        fakeUser({
+          role: 'TEAM_ADMIN',
+          teamPermissions: [{ teamId: 'parent-1' }],
+        }) as never
+      );
+      // child-1 has parent-1 as parent; parent-1 has no parent
+      vi.mocked(prisma.team.findUnique)
+        .mockResolvedValueOnce({ parentId: 'parent-1' } as never)
+        .mockResolvedValueOnce({ parentId: null } as never);
+      const { requireTeamAccess } = await import('./auth');
+      const user = await requireTeamAccess('child-1');
       expect(user.role).toBe('TEAM_ADMIN');
     });
 
@@ -113,6 +132,7 @@ describe('auth', () => {
           teamPermissions: [{ teamId: 'team-2' }],
         }) as never
       );
+      vi.mocked(prisma.team.findUnique).mockResolvedValue({ parentId: null } as never);
       const { requireTeamAccess } = await import('./auth');
       await expect(requireTeamAccess('team-1')).rejects.toThrow('Forbidden');
     });
@@ -144,8 +164,25 @@ describe('auth', () => {
           teamPermissions: [{ teamId: 'team-1' }],
         }) as never
       );
+      vi.mocked(prisma.team.findUnique).mockResolvedValue({ parentId: null } as never);
       const { requireTeamViewAccess } = await import('./auth');
       const user = await requireTeamViewAccess('team-1');
+      expect(user).toBeDefined();
+    });
+
+    it('user with parent permission can view child team', async () => {
+      mockEmail('viewer@edmonton.ca');
+      vi.mocked(prisma.user.findUnique).mockResolvedValue(
+        fakeUser({
+          role: 'VIEWER',
+          teamPermissions: [{ teamId: 'parent-1' }],
+        }) as never
+      );
+      vi.mocked(prisma.team.findUnique)
+        .mockResolvedValueOnce({ parentId: 'parent-1' } as never)
+        .mockResolvedValueOnce({ parentId: null } as never);
+      const { requireTeamViewAccess } = await import('./auth');
+      const user = await requireTeamViewAccess('child-1');
       expect(user).toBeDefined();
     });
 
@@ -157,6 +194,7 @@ describe('auth', () => {
           teamPermissions: [],
         }) as never
       );
+      vi.mocked(prisma.team.findUnique).mockResolvedValue({ parentId: null } as never);
       const { requireTeamViewAccess } = await import('./auth');
       await expect(requireTeamViewAccess('team-1')).rejects.toThrow('Forbidden');
     });

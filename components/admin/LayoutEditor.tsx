@@ -827,6 +827,7 @@ function WidgetInlinePreview({
             title: p.title,
             description: p.description,
             href: p.href,
+            isPublished: p.linkedTeam?.isPublished ?? true,
           }))}
         />
       ) : <EmptyWidgetPlaceholder />;
