@@ -146,34 +146,21 @@ export async function fetchSectionData(slug: string): Promise<{
     const team = await prisma.team.findUnique({
       where: { slug, isPublished: true, archivedAt: null },
       include: {
-        serviceAreas: { orderBy: { sortOrder: 'asc' } },
+        serviceAreas: {
+          orderBy: { sortOrder: 'asc' },
+          include: { linkedTeam: { select: { isPublished: true } } },
+        },
         whoWeAreItems: { orderBy: { sortOrder: 'asc' } },
         keyInitiativeSlides: { orderBy: { sortOrder: 'asc' } },
       },
     });
     if (!team || !team.pageTitle) return null;
 
-    // Collect slugs from service area links (e.g. "/some-slug" → "some-slug")
-    const linkedSlugs = team.serviceAreas
-      .map((sa) => sa.link?.replace(/^\//, ''))
-      .filter((s): s is string => !!s);
-
-    // Find which of those linked teams are actually published
-    const publishedTeams = linkedSlugs.length > 0
-      ? await prisma.team.findMany({
-          where: { slug: { in: linkedSlugs }, isPublished: true, archivedAt: null },
-          select: { slug: true },
-        })
-      : [];
-    const publishedSlugs = new Set(publishedTeams.map((t) => t.slug));
-
     return {
       pageTitle: team.pageTitle,
       pageDescription: team.pageDescription || '',
       serviceAreas: team.serviceAreas.map((sa) => {
-        const linkedSlug = sa.link?.replace(/^\//, '');
-        // Only include the link if the target team is published
-        const isLinkPublished = linkedSlug ? publishedSlugs.has(linkedSlug) : false;
+        const isPublished = sa.linkedTeam?.isPublished ?? true;
         return {
           id: sa.serviceAreaId,
           title: sa.title,
@@ -181,8 +168,8 @@ export async function fetchSectionData(slug: string): Promise<{
           shortDescription: sa.shortDescription,
           fullDescription: sa.fullDescription,
           features: sa.features,
-          link: isLinkPublished ? sa.link || undefined : undefined,
-          isPublished: linkedSlug ? isLinkPublished : true,
+          link: isPublished ? sa.link || undefined : undefined,
+          isPublished,
         };
       }),
       whoWeAreItems: team.whoWeAreItems.map((item) => ({
@@ -225,7 +212,10 @@ export async function fetchUnifiedTeamData(
           orderBy: { sortOrder: 'asc' },
           include: { links: { orderBy: { sortOrder: 'asc' } } },
         },
-        serviceAreas: { orderBy: { sortOrder: 'asc' } },
+        serviceAreas: {
+          orderBy: { sortOrder: 'asc' },
+          include: { linkedTeam: { select: { isPublished: true } } },
+        },
         whoWeAreItems: { orderBy: { sortOrder: 'asc' } },
         keyInitiativeSlides: { orderBy: { sortOrder: 'asc' } },
         teamServices: { orderBy: { sortOrder: 'asc' } },
@@ -241,18 +231,6 @@ export async function fetchUnifiedTeamData(
       },
     });
     if (!team) return null;
-
-    const linkedSlugs = team.serviceAreas
-      .map((sa) => sa.link?.replace(/^\//, ''))
-      .filter((s): s is string => !!s);
-
-    const publishedTeams = linkedSlugs.length > 0
-      ? await prisma.team.findMany({
-          where: { slug: { in: linkedSlugs }, isPublished: true, archivedAt: null },
-          select: { slug: true },
-        })
-      : [];
-    const publishedSlugs = new Set(publishedTeams.map((t) => t.slug));
 
     const widgetConfigs = Object.fromEntries(
       team.widgetInstances
@@ -301,8 +279,7 @@ export async function fetchUnifiedTeamData(
           }))
         : undefined,
       serviceAreas: team.serviceAreas.map((sa) => {
-        const linkedSlug = sa.link?.replace(/^\//, '');
-        const isLinkPublished = linkedSlug ? publishedSlugs.has(linkedSlug) : false;
+        const isPublished = sa.linkedTeam?.isPublished ?? true;
         return {
           id: sa.serviceAreaId,
           title: sa.title,
@@ -310,8 +287,8 @@ export async function fetchUnifiedTeamData(
           shortDescription: sa.shortDescription,
           fullDescription: sa.fullDescription,
           features: sa.features,
-          link: isLinkPublished ? sa.link || undefined : undefined,
-          isPublished: linkedSlug ? isLinkPublished : true,
+          link: isPublished ? sa.link || undefined : undefined,
+          isPublished,
         };
       }),
       whoWeAreItems: team.whoWeAreItems.map((item) => ({

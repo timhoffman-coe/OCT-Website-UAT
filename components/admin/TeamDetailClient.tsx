@@ -91,6 +91,8 @@ type TeamWithRelations = {
     icon: string | null;
     link: string | null;
     sortOrder: number;
+    linkedTeamId: string | null;
+    linkedTeam: { id: string; teamName: string; isPublished: boolean } | null;
   }>;
   accordionGroups: Array<{
     id: string;
@@ -270,7 +272,7 @@ export default function TeamDetailClient({ team, widgetDefinitions, readOnly = f
         teamQuickLinks={team.teamQuickLinks}
         whoWeAreItems={team.whoWeAreItems}
         keyInitiativeSlides={team.keyInitiativeSlides}
-        childTeams={team.children}
+        hasChildren={team.children.length > 0}
         isArchived={!!team.archivedAt}
         readOnly={readOnly}
       />

@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from 'react';
 import { createServiceArea, updateServiceArea, deleteServiceArea } from '@/lib/actions/service-area-actions';
-import { Pencil, Trash2, Plus, Save, X } from 'lucide-react';
+import Link from 'next/link';
+import { Pencil, Trash2, Plus, Save, X, ExternalLink } from 'lucide-react';
 
 interface ServiceArea {
   id: string;
@@ -14,6 +15,8 @@ interface ServiceArea {
   icon: string | null;
   link: string | null;
   sortOrder: number;
+  linkedTeamId: string | null;
+  linkedTeam: { id: string; teamName: string; isPublished: boolean } | null;
 }
 
 export default function ServiceAreaEditor({
@@ -192,9 +195,28 @@ export default function ServiceAreaEditor({
                       Features: {a.features.join(', ')}
                     </p>
                   )}
-                  {a.link && (
+                  {a.linkedTeam ? (
+                    <div className="flex items-center gap-2 mt-2">
+                      <Link
+                        href={`/admin/teams/${a.linkedTeam.id}`}
+                        className="font-sans text-xs text-primary-blue hover:underline flex items-center gap-1"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        Edit Sub-Team Page
+                      </Link>
+                      <span
+                        className={`text-xs font-sans px-1.5 py-0.5 rounded ${
+                          a.linkedTeam.isPublished
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-yellow-100 text-yellow-800'
+                        }`}
+                      >
+                        {a.linkedTeam.isPublished ? 'Published' : 'Draft'}
+                      </span>
+                    </div>
+                  ) : a.link ? (
                     <p className="font-sans text-xs text-gray-400 mt-1">{a.link}</p>
-                  )}
+                  ) : null}
                 </div>
                 <div className="flex gap-1 flex-shrink-0">
                   <button
@@ -261,6 +283,9 @@ export default function ServiceAreaEditor({
                 className="w-full border border-gray-300 rounded px-2 py-1.5 text-sm font-sans"
               />
             </div>
+            <p className="font-sans text-xs text-gray-400">
+              A linked sub-team page will be auto-created as a draft.
+            </p>
             <div className="flex gap-2">
               <button
                 onClick={handleCreate}

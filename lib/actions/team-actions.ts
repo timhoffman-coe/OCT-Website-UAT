@@ -126,6 +126,7 @@ export async function createChildTeam(
       fullDescription: '',
       features: [],
       link: `/${slug}`,
+      linkedTeamId: team.id,
       sortOrder: saCount,
     },
   });

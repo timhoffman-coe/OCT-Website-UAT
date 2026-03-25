@@ -40,7 +40,10 @@ export default async function TeamDetailPage({
         },
         trelloBoards: { orderBy: { sortOrder: 'asc' } },
         teamMembers: { orderBy: { sortOrder: 'asc' } },
-        serviceAreas: { orderBy: { sortOrder: 'asc' } },
+        serviceAreas: {
+          orderBy: { sortOrder: 'asc' },
+          include: { linkedTeam: { select: { id: true, teamName: true, isPublished: true } } },
+        },
         whoWeAreItems: { orderBy: { sortOrder: 'asc' } },
         keyInitiativeSlides: { orderBy: { sortOrder: 'asc' } },
         accordionGroups: {

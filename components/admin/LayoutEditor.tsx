@@ -148,6 +148,8 @@ interface LayoutEditorProps {
     icon: string | null;
     link: string | null;
     sortOrder: number;
+    linkedTeamId: string | null;
+    linkedTeam: { id: string; teamName: string; isPublished: boolean } | null;
   }>;
   accordionGroups: Array<{
     id: string;
@@ -207,7 +209,7 @@ interface LayoutEditorProps {
     imageAlt: string;
     sortOrder: number;
   }>;
-  childTeams: Array<{ slug: string; isPublished: boolean }>;
+  hasChildren: boolean;
   isArchived: boolean;
   readOnly?: boolean;
 }
@@ -792,7 +794,6 @@ function WidgetInlinePreview({
   teamQuickLinks,
   whoWeAreItems,
   keyInitiativeSlides,
-  childTeams,
 }: {
   widgetType: string;
   config: unknown;
@@ -814,7 +815,6 @@ function WidgetInlinePreview({
   teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
   whoWeAreItems: LayoutEditorProps['whoWeAreItems'];
   keyInitiativeSlides: LayoutEditorProps['keyInitiativeSlides'];
-  childTeams: LayoutEditorProps['childTeams'];
 }) {
   const cfg = (config as Record<string, string>) || {};
 
@@ -891,15 +891,11 @@ function WidgetInlinePreview({
           }))}
         />
       ) : <EmptyWidgetPlaceholder />;
-    case 'service_areas': {
-      const publishedSlugs = new Set(
-        childTeams.filter((c) => c.isPublished).map((c) => c.slug)
-      );
+    case 'service_areas':
       return serviceAreas.length > 0 ? (
         <ServiceAreasWidget
           serviceAreas={serviceAreas.map((sa) => {
-            const linkedSlug = sa.link?.replace(/^\//, '');
-            const isLinkPublished = linkedSlug ? publishedSlugs.has(linkedSlug) : true;
+            const isPublished = sa.linkedTeam?.isPublished ?? true;
             return {
               id: sa.serviceAreaId,
               title: sa.title,
@@ -907,13 +903,12 @@ function WidgetInlinePreview({
               shortDescription: sa.shortDescription,
               fullDescription: sa.fullDescription,
               features: sa.features,
-              link: isLinkPublished ? sa.link || undefined : undefined,
-              isPublished: isLinkPublished,
+              link: isPublished ? sa.link || undefined : undefined,
+              isPublished,
             };
           })}
         />
       ) : <EmptyWidgetPlaceholder />;
-    }
     case 'who_we_are':
       return whoWeAreItems.length > 0 ? (
         <WhoWeAreWidget
@@ -1001,7 +996,6 @@ function SortableWidgetItem({
   teamQuickLinks,
   whoWeAreItems,
   keyInitiativeSlides,
-  childTeams,
   readOnly,
 }: {
   instance: WidgetInstanceData;
@@ -1027,7 +1021,6 @@ function SortableWidgetItem({
   teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
   whoWeAreItems: LayoutEditorProps['whoWeAreItems'];
   keyInitiativeSlides: LayoutEditorProps['keyInitiativeSlides'];
-  childTeams: LayoutEditorProps['childTeams'];
   readOnly?: boolean;
 }) {
   const {
@@ -1138,7 +1131,6 @@ function SortableWidgetItem({
           teamQuickLinks={teamQuickLinks}
           whoWeAreItems={whoWeAreItems}
           keyInitiativeSlides={keyInitiativeSlides}
-          childTeams={childTeams}
         />
       </div>
     </div>
@@ -1173,7 +1165,7 @@ export default function LayoutEditor({
   teamQuickLinks,
   whoWeAreItems,
   keyInitiativeSlides,
-  childTeams,
+  hasChildren,
   isArchived,
   readOnly = false,
 }: LayoutEditorProps) {
@@ -1404,7 +1396,7 @@ export default function LayoutEditor({
           onClose={() => setShowArchiveDialog(false)}
           teamId={teamId}
           teamName={teamName}
-          hasChildren={childTeams.length > 0}
+          hasChildren={hasChildren}
         />
         {/* Page Text Editor */}
         {(initialPageTitle !== null || initialPageDescription !== null) && (
@@ -1523,7 +1515,6 @@ export default function LayoutEditor({
                     teamQuickLinks={teamQuickLinks}
                     whoWeAreItems={whoWeAreItems}
                     keyInitiativeSlides={keyInitiativeSlides}
-                    childTeams={childTeams}
                     readOnly={readOnly}
                   />
                 ))}

@@ -130,7 +130,8 @@ model Team {
   whoWeAreItems   WhoWeAreItem[]
   keyInitiativeSlides KeyInitiativeSlide[]
 
-  linkedFromPortfolio Portfolio? @relation("PortfolioLinkedTeam")
+  linkedFromPortfolio    Portfolio?   @relation("PortfolioLinkedTeam")
+  linkedFromServiceArea  ServiceArea? @relation("ServiceAreaLinkedTeam")
 
   @@index([parentId])
 }
@@ -317,8 +318,10 @@ model ServiceArea {
   icon             String?
   link             String?
   sortOrder        Int      @default(0)
+  linkedTeamId     String?  @unique
 
-  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team       Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  linkedTeam Team? @relation("ServiceAreaLinkedTeam", fields: [linkedTeamId], references: [id], onDelete: SetNull)
 
   @@index([teamId])
 }
