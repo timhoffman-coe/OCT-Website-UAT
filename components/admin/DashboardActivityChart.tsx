@@ -56,7 +56,7 @@ export default function DashboardActivityChart({ data }: ActivityChartProps) {
             fontFamily: 'Open Sans, sans-serif',
           }}
           labelFormatter={(label) => `${label}`}
-          formatter={(value: number) => [value, 'Changes']}
+          formatter={(value) => [value, 'Changes']}
         />
         <Area
           type="monotone"
