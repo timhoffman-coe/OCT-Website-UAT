@@ -182,6 +182,7 @@ export async function fetchSectionData(slug: string): Promise<{
           fullDescription: sa.fullDescription,
           features: sa.features,
           link: isLinkPublished ? sa.link || undefined : undefined,
+          isPublished: linkedSlug ? isLinkPublished : true,
         };
       }),
       whoWeAreItems: team.whoWeAreItems.map((item) => ({
@@ -310,6 +311,7 @@ export async function fetchUnifiedTeamData(
           fullDescription: sa.fullDescription,
           features: sa.features,
           link: isLinkPublished ? sa.link || undefined : undefined,
+          isPublished: linkedSlug ? isLinkPublished : true,
         };
       }),
       whoWeAreItems: team.whoWeAreItems.map((item) => ({

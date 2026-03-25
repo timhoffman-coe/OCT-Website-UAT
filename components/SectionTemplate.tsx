@@ -11,6 +11,7 @@ export interface ServiceArea {
   fullDescription: string;
   features: string[];
   link?: string;
+  isPublished?: boolean;
 }
 
 interface SectionTemplateProps {

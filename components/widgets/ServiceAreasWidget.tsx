@@ -28,6 +28,7 @@ export default function ServiceAreasWidget({ serviceAreas }: ServiceAreasWidgetP
               icon={area.icon}
               shortDescription={area.shortDescription}
               link={area.link}
+              isPublished={area.isPublished}
               onClick={() => setSelectedArea(area)}
             />
           ))}

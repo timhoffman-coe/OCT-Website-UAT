@@ -8,6 +8,7 @@ interface ServiceAreaCardProps {
   icon?: string;
   shortDescription: string;
   link?: string;
+  isPublished?: boolean;
   onClick: () => void;
 }
 
@@ -16,13 +17,14 @@ export default function ServiceAreaCard({
   icon,
   shortDescription,
   link,
+  isPublished = true,
   onClick,
 }: ServiceAreaCardProps) {
   const cardContent = (
     <>
-      {/* Icon */}
-      {icon && (
-        <div className="mb-4">
+      {/* Icon & Draft Badge */}
+      <div className="flex items-start justify-between mb-4">
+        {icon ? (
           <Image
             src={icon}
             alt={title}
@@ -31,8 +33,13 @@ export default function ServiceAreaCard({
             sizes="60px"
             className="rounded-lg"
           />
-        </div>
-      )}
+        ) : <div />}
+        {!isPublished && (
+          <span className="text-xs font-sans font-semibold px-2 py-1 rounded bg-yellow-200 text-yellow-800">
+            DRAFT
+          </span>
+        )}
+      </div>
 
       {/* Title */}
       <h3 className="font-sans text-xl font-bold text-[#212529] mb-3 group-hover:text-primary-blue transition-colors">
@@ -45,26 +52,35 @@ export default function ServiceAreaCard({
       </p>
 
       {/* Learn More Link */}
-      <div className="flex items-center text-primary-blue font-sans text-sm font-semibold">
-        <span>Learn More</span>
-        <svg
-          className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
-      </div>
+      {isPublished ? (
+        <div className="flex items-center text-primary-blue font-sans text-sm font-semibold">
+          <span>Learn More</span>
+          <svg
+            className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </div>
+      ) : (
+        <span className="font-sans text-gray-400 font-semibold text-sm">
+          Coming Soon
+        </span>
+      )}
     </>
   );
 
-  const cardClassName = "group relative bg-[#D3ECEF] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6 text-left w-full hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2";
+  const baseClassName = "group relative bg-[#D3ECEF] rounded-lg shadow-md transition-all duration-300 p-6 text-left w-full focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2";
+  const cardClassName = isPublished
+    ? `${baseClassName} hover:shadow-lg hover:-translate-y-1`
+    : `${baseClassName} opacity-60`;
 
   // If link is provided, render as Link, otherwise render as button
   if (link) {
