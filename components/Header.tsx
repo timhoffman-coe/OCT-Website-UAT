@@ -218,6 +218,9 @@ export default function Header() {
                 </div>
               </div>
 
+              {/* News Link */}
+              <Link href="/news" className="font-sans text-sm xl:text-base font-medium text-white hover:text-gray-300">News</Link>
+
               {/* Contact Link */}
               <Link href="/contact" className="font-sans text-sm xl:text-base font-medium text-white hover:text-gray-300">Contact</Link>
 
@@ -347,6 +350,9 @@ export default function Header() {
                 )}
               </div>
             </div>
+
+            {/* Mobile News */}
+            <Link href="/news" className="font-sans block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">News</Link>
 
             {/* Mobile Contact */}
             <Link href="/contact" className="font-sans block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Contact</Link>

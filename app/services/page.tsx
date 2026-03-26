@@ -118,10 +118,10 @@ export default function ServicesPage() {
       <main className="container mx-auto max-w-7xl py-12 md:py-16 px-4 sm:px-6 lg:px-8">
         {/* Page Title */}
         <div className="mb-12">
-          <h1 className="font-sans text-4xl md:text-5xl font-bold text-primary-blue mb-4 pb-3 border-b-2 border-[#F4F2F1]">
+          <h1 className="font-sans text-4xl md:text-5xl font-bold text-primary-blue mb-4 pb-3 border-b-2 border-structural-gray-blue">
             Our Services
           </h1>
-          <p className="font-serif text-lg md:text-xl text-[#495057] max-w-3xl mt-6">
+          <p className="font-serif text-lg md:text-xl text-text-secondary max-w-3xl mt-6">
             Open City & Technology provides comprehensive technology services that support the City of Edmonton&apos;s operations and strategic objectives.
           </p>
         </div>
@@ -140,13 +140,13 @@ export default function ServicesPage() {
                 <a
                   key={serviceIndex}
                   href={group.sectionUrl}
-                  className="group bg-[#D3ECEF] rounded-lg p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 border-transparent hover:border-primary-blue"
+                  className="group bg-structural-light-gray rounded-lg p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 border-transparent hover:border-primary-blue"
                 >
                   <div className="text-5xl mb-4">{service.icon}</div>
-                  <h3 className="font-sans text-xl font-bold text-[#212529] mb-3 group-hover:text-primary-blue transition-colors">
+                  <h3 className="font-sans text-xl font-bold text-text-dark mb-3 group-hover:text-primary-blue transition-colors">
                     {service.title}
                   </h3>
-                  <p className="font-sans text-sm text-[#495057] mb-4">
+                  <p className="font-sans text-sm text-text-secondary mb-4">
                     {service.description}
                   </p>
                   <div className="flex items-center font-sans text-sm font-semibold text-primary-blue">
@@ -169,19 +169,19 @@ export default function ServicesPage() {
         ))}
 
         {/* Contact Information */}
-        <div className="bg-[#F4F2F1] rounded-lg p-8 mt-8">
-          <h2 className="font-sans text-2xl font-bold text-[#212529] mb-4">
+        <div className="bg-structural-light-gray rounded-lg p-8 mt-8">
+          <h2 className="font-sans text-2xl font-bold text-text-dark mb-4">
             How Can We Help?
           </h2>
-          <p className="font-sans text-base text-[#495057] mb-4">
+          <p className="font-sans text-base text-text-secondary mb-4">
             Our team of technology professionals is dedicated to delivering secure, reliable, and innovative solutions that enable City operations and improve citizen services.
           </p>
-          <p className="font-sans text-base text-[#495057] mb-6">
+          <p className="font-sans text-base text-text-secondary mb-6">
             For inquiries about any of our services, please visit our contact page or reach out to the appropriate service area directly.
           </p>
           <Link
             href="/contact"
-            className="inline-block font-sans text-base font-semibold bg-primary-blue text-white px-6 py-3 rounded-md hover:bg-[#193A5A] transition-colors"
+            className="inline-block font-sans text-base font-semibold bg-primary-blue text-white px-6 py-3 rounded-md hover:bg-dark-blue transition-colors"
           >
             Contact Us
           </Link>
