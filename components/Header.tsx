@@ -206,6 +206,7 @@ export default function Header() {
                   <div className="border-t border-gray-200 my-1"></div>
                   <Link href="/resources/app-library" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">App Library</Link>
                   <Link href="/technology-strategies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Strategies</Link>
+                  <Link href="/policies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Policies & Procedures</Link>
                   <Link href="/org-chart" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">OCT Org Chart</Link>
                   <Link href="/ai-resources" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">AI Resources</Link>
                   <Link href="/links" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Links</Link>
@@ -339,6 +340,7 @@ export default function Header() {
                 <div className="border-t border-gray-200 my-1"></div>
                 <Link href="/resources/app-library" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">App Library</Link>
                 <Link href="/technology-strategies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Strategies</Link>
+                <Link href="/policies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Policies & Procedures</Link>
                 <Link href="/org-chart" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">OCT Org Chart</Link>
                 <Link href="/ai-resources" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">AI Resources</Link>
                 <Link href="/links" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Links</Link>

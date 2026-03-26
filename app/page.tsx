@@ -8,8 +8,10 @@ import GuidingPrinciples from '@/components/GuidingPrinciples';
 
 import Footer from '@/components/Footer';
 import AnimatedSection from '@/components/AnimatedSection';
+import { getAllPosts } from '@/lib/news';
 
 export default function Home() {
+  const latestPosts = getAllPosts().slice(0, 3);
   return (
     <div className="bg-white">
       <Header />
@@ -29,22 +31,40 @@ export default function Home() {
               <span className="h-[2px] flex-1 bg-structural-gray-blue mx-8 hidden sm:block" />
             </div>
             <div className="space-y-12">
-              {/* News Item 1 */}
-              <article className="flex flex-col md:flex-row gap-8 group">
-                <div className="md:w-64 h-44 rounded-xl overflow-hidden shrink-0 bg-gradient-to-br from-dark-blue to-primary-blue flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={0.5} stroke="currentColor" className="w-16 h-16 text-white/20">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3m3 3a3 3 0 1 0 0 6h13.5a3 3 0 1 0 0-6m-16.5-3a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3m-19.5 0a4.5 4.5 0 0 1 .9-2.7L5.737 5.1a3.375 3.375 0 0 1 2.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 0 1 .9 2.7m0 0a3 3 0 0 1-3 3m0 3h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Zm-3 6h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="flex gap-3 mb-3">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-process-blue">ITS Update</span>
-                    <span className="text-[10px] font-medium text-text-secondary">Coming Soon</span>
-                  </div>
-                  <h3 className="text-2xl font-bold text-dark-blue mb-3 group-hover:text-process-blue transition-colors">Branch News Coming Soon</h3>
-                  <p className="text-text-secondary leading-relaxed mb-4">Stay tuned for the latest updates from Open City &amp; Technology. News and announcements about infrastructure upgrades, new initiatives, and branch activities will appear here.</p>
-                </div>
-              </article>
+              {latestPosts.map((post) => {
+                const formattedDate = new Date(post.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                });
+                return (
+                  <Link key={post.slug} href={`/news/${post.slug}`}>
+                    <article className="flex flex-col md:flex-row gap-8 group">
+                      <div className="md:w-64 h-44 rounded-xl overflow-hidden shrink-0">
+                        <img
+                          src={post.image}
+                          alt={post.title}
+                          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex gap-3 mb-3">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-process-blue">{post.category}</span>
+                          <span className="text-[10px] font-medium text-text-secondary">{formattedDate}</span>
+                        </div>
+                        <h3 className="text-2xl font-bold text-dark-blue mb-3 group-hover:text-process-blue transition-colors">{post.title}</h3>
+                        <p className="text-text-secondary leading-relaxed mb-4">{post.description}</p>
+                      </div>
+                    </article>
+                  </Link>
+                );
+              })}
+              <Link href="/news" className="inline-flex items-center gap-2 text-process-blue font-bold text-sm hover:text-primary-blue transition-colors">
+                View all news
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
             </div>
           </div>
 
