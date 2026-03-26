@@ -289,6 +289,28 @@ export default async function AdminDashboard() {
         />
       </div>
 
+      {/* ── System Overview (SUPER_ADMIN only) ── */}
+      {isSuperAdmin && (teamsByTemplate as Array<{ pageTemplate: string; _count: number }>).length > 0 && (
+        <div className="mb-8">
+          <h2 className="font-sans text-lg font-semibold text-gray-900 mb-4">System Overview</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {(teamsByTemplate as Array<{ pageTemplate: string; _count: number }>).map((group) => {
+              const templateColor = TEMPLATE_COLORS[group.pageTemplate] || 'border-t-gray-300';
+              const label = TEMPLATE_LABELS[group.pageTemplate] || group.pageTemplate;
+              return (
+                <div
+                  key={group.pageTemplate}
+                  className={`bg-white rounded-lg border border-gray-200 border-t-4 ${templateColor} px-4 py-3 text-center`}
+                >
+                  <p className="font-sans text-2xl font-bold text-gray-900">{group._count}</p>
+                  <p className="font-sans text-xs text-gray-500">{label} Pages</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {/* ── Activity Chart + Quick Actions ── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Chart */}
@@ -329,7 +351,7 @@ export default async function AdminDashboard() {
 
       {/* ── Your Teams ── */}
       <div className="mb-8">
-        <h2 className="font-sans text-lg font-semibold text-gray-900 mb-4">Your Teams</h2>
+        <h2 className="font-sans text-lg font-semibold text-gray-900 mb-4">OCT Teams</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {topLevelTeams.map((team) => {
             const templateColor = TEMPLATE_COLORS[team.pageTemplate] || 'border-t-gray-300';
@@ -397,27 +419,6 @@ export default async function AdminDashboard() {
         <DashboardActivityFeed logs={serializedLogs} showFullLogLink={isSuperAdmin} />
       </div>
 
-      {/* ── System Overview (SUPER_ADMIN only) ── */}
-      {isSuperAdmin && (teamsByTemplate as Array<{ pageTemplate: string; _count: number }>).length > 0 && (
-        <div>
-          <h2 className="font-sans text-lg font-semibold text-gray-900 mb-4">System Overview</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {(teamsByTemplate as Array<{ pageTemplate: string; _count: number }>).map((group) => {
-              const templateColor = TEMPLATE_COLORS[group.pageTemplate] || 'border-t-gray-300';
-              const label = TEMPLATE_LABELS[group.pageTemplate] || group.pageTemplate;
-              return (
-                <div
-                  key={group.pageTemplate}
-                  className={`bg-white rounded-lg border border-gray-200 border-t-4 ${templateColor} px-4 py-3 text-center`}
-                >
-                  <p className="font-sans text-2xl font-bold text-gray-900">{group._count}</p>
-                  <p className="font-sans text-xs text-gray-500">{label} Pages</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </div>
   );
 }

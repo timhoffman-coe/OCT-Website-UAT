@@ -80,6 +80,23 @@ model AuditLog {
 }
 
 // ============================================================
+// ANALYTICS: PAGE VIEWS
+// ============================================================
+
+model PageView {
+  id        String   @id @default(cuid())
+  path      String
+  teamSlug  String?
+  userAgent String?
+  referrer  String?
+  createdAt DateTime @default(now())
+
+  @@index([path])
+  @@index([teamSlug])
+  @@index([createdAt])
+}
+
+// ============================================================
 // CONTENT: TEAMS
 // ============================================================
 

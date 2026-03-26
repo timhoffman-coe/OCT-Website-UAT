@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { InjectManifest } from "workbox-webpack-plugin";
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ['10.10.10.45'],
   output: 'standalone',
   experimental: {
     optimizePackageImports: ['lucide-react', 'recharts'],
@@ -28,7 +29,7 @@ const nextConfig: NextConfig = {
           { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://placehold.co; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://servicehealth-prod.edmonton.ca https://docs.google.com; manifest-src 'self' https://accounts.google.com https://iap.googleapis.com; frame-ancestors 'none';",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://placehold.co; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://servicehealth-prod.edmonton.ca https://docs.google.com; frame-src https://maps.google.com https://www.google.com; manifest-src 'self' https://accounts.google.com https://iap.googleapis.com; frame-ancestors 'none';",
           },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
         ],

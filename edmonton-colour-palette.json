@@ -1,0 +1,87 @@
+{
+  "name": "City of Edmonton Colour Palette",
+  "version": "1.0",
+  "primary": {
+    "edmonton-blue": {
+      "hex": "#005087",
+      "rgb": [0, 80, 135],
+      "cmyk": [100, 64, 13, 2],
+      "pantone": "PMS 2945",
+      "role": "Primary brand colour, headers, buttons, key UI elements",
+      "tints": {
+        "10": "#E6F0F7",
+        "30": "#B3D4E7",
+        "50": "#66A8C3",
+        "70": "#337CA5",
+        "100": "#005087"
+      },
+      "shades": {
+        "shade-1": "#00476F",
+        "shade-2": "#003D5C",
+        "shade-3": "#002E44",
+        "shade-4": "#001F2E",
+        "shade-5": "#001018"
+      }
+    },
+    "deep-navy": {
+      "hex": "#193A5A",
+      "rgb": [26, 58, 91],
+      "cmyk": [100, 74, 28, 17],
+      "pantone": "PMS 2955",
+      "role": "Text on light backgrounds, footers, dark sections",
+      "tints": {
+        "10": "#E8EBF0",
+        "30": "#B8C2CF",
+        "50": "#8C9DAD",
+        "70": "#506B83",
+        "100": "#193A5A"
+      },
+      "shades": {
+        "shade-1": "#14304C",
+        "shade-2": "#10273E",
+        "shade-3": "#0C1D2F",
+        "shade-4": "#081420",
+        "shade-5": "#040A10"
+      }
+    },
+    "process-blue": {
+      "hex": "#0081BC",
+      "rgb": [0, 129, 188],
+      "cmyk": [100, 25, 4, 0],
+      "pantone": "PMS Process Blue",
+      "role": "Links, secondary buttons, accents, data viz highlights",
+      "tints": {
+        "10": "#E6F3F9",
+        "30": "#B3DAED",
+        "50": "#66C0DE",
+        "70": "#339ECD",
+        "100": "#0081BC"
+      },
+      "shades": {
+        "shade-1": "#006D9E",
+        "shade-2": "#005A82",
+        "shade-3": "#004563",
+        "shade-4": "#003044",
+        "shade-5": "#001B26"
+      }
+    }
+  },
+  "neutrals": {
+    "gray-50": "#F4F6F8",
+    "gray-100": "#E2E6EA",
+    "gray-200": "#C5CCD3",
+    "gray-400": "#94A0AC",
+    "gray-600": "#5C6B78",
+    "gray-700": "#3D4D5C",
+    "gray-800": "#2A3844",
+    "gray-900": "#1A252E",
+    "white": "#FFFFFF",
+    "black": "#0D1820"
+  },
+  "semantic": {
+    "success": "#1D8348",
+    "warning": "#F5A623",
+    "error": "#C0392B",
+    "info": "#E6F3F9"
+  }
+}

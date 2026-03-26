@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useRef, useEffect } from 'react';
 import { createServiceArea, updateServiceArea, deleteServiceArea } from '@/lib/actions/service-area-actions';
 import Link from 'next/link';
 import { Pencil, Trash2, Plus, Save, X, ExternalLink } from 'lucide-react';
@@ -29,6 +29,13 @@ export default function ServiceAreaEditor({
   const [editing, setEditing] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const addFormRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (adding && addFormRef.current) {
+      addFormRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [adding]);
 
   const [form, setForm] = useState({
     title: '',
@@ -240,7 +247,7 @@ export default function ServiceAreaEditor({
 
         {/* Add Form */}
         {adding && (
-          <div className="bg-white border-2 border-dashed border-primary-blue rounded-lg p-4 space-y-3">
+          <div ref={addFormRef} className="bg-white border-2 border-dashed border-primary-blue rounded-lg p-4 space-y-3">
             <div>
               <label className="block font-sans text-xs text-gray-500 mb-1">Title</label>
               <input
