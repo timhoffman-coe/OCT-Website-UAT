@@ -74,12 +74,7 @@ const searchablePages = [
     keywords: ['policies', 'directives', 'procedures', 'governance', 'compliance', 'rules'],
     description: 'Access our policies, directives, and procedures.'
   },
-  {
-    title: 'Branch Templates',
-    url: '/branch-templates',
-    keywords: ['templates', 'documents', 'forms', 'branch resources'],
-    description: 'Download branch templates and forms.'
-  },
+
   {
     title: 'Technology Strategies',
     url: '/technology-strategies',

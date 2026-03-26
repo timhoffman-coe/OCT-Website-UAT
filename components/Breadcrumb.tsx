@@ -41,7 +41,7 @@ const routeMap: Record<string, { label: string; parent: string | null }> = {
   '/dashboards': { label: 'Dashboards', parent: '/' },
   '/cio-dashboard': { label: 'CIO Dashboard', parent: '/dashboards' },
   '/policies': { label: 'Policies', parent: '/' },
-  '/branch-templates': { label: 'Branch Templates', parent: '/' },
+
   '/technology-strategies': { label: 'Technology Strategies', parent: '/' },
   '/budget': { label: 'Budget', parent: '/' },
   '/org-chart': { label: 'Org Chart', parent: '/' },

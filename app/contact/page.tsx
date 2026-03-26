@@ -14,6 +14,19 @@ export default function ContactPage() {
       <Header />
 
       <main className="max-w-7xl mx-auto py-12 md:py-16 px-4 sm:px-6 lg:px-8">
+        {/* Hero Section */}
+        <header className="mb-16">
+          <span className="text-[0.6875rem] uppercase tracking-widest font-bold text-process-blue mb-4 block">
+            Civic Services Hub
+          </span>
+          <h1 className="font-sans text-5xl md:text-6xl font-bold text-dark-blue tracking-tight leading-tight mb-6">
+            Contact &amp; Support
+          </h1>
+          <p className="text-lg text-text-secondary leading-relaxed max-w-2xl">
+            The Open City &amp; Technology branch drives digital transformation for Edmonton.
+            Connect with our leadership and specialized technical teams to facilitate innovation.
+          </p>
+        </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Main Content Column */}

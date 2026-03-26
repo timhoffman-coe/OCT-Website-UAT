@@ -41,15 +41,7 @@ export const siteMapData: SitePage[] = [
       "management"
     ]
   },
-  {
-    "title": "Branch Templates",
-    "path": "/branch-templates",
-    "description": "Page for Branch Templates",
-    "keywords": [
-      "branch",
-      "templates"
-    ]
-  },
+
   {
     "title": "Budget",
     "path": "/budget",

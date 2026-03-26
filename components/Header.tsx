@@ -206,7 +206,7 @@ export default function Header() {
                 <div className="hidden group-hover:block absolute z-10 right-0 top-full w-56 bg-white rounded-md shadow-lg py-1">
                   <Link href="/resources/app-library" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">App Library</Link>
                   <Link href="/resources/nic" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Network Information Center</Link>
-                  <Link href="/branch-templates" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Branch Templates</Link>
+
                   <Link href="/technology-strategies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Strategies</Link>
                   <Link href="/budget" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget & Spend</Link>
                   <Link href="/org-chart" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">OCT Org Chart</Link>
@@ -341,7 +341,7 @@ export default function Header() {
               </button>
               <div className={`${openDropdown === 'mobile-resources' ? '' : 'hidden'} mt-1 pl-4`}>
                 <Link href="/resources/app-library" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">App Library</Link>
-                <Link href="/branch-templates" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Branch Templates</Link>
+
                 <Link href="/technology-strategies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Strategies</Link>
                 <Link href="/budget" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Budget & Spend</Link>
                 <Link href="/org-chart" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">OCT Org Chart</Link>
