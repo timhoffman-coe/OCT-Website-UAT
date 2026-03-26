@@ -143,6 +143,14 @@ export default function Home() {
       </AnimatedSection>
 
 
+      {/* Signature Section */}
+      <section className="w-full bg-structural-light-gray py-24 px-6 border-t border-structural-gray-blue">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-black text-dark-blue tracking-tighter mb-6">Building a Digital First City.</h2>
+          <p className="text-text-secondary text-lg max-w-2xl mx-auto">We are more than just a technology branch; we are the engine of civic innovation, enabling Edmonton to serve its citizens with speed, transparency, and excellence.</p>
+        </div>
+      </section>
+
       <AnimatedSection>
         <GuidingPrinciples />
       </AnimatedSection>
