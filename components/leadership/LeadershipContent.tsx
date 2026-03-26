@@ -1,6 +1,3 @@
-'use client';
-
-import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -68,183 +65,182 @@ const businessUnits = [
   }
 ];
 
-export default function LeadershipContent() {
-  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+const mailIcon = (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+  </svg>
+);
 
-  const toggleSection = (section: string) => {
-    setExpandedSections(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(section)) {
-        newSet.delete(section);
-      } else {
-        newSet.add(section);
-      }
-      return newSet;
-    });
-  };
+export default function LeadershipContent() {
+  const branchManager = branchManagerOffice.members[0];
+  const supportStaff = branchManagerOffice.members.slice(1);
 
   return (
     <>
-      {/* Branch Manager's Office - Always Visible */}
-      <div className="max-w-7xl mx-auto mb-10">
-        <div className="bg-gradient-to-r from-complement-empire-blue to-primary-blue rounded-lg shadow-xl p-8">
-          <div className="flex items-center mb-6">
-            <div className="w-1 h-12 bg-complement-sea-green mr-4"></div>
-            <h2 className="font-sans text-3xl font-bold text-white">
-              {branchManagerOffice.section}
-            </h2>
+      {/* Featured Branch Manager Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Main Featured Card */}
+          <div className="lg:col-span-8 bg-white rounded-xl p-8 md:p-12 shadow-sm border border-structural-gray-blue">
+            <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+              <div className="w-48 h-48 md:w-64 md:h-64 rounded-xl overflow-hidden flex-shrink-0">
+                <Image
+                  src={branchManager.image}
+                  alt={branchManager.name}
+                  width={256}
+                  height={256}
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
+              <div className="flex flex-col justify-center text-center md:text-left">
+                <h2 className="text-3xl font-bold text-dark-blue mb-1">{branchManager.name}</h2>
+                <span className="text-process-blue font-semibold text-lg mb-6">{branchManager.role}</span>
+                <p className="text-text-secondary mb-6 max-w-lg leading-relaxed">
+                  Daryl leads the strategic vision for the Open City &amp; Technology branch, overseeing municipal digital infrastructure and citizen-centric technology initiatives.
+                </p>
+                <a
+                  href={`mailto:${branchManager.email}`}
+                  className="flex items-center justify-center md:justify-start gap-2 text-dark-blue hover:text-process-blue transition-colors font-medium"
+                >
+                  {mailIcon}
+                  {branchManager.email}
+                </a>
+              </div>
+            </div>
           </div>
-          <p className="font-sans text-white/90 mb-6">Primary contact for Open City and Technology</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {branchManagerOffice.members.map((member, memberIdx) => (
-              <div key={memberIdx} className="bg-white rounded-lg p-5 hover:shadow-lg transition-shadow">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0">
+
+          {/* Secondary Support Cards */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
+            {supportStaff.map((member, idx) => (
+              <div key={idx} className="bg-structural-light-gray p-8 rounded-xl border border-structural-gray-blue">
+                <div className="flex items-center gap-5 mb-4">
+                  <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0">
                     <Image
                       src={member.image}
                       alt={member.name}
-                      width={96}
-                      height={96}
-                      sizes="96px"
-                      className="w-24 h-24 rounded-lg object-cover"
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="flex-1">
-                    <p className="font-sans text-sm font-semibold text-complement-empire-blue uppercase mb-1">
-                      {member.role}
-                    </p>
-                    <h3 className="font-sans text-lg font-bold text-gray-800 mb-2">
-                      {member.name}
-                    </h3>
-                    <a
-                      href={`mailto:${member.email}`}
-                      className="font-sans text-sm text-complement-sea-green hover:text-primary-blue transition-colors"
-                    >
-                      {member.email}
-                    </a>
+                  <div>
+                    <h3 className="font-bold text-xl text-dark-blue">{member.name}</h3>
+                    <p className="text-text-secondary text-sm">{member.role}</p>
                   </div>
                 </div>
+                <a
+                  href={`mailto:${member.email}`}
+                  className="text-process-blue hover:text-dark-blue inline-flex items-center font-medium gap-2 transition-colors text-sm"
+                >
+                  {mailIcon}
+                  {member.email}
+                </a>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Business Units - Collapsible */}
-      <div className="max-w-7xl mx-auto">
-        <h2 className="font-sans text-2xl font-bold text-gray-800 mb-6 ml-4">
-          Business Units
-        </h2>
-        <div className="space-y-4 ml-8 border-l-4 border-primary-blue pl-8">
-          {businessUnits.map((unit, idx) => {
-            const isExpanded = expandedSections.has(unit.section);
-            return (
-              <div key={idx} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <button
-                  onClick={() => toggleSection(unit.section)}
-                  className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-blue focus:ring-offset-2"
-                  aria-expanded={isExpanded}
-                >
-                  <h3 className="font-sans text-xl font-bold text-primary-blue text-left">
-                    {unit.section}
-                  </h3>
-                  <div className="flex-shrink-0 ml-4">
-                    {isExpanded ? (
-                      <svg className="h-6 w-6 text-primary-blue" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    ) : (
-                      <svg className="h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                      </svg>
-                    )}
-                  </div>
-                </button>
-
-                {isExpanded && (
-                  <div className="bg-gray-50">
-                    <div className="px-6 pt-2 pb-4">
-                      {/* Director Section */}
-                      {unit.members.filter(m => m.role === 'Director' && m.image).map((director, idx) => (
-                        <div key={idx} className="bg-white border border-gray-200 rounded-lg p-5 mb-6 hover:shadow-md transition-shadow">
-                          <div className="flex items-start gap-4">
-                            <div className="flex-shrink-0">
-                              <Image
-                                src={director.image!}
-                                alt={director.name}
-                                width={96}
-                                height={96}
-                                sizes="96px"
-                                className="w-24 h-24 rounded-lg object-cover"
-                              />
-                            </div>
-                            <div className="flex-1">
-                              <p className="font-sans text-sm font-semibold text-complement-empire-blue uppercase mb-1">
-                                {director.role}
-                              </p>
-                              <h4 className="font-sans text-lg font-bold text-gray-800 mb-2">
-                                {director.name}
-                              </h4>
-                              <a
-                                href={`mailto:${director.email}`}
-                                className="font-sans text-sm text-complement-sea-green hover:text-primary-blue transition-colors"
-                              >
-                                {director.email}
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-
-                      {/* Program Managers and Other Staff Section */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {unit.members.filter(m => m.role !== 'Director').map((member, memberIdx) => (
-                          <div key={memberIdx} className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                            <p className="font-sans text-sm font-semibold text-complement-empire-blue uppercase mb-1">
-                              {member.role}
-                            </p>
-                            <h4 className="font-sans text-lg font-bold text-gray-800 mb-2">
-                              {member.name}
-                            </h4>
-                            <a
-                              href={`mailto:${member.email}`}
-                              className="font-sans text-sm text-complement-sea-green hover:text-primary-blue transition-colors"
-                            >
-                              {member.email}
-                            </a>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <Link
-                      href={unit.link}
-                      className="block bg-primary-blue hover:bg-complement-empire-blue text-white text-center font-sans font-semibold py-4 transition-colors"
-                    >
-                      More Information About {unit.section}
-                      <svg className="inline-block ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                      </svg>
-                    </Link>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+      {/* Content Blade */}
+      <div className="w-full bg-dark-blue py-20 mb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="max-w-2xl text-center md:text-left">
+            <h2 className="text-3xl font-bold text-white mb-4">Departmental Leadership</h2>
+            <p className="text-white/60 text-lg">Our Directors oversee specialized teams that provide critical technology infrastructure and support across the entire municipality.</p>
+          </div>
+          <div className="flex gap-4">
+            <div className="px-6 py-4 bg-white/5 border border-white/10 rounded-lg text-center">
+              <div className="text-2xl font-bold text-white">5</div>
+              <div className="text-[0.6875rem] text-white/60 uppercase tracking-widest">Strategic Units</div>
+            </div>
+            <div className="px-6 py-4 bg-white/5 border border-white/10 rounded-lg text-center">
+              <div className="text-2xl font-bold text-white">120+</div>
+              <div className="text-[0.6875rem] text-white/60 uppercase tracking-widest">Staff Members</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Contact Information */}
-      <div className="max-w-7xl mx-auto mt-12 bg-white rounded-lg shadow-lg p-6">
-        <h2 className="font-sans text-2xl font-bold text-primary-blue mb-4">
-          Contact Us
-        </h2>
-        <p className="font-sans text-gray-700 mb-4">
-          For general inquiries about Open City and Technology services, please reach out to the appropriate business unit or contact the Branch Manager&apos;s office.
-        </p>
-        <p className="font-sans text-gray-600 text-sm">
-          Updated: January 2025
-        </p>
-      </div>
+      {/* Directors Grid */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {businessUnits.map((unit, idx) => {
+            const director = unit.members.find(m => m.role === 'Director');
+            const staff = unit.members.filter(m => m.role !== 'Director');
+            if (!director) return null;
+            return (
+              <div key={idx} className="bg-white p-8 rounded-xl flex flex-col h-full shadow-sm hover:shadow-lg transition-shadow duration-300 border border-structural-gray-blue">
+                <div className="flex items-center gap-4 mb-6">
+                  {director.image && (
+                    <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+                      <Image
+                        src={director.image}
+                        alt={director.name}
+                        width={80}
+                        height={80}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div>
+                    <h4 className="text-xl font-bold text-dark-blue">{director.name}</h4>
+                    <p className="text-process-blue font-medium text-xs leading-tight">Director, {unit.section}</p>
+                  </div>
+                </div>
+
+                {/* Staff list */}
+                <div className="mb-6 flex-grow">
+                  <p className="text-[0.6875rem] font-bold text-text-secondary uppercase tracking-widest mb-2">Team</p>
+                  <div className="space-y-1">
+                    {staff.map((member, mIdx) => (
+                      <div key={mIdx} className="flex items-center justify-between text-sm">
+                        <span className="text-dark-blue">{member.name}</span>
+                        <span className="text-text-secondary text-xs">{member.role}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-structural-gray-blue space-y-2 text-sm">
+                  <a
+                    href={`mailto:${director.email}`}
+                    className="flex items-center gap-2 text-dark-blue font-bold hover:text-process-blue transition-colors"
+                  >
+                    {mailIcon}
+                    {director.email}
+                  </a>
+                  <Link
+                    href={unit.link}
+                    className="flex items-center gap-2 text-process-blue font-medium hover:text-dark-blue transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+                    </svg>
+                    View {unit.section}
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Contact Utility Card */}
+          <div className="bg-structural-light-gray p-8 rounded-xl flex flex-col justify-center items-center text-center border-2 border-dashed border-structural-gray-blue">
+            <div className="mb-4 text-process-blue">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+              </svg>
+            </div>
+            <h4 className="font-bold text-dark-blue mb-2">Need general assistance?</h4>
+            <p className="text-sm text-text-secondary mb-6">For all other technical inquiries, please contact our help desk.</p>
+            <Link
+              href="/contact"
+              className="text-process-blue font-bold text-sm underline hover:text-dark-blue transition-colors"
+            >
+              Contact Support
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
