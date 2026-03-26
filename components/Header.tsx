@@ -175,26 +175,6 @@ export default function Header() {
                 </div>
               </div>
 
-              {/* Dashboards Dropdown */}
-              <div className="relative group">
-                <Link href="/dashboards" className="font-sans text-sm xl:text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 py-2">
-                  <span>Dashboards</span>
-                  <svg className="h-4 w-4 xl:h-5 xl:w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </Link>
-                <div className="hidden group-hover:block absolute z-10 top-full w-72 bg-white rounded-md shadow-lg py-1">
-                  <Link href="/dashboards" className="block px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-gray-100 border-b border-gray-200">View All Dashboards</Link>
-                  <Link href="/service-health" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Service & Infrastructure Health</Link>
-                  <Link href="/budget" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget & Financial</Link>
-                  <Link href="/people-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">People Management</Link>
-                  <Link href="/asset-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Asset Management</Link>
-                  <Link href="/incident-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Incident & Service Management</Link>
-                  <Link href="/vendor-command-center" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Vendor Command Center</Link>
-                  <Link href="/cio-dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Leadership</Link>
-                </div>
-              </div>
-
               {/* Resources Dropdown */}
               <div className="relative group">
                 <div className="font-sans text-sm xl:text-base font-medium text-white hover:text-gray-300 flex items-center space-x-1 cursor-pointer py-2">
@@ -203,15 +183,31 @@ export default function Header() {
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <div className="hidden group-hover:block absolute z-10 right-0 top-full w-56 bg-white rounded-md shadow-lg py-1">
+                <div className="hidden group-hover:block absolute z-10 right-0 top-full w-72 bg-white rounded-md shadow-lg py-1">
+                  {/* Dashboards with flyout */}
+                  <div className="relative group/dashboards">
+                    <Link href="/dashboards" className="w-full text-left px-4 py-2 text-sm font-bold text-primary-blue hover:bg-gray-100 flex items-center justify-between">
+                      <span>Dashboards</span>
+                      <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </Link>
+                    <div className="hidden group-hover/dashboards:block absolute right-full top-0 mr-0 w-72 bg-white rounded-md shadow-lg py-1 border border-gray-200">
+                      <Link href="/dashboards" className="block px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-gray-100 border-b border-gray-200">View All Dashboards</Link>
+                      <Link href="/service-health" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Service & Infrastructure Health</Link>
+                      <Link href="/budget" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget & Financial</Link>
+                      <Link href="/people-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">People Management</Link>
+                      <Link href="/asset-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Asset Management</Link>
+                      <Link href="/incident-management" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Incident & Service Management</Link>
+                      <Link href="/vendor-command-center" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Vendor Command Center</Link>
+                      <Link href="/cio-dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Leadership</Link>
+                    </div>
+                  </div>
+                  <div className="border-t border-gray-200 my-1"></div>
                   <Link href="/resources/app-library" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">App Library</Link>
-                  <Link href="/resources/nic" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Network Information Center</Link>
-
                   <Link href="/technology-strategies" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Technology Strategies</Link>
-                  <Link href="/budget" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Budget & Spend</Link>
                   <Link href="/org-chart" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">OCT Org Chart</Link>
                   <Link href="/ai-resources" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">AI Resources</Link>
-                  <a href="https://data.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Open Data Portal</a>
                   <Link href="/links" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Links</Link>
                   {canViewOctWebDev && (
                     <>
@@ -305,29 +301,6 @@ export default function Header() {
               </div>
             </div>
 
-            {/* Mobile Dashboards */}
-            <div>
-              <button
-                onClick={() => toggleDropdown('mobile-dashboards')}
-                className="font-sans w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 flex justify-between items-center"
-              >
-                <span>Dashboards</span>
-                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-              <div className={`${openDropdown === 'mobile-dashboards' ? '' : 'hidden'} mt-1 pl-4`}>
-                <Link href="/dashboards" className="block px-3 py-2 rounded-md text-sm font-semibold text-primary-blue hover:bg-gray-50 border-b border-gray-200 mb-1">View All Dashboards</Link>
-                <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Service & Infrastructure Health</a>
-                <Link href="/budget" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Budget & Financial</Link>
-                <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">People Management</a>
-                <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Asset Management</a>
-                <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Incident & Service Management</a>
-                <Link href="/vendor-command-center" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Vendor Command Center</Link>
-                <a href="#" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Leadership</a>
-              </div>
-            </div>
-
             {/* Mobile Resources */}
             <div>
               <button
@@ -340,13 +313,31 @@ export default function Header() {
                 </svg>
               </button>
               <div className={`${openDropdown === 'mobile-resources' ? '' : 'hidden'} mt-1 pl-4`}>
+                {/* Dashboards sub-section */}
+                <button
+                  onClick={() => toggleDropdown('mobile-dashboards')}
+                  className="w-full text-left px-3 py-2 rounded-md text-sm font-bold text-primary-blue hover:bg-gray-50 flex items-center justify-between"
+                >
+                  <span>Dashboards</span>
+                  <svg className={`h-4 w-4 transition-transform ${openDropdown === 'mobile-dashboards' ? 'rotate-90' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                <div className={`${openDropdown === 'mobile-dashboards' ? '' : 'hidden'} bg-gray-50 rounded-md mt-1 mb-2`}>
+                  <Link href="/dashboards" className="block px-5 py-2 rounded-md text-sm font-semibold text-primary-blue hover:bg-gray-100">View All Dashboards</Link>
+                  <Link href="/service-health" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Service & Infrastructure Health</Link>
+                  <Link href="/budget" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Budget & Financial</Link>
+                  <Link href="/people-management" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">People Management</Link>
+                  <Link href="/asset-management" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Asset Management</Link>
+                  <Link href="/incident-management" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Incident & Service Management</Link>
+                  <Link href="/vendor-command-center" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Vendor Command Center</Link>
+                  <Link href="/cio-dashboard" className="block px-5 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">Leadership</Link>
+                </div>
+                <div className="border-t border-gray-200 my-1"></div>
                 <Link href="/resources/app-library" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">App Library</Link>
-
                 <Link href="/technology-strategies" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Technology Strategies</Link>
-                <Link href="/budget" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Budget & Spend</Link>
                 <Link href="/org-chart" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">OCT Org Chart</Link>
                 <Link href="/ai-resources" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">AI Resources</Link>
-                <a href="https://data.edmonton.ca" target="_blank" rel="noopener noreferrer" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Open Data Portal</a>
                 <Link href="/links" className="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50">Links</Link>
                 {canViewOctWebDev && (
                   <>

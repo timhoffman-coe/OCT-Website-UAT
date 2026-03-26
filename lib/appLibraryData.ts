@@ -47,4 +47,14 @@ export const appLibraryData: App[] = [
         team: 'ITS',
         actionLabel: 'Open Portal',
     },
+    {
+        id: 'open-data-portal',
+        name: 'Open Data Portal',
+        description: 'Access open datasets published by the City of Edmonton for public use, research, and innovation.',
+        url: 'https://data.edmonton.ca',
+        category: 'data',
+        status: 'production',
+        team: 'ITS',
+        actionLabel: 'Open Portal',
+    },
 ];
