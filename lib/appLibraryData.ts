@@ -3,8 +3,11 @@ export interface App {
     name: string;
     description: string;
     url: string;
-    icon?: string; // URL to icon image or component name if using a library
     category: string;
+    status: 'production' | 'beta' | 'development';
+    team: string;
+    featured?: boolean;
+    actionLabel?: string;
 }
 
 export interface Category {
@@ -18,6 +21,8 @@ export const categories: Category[] = [
     { id: 'operations', name: 'Operations' },
     { id: 'it', name: 'IT Tools' },
     { id: 'productivity', name: 'Productivity' },
+    { id: 'citizen', name: 'Citizen Services' },
+    { id: 'data', name: 'Data & Analytics' },
 ];
 
 export const appLibraryData: App[] = [
@@ -27,6 +32,10 @@ export const appLibraryData: App[] = [
         description: 'Access City applications, virtual desktops, and remote access tools.',
         url: 'https://workspace.edmonton.ca',
         category: 'it',
+        status: 'production',
+        team: 'ITS',
+        featured: true,
+        actionLabel: 'Launch App',
     },
     {
         id: 'nic',
@@ -34,5 +43,8 @@ export const appLibraryData: App[] = [
         description: 'Centralized dashboard for network infrastructure, fibre routes, and tower management.',
         url: '/resources/nic',
         category: 'it',
+        status: 'production',
+        team: 'ITS',
+        actionLabel: 'Open Portal',
     },
 ];
