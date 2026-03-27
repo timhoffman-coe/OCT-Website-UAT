@@ -1,13 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { requireUser } from '@/lib/auth';
-import { redirect } from 'next/navigation';
 import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AnalyticsPage() {
-  const user = await requireUser();
-  if (user.role !== 'SUPER_ADMIN') redirect('/admin');
+  await requireUser();
 
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);

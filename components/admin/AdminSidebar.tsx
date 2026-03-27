@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket, Map, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket, Map, BarChart3, Newspaper } from 'lucide-react';
 
 interface Team {
   id: string;
@@ -17,9 +17,10 @@ interface AdminSidebarProps {
   teams: Team[];
   userRole: string;
   userName: string;
+  canEditNews?: boolean;
 }
 
-export default function AdminSidebar({ teams, userRole, userName }: AdminSidebarProps) {
+export default function AdminSidebar({ teams, userRole, userName, canEditNews }: AdminSidebarProps) {
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path || pathname.startsWith(path + '/');
@@ -210,6 +211,26 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
           </Link>
         </div>
 
+        {/* News Section */}
+        {canEditNews && (
+          <div className="pt-4">
+            <p className="px-3 text-xs font-sans font-semibold text-white/40 uppercase tracking-wider mb-2">
+              News
+            </p>
+            <Link
+              href="/admin/news"
+              className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                isActive('/admin/news') && !isActive('/admin/news-editors')
+                  ? 'bg-primary-blue text-white'
+                  : 'text-white/80 hover:bg-white/10'
+              }`}
+            >
+              <Newspaper className="w-4 h-4" />
+              News Posts
+            </Link>
+          </div>
+        )}
+
         {/* Admin Section */}
         {(userRole === 'SUPER_ADMIN' || userRole === 'TEAM_ADMIN') && (
           <div className="pt-4">
@@ -229,6 +250,17 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
             </Link>
             {userRole === 'SUPER_ADMIN' && (
               <>
+                <Link
+                  href="/admin/news-editors"
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                    isActive('/admin/news-editors')
+                      ? 'bg-primary-blue text-white'
+                      : 'text-white/80 hover:bg-white/10'
+                  }`}
+                >
+                  <Newspaper className="w-4 h-4" />
+                  News Editors
+                </Link>
                 <Link
                   href="/admin/roadmap-editors"
                   className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${

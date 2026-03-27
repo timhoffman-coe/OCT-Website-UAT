@@ -33,6 +33,9 @@ services:
       - MSSQL_TRUST_CERT=${MSSQL_TRUST_CERT:-false}
       - SERVICEHEALTH_API_BASE_URL=${SERVICEHEALTH_API_BASE_URL:-}
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      - news-content:/app/content/news
+      - news-images:/app/public/images/news
     depends_on:
       postgres:
         condition: service_healthy
@@ -50,3 +53,5 @@ services:
 
 volumes:
   pgdata:
+  news-content:
+  news-images:

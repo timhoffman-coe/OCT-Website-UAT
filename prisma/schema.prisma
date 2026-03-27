@@ -28,6 +28,7 @@ model User {
   auditLogs                    AuditLog[]
   roadmapPermission            RoadmapPermission?
   octWebDevPermission          OctWebDevPermission?
+  newsPermission               NewsPermission?
 }
 
 model TeamPermission {
@@ -58,6 +59,14 @@ model OctWebDevPermission {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("OctWebDevPermission")
+}
+
+model NewsPermission {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model AuditLog {

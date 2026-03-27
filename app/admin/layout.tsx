@@ -50,6 +50,7 @@ export default async function AdminLayout({
         teams={teams}
         userRole={user.role}
         userName={user.name}
+        canEditNews={user.role === 'SUPER_ADMIN' || !!user.newsPermission}
       />
       <main className="flex-1 overflow-auto">{children}</main>
     </div>

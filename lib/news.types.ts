@@ -10,4 +10,6 @@ export interface NewsPost {
   featured: boolean;
   author: string;
   content: string;
+  draft: boolean;
+  filename: string;
 }

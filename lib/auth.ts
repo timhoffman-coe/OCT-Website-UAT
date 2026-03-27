@@ -8,7 +8,7 @@ export async function getCurrentUser() {
 
   const user = await prisma.user.findUnique({
     where: { email },
-    include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true },
+    include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true, newsPermission: true },
   });
 
   return user;
@@ -96,6 +96,20 @@ export async function requireOctWebDevAccess() {
   const user = await requireUser();
   if (user.role === 'SUPER_ADMIN') return user;
   if (!user.octWebDevPermission) throw new Error('Forbidden: No OCT-Web-Dev view access');
+  return user;
+}
+
+export async function canEditNews(): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user) return false;
+  if (user.role === 'SUPER_ADMIN') return true;
+  return !!user.newsPermission;
+}
+
+export async function requireNewsAccess() {
+  const user = await requireUser();
+  if (user.role === 'SUPER_ADMIN') return user;
+  if (!user.newsPermission) throw new Error('Forbidden: No news edit access');
   return user;
 }
 

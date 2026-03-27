@@ -30,6 +30,8 @@ services:
       - DATABASE_URL=postgresql://coe_admin:${POSTGRES_PASSWORD}@postgres:5432/coe_cms
     volumes:
       - ./service-account.json:/app/service-account.json:ro
+      - news-content:/app/content/news
+      - news-images:/app/public/images/news
     depends_on:
       postgres:
         condition: service_healthy
@@ -47,3 +49,5 @@ services:
 
 volumes:
   pgdata:
+  news-content:
+  news-images:
