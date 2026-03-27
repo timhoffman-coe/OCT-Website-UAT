@@ -195,6 +195,21 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
           })}
         </div>
 
+        {/* Analytics — visible to all roles */}
+        <div className="pt-4">
+          <Link
+            href="/admin/analytics"
+            className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+              isActive('/admin/analytics')
+                ? 'bg-primary-blue text-white'
+                : 'text-white/80 hover:bg-white/10'
+            }`}
+          >
+            <BarChart3 className="w-4 h-4" />
+            Page Analytics
+          </Link>
+        </div>
+
         {/* Admin Section */}
         {(userRole === 'SUPER_ADMIN' || userRole === 'TEAM_ADMIN') && (
           <div className="pt-4">
@@ -235,17 +250,6 @@ export default function AdminSidebar({ teams, userRole, userName }: AdminSidebar
                 >
                   <Map className="w-4 h-4" />
                   OCT-Web-Dev Viewers
-                </Link>
-                <Link
-                  href="/admin/analytics"
-                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
-                    isActive('/admin/analytics')
-                      ? 'bg-primary-blue text-white'
-                      : 'text-white/80 hover:bg-white/10'
-                  }`}
-                >
-                  <BarChart3 className="w-4 h-4" />
-                  Page Analytics
                 </Link>
                 <Link
                   href="/admin/audit-log"
