@@ -3,12 +3,31 @@
 import { prisma } from '@/lib/prisma';
 import { requireTeamAccess } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
+import { isWidgetAllowedForTemplate } from '@/lib/widget-template-map';
 
 export async function addWidgetToTeam(
   teamId: string,
   widgetDefinitionId: string
 ) {
   const user = await requireTeamAccess(teamId);
+
+  const [team, widgetDef] = await Promise.all([
+    prisma.team.findUniqueOrThrow({
+      where: { id: teamId },
+      select: { pageTemplate: true, slug: true },
+    }),
+    prisma.widgetDefinition.findUniqueOrThrow({
+      where: { id: widgetDefinitionId },
+      select: { widgetType: true },
+    }),
+  ]);
+
+  if (!isWidgetAllowedForTemplate(widgetDef.widgetType, team.pageTemplate)) {
+    throw new Error(
+      `Widget "${widgetDef.widgetType}" is not allowed on ${team.pageTemplate} pages`
+    );
+  }
+
   const count = await prisma.widgetInstance.count({ where: { teamId } });
 
   const instance = await prisma.widgetInstance.create({
@@ -32,7 +51,6 @@ export async function addWidgetToTeam(
     },
   });
 
-  const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
   revalidatePath(`/${team.slug}`);
   revalidatePath(`/admin/teams/${teamId}`);
   return instance;

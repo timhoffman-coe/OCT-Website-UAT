@@ -1,5 +1,6 @@
 'use client';
 
+import { isWidgetAllowedForTemplate } from '@/lib/widget-template-map';
 import { useState, useTransition, useRef, useEffect, useCallback, useId } from 'react';
 import {
   DndContext,
@@ -101,6 +102,7 @@ interface LayoutEditorProps {
   isPublished: boolean;
   instances: WidgetInstanceData[];
   definitions: WidgetDefinitionData[];
+  pageTemplate: string;
   portfolios: Array<{
     id: string;
     iconName: string;
@@ -1147,6 +1149,7 @@ export default function LayoutEditor({
   isPublished: initialIsPublished,
   instances: initialInstances,
   definitions,
+  pageTemplate,
   portfolios,
   teamTabs,
   trelloBoards,
@@ -1227,7 +1230,7 @@ export default function LayoutEditor({
     instances.map((i) => i.widgetDefinition.id)
   );
   const availableDefinitions = definitions.filter(
-    (d) => !activeDefinitionIds.has(d.id)
+    (d) => !activeDefinitionIds.has(d.id) && isWidgetAllowedForTemplate(d.widgetType, pageTemplate)
   );
 
   function handleDragEnd(event: DragEndEvent) {

@@ -254,6 +254,7 @@ export default function TeamDetailClient({ team, widgetDefinitions, readOnly = f
         isPublished={team.isPublished}
         instances={team.widgetInstances}
         definitions={widgetDefinitions}
+        pageTemplate={team.pageTemplate}
         portfolios={team.portfolios}
         teamTabs={team.teamTabs}
         trelloBoards={team.trelloBoards}
