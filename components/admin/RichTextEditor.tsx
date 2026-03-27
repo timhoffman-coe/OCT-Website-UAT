@@ -22,6 +22,38 @@ import {
   Redo,
 } from 'lucide-react';
 
+function ToolbarButton({
+  onClick,
+  isActive,
+  children,
+  title,
+}: {
+  onClick: () => void;
+  isActive?: boolean;
+  children: React.ReactNode;
+  title: string;
+}) {
+  return (
+    <button
+      type="button"
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={onClick}
+      title={title}
+      className={`p-1.5 rounded transition-colors ${
+        isActive
+          ? 'bg-[#005087] text-white'
+          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function ToolbarDivider() {
+  return <div className="w-px h-5 bg-gray-200 mx-1" />;
+}
+
 interface RichTextEditorProps {
   content: string;
   onChange: (markdown: string) => void;
@@ -56,7 +88,8 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
       },
     },
     onUpdate: ({ editor }) => {
-      const md = editor.storage.markdown.getMarkdown();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const md = (editor.storage as any).markdown.getMarkdown();
       onChange(md);
     },
   });
@@ -68,34 +101,6 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
     if (!url) return;
     editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
   };
-
-  const ToolbarButton = ({
-    onClick,
-    isActive,
-    children,
-    title,
-  }: {
-    onClick: () => void;
-    isActive?: boolean;
-    children: React.ReactNode;
-    title: string;
-  }) => (
-    <button
-      type="button"
-      onMouseDown={(e) => e.preventDefault()}
-      onClick={onClick}
-      title={title}
-      className={`p-1.5 rounded transition-colors ${
-        isActive
-          ? 'bg-[#005087] text-white'
-          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
-      }`}
-    >
-      {children}
-    </button>
-  );
-
-  const Divider = () => <div className="w-px h-5 bg-gray-200 mx-1" />;
 
   return (
     <div className="border border-gray-300 rounded-lg overflow-hidden bg-white focus-within:ring-2 focus-within:ring-[#005087]/30 focus-within:border-[#005087] transition-all">
@@ -123,7 +128,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
           <UnderlineIcon size={15} />
         </ToolbarButton>
 
-        <Divider />
+        <ToolbarDivider />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -147,7 +152,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
           <Heading3 size={15} />
         </ToolbarButton>
 
-        <Divider />
+        <ToolbarDivider />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -177,7 +182,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
           <Minus size={15} />
         </ToolbarButton>
 
-        <Divider />
+        <ToolbarDivider />
 
         <ToolbarButton
           onClick={addLink}
@@ -187,7 +192,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
           <LinkIcon size={15} />
         </ToolbarButton>
 
-        <Divider />
+        <ToolbarDivider />
 
         <ToolbarButton
           onClick={() => editor.chain().focus().undo().run()}
