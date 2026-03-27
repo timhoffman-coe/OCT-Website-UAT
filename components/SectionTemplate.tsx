@@ -36,10 +36,10 @@ export default function SectionTemplate({
       <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         {/* Page Title Section */}
         <div className="mb-12">
-          <h1 className="font-sans text-4xl md:text-5xl font-bold text-primary-blue mb-4 pb-3 border-b-2 border-[#F4F2F1]">
+          <h1 className="font-sans text-4xl md:text-5xl font-bold text-primary-blue mb-4 pb-3 border-b-2 border-structural-gray-blue">
             {pageTitle}
           </h1>
-          <p className="font-serif text-lg md:text-xl text-[#495057] max-w-3xl mt-6">
+          <p className="font-serif text-lg md:text-xl text-text-secondary max-w-3xl mt-6">
             {pageDescription}
           </p>
         </div>

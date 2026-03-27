@@ -26,6 +26,16 @@ const BLOCKED_WIDGETS_BY_TEMPLATE: Record<string, string[]> = {
   ],
 };
 
+/**
+ * Widget types that render in the sidebar column on SUB_TEAM pages.
+ * All other widgets render in the main content area.
+ */
+export const SIDEBAR_WIDGETS = ['subteam_contacts', 'subteam_quick_links'];
+
+export function isSidebarWidget(widgetType: string): boolean {
+  return SIDEBAR_WIDGETS.includes(widgetType);
+}
+
 export function isWidgetAllowedForTemplate(
   widgetType: string,
   template: string

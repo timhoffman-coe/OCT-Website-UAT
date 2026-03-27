@@ -14,10 +14,10 @@ export default function SubTeamInitiativesWidget({ initiatives }: SubTeamInitiat
   if (initiatives.length === 0) return null;
   return (
     <section>
-      <h2 className="font-sans text-xl md:text-2xl font-bold text-primary-blue mb-2 pb-2 border-b-2 border-[#F4F2F1]">
+      <h2 className="font-sans text-xl md:text-2xl font-bold text-primary-blue mb-2 pb-2 border-b-2 border-structural-gray-blue">
         Current Initiatives
       </h2>
-      <p className="font-sans text-gray-600 mb-6">
+      <p className="font-sans text-text-secondary mb-6">
         Key projects currently underway within this portfolio.
       </p>
 
@@ -30,7 +30,7 @@ export default function SubTeamInitiativesWidget({ initiatives }: SubTeamInitiat
             <h3 className="font-sans text-primary-blue font-bold text-lg mb-1">
               {initiative.title}
             </h3>
-            <p className="font-sans text-sm text-gray-600 mb-2">
+            <p className="font-sans text-sm text-text-secondary mb-2">
               {initiative.description}
             </p>
             <Link

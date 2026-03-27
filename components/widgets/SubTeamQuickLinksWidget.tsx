@@ -14,15 +14,15 @@ interface SubTeamQuickLinksWidgetProps {
 export default function SubTeamQuickLinksWidget({ quickLinks }: SubTeamQuickLinksWidgetProps) {
   if (quickLinks.length === 0) return null;
   return (
-    <div className="bg-[#F4F2F1] rounded-md p-5">
-      <h3 className="font-sans font-bold text-gray-900 border-b border-gray-300 pb-2 mb-4">
+    <div className="bg-structural-light-gray rounded-md p-5">
+      <h3 className="font-sans font-bold text-text-dark border-b border-structural-gray-blue pb-2 mb-4">
         Quick Links
       </h3>
       <ul className="space-y-3">
         {quickLinks.map((link, index) => (
           <li
             key={index}
-            className="border-b border-gray-200 pb-3 last:border-0 last:pb-0"
+            className="border-b border-structural-gray-blue pb-3 last:border-0 last:pb-0"
           >
             <a
               href={link.href}
@@ -35,7 +35,7 @@ export default function SubTeamQuickLinksWidget({ quickLinks }: SubTeamQuickLink
                 <ExternalLink className="w-3 h-3" />
               )}
             </a>
-            <span className="font-sans text-xs text-gray-500 block mt-0.5">
+            <span className="font-sans text-xs text-text-secondary block mt-0.5">
               {link.description}
             </span>
           </li>

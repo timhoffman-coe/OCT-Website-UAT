@@ -20,7 +20,7 @@ export default function SubTeamHeaderWidget({
 }: SubTeamHeaderWidgetProps) {
   const Icon = resolveIcon(iconName);
   return (
-    <section className="bg-[#F4F2F1] rounded-lg p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 mb-8">
+    <section className="bg-structural-light-gray rounded-lg p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 mb-8">
       <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center shadow-sm flex-shrink-0">
         {/* eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map */}
         <Icon className="w-10 h-10 text-primary-blue" />
@@ -37,7 +37,7 @@ export default function SubTeamHeaderWidget({
         <h1 className="font-sans text-2xl md:text-3xl font-bold text-primary-blue mb-2">
           {teamName}
         </h1>
-        <p className="font-sans text-gray-600 max-w-3xl">
+        <p className="font-sans text-text-secondary max-w-3xl">
           {description}
         </p>
       </div>

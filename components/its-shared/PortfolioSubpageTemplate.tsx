@@ -61,7 +61,7 @@ export default function PortfolioSubpageTemplate({
       <main>
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           {/* Hero Block */}
-          <section className="bg-[#F4F2F1] rounded-lg p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 mb-8">
+          <section className="bg-structural-light-gray rounded-lg p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 mb-8">
             <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center shadow-sm flex-shrink-0">
               {/* eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map */}
               <Icon className="w-10 h-10 text-primary-blue" />
@@ -70,7 +70,7 @@ export default function PortfolioSubpageTemplate({
               <h1 className="font-sans text-2xl md:text-3xl font-bold text-primary-blue mb-2">
                 {title}
               </h1>
-              <p className="font-sans text-gray-600 max-w-3xl">
+              <p className="font-sans text-text-secondary max-w-3xl">
                 {description}
               </p>
             </div>
@@ -82,10 +82,10 @@ export default function PortfolioSubpageTemplate({
             <div className="lg:col-span-2">
               {/* Our Services */}
               <section className="mb-10">
-                <h2 className="font-sans text-xl md:text-2xl font-bold text-primary-blue mb-2 pb-2 border-b-2 border-[#F4F2F1]">
+                <h2 className="font-sans text-xl md:text-2xl font-bold text-primary-blue mb-2 pb-2 border-b-2 border-structural-gray-blue">
                   Our Services
                 </h2>
-                <p className="font-sans text-gray-600 mb-6">
+                <p className="font-sans text-text-secondary mb-6">
                   We offer end-to-end solutions for business areas. Explore our core capabilities below.
                 </p>
 
@@ -93,12 +93,12 @@ export default function PortfolioSubpageTemplate({
                   {services.map((service, index) => (
                     <div
                       key={index}
-                      className="border border-[#DDE3E6] rounded-md p-5 bg-white hover:border-primary-blue hover:-translate-y-1 hover:shadow-md transition-all duration-200"
+                      className="border border-structural-gray-blue rounded-md p-5 bg-white hover:border-primary-blue hover:-translate-y-1 hover:shadow-md transition-all duration-200"
                     >
                       <h3 className="font-sans text-primary-blue font-bold text-lg mb-3">
                         {service.title}
                       </h3>
-                      <ul className="font-sans text-sm text-gray-600 space-y-1 list-disc list-inside">
+                      <ul className="font-sans text-sm text-text-secondary space-y-1 list-disc list-inside">
                         {service.items.map((item, itemIndex) => (
                           <li key={itemIndex}>{item}</li>
                         ))}
@@ -110,10 +110,10 @@ export default function PortfolioSubpageTemplate({
 
               {/* Current Initiatives */}
               <section>
-                <h2 className="font-sans text-xl md:text-2xl font-bold text-primary-blue mb-2 pb-2 border-b-2 border-[#F4F2F1]">
+                <h2 className="font-sans text-xl md:text-2xl font-bold text-primary-blue mb-2 pb-2 border-b-2 border-structural-gray-blue">
                   Current Initiatives
                 </h2>
-                <p className="font-sans text-gray-600 mb-6">
+                <p className="font-sans text-text-secondary mb-6">
                   Key projects currently underway within this portfolio.
                 </p>
 
@@ -126,7 +126,7 @@ export default function PortfolioSubpageTemplate({
                       <h3 className="font-sans text-primary-blue font-bold text-lg mb-1">
                         {initiative.title}
                       </h3>
-                      <p className="font-sans text-sm text-gray-600 mb-2">
+                      <p className="font-sans text-sm text-text-secondary mb-2">
                         {initiative.description}
                       </p>
                       <Link
@@ -144,8 +144,8 @@ export default function PortfolioSubpageTemplate({
             {/* Sidebar (1/3) */}
             <aside className="space-y-6">
               {/* Key Contacts */}
-              <div className="bg-[#F4F2F1] rounded-md p-5">
-                <h3 className="font-sans font-bold text-gray-900 border-b border-gray-300 pb-2 mb-4">
+              <div className="bg-structural-light-gray rounded-md p-5">
+                <h3 className="font-sans font-bold text-text-dark border-b border-structural-gray-blue pb-2 mb-4">
                   Key Contacts
                 </h3>
                 <div className="space-y-4">
@@ -157,10 +157,10 @@ export default function PortfolioSubpageTemplate({
                         <UserCog className="w-5 h-5 text-primary-blue mt-0.5 flex-shrink-0" />
                       )}
                       <div>
-                        <h4 className="font-sans font-semibold text-sm text-gray-900">
+                        <h4 className="font-sans font-semibold text-sm text-text-dark">
                           {contact.name}
                         </h4>
-                        <span className="font-sans text-xs text-gray-500 block">
+                        <span className="font-sans text-xs text-text-secondary block">
                           {contact.role}
                         </span>
                         <a
@@ -176,15 +176,15 @@ export default function PortfolioSubpageTemplate({
               </div>
 
               {/* Quick Links */}
-              <div className="bg-[#F4F2F1] rounded-md p-5">
-                <h3 className="font-sans font-bold text-gray-900 border-b border-gray-300 pb-2 mb-4">
+              <div className="bg-structural-light-gray rounded-md p-5">
+                <h3 className="font-sans font-bold text-text-dark border-b border-structural-gray-blue pb-2 mb-4">
                   Quick Links
                 </h3>
                 <ul className="space-y-3">
                   {quickLinks.map((link, index) => (
                     <li
                       key={index}
-                      className="border-b border-gray-200 pb-3 last:border-0 last:pb-0"
+                      className="border-b border-structural-gray-blue pb-3 last:border-0 last:pb-0"
                     >
                       <a
                         href={link.href}
@@ -197,7 +197,7 @@ export default function PortfolioSubpageTemplate({
                           <ExternalLink className="w-3 h-3" />
                         )}
                       </a>
-                      <span className="font-sans text-xs text-gray-500 block mt-0.5">
+                      <span className="font-sans text-xs text-text-secondary block mt-0.5">
                         {link.description}
                       </span>
                     </li>

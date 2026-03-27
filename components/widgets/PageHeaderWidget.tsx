@@ -17,7 +17,7 @@ export default function PageHeaderWidget({ teamName, config }: PageHeaderWidgetP
             <h1 className="font-sans text-3xl md:text-4xl font-bold text-primary-blue">
               {teamName}
             </h1>
-            <p className="font-sans text-sm text-gray-600 mt-1">
+            <p className="font-sans text-sm text-text-secondary mt-1">
               {subtitle}
             </p>
           </div>
@@ -29,7 +29,7 @@ export default function PageHeaderWidget({ teamName, config }: PageHeaderWidgetP
           >
             {buttonText}
           </a>
-          <p className="font-sans text-xs text-gray-600">
+          <p className="font-sans text-xs text-text-secondary">
             {phoneText}
           </p>
         </div>

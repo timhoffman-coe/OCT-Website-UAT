@@ -17,7 +17,7 @@ export default function ServiceAreasWidget({ serviceAreas }: ServiceAreasWidgetP
   return (
     <>
       <section>
-        <h2 className="font-sans text-3xl font-bold text-primary-blue mb-8 pb-3 border-b-2 border-[#F4F2F1]">
+        <h2 className="font-sans text-3xl font-bold text-primary-blue mb-8 pb-3 border-b-2 border-structural-gray-blue">
           Our Service Areas
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">

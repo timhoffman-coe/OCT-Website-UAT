@@ -31,7 +31,7 @@ export default function TeamTabs({ tabs }: TeamTabsProps) {
   return (
     <div>
       {/* Tab List */}
-      <div className="flex flex-wrap border-b-2 border-[#DDE3E6] mb-6">
+      <div className="flex flex-wrap border-b-2 border-structural-gray-blue mb-6">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -39,7 +39,7 @@ export default function TeamTabs({ tabs }: TeamTabsProps) {
             className={`font-sans font-semibold text-base px-6 py-3 border-b-3 -mb-[2px] transition-all duration-300 ${
               activeTab === tab.id
                 ? 'text-primary-blue border-primary-blue'
-                : 'text-gray-500 border-transparent hover:text-gray-700 hover:bg-[#F4F2F1]'
+                : 'text-text-secondary border-transparent hover:text-text-dark hover:bg-structural-light-gray'
             }`}
             role="tab"
             aria-selected={activeTab === tab.id}
@@ -64,7 +64,7 @@ export default function TeamTabs({ tabs }: TeamTabsProps) {
             <h3 className="font-sans text-2xl font-bold text-primary-blue mb-2">
               {activeContent.videoTitle}
             </h3>
-            <p className="font-sans text-sm text-gray-600 mb-4">
+            <p className="font-sans text-sm text-text-secondary mb-4">
               {activeContent.videoDescription}
             </p>
             <div className="relative pb-[56.25%] h-0 overflow-hidden rounded-lg bg-black">
@@ -83,7 +83,7 @@ export default function TeamTabs({ tabs }: TeamTabsProps) {
             <h3 className="font-sans text-2xl font-bold text-primary-blue mb-2">
               {activeContent.diagramsTitle}
             </h3>
-            <p className="font-sans text-sm text-gray-600 mb-6">
+            <p className="font-sans text-sm text-text-secondary mb-6">
               {activeContent.diagramsDescription}
             </p>
             <ul className="space-y-3">
@@ -91,7 +91,7 @@ export default function TeamTabs({ tabs }: TeamTabsProps) {
                 <li key={index}>
                   <a
                     href={link.href}
-                    className="flex justify-between items-center bg-[#F4F2F1] border-2 border-[#DDE3E6] p-4 rounded font-sans font-semibold text-gray-900 hover:bg-[#DDE3E6] hover:translate-x-1 transition-all duration-300"
+                    className="flex justify-between items-center bg-structural-light-gray border-2 border-structural-gray-blue p-4 rounded font-sans font-semibold text-text-dark hover:bg-structural-gray-blue hover:translate-x-1 transition-all duration-300"
                   >
                     <span>{link.label}</span>
                     <ArrowRight className="w-5 h-5 text-primary-blue" aria-hidden="true" />

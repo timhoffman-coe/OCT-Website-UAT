@@ -30,11 +30,11 @@ export default function KeyInitiativesWidget({ slides }: { slides: KeyInitiative
   return (
     <section className="bg-white py-16 sm:py-20">
       <div className="max-w-5xl mx-auto">
-        <h2 className="font-sans text-3xl font-bold text-center text-gray-900 mb-12">
+        <h2 className="font-sans text-3xl font-bold text-center text-text-dark mb-12">
           Key Initiatives Spotlight
         </h2>
 
-        <div className="relative max-w-4xl mx-auto overflow-hidden rounded-lg shadow-xl bg-gray-900">
+        <div className="relative max-w-4xl mx-auto overflow-hidden rounded-lg shadow-xl bg-dark-blue">
           {/* Carousel Track */}
           <div
             className="flex transition-transform duration-500 ease-in-out"
@@ -58,7 +58,7 @@ export default function KeyInitiativesWidget({ slides }: { slides: KeyInitiative
                   <h3 className="font-sans text-3xl font-bold text-white">
                     {slide.title}
                   </h3>
-                  <p className="font-serif text-lg text-gray-200 mt-3 max-w-2xl">
+                  <p className="font-serif text-lg text-peaceful-light-blue mt-3 max-w-2xl">
                     {slide.description}
                   </p>
                 </div>

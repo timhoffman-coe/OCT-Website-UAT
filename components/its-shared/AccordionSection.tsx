@@ -34,20 +34,20 @@ export default function AccordionSection({ items }: AccordionSectionProps) {
   };
 
   return (
-    <div className="border-t border-[#DDE3E6]">
+    <div className="border-t border-structural-gray-blue">
       {items.map((item) => {
         const isOpen = openItems.has(item.id);
         return (
-          <div key={item.id} className="border-b border-[#DDE3E6]">
+          <div key={item.id} className="border-b border-structural-gray-blue">
             <button
               onClick={() => toggleItem(item.id)}
-              className="w-full text-left px-4 py-5 flex justify-between items-center font-sans text-lg font-semibold text-gray-900 hover:bg-[#F4F2F1] transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00BFFF] focus-visible:ring-offset-2"
+              className="w-full text-left px-4 py-5 flex justify-between items-center font-sans text-lg font-semibold text-text-dark hover:bg-structural-light-gray transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-process-blue focus-visible:ring-offset-2"
               aria-expanded={isOpen}
               aria-controls={`accordion-content-${item.id}`}
             >
               <span>{item.title}</span>
               <ChevronDown
-                className={`w-5 h-5 text-gray-600 transition-transform duration-300 ${
+                className={`w-5 h-5 text-text-secondary transition-transform duration-300 ${
                   isOpen ? 'rotate-180' : ''
                 }`}
                 aria-hidden="true"
@@ -59,7 +59,7 @@ export default function AccordionSection({ items }: AccordionSectionProps) {
                 isOpen ? 'max-h-[1000px]' : 'max-h-0'
               }`}
             >
-              <ul className="bg-[#F4F2F1] py-4 px-8 pl-12 list-disc">
+              <ul className="bg-structural-light-gray py-4 px-8 pl-12 list-disc">
                 {item.links.map((link, index) => (
                   <li key={index} className="mb-3 last:mb-0">
                     <a

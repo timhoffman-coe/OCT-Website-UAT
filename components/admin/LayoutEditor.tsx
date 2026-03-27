@@ -1,6 +1,6 @@
 'use client';
 
-import { isWidgetAllowedForTemplate } from '@/lib/widget-template-map';
+import { isWidgetAllowedForTemplate, isSidebarWidget } from '@/lib/widget-template-map';
 import { useState, useTransition, useRef, useEffect, useCallback, useId } from 'react';
 import {
   DndContext,
@@ -350,6 +350,60 @@ const WIDGET_PREVIEWS: Record<string, WidgetPreviewInfo> = {
       'Dot indicators for slide navigation',
     ],
     schematic: 'full-width',
+  },
+  subteam_header: {
+    description:
+      'A hero block with the team icon, name, description, and a breadcrumb link back to the parent team. Renders full-width above the main content.',
+    layoutType: 'Full-width hero',
+    contents: [
+      'Back link to parent team',
+      'Team icon in a circular badge',
+      'Team name heading',
+      'Team description text',
+    ],
+    schematic: 'full-width',
+  },
+  subteam_services: {
+    description:
+      'A 2-column grid of service cards, each with a title and a bulleted list of capabilities. Renders in the main content area.',
+    layoutType: '2-column card grid (main area)',
+    contents: [
+      '"Our Services" section heading',
+      'Service cards with title and bullet items',
+    ],
+    schematic: '2-col',
+  },
+  subteam_initiatives: {
+    description:
+      'A vertical list of current initiatives with titles, descriptions, and links to project docs. Renders in the main content area.',
+    layoutType: 'Stacked list (main area)',
+    contents: [
+      '"Current Initiatives" section heading',
+      'Initiative entries with blue left border',
+      'Links to project documentation',
+    ],
+    schematic: 'accordion',
+  },
+  subteam_contacts: {
+    description:
+      'A sidebar card showing key contacts with names, roles, and email links. Renders in the right sidebar.',
+    layoutType: 'Sidebar card',
+    contents: [
+      '"Key Contacts" heading',
+      'Contact entries with icon, name, role, and email',
+    ],
+    schematic: 'card',
+  },
+  subteam_quick_links: {
+    description:
+      'A sidebar card with a list of quick links and descriptions. Renders in the right sidebar.',
+    layoutType: 'Sidebar card',
+    contents: [
+      '"Quick Links" heading',
+      'Link entries with label and description',
+      'External/secure link indicators',
+    ],
+    schematic: 'card',
   },
 };
 
@@ -1491,8 +1545,12 @@ export default function LayoutEditor({
               items={instances.map((i) => i.id)}
               strategy={verticalListSortingStrategy}
             >
-              <div className="space-y-4">
-                {instances.map((instance) => (
+              {(() => {
+                const mainInstances = instances.filter((i) => !isSidebarWidget(i.widgetDefinition.widgetType));
+                const sidebarInstances = instances.filter((i) => isSidebarWidget(i.widgetDefinition.widgetType));
+                const hasSidebar = sidebarInstances.length > 0;
+
+                const renderItem = (instance: typeof instances[number]) => (
                   <SortableWidgetItem
                     key={instance.id}
                     instance={instance}
@@ -1520,8 +1578,37 @@ export default function LayoutEditor({
                     keyInitiativeSlides={keyInitiativeSlides}
                     readOnly={readOnly}
                   />
-                ))}
-              </div>
+                );
+
+                if (!hasSidebar) {
+                  return (
+                    <div className="space-y-4">
+                      {instances.map(renderItem)}
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div className="lg:col-span-2 space-y-4">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="h-px flex-1 bg-gray-200" />
+                        <span className="font-sans text-xs font-semibold text-gray-400 uppercase tracking-wider">Main Content</span>
+                        <div className="h-px flex-1 bg-gray-200" />
+                      </div>
+                      {mainInstances.map(renderItem)}
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="h-px flex-1 bg-gray-200" />
+                        <span className="font-sans text-xs font-semibold text-gray-400 uppercase tracking-wider">Sidebar</span>
+                        <div className="h-px flex-1 bg-gray-200" />
+                      </div>
+                      {sidebarInstances.map(renderItem)}
+                    </div>
+                  </div>
+                );
+              })()}
             </SortableContext>
           </DndContext>
         )}
