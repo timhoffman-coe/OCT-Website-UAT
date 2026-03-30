@@ -62,7 +62,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/dompurify": "^3.0.5",
     "@types/mssql": "^9.1.9",
-    "@types/node": "^20",
+    "@types/node": "^20.19.37",
     "@types/pdf-parse": "^1.1.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
