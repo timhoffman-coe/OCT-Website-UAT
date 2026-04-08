@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
-import { clientsClaim } from 'workbox-core';
-import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
+import { clientsClaim, WorkboxPlugin } from 'workbox-core';
+import { cleanupOutdatedCaches } from 'workbox-precaching';
 import { registerRoute, setCatchHandler } from 'workbox-routing';
 import { CacheFirst, NetworkFirst, StaleWhileRevalidate, NetworkOnly } from 'workbox-strategies';
 import { ExpirationPlugin } from 'workbox-expiration';
@@ -10,10 +10,17 @@ declare const self: ServiceWorkerGlobalScope;
 
 self.skipWaiting();
 clientsClaim();
-
-// Precache build assets injected by workbox-webpack-plugin
-precacheAndRoute(self.__WB_MANIFEST || []);
 cleanupOutdatedCaches();
+
+// Plugin that prevents caching IAP auth redirects
+const iapGuardPlugin: WorkboxPlugin = {
+  cacheWillUpdate: async ({ response }) => {
+    if (response.redirected && new URL(response.url).origin !== self.location.origin) {
+      return null;
+    }
+    return response;
+  },
+};
 
 // Admin routes — never cache (authenticated content behind IAP)
 registerRoute(
@@ -24,7 +31,7 @@ registerRoute(
 // API routes — network first with fallback to cache
 registerRoute(
   ({ url, sameOrigin }) => sameOrigin && url.pathname.startsWith('/api/'),
-  new NetworkFirst({ cacheName: 'api-cache', networkTimeoutSeconds: 10 })
+  new NetworkFirst({ cacheName: 'api-cache', networkTimeoutSeconds: 10, plugins: [iapGuardPlugin] })
 );
 
 // Images — cache first, 30-day expiry
@@ -33,7 +40,8 @@ registerRoute(
   new CacheFirst({
     cacheName: 'images',
     plugins: [
-      new CacheableResponsePlugin({ statuses: [0, 200] }),
+      iapGuardPlugin,
+      new CacheableResponsePlugin({ statuses: [200] }),
       new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 30 * 24 * 60 * 60 }),
     ],
   })
@@ -60,14 +68,14 @@ registerRoute(
 // Pages — network first
 registerRoute(
   ({ request }) => request.mode === 'navigate',
-  new NetworkFirst({ cacheName: 'pages', networkTimeoutSeconds: 5 })
+  new NetworkFirst({ cacheName: 'pages', networkTimeoutSeconds: 5, plugins: [iapGuardPlugin] })
 );
 
 // Static assets (JS, CSS) — stale while revalidate
 registerRoute(
   ({ request }) =>
     request.destination === 'script' || request.destination === 'style',
-  new StaleWhileRevalidate({ cacheName: 'static-assets' })
+  new StaleWhileRevalidate({ cacheName: 'static-assets', plugins: [iapGuardPlugin] })
 );
 
 // Offline fallback for failed navigation requests
