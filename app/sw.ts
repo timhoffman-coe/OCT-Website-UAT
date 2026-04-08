@@ -10,6 +10,11 @@ declare const self: ServiceWorkerGlobalScope;
 
 self.skipWaiting();
 clientsClaim();
+
+// Required by InjectManifest plugin — referenced but not precached behind IAP
+const _manifest = self.__WB_MANIFEST;
+void _manifest;
+
 cleanupOutdatedCaches();
 
 // Plugin that prevents caching IAP auth redirects
