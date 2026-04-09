@@ -67,7 +67,7 @@ Each team has a `pageTemplate` that determines what content types it supports:
 
 ### Widget System
 
-Pages use a widget-based layout system. Each team has a set of `WidgetInstance` records that control which content sections appear and in what order. There are 17 widget types:
+Pages use a widget-based layout system. Each team has a set of `WidgetInstance` records that control which content sections appear and in what order. There are 16 widget types:
 
 | Widget Type | Label | Template | Description |
 |-------------|-------|----------|-------------|
@@ -264,7 +264,9 @@ Audit logs can be viewed at `/admin/audit-log` and exported to JSON or CSV. A re
 
 ## Media Handling
 
-The CMS does **not** include file upload functionality. Images are referenced by URL (e.g., `KeyInitiativeSlide.imageUrl`). External resources like Trello boards, videos, and diagrams are stored as links.
+Most images and media are referenced by URL (e.g., `KeyInitiativeSlide.imageUrl`). External resources like Trello boards, videos, and diagrams are stored as links.
+
+The one exception is **news post images**, which support direct file upload via `POST /api/cms/news/upload-image`. Uploaded images are stored in `public/images/news/` with timestamped filenames (PNG, JPEG, WebP; max 5 MB).
 
 ## Key Files
 

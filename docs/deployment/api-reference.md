@@ -1,6 +1,6 @@
 # API Reference
 
-This application exposes 21 API routes grouped by feature area. All routes use the `GET` method unless noted otherwise.
+This application exposes 23 API routes grouped by feature area. All routes use the `GET` method unless noted otherwise.
 
 ## Health & Status
 
@@ -300,7 +300,7 @@ Reads the main checklist markdown from `content/oct-web-dev.md` on disk.
 
 Reads a documentation file by slug. Only whitelisted slugs are allowed — returns 404 for unknown slugs.
 
-**Available slugs:** `cicd-pipeline`, `prisma-migration-workflow`, `cms-overview`, `api-reference`, `architecture-overview`, `development-setup`, `deployment-guide`, `cms-admin-guide`
+**Available slugs:** `cicd-pipeline`, `prisma-migration-workflow`, `cms-overview`, `api-reference`, `architecture-overview`, `development-setup`, `deployment-guide`, `cms-admin-guide`, `testing`, `environment-variables`, `ai-assistant`, `widget-system`, `service-health`, `data-portal`
 
 ```json
 {
@@ -434,19 +434,57 @@ Returns 400 if year is invalid.
 
 ---
 
+## Analytics
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| GET | `/api/track-view` | Public | Record a page view |
+
+### GET /api/track-view
+
+Fire-and-forget endpoint called by `proxy.ts` to record page views. Accepts path, teamSlug, userAgent, and referrer as query parameters. Stores records in the `PageView` table. Views older than 90 days are automatically cleaned up.
+
+**Query parameters:**
+
+| Param | Description |
+|-------|-------------|
+| `path` | Page path (e.g., `/data-technology`) |
+| `teamSlug` | Team slug for team pages |
+| `userAgent` | Browser user agent string |
+| `referrer` | Referrer URL |
+
+---
+
+## News Image Upload
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/cms/news/upload-image` | requireNewsAccess | Upload news post image |
+
+### POST /api/cms/news/upload-image
+
+Uploads an image for use in news posts. Accepts multipart form data with an `image` field. Stores images in `public/images/news/` with timestamped filenames.
+
+- Accepted types: PNG, JPEG, WebP
+- Max size: 5 MB
+- Returns the public URL path of the uploaded image
+
+---
+
 ## Authentication Summary
 
 | Auth Level | Routes | Description |
 |-----------|--------|-------------|
-| Public | 15 | No authentication required |
+| Public | 16 | No authentication required |
 | requireUser | 2 | Authenticated user; role-based filtering |
 | requireTeamAccess | 1 | SUPER_ADMIN or TEAM_ADMIN with team permission |
 | requireSuperAdmin | 2 | SUPER_ADMIN role only |
 | requireOctWebDevAccess | 2 | SUPER_ADMIN or user with OctWebDevPermission |
+| requireNewsAccess | 1 | SUPER_ADMIN or user with NewsPermission |
 
 ## Rate Limiting
 
-Rate limits are enforced in `middleware.ts` using an in-memory per-IP tracker.
+Rate limits are enforced in `proxy.ts` using an in-memory per-IP tracker.
 
 | Endpoint | Limit | Window |
 |----------|-------|--------|
@@ -456,12 +494,13 @@ Rate limits are enforced in `middleware.ts` using an in-memory per-IP tracker.
 
 Exceeding the limit returns **429 Too Many Requests**.
 
-## Middleware
+## Request Interceptor (proxy.ts)
 
-The middleware runs on these paths: `/admin/*`, `/api/cms/*`, `/api/chat`, `/api/admin-login`, `/api/log-error`.
+`proxy.ts` runs on all request paths except static assets (`_next/static`, `_next/image`, `favicon.ico`, `icons/`, `images/`, `manifest.json`).
 
 It handles:
 - **Correlation IDs** — generated or propagated via `x-correlation-id` header
 - **Rate limiting** — per-IP tracking with automatic stale entry cleanup (>10,000 entries)
 - **Authentication** — IAP JWT verification (production) or dev bypass with optional password gate
+- **Page view tracking** — fire-and-forget analytics for public pages (non-admin, non-API)
 - **IP extraction** — reads `x-real-ip` (GCP load balancer), falls back to `x-forwarded-for`

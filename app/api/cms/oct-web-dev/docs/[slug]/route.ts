@@ -15,6 +15,11 @@ const ALLOWED_DOCS: Record<string, string> = {
   'deployment-guide': 'docs/deployment/deployment-guide.md',
   'cms-admin-guide': 'docs/deployment/cms-admin-guide.md',
   'testing': 'docs/deployment/testing.md',
+  'environment-variables': 'docs/deployment/environment-variables.md',
+  'ai-assistant': 'docs/deployment/ai-assistant.md',
+  'widget-system': 'docs/deployment/widget-system.md',
+  'service-health': 'docs/deployment/service-health.md',
+  'data-portal': 'docs/deployment/data-portal.md',
 };
 
 export async function GET(

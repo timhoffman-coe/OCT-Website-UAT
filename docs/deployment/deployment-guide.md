@@ -11,6 +11,17 @@
 | Auth | Google Cloud IAP |
 | Database | PostgreSQL 16 (user: `coe_admin`, database: `coe_cms`) |
 
+## Pre-Deployment Checklist
+
+Before deploying, verify:
+
+- [ ] All changes are committed and pushed to the repository
+- [ ] Any new Prisma migrations are committed in `prisma/migrations/`
+- [ ] `npm run lint` passes locally
+- [ ] `npm run build` succeeds locally (catches TypeScript and build errors)
+- [ ] You are logged in to GitHub Container Registry (`docker login ghcr.io`)
+- [ ] Production server has sufficient disk space (`df -h` — Docker images are ~500MB each)
+
 ## Deployment Process
 
 ### Standard deploy (no schema changes)
@@ -45,6 +56,17 @@
 `prisma migrate deploy` applies pending migrations. It is safe to run when there are no pending migrations.
 
 For detailed CI/CD steps including prerequisites, GitHub Container Registry setup, and image tagging, see the CI/CD Pipeline document. For migration procedures and rollback strategies, see the Prisma Migration Workflow document.
+
+## Post-Deployment Verification
+
+After deploying, run through these checks:
+
+1. **Health endpoint**: `curl http://localhost:3000/api/health` — should return `"status": "healthy"`
+2. **Container status**: `docker compose ps` — all three containers should be `Up (healthy)`
+3. **Public pages**: Spot-check a few public pages in the browser (home page, a team page)
+4. **Admin panel**: Navigate to `/admin` and verify you can log in and see the dashboard
+5. **Recent logs**: `docker compose logs app --tail 50` — check for errors or warnings
+6. **Migration status**: `docker exec nextjs-site-app-1 prisma migrate status` — no pending migrations
 
 ## Health Checks
 

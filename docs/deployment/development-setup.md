@@ -165,3 +165,66 @@ If you prefer to run without Docker:
    ```
 
 The app will be available at `http://localhost:3000`.
+
+## Troubleshooting
+
+### Docker container won't start / crashes on startup
+
+```bash
+# Check container logs
+docker compose -f docker-compose.dev.yml logs app
+
+# If Prisma client is out of date after pulling new changes
+docker compose -f docker-compose.dev.yml exec app npx prisma generate
+docker compose -f docker-compose.dev.yml restart app
+```
+
+### Database connection errors
+
+The app container waits for PostgreSQL to be healthy, but occasionally the timing can be tight:
+
+```bash
+# Restart just the app container
+docker compose -f docker-compose.dev.yml restart app
+
+# If the database is corrupted, reset it
+docker compose -f docker-compose.dev.yml down -v  # removes volumes!
+docker compose -f docker-compose.dev.yml up
+```
+
+### Port 3000 or 5432 already in use
+
+```bash
+# Find what's using the port
+lsof -i :3000
+# or on Linux
+ss -tlnp | grep 3000
+```
+
+Stop the conflicting process, or change the port mapping in `docker-compose.dev.yml`.
+
+### File changes not triggering hot reload
+
+- Docker uses `WATCHPACK_POLLING=true` for file watching inside containers. If changes still aren't detected, restart the app container.
+- On WSL2, ensure your project is on the Linux filesystem (not `/mnt/c/...`) for reliable file watching.
+
+### `node_modules` issues after pulling new changes
+
+The `node_modules` directory is excluded from the Docker volume mount to avoid host/container conflicts. If dependencies change:
+
+```bash
+docker compose -f docker-compose.dev.yml down
+docker compose -f docker-compose.dev.yml build --no-cache app
+docker compose -f docker-compose.dev.yml up
+```
+
+### Prisma client errors ("Cannot find module @prisma/client")
+
+```bash
+docker compose -f docker-compose.dev.yml exec app npx prisma generate
+docker compose -f docker-compose.dev.yml restart app
+```
+
+### AI/MSSQL/Service Health features not working
+
+These features require additional environment variables not set by default. See the Environment Variables Reference for the full list. Add them to `.env.local` if needed — Docker Compose will pick them up.

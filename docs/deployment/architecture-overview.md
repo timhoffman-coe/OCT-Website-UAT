@@ -26,35 +26,45 @@ app/
   [teamSlug]/             Dynamic CMS team pages
   [teamSlug]/[subTeamSlug]/  Sub-team pages
   admin/                  CMS admin interface
-  api/                    API routes (21 endpoints)
+  api/                    API routes (23 endpoints)
+  oct-assistant/          AI assistant page and services
   layout.tsx              Root layout (fonts, metadata, PWA)
   globals.css             Tailwind + custom styles
 
 components/
-  admin/                  CMS editor components (21 files)
-  widgets/                Public-facing widget renderers
+  admin/                  CMS editor components (30 files)
+  widgets/                Public-facing widget renderers (16 types)
   Header.tsx, Footer.tsx  Shared layout components
 
 lib/
   actions/                Server actions (CRUD operations)
   data/                   Data fetching utilities
+  service-health/         Service health API client and types
   hooks/                  React hooks
   auth.ts                 Authentication & authorization
   audit.ts                Audit logging
   prisma.ts               Prisma client with pg adapter
-  logger.ts               Structured logging
-  env.ts                  Environment validation
+  logger.ts               Structured logging (GCP Cloud Logging compatible)
+  env.ts                  Environment validation (Zod schema)
   mssql.ts                MSSQL connection pool
+  news.ts                 File-based news CMS
+  iap-verify.ts           Google IAP JWT verification
+  feature-flags.ts        Feature flag configuration
+  page-views.ts           Analytics recording and cleanup
 
 prisma/
   schema.prisma           Data model definition
-  migrations/             Migration files
+  migrations/             Migration files (11 migrations)
   seed.ts                 Database seeding
 
-content/                  Static markdown files
+content/
+  news/                   Markdown news post files
+  oct-web-dev.md          OCT Web Dev checklist
+
 docs/                     Project documentation
 public/                   Static assets, PWA manifest
-middleware.ts             Auth, rate limiting, correlation IDs
+proxy.ts                  Auth, rate limiting, analytics, correlation IDs
+entrypoint.js             Production secret fetching from GCP Secret Manager
 ```
 
 ## Frontend Architecture
@@ -70,7 +80,7 @@ All CMS pages use `force-dynamic` (no static generation) so content changes are 
 
 ### Widget System
 
-Page layout is driven by `WidgetInstance` records in the database. Each team has a set of widgets that control which content sections appear and in what order. There are 16 widget types (e.g., `page_header`, `portfolios`, `service_areas`, `team_members`). Widgets can be reordered via drag-and-drop in the admin panel.
+Page layout is driven by `WidgetInstance` records in the database. Each team has a set of widgets that control which content sections appear and in what order. There are 16 widget types (e.g., `page_header`, `portfolios`, `service_areas`, `team_members`). Widgets can be reordered via drag-and-drop in the admin panel. Widget availability is controlled per page template via a blocklist — see the Widget System document for full details.
 
 ### Fonts
 
@@ -83,7 +93,7 @@ Loaded via Google Fonts with `next/font` optimization.
 
 ### API Routes
 
-21 API endpoints under `app/api/` handle health checks, authentication, AI chat, CMS data, service health, and Data Portal queries. See the API Reference document for full details.
+23 API endpoints under `app/api/` handle health checks, authentication, AI chat, CMS data, service health, and Data Portal queries. See the API Reference document for full details.
 
 ### Server Actions
 
@@ -94,13 +104,15 @@ Located in `lib/actions/`. Handle all content CRUD operations (teams, portfolios
 4. Logs the change to the audit trail
 5. Calls `revalidatePath()` to refresh public pages
 
-### Middleware
+### Request Interceptor (proxy.ts)
 
-`middleware.ts` runs on `/admin/*`, `/api/cms/*`, `/api/chat`, `/api/admin-login`, and `/api/log-error`. It handles:
+`proxy.ts` is the Next.js request interceptor (replacing the older `middleware.ts` pattern in Next.js 16). It runs on all requests except static assets. It handles:
 
 1. **Correlation IDs** — generates or propagates `x-correlation-id` for request tracing
-2. **Rate limiting** — per-IP in-memory tracking (chat: 20/min, login: 5/min, error: 10/min)
-3. **Authentication** — IAP JWT verification (production) or dev bypass
+2. **Rate limiting** — per-IP in-memory tracking (chat: 20/min, login: 5/min, error: 10/min) with automatic stale entry cleanup (>10,000 entries)
+3. **Authentication** — IAP JWT verification (production) or dev bypass with optional password gate
+4. **Page view tracking** — fire-and-forget analytics for public pages (non-admin, non-API)
+5. **IP extraction** — reads `x-real-ip` (GCP load balancer), falls back to `x-forwarded-for`
 
 ## Database Layer
 
@@ -158,7 +170,7 @@ In development, an optional password gate (`ADMIN_PASSWORD` env var) provides a 
 | `tsconfig.json` | ES2022 target, strict mode, `@/*` path alias |
 | `eslint.config.mjs` | Next.js core web vitals + TypeScript rules |
 | `postcss.config.mjs` | Tailwind CSS 4 via `@tailwindcss/postcss` |
-| `middleware.ts` | Auth, rate limiting, correlation IDs |
+| `proxy.ts` | Auth, rate limiting, page view tracking, correlation IDs |
 | `docker-compose.dev.yml` | Local development environment |
 | `docker-compose.yml` | Production environment |
 | `Dockerfile` | Multi-stage production build |
