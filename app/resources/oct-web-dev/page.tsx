@@ -9,15 +9,22 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const DOCUMENTS = [
-  { slug: 'cicd-pipeline', title: 'CI/CD Pipeline', description: 'Local build to GCP production deployment' },
-  { slug: 'prisma-migration-workflow', title: 'Prisma Migrations', description: 'Schema change lifecycle and rollback procedures' },
-  { slug: 'cms-overview', title: 'CMS Overview', description: 'How the content management system works' },
-  { slug: 'api-reference', title: 'API Reference', description: 'Complete reference for all API routes' },
   { slug: 'architecture-overview', title: 'Architecture Overview', description: 'System architecture, directory structure, and tech stack' },
+  { slug: 'cms-overview', title: 'CMS Overview', description: 'How the content management system works' },
+  { slug: 'widget-system', title: 'Widget System', description: 'Widget types, template blocklist, and how to add new widgets' },
+  { slug: 'projects-system', title: 'Projects System', description: 'Project pages, widget editors, permissions, and tags' },
+  { slug: 'cms-admin-guide', title: 'CMS Admin Guide', description: 'User guide for content editors' },
+  { slug: 'api-reference', title: 'API Reference', description: 'Complete reference for all API routes' },
   { slug: 'development-setup', title: 'Development Setup', description: 'Local dev environment and tooling guide' },
   { slug: 'deployment-guide', title: 'Deployment Guide', description: 'Production deployment and operations' },
-  { slug: 'cms-admin-guide', title: 'CMS Admin Guide', description: 'User guide for content editors' },
+  { slug: 'cicd-pipeline', title: 'CI/CD Pipeline', description: 'Local build to GCP production deployment' },
+  { slug: 'prisma-migration-workflow', title: 'Prisma Migrations', description: 'Schema change lifecycle and rollback procedures' },
+  { slug: 'secret-management', title: 'Secret Management', description: 'Google Secret Manager setup and credential rotation' },
+  { slug: 'environment-variables', title: 'Environment Variables', description: 'Complete reference for all env vars and feature flags' },
   { slug: 'testing', title: 'Testing', description: 'Test framework, conventions, and how to run tests' },
+  { slug: 'ai-assistant', title: 'AI Assistant', description: 'Gemini chat integration, Drive context, and circuit breaker' },
+  { slug: 'service-health', title: 'Service Health', description: 'Uptrends API integration, status mapping, and caching' },
+  { slug: 'data-portal', title: 'Data Portal', description: 'MSSQL integration, NTLM auth, and budget/incident queries' },
 ];
 
 const TABS = [
