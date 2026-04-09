@@ -55,6 +55,7 @@ export default function UserManagementClient({
   const [editing, setEditing] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     email: '',
     name: '',
@@ -82,33 +83,48 @@ export default function UserManagementClient({
   }
 
   function handleSave(userId: string) {
+    setError(null);
     startTransition(async () => {
-      await updateUser(userId, {
-        name: form.name,
-        role: form.role,
-        teamIds: form.teamIds,
-      });
-      setEditing(null);
+      try {
+        await updateUser(userId, {
+          name: form.name,
+          role: form.role,
+          teamIds: form.teamIds,
+        });
+        setEditing(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to update user');
+      }
     });
   }
 
   function handleCreate() {
+    setError(null);
     startTransition(async () => {
-      await createUser({
-        email: form.email,
-        name: form.name,
-        role: form.role,
-        teamIds: form.teamIds,
-      });
-      setAdding(false);
-      setForm({ email: '', name: '', role: 'VIEWER', teamIds: [] });
+      try {
+        await createUser({
+          email: form.email,
+          name: form.name,
+          role: form.role,
+          teamIds: form.teamIds,
+        });
+        setAdding(false);
+        setForm({ email: '', name: '', role: 'VIEWER', teamIds: [] });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to create user');
+      }
     });
   }
 
   function handleDelete(userId: string) {
     if (!confirm('Delete this user?')) return;
+    setError(null);
     startTransition(async () => {
-      await deleteUser(userId);
+      try {
+        await deleteUser(userId);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to delete user');
+      }
     });
   }
 
@@ -344,6 +360,13 @@ export default function UserManagementClient({
           <Plus className="w-4 h-4" /> Add User
         </button>
       </div>
+
+      {error && (
+        <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
+          <span className="text-red-600 font-sans text-sm flex-1">{error}</span>
+          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600 text-sm font-bold">✕</button>
+        </div>
+      )}
 
       <div className="space-y-3">
         {adding && (
