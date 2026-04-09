@@ -21,10 +21,13 @@ The left sidebar organizes content hierarchically:
 
 - **Dashboard** — link to the main dashboard
 - **Teams** — expandable tree showing sections, teams, and sub-teams. The tree auto-expands to show the page you're currently viewing.
+- **News** — news post management (requires news editor permission)
 - **Administration** (SUPER_ADMIN and TEAM_ADMIN only):
   - User Management
+  - News Editors (SUPER_ADMIN only)
   - Roadmap Editors (SUPER_ADMIN only)
   - OCT-Web-Dev Viewers (SUPER_ADMIN only)
+  - Page Analytics
   - Audit Log (SUPER_ADMIN only)
   - Trash (SUPER_ADMIN only)
 
@@ -69,9 +72,11 @@ Different team types support different content:
 
 - **Portfolios** — cards that link to sub-team pages. Each has an icon, title, and description.
 - **Team Tabs** — tabbed content sections with video embeds and diagram links
-- **Trello Boards** — links to external Trello boards
+- **Accordion Links** — collapsible accordion groups of categorized links. Create groups, then add individual links within each group.
+- **Work Tracking Boards** — links to external boards (Trello, etc.)
+- **Ongoing Projects** — hero block highlighting current projects with a call-to-action button (configured via widget settings)
+- **Budget & Spend** — budget overview card with link to financial reports (configured via widget settings)
 - **Team Members** — staff cards with name, title, and email
-- **Accordion Links** — collapsible sections with grouped links
 
 ### SUB_TEAM pages (detail pages under a team)
 
@@ -147,6 +152,7 @@ Click a user card to change their role or team assignments. TEAM_ADMIN users can
 
 ### Special permissions
 
+- **News Editors** — go to the News Editors page to grant or revoke news post editing access
 - **Roadmap Editors** — go to the Roadmap Editors page to grant or revoke roadmap editing access
 - **OCT-Web-Dev Viewers** — go to the OCT-Web-Dev Viewers page to control who can see the development documentation
 
@@ -178,3 +184,80 @@ Teams have a **Published** or **Draft** status:
 - **Draft** — the team exists in the CMS but is not shown publicly
 
 Toggle the status from the team editor header. New teams default to Draft.
+
+## News Posts
+
+The CMS includes a news management system for publishing articles on the public site. Access requires a News Editor permission (granted by Super Admins) or the Super Admin role.
+
+### Viewing News
+
+Navigate to **News** in the sidebar. The news list shows:
+- Statistics: total posts, published count, draft count
+- Featured post displayed as a hero banner
+- All other posts in a card grid with category badge, status, title, author, and date
+
+### Creating a Post
+
+1. Go to the News page and click **New Post**
+2. Fill in the required fields:
+   - **Title** — the article headline
+   - **Author** — who wrote the article
+   - **Category** — choose one: Strategy, Infrastructure, Community, or Spotlight
+   - **Publish Date** — when the article should be dated
+3. Optionally add:
+   - **Description** — short summary shown on cards and in search results
+   - **Hero Image** — drag-and-drop or click to upload (PNG, JPG, WebP, max 5 MB)
+   - **Featured** toggle — highlights this post on the news list (only one post can be featured at a time)
+4. Write the article body using the rich text editor (supports headings, bold, italic, lists, block quotes, links)
+5. Click **Save Draft** to save without publishing, or **Publish** to make it live
+
+### Editing a Post
+
+Click any post card on the news list to open the editor. Make changes and save.
+
+### Publishing and Unpublishing
+
+- From the news list, click the publish/unpublish button on any post card
+- From the editor, use the **Publish** or **Save Draft** buttons
+- Draft posts are hidden from the public site
+
+### Managing News Editors (SUPER_ADMIN)
+
+1. Go to **News Editors** in the Administration section
+2. Select a user from the dropdown and click **Add**
+3. To revoke access, click the remove button next to an editor's name
+
+## Page Analytics
+
+The analytics dashboard at `/admin/analytics` shows page view metrics for the public site:
+
+- **Views (Last 30 Days)** and **Views (Last 7 Days)** — summary counts
+- **Daily Page Views** — area chart showing traffic over the last 30 days
+- **Top Pages** — the 10 most-visited paths
+- **Top Teams** — the 10 most-visited team pages
+- **Recent Views** — the 50 most recent page views with timestamp, path, team, and referrer
+
+Page views are tracked automatically by the server on every public page load. No configuration is needed. Views older than 90 days are automatically cleaned up.
+
+## Team Change History
+
+Each team editor includes a collapsible **Change History** panel at the bottom. Expanding it shows the most recent changes to that team:
+
+- Action type (Create, Update, Delete, Archive, Restore) with color-coded badges
+- Who made the change
+- When it happened
+- Expandable details showing the JSON diff of what changed
+
+This is a filtered view of the full audit log, scoped to the specific team.
+
+## Special Permission Pages (SUPER_ADMIN)
+
+### Roadmap Editors
+
+Go to **Roadmap Editors** in the Administration section to manage who can edit the Technology Roadmap. Add or remove editors using the same interface as News Editors.
+
+### OCT-Web-Dev Viewers
+
+Go to **OCT-Web-Dev Viewers** in the Administration section to manage who can view the OCT-Web-Dev documentation pages. Add or remove viewers using the same interface.
+
+In both cases, Super Admins automatically have access without needing an explicit permission.

@@ -122,8 +122,26 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  // Only protect admin and CMS API routes
+  // Public pages: track the view and pass through
   if (!path.startsWith('/admin') && !path.startsWith('/api/cms')) {
+    // Fire-and-forget page view tracking via internal API
+    if (!path.startsWith('/api/') && !path.startsWith('/_next/')) {
+      const teamSlug = path.split('/').filter(Boolean)[0] || undefined;
+      const origin = request.nextUrl.origin;
+      fetch(`${origin}/api/track-view`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-internal-secret': process.env.INTERNAL_API_SECRET || '',
+        },
+        body: JSON.stringify({
+          path,
+          teamSlug,
+          userAgent: request.headers.get('user-agent') || undefined,
+          referrer: request.headers.get('referer') || undefined,
+        }),
+      }).catch(() => {});
+    }
     const response = NextResponse.next();
     response.headers.set('x-correlation-id', correlationId);
     return response;
@@ -200,5 +218,13 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/cms/:path*', '/api/chat', '/api/admin-login', '/api/log-error'],
+  matcher: [
+    /*
+     * Match all request paths except static files and Next.js internals:
+     * - _next/static (static files)
+     * - _next/image (image optimization)
+     * - favicon.ico, icons/, images/, manifest.json
+     */
+    '/((?!_next/static|_next/image|favicon\\.ico|icons/|images/|manifest\\.json).*)',
+  ],
 };

@@ -18,6 +18,7 @@ const BLOCKED_WIDGETS_BY_TEMPLATE: Record<string, string[]> = {
     'service_areas',
   ],
   ITS_TEAM: [
+    'service_areas',
     'subteam_header',
     'subteam_services',
     'subteam_initiatives',
