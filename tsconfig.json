@@ -27,7 +27,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
   "exclude": ["node_modules", "prisma/full-export.ts", "prisma/export-db.ts", "prisma/create-subteams.ts", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "vitest.config.ts", "vitest.setup.ts", "playwright.config.ts", "e2e", "__tests__", "lib/__mocks__"]
