@@ -21,7 +21,7 @@ export async function createWhoWeAreItem(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'WhoWeAreItem', entityId: item.id, changes: data },
+    data: { userId: user.id, action: 'CREATE', entity: 'WhoWeAreItem', entityId: item.id, description: `Created who we are item '${data.title}'`, changes: data },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
@@ -46,7 +46,7 @@ export async function updateWhoWeAreItem(
   const updated = await prisma.whoWeAreItem.update({ where: { id: itemId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'WhoWeAreItem', entityId: itemId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'WhoWeAreItem', entityId: itemId, description: `Updated who we are item '${before.title}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: before.teamId } });
@@ -62,7 +62,7 @@ export async function deleteWhoWeAreItem(itemId: string) {
   await prisma.whoWeAreItem.delete({ where: { id: itemId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'WhoWeAreItem', entityId: itemId, changes: item },
+    data: { userId: user.id, action: 'DELETE', entity: 'WhoWeAreItem', entityId: itemId, description: `Deleted who we are item '${item.title}'`, changes: item },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: item.teamId } });

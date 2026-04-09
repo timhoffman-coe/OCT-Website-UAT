@@ -29,6 +29,7 @@ export async function addNewsEditor(email: string) {
       action: 'CREATE',
       entity: 'NewsPermission',
       entityId: permission.id,
+      description: `Granted news permission to '${email}'`,
       changes: { email, userName: user.name },
     },
   });
@@ -55,6 +56,7 @@ export async function removeNewsEditor(permissionId: string) {
       action: 'DELETE',
       entity: 'NewsPermission',
       entityId: permissionId,
+      description: `Revoked news permission from '${permission.user.email}'`,
       changes: { email: permission.user.email, name: permission.user.name },
     },
   });

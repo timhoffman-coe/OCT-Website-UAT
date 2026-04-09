@@ -72,6 +72,7 @@ export async function createPortfolio(
       action: 'CREATE',
       entity: 'Portfolio',
       entityId: portfolio.id,
+      description: `Created portfolio '${data.title}'`,
       changes: { ...data, linkedTeamId: subTeam.id },
     },
   });
@@ -106,6 +107,7 @@ export async function updatePortfolio(
       action: 'UPDATE',
       entity: 'Portfolio',
       entityId: portfolioId,
+      description: `Updated portfolio '${before.title}'`,
       changes: { before, after: updated },
     },
   });
@@ -137,6 +139,7 @@ export async function deletePortfolio(portfolioId: string) {
       action: 'DELETE',
       entity: 'Portfolio',
       entityId: portfolioId,
+      description: `Deleted portfolio '${portfolio.title}'`,
       changes: portfolio,
     },
   });

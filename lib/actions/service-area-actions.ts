@@ -72,7 +72,7 @@ export async function createServiceArea(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'ServiceArea', entityId: area.id, changes: { ...data, linkedTeamId: childTeam.id } },
+    data: { userId: user.id, action: 'CREATE', entity: 'ServiceArea', entityId: area.id, description: `Created service area '${data.title}'`, changes: { ...data, linkedTeamId: childTeam.id } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
@@ -98,7 +98,7 @@ export async function updateServiceArea(
   const updated = await prisma.serviceArea.update({ where: { id: areaId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'ServiceArea', entityId: areaId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'ServiceArea', entityId: areaId, description: `Updated service area '${before.title}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: before.teamId } });
@@ -119,7 +119,7 @@ export async function deleteServiceArea(areaId: string) {
   await prisma.serviceArea.delete({ where: { id: areaId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'ServiceArea', entityId: areaId, changes: area },
+    data: { userId: user.id, action: 'DELETE', entity: 'ServiceArea', entityId: areaId, description: `Deleted service area '${area.title}'`, changes: area },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: area.teamId } });

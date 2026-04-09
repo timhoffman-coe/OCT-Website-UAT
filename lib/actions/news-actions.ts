@@ -43,6 +43,7 @@ export async function createNewsPost(data: NewsPostData) {
       action: 'CREATE',
       entity: 'NewsPost',
       entityId: slug,
+      description: `Created news post '${data.title}'`,
       changes: { title: data.title, category: data.category, draft: data.draft },
     },
   });
@@ -77,6 +78,7 @@ export async function updateNewsPost(slug: string, data: NewsPostData) {
       action: 'UPDATE',
       entity: 'NewsPost',
       entityId: newSlug,
+      description: `Updated news post '${data.title || newSlug}'`,
       changes: { title: data.title, category: data.category, draft: data.draft },
     },
   });
@@ -103,6 +105,7 @@ export async function deleteNewsPost(slug: string) {
       action: 'DELETE',
       entity: 'NewsPost',
       entityId: slug,
+      description: `Deleted news post '${post?.title ?? slug}'`,
       changes: { title: post?.title ?? slug },
     },
   });
@@ -132,6 +135,7 @@ export async function publishNewsPost(slug: string) {
       action: 'UPDATE',
       entity: 'NewsPost',
       entityId: slug,
+      description: `Published news post '${post.title}'`,
       changes: { title: post.title, action: 'publish' },
     },
   });
@@ -158,6 +162,7 @@ export async function unpublishNewsPost(slug: string) {
       action: 'UPDATE',
       entity: 'NewsPost',
       entityId: slug,
+      description: `Unpublished news post '${post.title}'`,
       changes: { title: post.title, action: 'unpublish' },
     },
   });

@@ -27,6 +27,7 @@ interface AuditEntry {
   action: AuditAction;
   entity: string;
   entityId: string;
+  description?: string;
   changes?: Prisma.InputJsonValue;
   status?: 'SUCCESS' | 'FAILED';
   ipAddress?: string;
@@ -46,6 +47,7 @@ export async function writeAuditLog(entry: AuditEntry) {
     action,
     entity,
     entityId,
+    description,
     changes = {},
     status = 'SUCCESS',
     ipAddress,
@@ -59,6 +61,7 @@ export async function writeAuditLog(entry: AuditEntry) {
         action,
         entity,
         entityId,
+        description,
         changes,
         status,
         ipAddress,
@@ -223,6 +226,7 @@ export async function exportAuditLogs(options: ExportOptions) {
       'action',
       'entity',
       'entityId',
+      'description',
       'status',
       'changes',
       'ipAddress',
@@ -238,6 +242,7 @@ export async function exportAuditLogs(options: ExportOptions) {
       entry.action,
       entry.entity,
       entry.entityId,
+      entry.description || '',
       entry.status,
       JSON.stringify(entry.changes),
       entry.ipAddress || '',

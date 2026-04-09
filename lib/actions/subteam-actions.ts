@@ -20,7 +20,7 @@ export async function createTeamService(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'TeamService', entityId: service.id, changes: data },
+    data: { userId: user.id, action: 'CREATE', entity: 'TeamService', entityId: service.id, description: `Created service '${data.title}'`, changes: data },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
@@ -39,7 +39,7 @@ export async function updateTeamService(
   const updated = await prisma.teamService.update({ where: { id: serviceId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'TeamService', entityId: serviceId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'TeamService', entityId: serviceId, description: `Updated service '${before.title}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: before.teamId } });
@@ -55,7 +55,7 @@ export async function deleteTeamService(serviceId: string) {
   await prisma.teamService.delete({ where: { id: serviceId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'TeamService', entityId: serviceId, changes: service },
+    data: { userId: user.id, action: 'DELETE', entity: 'TeamService', entityId: serviceId, description: `Deleted service '${service.title}'`, changes: service },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: service.teamId } });
@@ -79,7 +79,7 @@ export async function createTeamInitiative(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'TeamInitiative', entityId: initiative.id, changes: data },
+    data: { userId: user.id, action: 'CREATE', entity: 'TeamInitiative', entityId: initiative.id, description: `Created initiative '${data.title}'`, changes: data },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
@@ -98,7 +98,7 @@ export async function updateTeamInitiative(
   const updated = await prisma.teamInitiative.update({ where: { id: initiativeId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'TeamInitiative', entityId: initiativeId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'TeamInitiative', entityId: initiativeId, description: `Updated initiative '${before.title}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: before.teamId } });
@@ -114,7 +114,7 @@ export async function deleteTeamInitiative(initiativeId: string) {
   await prisma.teamInitiative.delete({ where: { id: initiativeId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'TeamInitiative', entityId: initiativeId, changes: initiative },
+    data: { userId: user.id, action: 'DELETE', entity: 'TeamInitiative', entityId: initiativeId, description: `Deleted initiative '${initiative.title}'`, changes: initiative },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: initiative.teamId } });
@@ -138,7 +138,7 @@ export async function createTeamContact(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'TeamContact', entityId: contact.id, changes: data },
+    data: { userId: user.id, action: 'CREATE', entity: 'TeamContact', entityId: contact.id, description: `Created contact '${data.name}'`, changes: data },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
@@ -157,7 +157,7 @@ export async function updateTeamContact(
   const updated = await prisma.teamContact.update({ where: { id: contactId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'TeamContact', entityId: contactId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'TeamContact', entityId: contactId, description: `Updated contact '${before.name}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: before.teamId } });
@@ -173,7 +173,7 @@ export async function deleteTeamContact(contactId: string) {
   await prisma.teamContact.delete({ where: { id: contactId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'TeamContact', entityId: contactId, changes: contact },
+    data: { userId: user.id, action: 'DELETE', entity: 'TeamContact', entityId: contactId, description: `Deleted contact '${contact.name}'`, changes: contact },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: contact.teamId } });
@@ -197,7 +197,7 @@ export async function createTeamQuickLink(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'TeamQuickLink', entityId: link.id, changes: data },
+    data: { userId: user.id, action: 'CREATE', entity: 'TeamQuickLink', entityId: link.id, description: `Created quick link '${data.label}'`, changes: data },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
@@ -216,7 +216,7 @@ export async function updateTeamQuickLink(
   const updated = await prisma.teamQuickLink.update({ where: { id: linkId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'TeamQuickLink', entityId: linkId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'TeamQuickLink', entityId: linkId, description: `Updated quick link '${before.label}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: before.teamId } });
@@ -232,7 +232,7 @@ export async function deleteTeamQuickLink(linkId: string) {
   await prisma.teamQuickLink.delete({ where: { id: linkId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'TeamQuickLink', entityId: linkId, changes: link },
+    data: { userId: user.id, action: 'DELETE', entity: 'TeamQuickLink', entityId: linkId, description: `Deleted quick link '${link.label}'`, changes: link },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: link.teamId } });

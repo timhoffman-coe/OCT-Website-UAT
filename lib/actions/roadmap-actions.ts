@@ -44,6 +44,7 @@ export async function createRoadmapProject(sectionId: string, data: ProjectData)
       action: 'CREATE',
       entity: 'RoadmapProject',
       entityId: project.id,
+      description: `Created roadmap project '${data.name}'`,
       changes: { sectionId, ...data },
     },
   });
@@ -79,6 +80,7 @@ export async function updateRoadmapProject(projectId: string, data: Partial<Proj
       action: 'UPDATE',
       entity: 'RoadmapProject',
       entityId: projectId,
+      description: `Updated roadmap project '${before.name}'`,
       changes: { before, after: updated },
     },
   });
@@ -104,6 +106,7 @@ export async function deleteRoadmapProject(projectId: string) {
       action: 'DELETE',
       entity: 'RoadmapProject',
       entityId: projectId,
+      description: `Deleted roadmap project '${project.name}'`,
       changes: project,
     },
   });

@@ -29,6 +29,7 @@ export async function addOctWebDevViewer(email: string) {
       action: 'CREATE',
       entity: 'OctWebDevPermission',
       entityId: permission.id,
+      description: `Granted OCT web dev permission to '${email}'`,
       changes: { email, userName: user.name },
     },
   });
@@ -55,6 +56,7 @@ export async function removeOctWebDevViewer(permissionId: string) {
       action: 'DELETE',
       entity: 'OctWebDevPermission',
       entityId: permissionId,
+      description: `Revoked OCT web dev permission from '${permission.user.email}'`,
       changes: { email: permission.user.email, name: permission.user.name },
     },
   });

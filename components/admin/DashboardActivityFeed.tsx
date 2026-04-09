@@ -9,6 +9,7 @@ interface ActivityLog {
   action: string;
   entity: string;
   entityId: string;
+  description: string | null;
   createdAt: string;
   user: { name: string; email: string };
 }
@@ -78,8 +79,15 @@ export default function DashboardActivityFeed({ logs, showFullLogLink = false }:
               <div className="flex-1 min-w-0">
                 <p className="font-sans text-sm text-gray-900 truncate">
                   <span className="font-medium">{log.user.name}</span>
-                  {' '}{config.verb}{' '}
-                  <span className="text-gray-500">{formatEntity(log.entity)}</span>
+                  {' '}
+                  {log.description ? (
+                    <span className="text-gray-500">{log.description}</span>
+                  ) : (
+                    <>
+                      {config.verb}{' '}
+                      <span className="text-gray-500">{formatEntity(log.entity)}</span>
+                    </>
+                  )}
                 </p>
               </div>
               <span className="flex-shrink-0 font-sans text-xs text-gray-400">

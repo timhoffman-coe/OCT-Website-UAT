@@ -21,7 +21,7 @@ export async function createKeyInitiativeSlide(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'KeyInitiativeSlide', entityId: slide.id, changes: data },
+    data: { userId: user.id, action: 'CREATE', entity: 'KeyInitiativeSlide', entityId: slide.id, description: `Created key initiative '${data.title}'`, changes: data },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
@@ -46,7 +46,7 @@ export async function updateKeyInitiativeSlide(
   const updated = await prisma.keyInitiativeSlide.update({ where: { id: slideId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'KeyInitiativeSlide', entityId: slideId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'KeyInitiativeSlide', entityId: slideId, description: `Updated key initiative '${before.title}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: before.teamId } });
@@ -62,7 +62,7 @@ export async function deleteKeyInitiativeSlide(slideId: string) {
   await prisma.keyInitiativeSlide.delete({ where: { id: slideId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'KeyInitiativeSlide', entityId: slideId, changes: slide },
+    data: { userId: user.id, action: 'DELETE', entity: 'KeyInitiativeSlide', entityId: slideId, description: `Deleted key initiative '${slide.title}'`, changes: slide },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: slide.teamId } });

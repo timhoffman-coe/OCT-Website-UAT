@@ -18,7 +18,7 @@ export async function createAccordionGroup(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'AccordionGroup', entityId: group.id, changes: data },
+    data: { userId: user.id, action: 'CREATE', entity: 'AccordionGroup', entityId: group.id, description: `Created accordion group '${data.title}'`, changes: data },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
@@ -38,7 +38,7 @@ export async function updateAccordionGroup(
   const updated = await prisma.accordionGroup.update({ where: { id: groupId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'AccordionGroup', entityId: groupId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'AccordionGroup', entityId: groupId, description: `Updated accordion group '${before.title}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: before.teamId } });
@@ -55,7 +55,7 @@ export async function deleteAccordionGroup(groupId: string) {
   await prisma.accordionGroup.delete({ where: { id: groupId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'AccordionGroup', entityId: groupId, changes: group },
+    data: { userId: user.id, action: 'DELETE', entity: 'AccordionGroup', entityId: groupId, description: `Deleted accordion group '${group.title}'`, changes: group },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: group.teamId } });
@@ -79,7 +79,7 @@ export async function createAccordionLink(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'AccordionLink', entityId: link.id, changes: data },
+    data: { userId: user.id, action: 'CREATE', entity: 'AccordionLink', entityId: link.id, description: `Created accordion link '${data.label}'`, changes: data },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: group.teamId } });
@@ -100,7 +100,7 @@ export async function updateAccordionLink(
   const updated = await prisma.accordionLink.update({ where: { id: linkId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'AccordionLink', entityId: linkId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'AccordionLink', entityId: linkId, description: `Updated accordion link '${before.label}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: group.teamId } });
@@ -118,7 +118,7 @@ export async function deleteAccordionLink(linkId: string) {
   await prisma.accordionLink.delete({ where: { id: linkId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'AccordionLink', entityId: linkId, changes: link },
+    data: { userId: user.id, action: 'DELETE', entity: 'AccordionLink', entityId: linkId, description: `Deleted accordion link '${link.label}'`, changes: link },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: group.teamId } });

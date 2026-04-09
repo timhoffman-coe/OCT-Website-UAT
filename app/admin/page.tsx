@@ -172,6 +172,7 @@ export default async function AdminDashboard() {
     action: log.action,
     entity: log.entity,
     entityId: log.entityId,
+    description: log.description,
     createdAt: log.createdAt.toISOString(),
     user: log.user,
   }));

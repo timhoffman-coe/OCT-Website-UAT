@@ -47,6 +47,7 @@ export async function addWidgetToTeam(
       action: 'ADD_WIDGET',
       entity: 'WidgetInstance',
       entityId: instance.id,
+      description: `Added widget '${widgetDef.widgetType}' to team`,
       changes: { widgetDefinitionId },
     },
   });
@@ -70,6 +71,7 @@ export async function removeWidgetFromTeam(instanceId: string) {
       action: 'REMOVE_WIDGET',
       entity: 'WidgetInstance',
       entityId: instanceId,
+      description: `Removed widget from team`,
       changes: instance,
     },
   });
@@ -100,6 +102,7 @@ export async function reorderWidgets(
       action: 'REORDER_WIDGETS',
       entity: 'Team',
       entityId: teamId,
+      description: `Reordered widgets`,
       changes: { order: orderedInstanceIds },
     },
   });
@@ -168,6 +171,7 @@ export async function resetWidgetsToDefault(teamId: string) {
       action: 'RESET_WIDGETS',
       entity: 'Team',
       entityId: teamId,
+      description: `Reset widgets to defaults`,
       changes: { resetTo: defaults },
     },
   });
@@ -197,6 +201,7 @@ export async function updateWidgetConfig(
       action: 'UPDATE_WIDGET_CONFIG',
       entity: 'WidgetInstance',
       entityId: instanceId,
+      description: `Updated widget configuration`,
       changes: { before: instance.config, after: config },
     },
   });

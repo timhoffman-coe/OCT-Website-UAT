@@ -40,6 +40,7 @@ export async function addRoadmapEditor(email: string) {
       action: 'CREATE',
       entity: 'RoadmapPermission',
       entityId: permission.id,
+      description: `Granted roadmap permission to '${email}'`,
       changes: { email, userName: user.name },
     },
   });
@@ -66,6 +67,7 @@ export async function removeRoadmapEditor(permissionId: string) {
       action: 'DELETE',
       entity: 'RoadmapPermission',
       entityId: permissionId,
+      description: `Revoked roadmap permission from '${permission.user.email}'`,
       changes: { email: permission.user.email, name: permission.user.name },
     },
   });

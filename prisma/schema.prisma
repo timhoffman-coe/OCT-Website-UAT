@@ -70,16 +70,17 @@ model NewsPermission {
 }
 
 model AuditLog {
-  id        String   @id @default(cuid())
-  userId    String
-  action    String
-  entity    String
-  entityId  String
-  changes   Json     @default("{}")
-  status    String   @default("SUCCESS")
-  ipAddress String?
-  userAgent String?
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  userId      String
+  action      String
+  entity      String
+  entityId    String
+  description String?
+  changes     Json     @default("{}")
+  status      String   @default("SUCCESS")
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
 

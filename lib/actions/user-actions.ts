@@ -49,7 +49,7 @@ export async function createUser(data: {
   });
 
   await prisma.auditLog.create({
-    data: { userId: admin.id, action: 'CREATE', entity: 'User', entityId: user.id, changes: data },
+    data: { userId: admin.id, action: 'CREATE', entity: 'User', entityId: user.id, description: `Created user ${data.email} (${data.role})`, changes: data },
   });
 
   revalidatePath('/admin/users');
@@ -88,7 +88,7 @@ export async function updateUser(
     }
 
     await prisma.auditLog.create({
-      data: { userId: admin.id, action: 'UPDATE', entity: 'User', entityId: userId, changes: data },
+      data: { userId: admin.id, action: 'UPDATE', entity: 'User', entityId: userId, description: `Updated user ${updated.email}${data.role ? ` role to ${data.role}` : ''}`, changes: data },
     });
 
     revalidatePath('/admin/users');
@@ -141,7 +141,7 @@ export async function updateUser(
   }
 
   await prisma.auditLog.create({
-    data: { userId: admin.id, action: 'UPDATE', entity: 'User', entityId: userId, changes: data },
+    data: { userId: admin.id, action: 'UPDATE', entity: 'User', entityId: userId, description: `Updated user ${updated.email}${data.role ? ` role to ${data.role}` : ''}`, changes: data },
   });
 
   revalidatePath('/admin/users');
@@ -155,7 +155,7 @@ export async function deleteUser(userId: string) {
   await prisma.user.delete({ where: { id: userId } });
 
   await prisma.auditLog.create({
-    data: { userId: admin.id, action: 'DELETE', entity: 'User', entityId: userId, changes: user },
+    data: { userId: admin.id, action: 'DELETE', entity: 'User', entityId: userId, description: `Deleted user ${user.email} (${user.name})`, changes: user },
   });
 
   revalidatePath('/admin/users');

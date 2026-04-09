@@ -21,6 +21,7 @@ export async function createTeamMember(
       action: 'CREATE',
       entity: 'TeamMember',
       entityId: member.id,
+      description: `Created team member '${data.name}'`,
       changes: data,
     },
   });
@@ -51,6 +52,7 @@ export async function updateTeamMember(
       action: 'UPDATE',
       entity: 'TeamMember',
       entityId: memberId,
+      description: `Updated team member '${before.name}'`,
       changes: { before, after: updated },
     },
   });
@@ -77,6 +79,7 @@ export async function deleteTeamMember(memberId: string) {
       action: 'DELETE',
       entity: 'TeamMember',
       entityId: memberId,
+      description: `Deleted team member '${member.name}'`,
       changes: member,
     },
   });

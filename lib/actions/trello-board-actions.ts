@@ -16,7 +16,7 @@ export async function createTrelloBoard(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'TrelloBoard', entityId: board.id, changes: data },
+    data: { userId: user.id, action: 'CREATE', entity: 'TrelloBoard', entityId: board.id, description: `Created Trello board '${data.title}'`, changes: data },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
@@ -35,7 +35,7 @@ export async function updateTrelloBoard(
   const updated = await prisma.trelloBoard.update({ where: { id: boardId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'TrelloBoard', entityId: boardId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'TrelloBoard', entityId: boardId, description: `Updated Trello board '${before.title}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: before.teamId } });
@@ -51,7 +51,7 @@ export async function deleteTrelloBoard(boardId: string) {
   await prisma.trelloBoard.delete({ where: { id: boardId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'TrelloBoard', entityId: boardId, changes: board },
+    data: { userId: user.id, action: 'DELETE', entity: 'TrelloBoard', entityId: boardId, description: `Deleted Trello board '${board.title}'`, changes: board },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: board.teamId } });

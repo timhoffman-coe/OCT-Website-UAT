@@ -34,7 +34,7 @@ export async function createTeamTab(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'CREATE', entity: 'TeamTab', entityId: tab.id, changes: data },
+    data: { userId: user.id, action: 'CREATE', entity: 'TeamTab', entityId: tab.id, description: `Created tab '${data.label}'`, changes: data },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
@@ -61,7 +61,7 @@ export async function updateTeamTab(
   const updated = await prisma.teamTab.update({ where: { id: tabId }, data });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'TeamTab', entityId: tabId, changes: { before, after: updated } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'TeamTab', entityId: tabId, description: `Updated tab '${before.label}'`, changes: { before, after: updated } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: before.teamId } });
@@ -77,7 +77,7 @@ export async function deleteTeamTab(tabId: string) {
   await prisma.teamTab.delete({ where: { id: tabId } });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'DELETE', entity: 'TeamTab', entityId: tabId, changes: tab },
+    data: { userId: user.id, action: 'DELETE', entity: 'TeamTab', entityId: tabId, description: `Deleted tab '${tab.label}'`, changes: tab },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: tab.teamId } });
@@ -99,7 +99,7 @@ export async function updateDiagramLinks(
   });
 
   await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'DiagramLinks', entityId: tabId, changes: { links } },
+    data: { userId: user.id, action: 'UPDATE', entity: 'DiagramLinks', entityId: tabId, description: `Updated diagram links`, changes: { links } },
   });
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: tab.teamId } });

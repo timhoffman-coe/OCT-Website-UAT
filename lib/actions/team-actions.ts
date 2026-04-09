@@ -29,6 +29,7 @@ export async function updateTeam(
       action: 'UPDATE',
       entity: 'Team',
       entityId: teamId,
+      description: `Updated team '${updated.teamName}'`,
       changes: { before, after: updated },
     },
   });
@@ -56,6 +57,7 @@ export async function createTeam(data: {
       action: 'CREATE',
       entity: 'Team',
       entityId: team.id,
+      description: `Created team '${data.teamName}' (${data.pageTemplate})`,
       changes: data,
     },
   });
@@ -137,6 +139,7 @@ export async function createChildTeam(
       action: 'CREATE_CHILD_TEAM',
       entity: 'Team',
       entityId: team.id,
+      description: `Created child team '${data.teamName}' under '${parent.teamName}'`,
       changes: { parentId, ...data },
     },
   });
@@ -185,6 +188,7 @@ export async function archiveTeam(teamId: string) {
       action: 'ARCHIVE',
       entity: 'Team',
       entityId: teamId,
+      description: `Archived team '${team.teamName}'${descendantIds.length > 0 ? ` (+ ${descendantIds.length} sub-teams)` : ''}`,
       changes: { teamName: team.teamName, slug: team.slug, descendantCount: descendantIds.length },
     },
   });
@@ -241,6 +245,7 @@ export async function restoreTeam(teamId: string) {
       action: 'RESTORE',
       entity: 'Team',
       entityId: teamId,
+      description: `Restored team '${team.teamName}'${descendantIds.length > 0 ? ` (+ ${descendantIds.length} sub-teams)` : ''}`,
       changes: { teamName: team.teamName, slug: team.slug, descendantCount: descendantIds.length },
     },
   });
@@ -278,6 +283,7 @@ export async function permanentlyDeleteTeam(teamId: string) {
       action: 'DELETE',
       entity: 'Team',
       entityId: teamId,
+      description: `Permanently deleted team '${team.teamName}'`,
       changes: team,
     },
   });
