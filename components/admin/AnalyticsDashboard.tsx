@@ -7,8 +7,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
 } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 
 interface AnalyticsDashboardProps {
   totalViews30d: number;
@@ -59,7 +59,7 @@ export default function AnalyticsDashboard({
             No page views recorded yet
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height={256}>
+          <ClientResponsiveContainer width="100%" height={256}>
             <AreaChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
               <defs>
                 <linearGradient id="pageViewGradient" x1="0" y1="0" x2="0" y2="1">
@@ -102,7 +102,7 @@ export default function AnalyticsDashboard({
                 activeDot={{ r: 4, fill: '#005087', strokeWidth: 0 }}
               />
             </AreaChart>
-          </ResponsiveContainer>
+          </ClientResponsiveContainer>
         )}
       </div>
 

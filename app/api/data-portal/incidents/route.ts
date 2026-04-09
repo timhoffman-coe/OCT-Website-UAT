@@ -3,6 +3,7 @@ import { getIncidentMetrics } from '@/lib/data/data-portal';
 import { logger } from '@/lib/logger';
 import type { DataPortalResponse, IncidentMetric } from '@/lib/data/data-portal-types';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 300; // 5 min — analytical data, freshness less critical than health monitoring
 
 export async function GET(request: NextRequest) {

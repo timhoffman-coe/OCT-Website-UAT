@@ -7,8 +7,8 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
 } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 
 interface ActivityChartProps {
   data: Array<{ date: string; count: number }>;
@@ -24,7 +24,7 @@ export default function DashboardActivityChart({ data }: ActivityChartProps) {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={256}>
+    <ClientResponsiveContainer width="100%" height={256}>
       <AreaChart data={data} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
         <defs>
           <linearGradient id="activityGradient" x1="0" y1="0" x2="0" y2="1">
@@ -68,6 +68,6 @@ export default function DashboardActivityChart({ data }: ActivityChartProps) {
           activeDot={{ r: 4, fill: '#005087', strokeWidth: 0 }}
         />
       </AreaChart>
-    </ResponsiveContainer>
+    </ClientResponsiveContainer>
   );
 }

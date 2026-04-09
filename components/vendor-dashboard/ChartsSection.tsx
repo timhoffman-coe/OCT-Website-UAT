@@ -2,9 +2,10 @@
 
 import React from 'react';
 import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
     Cell, ScatterChart, Scatter, ZAxis, ReferenceLine, PieChart, Pie, Legend
 } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 import { Vendor, RiskLevel, CorpStructure } from './types';
 
 interface ChartsSectionProps {
@@ -88,7 +89,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
                     Chart A: Spend vs Budget (Top Vendors)
                 </h4>
                 <div className="h-64 w-full text-xs">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ClientResponsiveContainer width="100%" height="100%">
                         <BarChart layout="vertical" data={spendData} margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
                             <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={true} />
                             <XAxis type="number" tickFormatter={(val) => `$${val / 1000}k`} />
@@ -101,7 +102,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
                             </Bar>
                             <Bar dataKey="remaining" stackId="a" fill="#e2e8f0" name="Remaining Budget" radius={[0, 4, 4, 0]} barSize={20} />
                         </BarChart>
-                    </ResponsiveContainer>
+                    </ClientResponsiveContainer>
                 </div>
             </div>
 
@@ -112,7 +113,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
                 </h4>
                 <div className="h-64 w-full text-xs">
                     {renewalData.length > 0 ? (
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ClientResponsiveContainer width="100%" height="100%">
                             <BarChart layout="vertical" data={renewalData} margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis type="number" hide />
@@ -139,7 +140,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
                                     ))}
                                 </Bar>
                             </BarChart>
-                        </ResponsiveContainer>
+                        </ClientResponsiveContainer>
                     ) : (
                         <div className="h-full flex items-center justify-center text-slate-400 italic">
                             No renewals in the next 6 months.
@@ -154,7 +155,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
                     Chart C: Contracts by Sourcing Type
                 </h4>
                 <div className="h-64 w-full text-xs">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ClientResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
                                 data={sourcingPieData}
@@ -173,7 +174,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
                             <Tooltip />
                             <Legend layout="vertical" verticalAlign="middle" align="right" />
                         </PieChart>
-                    </ResponsiveContainer>
+                    </ClientResponsiveContainer>
                 </div>
             </div>
 
@@ -183,7 +184,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
                     Chart D: Risk Matrix (SPM vs Risk)
                 </h4>
                 <div className="h-64 w-full text-xs">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ClientResponsiveContainer width="100%" height="100%">
                         <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis type="number" dataKey="x" name="SPM Score" domain={[0, 100]} label={{ value: 'SPM Score (Higher is Better)', position: 'bottom', offset: 0 }} />
@@ -205,7 +206,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
                                 ))}
                             </Scatter>
                         </ScatterChart>
-                    </ResponsiveContainer>
+                    </ClientResponsiveContainer>
                 </div>
             </div>
 

@@ -3,6 +3,7 @@ import { getServiceHealth } from '@/lib/data/data-portal';
 import { logger } from '@/lib/logger';
 import type { DataPortalResponse, ServiceHealthRecord } from '@/lib/data/data-portal-types';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 60; // 1 min — near-real-time monitoring, needs freshest data
 
 export async function GET() {

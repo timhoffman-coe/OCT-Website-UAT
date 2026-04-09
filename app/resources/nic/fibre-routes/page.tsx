@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { AreaChart, Area, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 import { Plus, Search, SlidersHorizontal, Share2, Trash2, MoreVertical } from 'lucide-react';
 
 const fibreRoutes = [
@@ -118,7 +119,7 @@ export default function FibreRoutes() {
                             <span className="text-gray-500">km</span>
                         </div>
                         <div className="mt-4 h-[150px]">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={trafficData}>
                                     <defs>
                                         <linearGradient id="colorFibre" x1="0" y1="0" x2="0" y2="1">
@@ -128,7 +129,7 @@ export default function FibreRoutes() {
                                     </defs>
                                     <Area type="monotone" dataKey="value" stroke="#2E7D32" strokeWidth={3} fillOpacity={1} fill="url(#colorFibre)" />
                                 </AreaChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                     </div>
 

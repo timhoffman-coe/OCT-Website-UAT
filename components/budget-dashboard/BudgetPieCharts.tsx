@@ -1,6 +1,7 @@
 'use client';
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 
 const COLORS = ['#0081BC', '#109D7E', '#FAB840', '#EA5853', '#99479A', '#2F63AD'];
 
@@ -24,7 +25,7 @@ export default function BudgetPieCharts({ fundingByProgram, spendingByProgram, s
       <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
         <h3 className="text-lg font-bold text-[#212529] mb-4 font-sans">Funding by Program</h3>
         <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
+          <ClientResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={fundingByProgram}
@@ -45,7 +46,7 @@ export default function BudgetPieCharts({ fundingByProgram, spendingByProgram, s
               />
               <Legend verticalAlign="bottom" height={36} />
             </PieChart>
-          </ResponsiveContainer>
+          </ClientResponsiveContainer>
         </div>
       </div>
 
@@ -53,7 +54,7 @@ export default function BudgetPieCharts({ fundingByProgram, spendingByProgram, s
       <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
         <h3 className="text-lg font-bold text-[#212529] mb-4 font-sans">Spending by Program</h3>
         <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
+          <ClientResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={spendingByProgram}
@@ -74,7 +75,7 @@ export default function BudgetPieCharts({ fundingByProgram, spendingByProgram, s
               />
               <Legend verticalAlign="bottom" height={36} />
             </PieChart>
-          </ResponsiveContainer>
+          </ClientResponsiveContainer>
         </div>
       </div>
 
@@ -82,7 +83,7 @@ export default function BudgetPieCharts({ fundingByProgram, spendingByProgram, s
       <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
         <h3 className="text-lg font-bold text-[#212529] mb-4 font-sans">Spending by Fiscal Year</h3>
         <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
+          <ClientResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={spendingByYear}
@@ -103,7 +104,7 @@ export default function BudgetPieCharts({ fundingByProgram, spendingByProgram, s
               />
               <Legend verticalAlign="bottom" height={36} />
             </PieChart>
-          </ResponsiveContainer>
+          </ClientResponsiveContainer>
         </div>
       </div>
     </div>

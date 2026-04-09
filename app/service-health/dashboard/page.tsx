@@ -24,7 +24,8 @@ import {
     type LucideIcon
 } from 'lucide-react';
 import Link from 'next/link';
-import { AreaChart, Area, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 import { useServiceHealth } from '@/hooks/useServiceHealth';
 import type { ServiceStatus } from '@/lib/service-health/types';
 import { SERVICE_ICON_MAP } from '@/lib/service-health/constants';
@@ -105,7 +106,7 @@ const Sparkline = ({ data, status }: { data: { x: number; y: number }[]; status:
 
     return (
         <div className="w-full h-16">
-            <ResponsiveContainer width="100%" height="100%">
+            <ClientResponsiveContainer width="100%" height="100%">
                 <AreaChart data={data}>
                     <defs>
                         <linearGradient id={`gradient-${status}`} x1="0" y1="0" x2="0" y2="1">
@@ -123,7 +124,7 @@ const Sparkline = ({ data, status }: { data: { x: number; y: number }[]; status:
                         isAnimationActive={false}
                     />
                 </AreaChart>
-            </ResponsiveContainer>
+            </ClientResponsiveContainer>
         </div>
     );
 };

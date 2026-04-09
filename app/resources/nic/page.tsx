@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { AreaChart, Area, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { AreaChart, Area, PieChart, Pie, Cell } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 import { Search, Bell, Settings, TrendingUp, TrendingDown, XCircle, AlertTriangle, CheckCircle, Map, RadioTower, Briefcase, Users } from 'lucide-react';
 
 const trafficData = [
@@ -91,7 +92,7 @@ export default function NICDashboard() {
                             </div>
                         </div>
                         <div className="h-[250px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={trafficData}>
                                     <defs>
                                         <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
@@ -108,7 +109,7 @@ export default function NICDashboard() {
                                         fill="url(#colorValue)"
                                     />
                                 </AreaChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                         <div className="flex justify-between px-2 mt-2 text-xs font-semibold text-gray-500">
                             <span>12 AM</span>
@@ -129,7 +130,7 @@ export default function NICDashboard() {
                             <p className="text-gray-500 text-sm">Real-time severity breakdown</p>
                         </div>
                         <div className="relative h-[220px] flex items-center justify-center">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie
                                         data={alarmData}
@@ -146,7 +147,7 @@ export default function NICDashboard() {
                                         ))}
                                     </Pie>
                                 </PieChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                             {/* Center Text */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <span className="text-3xl font-bold text-gray-900">12</span>

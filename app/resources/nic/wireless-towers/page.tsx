@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, Tooltip } from 'recharts';
+import { BarChart, Bar, CartesianGrid, XAxis, Tooltip } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 import { Sheet, Plus, Globe, RadioTower } from 'lucide-react';
 
 const towers = [
@@ -146,7 +147,7 @@ export default function WirelessTowers() {
                     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                         <h3 className="font-bold text-gray-900 mb-4">Signal Strength</h3>
                         <div className="h-[250px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <BarChart data={signalData} layout="vertical" margin={{ left: -20 }}>
                                     <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} opacity={0.3} />
                                     <XAxis type="number" hide />
@@ -156,7 +157,7 @@ export default function WirelessTowers() {
                                     />
                                     <Bar dataKey="signal" fill="#005087" radius={[0, 4, 4, 0]} barSize={20} background={{ fill: '#f1f5f9' }} />
                                 </BarChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                     </div>
                 </div>

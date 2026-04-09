@@ -1,6 +1,7 @@
 'use client';
 
-import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 
 const COLORS = ['#2F63AD', '#9947AE', '#61BEB2', '#109D7E', '#B1C034', '#FAB840', '#EA5853', '#839899'];
 
@@ -22,7 +23,7 @@ const spendData = [
 
 export function SpendPieChart() {
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ClientResponsiveContainer width="100%" height="100%">
       <PieChart>
         <Pie
           data={spendData}
@@ -41,19 +42,19 @@ export function SpendPieChart() {
         <Tooltip formatter={(value) => `$${value}M`} />
         <Legend />
       </PieChart>
-    </ResponsiveContainer>
+    </ClientResponsiveContainer>
   );
 }
 
 export function TimeAccountingBarChart() {
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ClientResponsiveContainer width="100%" height="100%">
       <BarChart data={timeAccountingData}>
         <XAxis dataKey="name" tick={{ fontSize: 12 }} />
         <YAxis tick={{ fontSize: 12 }} />
         <Tooltip />
         <Bar dataKey="hours" fill="#2F63AD" />
       </BarChart>
-    </ResponsiveContainer>
+    </ClientResponsiveContainer>
   );
 }

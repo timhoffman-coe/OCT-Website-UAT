@@ -3,6 +3,7 @@ import { getBudgetActuals } from '@/lib/data/data-portal';
 import { logger } from '@/lib/logger';
 import type { DataPortalResponse, BudgetActual } from '@/lib/data/data-portal-types';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 300; // 5 min — financial data updated infrequently, freshness less critical
 
 export async function GET(request: NextRequest) {

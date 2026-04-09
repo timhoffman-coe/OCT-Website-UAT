@@ -3,7 +3,8 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import DashboardDisclaimer from '@/components/DashboardDisclaimer';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 
 export default function AssetManagementPage() {
     // Sample Data for Charts
@@ -64,11 +65,11 @@ export default function AssetManagementPage() {
                         <p className="text-4xl font-light text-gray-800 mb-1">$2.36M</p>
                         <p className="text-xs text-gray-500 mb-4">— $0 (0%) since April 2023</p>
                         <div className="h-32">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <LineChart data={spendTrendData}>
                                     <Line type="monotone" dataKey="value" stroke="#29ABE2" strokeWidth={2} dot={{ r: 2 }} />
                                 </LineChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                         <div className="flex justify-between mt-4 text-sm">
                             <div>
@@ -88,11 +89,11 @@ export default function AssetManagementPage() {
                         <h3 className="text-sm font-semibold text-gray-600 mb-1">Actual savings</h3>
                         <p className="text-4xl font-light text-gray-800 mb-4">$0</p>
                         <div className="h-32">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <LineChart data={flatLineData}>
                                     <Line type="monotone" dataKey="value" stroke="#29ABE2" strokeWidth={2} dot={{ r: 2 }} />
                                 </LineChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                         <div className="mt-4">
                             <p className="text-gray-500 text-xs">Data from May 2023</p>
@@ -106,11 +107,11 @@ export default function AssetManagementPage() {
                         <h3 className="text-sm font-semibold text-gray-600 mb-1">Potential savings</h3>
                         <p className="text-4xl font-light text-gray-800 mb-4">$0</p>
                         <div className="h-32">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <LineChart data={flatLineData}>
                                     <Line type="monotone" dataKey="value" stroke="#29ABE2" strokeWidth={2} dot={{ r: 2 }} />
                                 </LineChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                         <div className="mt-4">
                             <p className="text-gray-500 text-xs">Data from May 2023</p>
@@ -126,14 +127,14 @@ export default function AssetManagementPage() {
                     <div className="bg-white p-6 rounded shadow-sm lg:col-span-2">
                         <h3 className="text-sm font-semibold text-gray-600 mb-4">Asset fulfillment time</h3>
                         <div className="h-64">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <BarChart data={fulfillmentData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                     <XAxis type="number" domain={[0, 1]} hide />
                                     <YAxis type="category" dataKey="name" hide />
                                     <Tooltip />
                                     <Bar dataKey="value" fill="#1CB0D3" barSize={150} />
                                 </BarChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                         <div className="flex justify-center mt-2">
                             <div className="flex items-center">
@@ -175,11 +176,11 @@ export default function AssetManagementPage() {
                         <h3 className="text-sm font-semibold text-gray-600 mb-1">Missing hardware assets</h3>
                         <p className="text-4xl font-light text-gray-800 mb-4">0</p>
                         <div className="h-32">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <LineChart data={flatLineData}>
                                     <Line type="monotone" dataKey="value" stroke="#29ABE2" strokeWidth={2} dot={{ r: 2 }} />
                                 </LineChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                         <div className="mt-4">
                             <p className="text-gray-500 text-xs">Data from May 2023</p>
@@ -191,11 +192,11 @@ export default function AssetManagementPage() {
                         <h3 className="text-sm font-semibold text-gray-600 mb-1">Software true-up cost</h3>
                         <p className="text-4xl font-light text-gray-800 mb-4">$0</p>
                         <div className="h-32">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <LineChart data={flatLineData}>
                                     <Line type="monotone" dataKey="value" stroke="#29ABE2" strokeWidth={2} dot={{ r: 2 }} />
                                 </LineChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                         <div className="mt-4">
                             <p className="text-gray-500 text-xs">Data from May 2023</p>
@@ -208,11 +209,11 @@ export default function AssetManagementPage() {
                         <p className="text-4xl font-light text-gray-800 mb-1">7</p>
                         <p className="text-xs text-gray-500 mb-4">↓ -2 (-22.2%) since April 2023</p>
                         <div className="h-32">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <LineChart data={expiringContractsData}>
                                     <Line type="monotone" dataKey="value" stroke="#29ABE2" strokeWidth={2} dot={{ r: 2 }} />
                                 </LineChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                         <div className="mt-4">
                             <p className="text-gray-500 text-xs">Data from May 2023</p>
@@ -226,14 +227,14 @@ export default function AssetManagementPage() {
                     <div className="bg-white p-6 rounded shadow-sm">
                         <h3 className="text-sm font-semibold text-gray-600 mb-4">Assets pulled from pool vs. net new purchase</h3>
                         <div className="h-48">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <BarChart data={poolVsNewData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                     <XAxis type="number" hide />
                                     <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} width={60} />
                                     <Tooltip />
                                     <Bar dataKey="value" fill="#1CB0D3" barSize={80} />
                                 </BarChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                     </div>
 
@@ -241,14 +242,14 @@ export default function AssetManagementPage() {
                     <div className="bg-white p-6 rounded shadow-sm">
                         <h3 className="text-sm font-semibold text-gray-600 mb-4">End of life models in next 90 days</h3>
                         <div className="h-48">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <BarChart data={eolData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                                     <XAxis type="number" hide />
                                     <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} width={60} />
                                     <Tooltip />
                                     <Bar dataKey="value" fill="#1CB0D3" barSize={80} />
                                 </BarChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                     </div>
                 </div>

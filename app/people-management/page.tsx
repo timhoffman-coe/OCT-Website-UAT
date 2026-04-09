@@ -3,7 +3,8 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import DashboardDisclaimer from '@/components/DashboardDisclaimer';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 
 export default function PeopleManagementPage() {
     // Sample Data
@@ -108,7 +109,7 @@ export default function PeopleManagementPage() {
                                 Branch Overtime (Last 6 Months)
                             </h3>
                             <div className="h-64">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ClientResponsiveContainer width="100%" height="100%">
                                     <AreaChart data={overtimeData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                                         <defs>
                                             <linearGradient id="colorOvertime" x1="0" y1="0" x2="0" y2="1">
@@ -122,7 +123,7 @@ export default function PeopleManagementPage() {
                                         <Tooltip />
                                         <Area type="monotone" dataKey="hours" stroke="#005087" fillOpacity={1} fill="url(#colorOvertime)" />
                                     </AreaChart>
-                                </ResponsiveContainer>
+                                </ClientResponsiveContainer>
                             </div>
                         </div>
 
@@ -132,7 +133,7 @@ export default function PeopleManagementPage() {
                                 Branch Sick Time (Hours)
                             </h3>
                             <div className="h-64">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ClientResponsiveContainer width="100%" height="100%">
                                     <BarChart data={sickTimeData} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                         <XAxis dataKey="name" angle={-15} textAnchor="end" interval={0} height={60} />
@@ -140,7 +141,7 @@ export default function PeopleManagementPage() {
                                         <Tooltip />
                                         <Bar dataKey="hours" fill="#EA5853" radius={[4, 4, 0, 0]} />
                                     </BarChart>
-                                </ResponsiveContainer>
+                                </ClientResponsiveContainer>
                             </div>
                         </div>
 
@@ -150,7 +151,7 @@ export default function PeopleManagementPage() {
                                 Branch Excess Vacation (&gt;50 Days Accrued)
                             </h3>
                             <div className="h-64">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ClientResponsiveContainer width="100%" height="100%">
                                     <BarChart data={vacationData} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                         <XAxis dataKey="name" />
@@ -158,7 +159,7 @@ export default function PeopleManagementPage() {
                                         <Tooltip />
                                         <Bar dataKey="days" fill="#FAB840" radius={[4, 4, 0, 0]} name="Excess Days" />
                                     </BarChart>
-                                </ResponsiveContainer>
+                                </ClientResponsiveContainer>
                             </div>
                         </div>
 

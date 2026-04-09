@@ -1,6 +1,7 @@
 'use client';
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 
 interface BudgetChartData {
   name: string;
@@ -21,7 +22,7 @@ export default function BudgetCharts({ overallData, sectionData, formatCurrency 
       <div className="bg-white/50 rounded-lg p-4 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">Overall Performance</h3>
         <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
+          <ClientResponsiveContainer width="100%" height="100%">
             <BarChart data={overallData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="name" />
@@ -31,7 +32,7 @@ export default function BudgetCharts({ overallData, sectionData, formatCurrency 
               <Bar dataKey="Budgeted" fill="#005087" radius={[4, 4, 0, 0]} />
               <Bar dataKey="Actual" fill="#2A9D8F" radius={[4, 4, 0, 0]} />
             </BarChart>
-          </ResponsiveContainer>
+          </ClientResponsiveContainer>
         </div>
       </div>
 
@@ -39,7 +40,7 @@ export default function BudgetCharts({ overallData, sectionData, formatCurrency 
       <div className="lg:col-span-2 bg-white/50 rounded-lg p-4 shadow-sm">
         <h3 className="text-lg font-semibold text-gray-700 mb-4 text-center">Breakdown by Section</h3>
         <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
+          <ClientResponsiveContainer width="100%" height="100%">
             <BarChart data={sectionData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="name" interval={0} angle={-15} textAnchor="end" height={60} />
@@ -49,7 +50,7 @@ export default function BudgetCharts({ overallData, sectionData, formatCurrency 
               <Bar dataKey="Budgeted" fill="#005087" radius={[4, 4, 0, 0]} />
               <Bar dataKey="Actual" fill="#2A9D8F" radius={[4, 4, 0, 0]} />
             </BarChart>
-          </ResponsiveContainer>
+          </ClientResponsiveContainer>
         </div>
       </div>
     </div>

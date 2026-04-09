@@ -3,7 +3,8 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import DashboardDisclaimer from '@/components/DashboardDisclaimer';
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 
 // Simple seeded PRNG to avoid impure Math.random() during render
 function seededRandom(seed: number) {
@@ -73,7 +74,7 @@ export default function IncidentManagementPage() {
                     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                         <h3 className="text-lg font-semibold text-gray-800 mb-4">Open incidents</h3>
                         <div className="h-64">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ClientResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={openIncidentsData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
                                     <defs>
                                         <linearGradient id="colorOpen" x1="0" y1="0" x2="0" y2="1">
@@ -86,7 +87,7 @@ export default function IncidentManagementPage() {
                                     <Tooltip />
                                     <Area type="monotone" dataKey="open" stroke="#64B5F6" fillOpacity={1} fill="url(#colorOpen)" />
                                 </AreaChart>
-                            </ResponsiveContainer>
+                            </ClientResponsiveContainer>
                         </div>
                         <div className="flex justify-center space-x-6 mt-4 text-xs text-gray-600">
                             <div className="flex items-center"><span className="w-3 h-3 bg-[#64B5F6] mr-2"></span>Open incidents</div>
@@ -128,11 +129,11 @@ export default function IncidentManagementPage() {
                                         <td className="py-4 text-center text-sm text-gray-600">{row.d7}</td>
                                         <td className="py-4 text-center text-sm text-gray-600">{row.change}</td>
                                         <td className="py-4 text-center h-12 w-24">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <ClientResponsiveContainer width="100%" height="100%">
                                                 <LineChart data={row.trend.map((val, i) => ({ val }))}>
                                                     <Line type="monotone" dataKey="val" stroke="#90CAF9" strokeWidth={2} dot={false} />
                                                 </LineChart>
-                                            </ResponsiveContainer>
+                                            </ClientResponsiveContainer>
                                         </td>
                                     </tr>
                                 ))}
@@ -147,7 +148,7 @@ export default function IncidentManagementPage() {
                         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                             <h3 className="text-lg font-semibold text-gray-800 mb-4">New incidents</h3>
                             <div className="h-64">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ClientResponsiveContainer width="100%" height="100%">
                                     <BarChart data={newIncidentsData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
                                         <XAxis dataKey="day" hide />
                                         <YAxis hide />
@@ -158,7 +159,7 @@ export default function IncidentManagementPage() {
                                         <Bar dataKey="high" stackId="a" fill="#9C27B0" />
                                         <Bar dataKey="critical" stackId="a" fill="#E91E63" />
                                     </BarChart>
-                                </ResponsiveContainer>
+                                </ClientResponsiveContainer>
                             </div>
                             <div className="flex flex-wrap justify-center gap-4 mt-4 text-xs text-gray-600">
                                 <div className="flex items-center"><span className="w-3 h-3 bg-[#2196F3] mr-2"></span>5 - Planning</div>
@@ -173,7 +174,7 @@ export default function IncidentManagementPage() {
                         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                             <h3 className="text-lg font-semibold text-gray-800 mb-4">New incidents by priority</h3>
                             <div className="h-64 flex items-center justify-center">
-                                <ResponsiveContainer width="100%" height="100%">
+                                <ClientResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie
                                             data={priorityData}
@@ -190,7 +191,7 @@ export default function IncidentManagementPage() {
                                         </Pie>
                                         <Tooltip />
                                     </PieChart>
-                                </ResponsiveContainer>
+                                </ClientResponsiveContainer>
                             </div>
                             <div className="flex flex-wrap justify-center gap-4 mt-4 text-xs text-gray-600">
                                 {priorityData.map((entry, index) => (

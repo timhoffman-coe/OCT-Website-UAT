@@ -1,6 +1,7 @@
 'use client';
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { ClientResponsiveContainer } from '@/components/ClientOnly';
 
 export default function IncidentsTrendChart() {
   // Generate last 30 days of data
@@ -14,7 +15,7 @@ export default function IncidentsTrendChart() {
   });
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ClientResponsiveContainer width="100%" height="100%">
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
         <XAxis
@@ -37,6 +38,6 @@ export default function IncidentsTrendChart() {
           name="New P1/P2 Incidents"
         />
       </LineChart>
-    </ResponsiveContainer>
+    </ClientResponsiveContainer>
   );
 }
