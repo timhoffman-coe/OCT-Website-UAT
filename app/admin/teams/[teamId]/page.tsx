@@ -19,7 +19,7 @@ export default async function TeamDetailPage({
     notFound();
   }
 
-  const readOnly = user.role === 'VIEWER';
+  const readOnly = user.role === 'VIEWER' || user.ancestorOnly;
 
   const [team, widgetDefinitions] = await Promise.all([
     prisma.team.findUnique({

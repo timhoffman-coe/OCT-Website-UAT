@@ -54,13 +54,23 @@ export async function requireTeamAccess(teamId: string) {
 
 export async function requireTeamViewAccess(teamId: string) {
   const user = await requireUser();
-  if (user.role === 'SUPER_ADMIN') return user;
+  if (user.role === 'SUPER_ADMIN') return { ...user, ancestorOnly: false };
+
+  // Check if user has permission for this team or any ancestor (permission flows down)
   const ancestorIds = await getTeamAncestorIds(teamId);
-  const hasAccess = user.teamPermissions.some(
+  const hasDirectAccess = user.teamPermissions.some(
     (p) => ancestorIds.includes(p.teamId)
   );
-  if (!hasAccess) throw new Error('Forbidden: No access to this team');
-  return user;
+  if (hasDirectAccess) return { ...user, ancestorOnly: false };
+
+  // Also grant read-only view access if the requested team is an ancestor of any permitted team
+  // (ancestor teams appear in the sidebar for grouping and should be viewable)
+  for (const perm of user.teamPermissions) {
+    const permAncestors = await getTeamAncestorIds(perm.teamId);
+    if (permAncestors.includes(teamId)) return { ...user, ancestorOnly: true };
+  }
+
+  throw new Error('Forbidden: No access to this team');
 }
 
 export async function requireSuperAdmin() {
