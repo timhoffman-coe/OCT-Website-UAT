@@ -47,6 +47,7 @@ describe('addOctWebDevViewer', () => {
         action: 'CREATE',
         entity: 'OctWebDevPermission',
         entityId: 'perm-1',
+        description: "Granted OCT web dev permission to 'dev@edmonton.ca'",
         changes: { email: 'dev@edmonton.ca', userName: 'Dev User' },
       },
     });
@@ -93,6 +94,7 @@ describe('removeOctWebDevViewer', () => {
         action: 'DELETE',
         entity: 'OctWebDevPermission',
         entityId: 'perm-1',
+        description: "Revoked OCT web dev permission from 'dev@edmonton.ca'",
         changes: { email: 'dev@edmonton.ca', name: 'Dev User' },
       },
     });
