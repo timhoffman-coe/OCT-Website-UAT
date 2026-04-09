@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,7 +23,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -27,7 +33,22 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "prisma/full-export.ts", "prisma/export-db.ts", "prisma/create-subteams.ts", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "vitest.config.ts", "vitest.setup.ts", "playwright.config.ts", "e2e", "__tests__", "lib/__mocks__"]
+  "exclude": [
+    "node_modules",
+    "prisma/full-export.ts",
+    "prisma/export-db.ts",
+    "prisma/create-subteams.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "vitest.config.ts",
+    "vitest.setup.ts",
+    "playwright.config.ts",
+    "e2e",
+    "__tests__",
+    "lib/__mocks__"
+  ]
 }
