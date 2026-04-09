@@ -29,6 +29,8 @@ model User {
   roadmapPermission            RoadmapPermission?
   octWebDevPermission          OctWebDevPermission?
   newsPermission               NewsPermission?
+  projectPermission            ProjectPermission?
+  projectManagerAssignments    ProjectManagerAssignment[]
 }
 
 model TeamPermission {
@@ -62,6 +64,14 @@ model OctWebDevPermission {
 }
 
 model NewsPermission {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ProjectPermission {
   id        String   @id @default(cuid())
   userId    String   @unique
   createdAt DateTime @default(now())
@@ -369,17 +379,21 @@ model WidgetDefinition {
 }
 
 model WidgetInstance {
-  id                 String @id @default(cuid())
-  teamId             String
+  id                 String  @id @default(cuid())
+  teamId             String?
+  projectId          String?
   widgetDefinitionId String
-  sortOrder          Int    @default(0)
+  sortOrder          Int     @default(0)
   config             Json?
 
-  team             Team             @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  team             Team?            @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  project          Project?         @relation(fields: [projectId], references: [id], onDelete: Cascade)
   widgetDefinition WidgetDefinition @relation(fields: [widgetDefinitionId], references: [id], onDelete: Restrict)
 
   @@unique([teamId, widgetDefinitionId])
+  @@unique([projectId, widgetDefinitionId])
   @@index([teamId, sortOrder])
+  @@index([projectId, sortOrder])
 }
 
 // ============================================================
@@ -507,4 +521,131 @@ model RoadmapProject {
   section RoadmapSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 
   @@index([sectionId])
+}
+
+// ============================================================
+// CONTENT: PROJECTS
+// ============================================================
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  slug        String        @unique
+  projectCode String?
+  title       String
+  description String?
+  status      ProjectStatus @default(PLANNING)
+
+  // Governance
+  department            String?
+  branch                String?
+  projectSponsor        String?
+  projectManager        String?
+  octProgramManager     String?
+  octltRepresentative   String?
+  programManagerBusiness String?
+
+  // Financial
+  totalBudget          String?
+  fundingSources       String?
+  expenditureAuthority String?
+
+  // Timeline
+  startDate DateTime?
+  endDate   DateTime?
+  progress  Int       @default(0)
+
+  // Publishing
+  isPublished Boolean   @default(false)
+  archivedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  milestones         ProjectMilestone[]
+  objectives         ProjectObjective[]
+  statusUpdates      ProjectStatusUpdate[]
+  tags               ProjectTagAssignment[]
+  managerAssignments ProjectManagerAssignment[]
+  widgetInstances    WidgetInstance[]
+
+  @@index([status])
+  @@index([isPublished])
+}
+
+model ProjectMilestone {
+  id        String   @id @default(cuid())
+  projectId String
+  name      String
+  date      DateTime?
+  status    String   @default("upcoming") // "completed", "current", "upcoming"
+  sortOrder Int      @default(0)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model ProjectObjective {
+  id          String  @id @default(cuid())
+  projectId   String
+  iconName    String?
+  title       String
+  description String
+  sortOrder   Int     @default(0)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model ProjectStatusUpdate {
+  id        String   @id @default(cuid())
+  projectId String
+  content   String
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([createdAt])
+}
+
+model ProjectTag {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  projects ProjectTagAssignment[]
+}
+
+model ProjectTagAssignment {
+  id        String @id @default(cuid())
+  projectId String
+  tagId     String
+
+  project Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tag     ProjectTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, tagId])
+  @@index([tagId])
+}
+
+model ProjectManagerAssignment {
+  id        String   @id @default(cuid())
+  userId    String
+  projectId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+  @@index([projectId])
 }

@@ -3,6 +3,7 @@ import type { ITSTeamPageData } from './its-shared';
 import type { ServiceArea } from '@/components/SectionTemplate';
 import type { SubTeamPageData } from '@/components/its-shared/SubTeamPageTemplate';
 import type { WidgetDataBag } from '@/components/widgets/WidgetRenderer';
+import { fetchProjectsForWidget } from './fetch-project';
 
 export async function fetchITSTeamData(
   slug: string
@@ -312,6 +313,30 @@ export async function fetchUnifiedTeamData(
       contacts: team.teamContacts.map((c) => ({ name: c.name, role: c.role, email: c.email })),
       quickLinks: team.teamQuickLinks.map((ql) => ({ label: ql.label, description: ql.description, href: ql.href, isSecure: ql.isSecure })),
     };
+
+    // Fetch ongoing projects if the widget has project config
+    const projectConfig = widgetConfigs['ongoing_projects'];
+    if (projectConfig && projectConfig.mode) {
+      try {
+        const projects = await fetchProjectsForWidget({
+          mode: projectConfig.mode as 'manual' | 'tag',
+          projectIds: projectConfig.projectIds ? JSON.parse(projectConfig.projectIds as string) : undefined,
+          tagSlug: projectConfig.tagSlug as string | undefined,
+          maxProjects: projectConfig.maxProjects ? parseInt(projectConfig.maxProjects as string) : undefined,
+        });
+        dataBag.ongoingProjects = projects.map((p) => ({
+          id: p.id,
+          slug: p.slug,
+          title: p.title,
+          description: p.description,
+          status: p.status,
+          progress: p.progress,
+          tags: p.tags,
+        }));
+      } catch {
+        // Silently fail - widget will show fallback
+      }
+    }
 
     return {
       dataBag,

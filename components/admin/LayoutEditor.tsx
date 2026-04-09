@@ -41,7 +41,14 @@ import {
   updateWidgetConfig,
   resetWidgetsToDefault,
 } from '@/lib/actions/widget-actions';
+import {
+  addWidgetToProject,
+  removeWidgetFromProject,
+  reorderProjectWidgets,
+  resetProjectWidgetsToDefault,
+} from '@/lib/actions/project-widget-actions';
 import { updateTeam } from '@/lib/actions/team-actions';
+import { publishProject, unpublishProject } from '@/lib/actions/project-actions';
 import PortfolioEditor from './PortfolioEditor';
 import TeamTabEditor from './TeamTabEditor';
 import TrelloBoardEditor from './TrelloBoardEditor';
@@ -71,6 +78,19 @@ import SubTeamServicesWidget from '@/components/widgets/SubTeamServicesWidget';
 import SubTeamInitiativesWidget from '@/components/widgets/SubTeamInitiativesWidget';
 import SubTeamContactsWidget from '@/components/widgets/SubTeamContactsWidget';
 import SubTeamQuickLinksWidget from '@/components/widgets/SubTeamQuickLinksWidget';
+// Project widgets & editors
+import ProjectHeader from '@/components/projects/ProjectHeader';
+import ProjectGovernance from '@/components/projects/ProjectGovernance';
+import ProjectObjectives from '@/components/projects/ProjectObjectives';
+import ProjectFinancial from '@/components/projects/ProjectFinancial';
+import ProjectTimeline from '@/components/projects/ProjectTimeline';
+import ProjectStatusUpdateSection from '@/components/projects/ProjectStatusUpdate';
+import ProjectHeaderEditor from './ProjectHeaderEditor';
+import ProjectGovernanceEditor from './ProjectGovernanceEditor';
+import ProjectFinancialEditor from './ProjectFinancialEditor';
+import ProjectObjectivesEditor from './ProjectObjectivesEditor';
+import ProjectMilestonesEditor from './ProjectMilestonesEditor';
+import ProjectStatusUpdatesEditor from './ProjectStatusUpdatesEditor';
 
 // ── Types ──────────────────────────────────────────────
 
@@ -94,8 +114,32 @@ type WidgetDefinitionData = {
   icon: string;
 };
 
+interface ProjectData {
+  title: string;
+  description: string | null;
+  status: string;
+  projectCode: string | null;
+  department: string | null;
+  branch: string | null;
+  projectSponsor: string | null;
+  projectManager: string | null;
+  octProgramManager: string | null;
+  octltRepresentative: string | null;
+  programManagerBusiness: string | null;
+  totalBudget: string | null;
+  fundingSources: string | null;
+  expenditureAuthority: string | null;
+  startDate: Date | null;
+  endDate: Date | null;
+  progress: number;
+  milestones: { id: string; name: string; date: Date | null; status: string; sortOrder: number }[];
+  objectives: { id: string; iconName: string | null; title: string; description: string; sortOrder: number }[];
+  statusUpdates: { id: string; content: string; createdAt: Date }[];
+}
+
 interface LayoutEditorProps {
-  teamId: string;
+  teamId?: string;
+  projectId?: string;
   teamSlug: string;
   teamName: string;
   teamShortName: string;
@@ -214,6 +258,7 @@ interface LayoutEditorProps {
   hasChildren: boolean;
   isArchived: boolean;
   readOnly?: boolean;
+  projectData?: ProjectData;
 }
 
 // ── Widget Preview Data ────────────────────────────────
@@ -403,6 +448,43 @@ const WIDGET_PREVIEWS: Record<string, WidgetPreviewInfo> = {
       'Link entries with label and description',
       'External/secure link indicators',
     ],
+    schematic: 'card',
+  },
+  // ── Project Widgets ──
+  project_header: {
+    description: 'A gradient hero section with project status badge, project code, title, and description.',
+    layoutType: 'Full-width banner',
+    contents: ['Status badge (Planning, In Progress, etc.)', 'Project code', 'Title and description', 'Edit button for authorized users'],
+    schematic: 'full-width',
+  },
+  project_governance: {
+    description: 'A 2-column grid displaying governance roles including department, branch, sponsors, and managers.',
+    layoutType: '2-column grid',
+    contents: ['Department & Branch', 'Project Sponsor', 'Project Manager', 'OCT Program Manager', 'OCTLT Representative', 'Program Manager (Business)'],
+    schematic: '2-col',
+  },
+  project_objectives: {
+    description: 'A list of project objectives, each with an icon, title, and description.',
+    layoutType: 'Stacked list',
+    contents: ['Objective icon', 'Objective title', 'Objective description'],
+    schematic: 'accordion',
+  },
+  project_financial: {
+    description: 'A budget overview card showing total budget, funding sources, and expenditure authority.',
+    layoutType: 'Sidebar card',
+    contents: ['Total project budget', 'Funding sources', 'Expenditure authority'],
+    schematic: 'card',
+  },
+  project_timeline: {
+    description: 'A timeline section with start/end dates, progress bar, and milestone tracking.',
+    layoutType: 'Sidebar card',
+    contents: ['Start and end dates', 'Progress bar', 'Milestone timeline (completed, current, upcoming)'],
+    schematic: 'card',
+  },
+  project_status_updates: {
+    description: 'Displays the latest project status updates with timestamps.',
+    layoutType: 'Sidebar card',
+    contents: ['Update timestamp', 'Status text content', 'Update history'],
     schematic: 'card',
   },
 };
@@ -677,6 +759,7 @@ function WidgetPreviewModal({
 function WidgetEditorModal({
   instance,
   teamId,
+  projectId,
   onClose,
   onConfigSaved,
   portfolios,
@@ -691,9 +774,11 @@ function WidgetEditorModal({
   teamInitiatives,
   teamContacts,
   teamQuickLinks,
+  projectData,
 }: {
   instance: WidgetInstanceData;
-  teamId: string;
+  teamId?: string;
+  projectId?: string;
   onClose: () => void;
   onConfigSaved: (instanceId: string, config: Record<string, string>) => void;
   portfolios: LayoutEditorProps['portfolios'];
@@ -708,6 +793,7 @@ function WidgetEditorModal({
   teamInitiatives: LayoutEditorProps['teamInitiatives'];
   teamContacts: LayoutEditorProps['teamContacts'];
   teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
+  projectData?: ProjectData;
 }) {
   // eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map
   const IconComponent = resolveIcon(instance.widgetDefinition.icon);
@@ -743,29 +829,42 @@ function WidgetEditorModal({
 
     switch (widgetType) {
       case 'portfolios':
-        return <PortfolioEditor teamId={teamId} portfolios={portfolios} />;
+        return <PortfolioEditor teamId={teamId!} portfolios={portfolios} />;
       case 'team_tabs':
-        return <TeamTabEditor teamId={teamId} tabs={teamTabs} />;
+        return <TeamTabEditor teamId={teamId!} tabs={teamTabs} />;
       case 'work_tracking':
-        return <TrelloBoardEditor teamId={teamId} boards={trelloBoards} />;
+        return <TrelloBoardEditor teamId={teamId!} boards={trelloBoards} />;
       case 'team_members':
-        return <TeamMemberEditor teamId={teamId} members={teamMembers} />;
+        return <TeamMemberEditor teamId={teamId!} members={teamMembers} />;
       case 'service_areas':
-        return <ServiceAreaEditor teamId={teamId} areas={serviceAreas} />;
+        return <ServiceAreaEditor teamId={teamId!} areas={serviceAreas} />;
       case 'who_we_are':
-        return <WhoWeAreEditor teamId={teamId} items={whoWeAreItems} />;
+        return <WhoWeAreEditor teamId={teamId!} items={whoWeAreItems} />;
       case 'key_initiatives':
-        return <KeyInitiativesEditor teamId={teamId} slides={keyInitiativeSlides} />;
+        return <KeyInitiativesEditor teamId={teamId!} slides={keyInitiativeSlides} />;
       case 'accordion_links':
-        return <AccordionLinksEditor teamId={teamId} groups={accordionGroups} />;
+        return <AccordionLinksEditor teamId={teamId!} groups={accordionGroups} />;
       case 'subteam_services':
-        return <TeamServicesEditor teamId={teamId} services={teamServices} />;
+        return <TeamServicesEditor teamId={teamId!} services={teamServices} />;
       case 'subteam_initiatives':
-        return <TeamInitiativesEditor teamId={teamId} initiatives={teamInitiatives} />;
+        return <TeamInitiativesEditor teamId={teamId!} initiatives={teamInitiatives} />;
       case 'subteam_contacts':
-        return <TeamContactsEditor teamId={teamId} contacts={teamContacts} />;
+        return <TeamContactsEditor teamId={teamId!} contacts={teamContacts} />;
       case 'subteam_quick_links':
-        return <TeamQuickLinksEditor teamId={teamId} quickLinks={teamQuickLinks} />;
+        return <TeamQuickLinksEditor teamId={teamId!} quickLinks={teamQuickLinks} />;
+      // Project widget editors
+      case 'project_header':
+        return projectData ? <ProjectHeaderEditor projectId={projectId!} title={projectData.title} description={projectData.description} status={projectData.status} projectCode={projectData.projectCode} /> : null;
+      case 'project_governance':
+        return projectData ? <ProjectGovernanceEditor projectId={projectId!} department={projectData.department} branch={projectData.branch} projectSponsor={projectData.projectSponsor} projectManager={projectData.projectManager} octProgramManager={projectData.octProgramManager} octltRepresentative={projectData.octltRepresentative} programManagerBusiness={projectData.programManagerBusiness} /> : null;
+      case 'project_financial':
+        return projectData ? <ProjectFinancialEditor projectId={projectId!} totalBudget={projectData.totalBudget} fundingSources={projectData.fundingSources} expenditureAuthority={projectData.expenditureAuthority} /> : null;
+      case 'project_objectives':
+        return projectData ? <ProjectObjectivesEditor projectId={projectId!} objectives={projectData.objectives} /> : null;
+      case 'project_timeline':
+        return projectData ? <ProjectMilestonesEditor projectId={projectId!} milestones={projectData.milestones} startDate={projectData.startDate} endDate={projectData.endDate} progress={projectData.progress} /> : null;
+      case 'project_status_updates':
+        return projectData ? <ProjectStatusUpdatesEditor projectId={projectId!} updates={projectData.statusUpdates} /> : null;
       default:
         return (
           <p className="font-sans text-sm text-gray-500">
@@ -850,6 +949,7 @@ function WidgetInlinePreview({
   teamQuickLinks,
   whoWeAreItems,
   keyInitiativeSlides,
+  projectData,
 }: {
   widgetType: string;
   config: unknown;
@@ -871,6 +971,7 @@ function WidgetInlinePreview({
   teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
   whoWeAreItems: LayoutEditorProps['whoWeAreItems'];
   keyInitiativeSlides: LayoutEditorProps['keyInitiativeSlides'];
+  projectData?: ProjectData;
 }) {
   const cfg = (config as Record<string, string>) || {};
 
@@ -1021,6 +1122,63 @@ function WidgetInlinePreview({
           quickLinks={teamQuickLinks.map(ql => ({ label: ql.label, description: ql.description, href: ql.href, isSecure: ql.isSecure }))}
         />
       ) : <EmptyWidgetPlaceholder />;
+    // Project widget previews — always show component with placeholder data when empty
+    case 'project_header':
+      return (
+        <ProjectHeader
+          title={projectData?.title || 'Project Title'}
+          description={projectData?.description || 'Project description will appear here. Click the pencil icon to edit.'}
+          status={(projectData?.status || 'PLANNING') as 'PLANNING'}
+          projectCode={projectData?.projectCode || 'PRJ-0000'}
+        />
+      );
+    case 'project_governance':
+      return (
+        <ProjectGovernance
+          department={projectData?.department || 'Department'}
+          branch={projectData?.branch || 'Branch'}
+          projectSponsor={projectData?.projectSponsor || 'Project Sponsor'}
+          projectManager={projectData?.projectManager || 'Project Manager'}
+          octProgramManager={projectData?.octProgramManager || 'OCT Program Manager'}
+          octltRepresentative={projectData?.octltRepresentative || 'OCTLT Representative'}
+          programManagerBusiness={projectData?.programManagerBusiness || 'Program Manager'}
+        />
+      );
+    case 'project_objectives':
+      return (
+        <ProjectObjectives
+          objectives={projectData?.objectives.length ? projectData.objectives : [
+            { id: 'placeholder', iconName: 'check_circle', title: 'Objective Title', description: 'Objective description. Click the pencil icon to add objectives.' },
+          ]}
+        />
+      );
+    case 'project_financial':
+      return (
+        <ProjectFinancial
+          totalBudget={projectData?.totalBudget || '$0'}
+          fundingSources={projectData?.fundingSources || 'Funding sources'}
+          expenditureAuthority={projectData?.expenditureAuthority || 'Expenditure authority'}
+        />
+      );
+    case 'project_timeline':
+      return (
+        <ProjectTimeline
+          startDate={projectData?.startDate ?? null}
+          endDate={projectData?.endDate ?? null}
+          progress={projectData?.progress ?? 0}
+          milestones={projectData?.milestones.length ? projectData.milestones : [
+            { id: 'placeholder', name: 'Milestone', date: null, status: 'upcoming' },
+          ]}
+        />
+      );
+    case 'project_status_updates':
+      return (
+        <ProjectStatusUpdateSection
+          updates={projectData?.statusUpdates.length ? projectData.statusUpdates : [
+            { id: 'placeholder', content: 'Status updates will appear here. Click the pencil icon to add updates.', createdAt: new Date() },
+          ]}
+        />
+      );
     default:
       return null;
   }
@@ -1053,6 +1211,7 @@ function SortableWidgetItem({
   whoWeAreItems,
   keyInitiativeSlides,
   readOnly,
+  projectData,
 }: {
   instance: WidgetInstanceData;
   onRemove: (id: string) => void;
@@ -1078,6 +1237,7 @@ function SortableWidgetItem({
   whoWeAreItems: LayoutEditorProps['whoWeAreItems'];
   keyInitiativeSlides: LayoutEditorProps['keyInitiativeSlides'];
   readOnly?: boolean;
+  projectData?: ProjectData;
 }) {
   const {
     attributes,
@@ -1187,6 +1347,7 @@ function SortableWidgetItem({
           teamQuickLinks={teamQuickLinks}
           whoWeAreItems={whoWeAreItems}
           keyInitiativeSlides={keyInitiativeSlides}
+          projectData={projectData}
         />
       </div>
     </div>
@@ -1197,6 +1358,7 @@ function SortableWidgetItem({
 
 export default function LayoutEditor({
   teamId,
+  projectId,
   teamSlug,
   teamName,
   teamShortName,
@@ -1225,7 +1387,9 @@ export default function LayoutEditor({
   hasChildren,
   isArchived,
   readOnly = false,
+  projectData,
 }: LayoutEditorProps) {
+  const isProjectMode = !!projectId;
   const dndId = useId();
   const [instances, setInstances] = useState(initialInstances);
   const [isPending, startTransition] = useTransition();
@@ -1246,17 +1410,26 @@ export default function LayoutEditor({
   function handleTogglePublish() {
     const newValue = !isPublished;
     startPublishTransition(async () => {
-      await updateTeam(teamId, { isPublished: newValue });
+      if (isProjectMode) {
+        if (newValue) await publishProject(projectId!);
+        else await unpublishProject(projectId!);
+      } else {
+        await updateTeam(teamId!, { isPublished: newValue });
+      }
       setIsPublished(newValue);
     });
   }
 
   function handleSavePageText() {
     startPageTextTransition(async () => {
-      await updateTeam(teamId, {
-        pageTitle: pageTitle || undefined,
-        pageDescription: pageDescription || undefined,
-      });
+      if (isProjectMode) {
+        // Project header is edited via widget editor, not page text
+      } else {
+        await updateTeam(teamId!, {
+          pageTitle: pageTitle || undefined,
+          pageDescription: pageDescription || undefined,
+        });
+      }
       setEditingPageText(false);
     });
   }
@@ -1297,16 +1470,19 @@ export default function LayoutEditor({
     setInstances(reordered);
 
     startTransition(async () => {
-      await reorderWidgets(
-        teamId,
-        reordered.map((i) => i.id)
-      );
+      if (isProjectMode) {
+        await reorderProjectWidgets(projectId!, reordered.map((i) => i.id));
+      } else {
+        await reorderWidgets(teamId!, reordered.map((i) => i.id));
+      }
     });
   }
 
   function handleAdd(definition: WidgetDefinitionData) {
     startTransition(async () => {
-      const instance = await addWidgetToTeam(teamId, definition.id);
+      const instance = isProjectMode
+        ? await addWidgetToProject(projectId!, definition.id)
+        : await addWidgetToTeam(teamId!, definition.id);
       setInstances((prev) => [
         ...prev,
         {
@@ -1328,7 +1504,8 @@ export default function LayoutEditor({
 
     setInstances((prev) => prev.filter((i) => i.id !== instanceId));
     startTransition(async () => {
-      await removeWidgetFromTeam(instanceId);
+      if (isProjectMode) await removeWidgetFromProject(instanceId);
+      else await removeWidgetFromTeam(instanceId);
     });
   }
 
@@ -1358,11 +1535,15 @@ export default function LayoutEditor({
     if (!confirm('Are you sure you want to reset to the default layout? This will remove all current widgets and replace them with the default set.')) return;
 
     startTransition(async () => {
-      const newInstances = await resetWidgetsToDefault(teamId);
+      const newInstances = isProjectMode
+        ? await resetProjectWidgetsToDefault(projectId!)
+        : await resetWidgetsToDefault(teamId!);
       setInstances(
         newInstances.map((inst) => ({
-          ...inst,
+          id: inst.id,
+          sortOrder: inst.sortOrder,
           config: inst.config as unknown,
+          widgetDefinition: inst.widgetDefinition,
         }))
       );
     });
@@ -1407,7 +1588,7 @@ export default function LayoutEditor({
             )}
             {/* Preview Page button */}
             <a
-              href={parentTeamSlug ? `/${parentTeamSlug}/${teamSlug}` : `/${teamSlug}`}
+              href={isProjectMode ? `/projects/${teamSlug}` : parentTeamSlug ? `/${parentTeamSlug}/${teamSlug}` : `/${teamSlug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-primary-blue hover:text-primary-blue transition-colors"
@@ -1448,13 +1629,15 @@ export default function LayoutEditor({
         </div>
 
         {/* Archive Confirmation Dialog */}
-        <ArchiveConfirmDialog
-          isOpen={showArchiveDialog}
-          onClose={() => setShowArchiveDialog(false)}
-          teamId={teamId}
-          teamName={teamName}
-          hasChildren={hasChildren}
-        />
+        {!isProjectMode && (
+          <ArchiveConfirmDialog
+            isOpen={showArchiveDialog}
+            onClose={() => setShowArchiveDialog(false)}
+            teamId={teamId!}
+            teamName={teamName}
+            hasChildren={hasChildren}
+          />
+        )}
         {/* Page Text Editor */}
         {(initialPageTitle !== null || initialPageDescription !== null) && (
           <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
@@ -1577,6 +1760,7 @@ export default function LayoutEditor({
                     whoWeAreItems={whoWeAreItems}
                     keyInitiativeSlides={keyInitiativeSlides}
                     readOnly={readOnly}
+                    projectData={projectData}
                   />
                 );
 
@@ -1684,6 +1868,7 @@ export default function LayoutEditor({
         <WidgetEditorModal
           instance={editingWidget}
           teamId={teamId}
+          projectId={projectId}
           onClose={() => setEditingWidget(null)}
           onConfigSaved={handleConfigSaved}
           portfolios={portfolios}
@@ -1698,6 +1883,7 @@ export default function LayoutEditor({
           teamInitiatives={teamInitiatives}
           teamContacts={teamContacts}
           teamQuickLinks={teamQuickLinks}
+          projectData={projectData}
         />
       )}
     </div>

@@ -71,6 +71,7 @@ export default function RootLayout({
       </head>
       <body
         className={`${openSans.variable} ${ptSerif.variable} antialiased`}
+        suppressHydrationWarning
       >
         <DevelopmentDisclaimer />
         {children}

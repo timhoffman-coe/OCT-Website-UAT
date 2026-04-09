@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket, Map, BarChart3, Newspaper } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket, Map, BarChart3, Newspaper, FolderKanban } from 'lucide-react';
 
 interface Team {
   id: string;
@@ -18,9 +18,10 @@ interface AdminSidebarProps {
   userRole: string;
   userName: string;
   canEditNews?: boolean;
+  canEditProjects?: boolean;
 }
 
-export default function AdminSidebar({ teams, userRole, userName, canEditNews }: AdminSidebarProps) {
+export default function AdminSidebar({ teams, userRole, userName, canEditNews, canEditProjects }: AdminSidebarProps) {
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path || pathname.startsWith(path + '/');
@@ -231,6 +232,26 @@ export default function AdminSidebar({ teams, userRole, userName, canEditNews }:
           </div>
         )}
 
+        {/* Projects Section */}
+        {canEditProjects && (
+          <div className="pt-4">
+            <p className="px-3 text-xs font-sans font-semibold text-white/40 uppercase tracking-wider mb-2">
+              Projects
+            </p>
+            <Link
+              href="/admin/projects"
+              className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                isActive('/admin/projects') && !isActive('/admin/project-editors')
+                  ? 'bg-primary-blue text-white'
+                  : 'text-white/80 hover:bg-white/10'
+              }`}
+            >
+              <FolderKanban className="w-4 h-4" />
+              All Projects
+            </Link>
+          </div>
+        )}
+
         {/* Admin Section */}
         {(userRole === 'SUPER_ADMIN' || userRole === 'TEAM_ADMIN') && (
           <div className="pt-4">
@@ -260,6 +281,17 @@ export default function AdminSidebar({ teams, userRole, userName, canEditNews }:
                 >
                   <Newspaper className="w-4 h-4" />
                   News Editors
+                </Link>
+                <Link
+                  href="/admin/project-editors"
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                    isActive('/admin/project-editors')
+                      ? 'bg-primary-blue text-white'
+                      : 'text-white/80 hover:bg-white/10'
+                  }`}
+                >
+                  <FolderKanban className="w-4 h-4" />
+                  Project Editors
                 </Link>
                 <Link
                   href="/admin/roadmap-editors"

@@ -37,10 +37,12 @@ There are three roles:
 
 Permissions are granted per-team through the `TeamPermission` table. A TEAM_ADMIN for a parent team automatically has access to its child teams.
 
-Four special permission tables control access to non-team content:
+Five special permission tables control access to non-team content:
 - `RoadmapPermission` — who can edit the Technology Roadmap
 - `OctWebDevPermission` — who can view the OCT-Web-Dev documentation section
 - `NewsPermission` — who can create and edit news posts
+- `ProjectPermission` — who can manage all projects (global access)
+- `ProjectManagerAssignment` — per-project edit access for individual project managers
 
 In all cases, SUPER_ADMIN users automatically have access without needing an explicit permission record.
 
@@ -63,11 +65,12 @@ Each team has a `pageTemplate` that determines what content types it supports:
 | **SECTION** | Top-level landing pages | Service areas, "Who We Are" cards, key initiative slides |
 | **ITS_TEAM** | Main team pages | Portfolios, team tabs, Trello boards, team members, accordion links |
 | **SUB_TEAM** | Detail pages under a team | Services, initiatives, contacts, quick links |
+| **PROJECT** | Project showcase pages | Governance, objectives, financial, timeline, milestones, status updates |
 | **CUSTOM** | Reserved for future use | — |
 
 ### Widget System
 
-Pages use a widget-based layout system. Each team has a set of `WidgetInstance` records that control which content sections appear and in what order. There are 16 widget types:
+Pages use a widget-based layout system. Each team or project has a set of `WidgetInstance` records that control which content sections appear and in what order. There are 22 widget types:
 
 | Widget Type | Label | Template | Description |
 |-------------|-------|----------|-------------|
@@ -87,6 +90,12 @@ Pages use a widget-based layout system. Each team has a set of `WidgetInstance` 
 | `subteam_initiatives` | Current Initiatives | SUB_TEAM | Initiative cards with descriptions and links |
 | `subteam_contacts` | Key Contacts | SUB_TEAM | Sidebar contact cards with roles and emails |
 | `subteam_quick_links` | Quick Links | SUB_TEAM | Sidebar quick links with descriptions |
+| `project_header` | Project Header | PROJECT | Gradient hero with status badge, code, title, description |
+| `project_governance` | Project Governance | PROJECT | 2-column grid of governance roles |
+| `project_objectives` | Project Objectives | PROJECT | Objectives list with icons and descriptions |
+| `project_financial` | Financial Overview | PROJECT | Budget card with funding and authority |
+| `project_timeline` | Project Timeline | PROJECT | Dates, progress bar, milestone timeline |
+| `project_status_updates` | Status Updates | PROJECT | Latest status updates with timestamps |
 
 Some widgets (`budget_spend`, `ongoing_projects`) are config-based — their heading, description, button text, and button link are stored as JSON config on the `WidgetInstance` rather than in separate database tables.
 
@@ -100,7 +109,17 @@ User
   ├─ RoadmapPermission
   ├─ OctWebDevPermission
   ├─ NewsPermission
+  ├─ ProjectPermission
+  ├─ ProjectManagerAssignment[]
   └─ AuditLog (tracks all changes)
+
+Project
+  ├─ WidgetInstance[] (layout configuration)
+  ├─ ProjectMilestone[] (timeline)
+  ├─ ProjectObjective[] (goals)
+  ├─ ProjectStatusUpdate[] (history)
+  ├─ ProjectTag[] (via join table)
+  └─ ProjectManagerAssignment[]
 
 Team
   ├─ Parent/child hierarchy (parentId)
@@ -143,6 +162,10 @@ The admin panel is a client-side React application with these main sections:
 | `/admin/audit-log` | View and export change history |
 | `/admin/roadmap-editors` | Manage roadmap editor permissions (SUPER_ADMIN) |
 | `/admin/oct-web-dev-viewers` | Manage documentation viewer permissions (SUPER_ADMIN) |
+| `/admin/projects` | Project list with search and status filtering |
+| `/admin/projects/new` | Create a new project |
+| `/admin/projects/[projectId]` | Visual widget editor for a project (same as team editor) |
+| `/admin/project-editors` | Manage global project permissions (SUPER_ADMIN) |
 | `/admin/trash` | Restore archived (soft-deleted) teams |
 
 ### Editing Flow
@@ -239,6 +262,8 @@ Public pages use Next.js dynamic routes:
 
 - `app/[teamSlug]/page.tsx` — renders SECTION and ITS_TEAM pages
 - `app/[teamSlug]/[subTeamSlug]/page.tsx` — renders SUB_TEAM pages
+- `app/projects/page.tsx` — project listing with tag filtering
+- `app/projects/[projectSlug]/page.tsx` — project detail page (widget-based layout)
 
 The rendering flow:
 

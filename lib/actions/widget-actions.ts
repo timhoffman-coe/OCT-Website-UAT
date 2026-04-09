@@ -64,6 +64,7 @@ export async function removeWidgetFromTeam(instanceId: string) {
       widgetDefinition: { select: { widgetType: true } },
     },
   });
+  if (!instance.teamId) throw new Error('Widget is not on a team');
   const user = await requireTeamAccess(instance.teamId);
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: instance.teamId } });
@@ -77,7 +78,7 @@ export async function removeWidgetFromTeam(instanceId: string) {
       entity: 'WidgetInstance',
       entityId: instanceId,
       description: `Removed widget '${instance.widgetDefinition.widgetType}' from '${team.teamName}'`,
-      changes: instance,
+      changes: JSON.parse(JSON.stringify(instance)),
     },
   });
   revalidatePath(`/${team.slug}`);
@@ -193,6 +194,7 @@ export async function updateWidgetConfig(
       widgetDefinition: { select: { widgetType: true } },
     },
   });
+  if (!instance.teamId) throw new Error('Widget is not on a team');
   const user = await requireTeamAccess(instance.teamId);
 
   const team = await prisma.team.findUniqueOrThrow({ where: { id: instance.teamId } });

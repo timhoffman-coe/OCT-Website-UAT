@@ -32,5 +32,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...teamPages];
+  const projects = await prisma.project.findMany({
+    where: { isPublished: true, archivedAt: null },
+    select: { slug: true, updatedAt: true },
+  });
+
+  const projectPages = [
+    {
+      url: `${baseUrl}/projects`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
+    ...projects.map((project) => ({
+      url: `${baseUrl}/projects/${project.slug}`,
+      lastModified: project.updatedAt,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
+  ];
+
+  return [...staticPages, ...teamPages, ...projectPages];
 }

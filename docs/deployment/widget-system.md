@@ -5,14 +5,14 @@ The widget system provides a flexible, drag-and-drop page layout for all CMS-man
 ## Architecture
 
 ```
-WidgetDefinition (16 types)
+WidgetDefinition (22 types)
   │  Stores: widgetType, label, description, icon, isEnabled
-  │  Seeded once via prisma/seed.ts
+  │  Seeded once via prisma/seed.ts or migration SQL
   │
   ▼
-WidgetInstance (per-team)
-  │  Stores: teamId, widgetDefinitionId, config (JSON), sortOrder
-  │  Created automatically when teams/portfolios are added
+WidgetInstance (per-team or per-project)
+  │  Stores: teamId?, projectId?, widgetDefinitionId, config (JSON), sortOrder
+  │  Created automatically when teams/projects are added
   │
   ▼
 WidgetRenderer (components/widgets/WidgetRenderer.tsx)
@@ -20,7 +20,7 @@ WidgetRenderer (components/widgets/WidgetRenderer.tsx)
 ```
 
 - **WidgetDefinition** records are global — they define what widget types exist in the system.
-- **WidgetInstance** records are per-team — they define which widgets appear on a specific team's page and in what order.
+- **WidgetInstance** records are per-entity — they define which widgets appear on a specific team or project page and in what order. Each instance has either `teamId` or `projectId` set (not both).
 - The `config` JSON field on WidgetInstance stores settings for config-based widgets (e.g., heading, description, button text).
 
 ## Widget Types
@@ -43,6 +43,12 @@ WidgetRenderer (components/widgets/WidgetRenderer.tsx)
 | `subteam_initiatives` | Current Initiatives | SUB_TEAM | Initiative cards with descriptions and links |
 | `subteam_contacts` | Key Contacts | SUB_TEAM | Sidebar contact cards with roles and emails |
 | `subteam_quick_links` | Quick Links | SUB_TEAM | Sidebar quick links with descriptions |
+| `project_header` | Project Header | PROJECT | Gradient hero with status, code, title, description |
+| `project_governance` | Project Governance | PROJECT | 2-column grid of governance roles |
+| `project_objectives` | Project Objectives | PROJECT | Objectives list with Lucide icons |
+| `project_financial` | Financial Overview | PROJECT | Budget card with funding and authority |
+| `project_timeline` | Project Timeline | PROJECT | Dates, progress bar, milestone timeline |
+| `project_status_updates` | Status Updates | PROJECT | Latest status updates with timestamps |
 
 ## Template Blocklist
 
@@ -52,15 +58,23 @@ Not all widgets are available on all page templates. `lib/widget-template-map.ts
 |----------|----------------|
 | **SECTION** | `subteam_header`, `subteam_services`, `subteam_initiatives`, `subteam_contacts`, `subteam_quick_links` |
 | **ITS_TEAM** | `service_areas`, `subteam_header`, `subteam_services`, `subteam_initiatives`, `subteam_contacts`, `subteam_quick_links` |
-| **SUB_TEAM** | `portfolios`, `service_areas` |
+| **SUB_TEAM** | `portfolios`, `service_areas`, all `project_*` widgets |
+| **PROJECT** | All `page_header`, `portfolios`, `team_*`, `service_areas`, `who_we_are`, `key_initiatives`, `subteam_*`, `ongoing_projects`, `budget_spend`, `accordion_links`, `work_tracking` widgets |
 
-If a widget type is in the blocklist for a template, it won't appear in the Layout Editor's "Add Widget" options for teams using that template.
+If a widget type is in the blocklist for a template, it won't appear in the Layout Editor's "Add Widget" options for pages using that template.
 
 ## Sidebar vs. Main Content
 
-On SUB_TEAM pages, two widgets render in a sidebar column instead of the main content area:
+Certain widgets render in a sidebar column instead of the main content area:
+
+**SUB_TEAM sidebar** (1/3 width):
 - `subteam_contacts`
 - `subteam_quick_links`
+
+**PROJECT sidebar** (4/12 width):
+- `project_financial`
+- `project_timeline`
+- `project_status_updates`
 
 The `isSidebarWidget()` function in `lib/widget-template-map.ts` identifies these.
 
@@ -87,10 +101,11 @@ When a new team is created, default widgets are automatically assigned based on 
 
 ### Server Actions
 
-All widget operations go through `lib/actions/widget-actions.ts`:
-- Create, update, delete widget instances
-- Reorder widgets (update sortOrder)
-- Each operation logs to the audit trail
+Widget operations go through two action files:
+- `lib/actions/widget-actions.ts` — for team widget instances
+- `lib/actions/project-widget-actions.ts` — for project widget instances
+
+Both support: create, delete, reorder, update config, and reset to defaults. Each operation logs to the audit trail.
 
 ## Adding a New Widget Type
 

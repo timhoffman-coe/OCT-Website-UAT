@@ -20,12 +20,14 @@
 - [x] Admin dashboard with team hierarchy
 - [x] Full CRUD for teams, users, widgets, service areas
 - [x] Team page editor with SECTION, ITS_TEAM, SUB_TEAM templates
+- [x] Project page editor with PROJECT template (6 widget types)
 - [x] Widget-based layout system with drag-and-drop reordering
 - [x] Reusable widgets across all page tiers
 - [x] User management interface
 - [x] Audit logging system
 - [x] Roadmap editor permissions management
 - [x] OCT-Web-Dev viewer permissions management
+- [x] Project editor permissions management (global + per-project)
 
 ### Pages & Content
 - [x] All 5 section landing pages (Tech Planning, Business Solutions, ITS, PMO, CIS)
@@ -323,11 +325,17 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 - [ ] Add role-based conditional rendering (only visible to leadership group members)
 - [ ] Populate leadership profiles via CMS admin
 
-### Project Page Template
-- [ ] Create project page template as sub-page type under teams
-- [ ] Add project fields (description, status, team members, timeline)
-- [ ] Wire into dynamic team routes ([teamSlug]/projects/[projectSlug])
-- [ ] Allow teams to showcase active project work
+### Project Pages
+- [x] Dedicated Project data model (governance, financial, timeline, milestones, objectives, status updates, tags)
+- [x] Widget-based project pages with drag-and-drop layout editor (6 project-specific widgets)
+- [x] Two-tier permissions (global ProjectPermission + per-project ProjectManagerAssignment)
+- [x] Project listing page at /projects with tag filtering
+- [x] Project detail pages at /projects/[slug] using WidgetRenderer
+- [x] Admin CRUD: list, create, visual editor at /admin/projects
+- [x] Project editor permissions management at /admin/project-editors
+- [x] Ongoing Projects widget upgraded to display real project data (manual or tag-based selection)
+- [x] Default widget instances auto-created on project creation
+- [x] Projects added to sitemap
 
 ### News & Announcements Section
 - [ ] Create news/blog page with chronological post listing
@@ -345,7 +353,7 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 - [ ] Service area descriptions are accurate and complete
 - [ ] Team contacts populated with real names and emails
 - [ ] Quick links point to real resources
-- [ ] Initiatives/projects are current
+- [ ] Initiatives/projects are current (Projects system now available — populate with real project data)
 - [ ] Trello board links are active
 
 ## Infrastructure, Testing & DevOps

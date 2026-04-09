@@ -16,6 +16,7 @@ Documentation for the City of Edmonton Open City & Technology website — a Next
 | [Architecture Overview](deployment/architecture-overview.md) | Developers | System architecture, frontend/backend patterns, database layer |
 | [CMS Overview](deployment/cms-overview.md) | Developers | CMS data model, team hierarchy, editing flow, news system |
 | [Widget System](deployment/widget-system.md) | Developers | Widget types, template blocklist, how to add new widgets |
+| [Projects System](deployment/projects-system.md) | Developers | Project pages, widget editors, permissions, tags, ongoing projects widget |
 
 ## Subsystem Guides
 

@@ -15,8 +15,16 @@ import SubTeamServicesWidget from './SubTeamServicesWidget';
 import SubTeamInitiativesWidget from './SubTeamInitiativesWidget';
 import SubTeamContactsWidget from './SubTeamContactsWidget';
 import SubTeamQuickLinksWidget from './SubTeamQuickLinksWidget';
+// Project widgets
+import ProjectHeader from '@/components/projects/ProjectHeader';
+import ProjectGovernance from '@/components/projects/ProjectGovernance';
+import ProjectObjectives from '@/components/projects/ProjectObjectives';
+import ProjectFinancial from '@/components/projects/ProjectFinancial';
+import ProjectTimeline from '@/components/projects/ProjectTimeline';
+import ProjectStatusUpdateSection from '@/components/projects/ProjectStatusUpdate';
 import type { Portfolio, TeamTab, AccordionItem, TrelloBoard, TeamMember } from '@/lib/data/its-shared';
 import type { ServiceArea } from '@/components/SectionTemplate';
+import type { ProjectStatus } from '@prisma/client';
 
 export const DEFAULT_ITS_TEAM_WIDGETS = [
   'page_header',
@@ -41,6 +49,25 @@ export const DEFAULT_SUB_TEAM_WIDGETS = [
   'subteam_quick_links',
 ] as const;
 
+export const DEFAULT_PROJECT_WIDGETS = [
+  'project_header',
+  'project_governance',
+  'project_objectives',
+  'project_financial',
+  'project_timeline',
+  'project_status_updates',
+] as const;
+
+export interface OngoingProjectSummary {
+  id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  status: string;
+  progress: number;
+  tags: { tag: { name: string; slug: string } }[];
+}
+
 export interface WidgetDataBag {
   teamName?: string;
   teamShortName?: string;
@@ -64,6 +91,30 @@ export interface WidgetDataBag {
   initiatives?: { title: string; description: string; href: string }[];
   contacts?: { name: string; role: string; email: string }[];
   quickLinks?: { label: string; description: string; href: string; isSecure: boolean }[];
+  ongoingProjects?: OngoingProjectSummary[];
+  // Project fields
+  projectTitle?: string;
+  projectDescription?: string | null;
+  projectStatus?: ProjectStatus;
+  projectCode?: string | null;
+  projectId?: string;
+  canEditProject?: boolean;
+  department?: string | null;
+  branch?: string | null;
+  projectSponsor?: string | null;
+  projectManager?: string | null;
+  octProgramManager?: string | null;
+  octltRepresentative?: string | null;
+  programManagerBusiness?: string | null;
+  totalBudget?: string | null;
+  fundingSources?: string | null;
+  expenditureAuthority?: string | null;
+  startDate?: Date | null;
+  endDate?: Date | null;
+  progress?: number;
+  milestones?: { id: string; name: string; date: Date | null; status: string }[];
+  objectives?: { id: string; iconName: string | null; title: string; description: string }[];
+  statusUpdates?: { id: string; content: string; createdAt: Date }[];
 }
 
 interface WidgetRendererProps {
@@ -105,6 +156,7 @@ function renderWidget(widgetType: string, data: WidgetDataBag, index: number) {
           teamName={data.teamName}
           teamShortName={data.teamShortName || data.teamName}
           config={data.widgetConfigs?.ongoing_projects}
+          projects={data.ongoingProjects}
         />
       ) : null;
 
@@ -165,6 +217,65 @@ function renderWidget(widgetType: string, data: WidgetDataBag, index: number) {
         <SubTeamQuickLinksWidget key={index} quickLinks={data.quickLinks} />
       ) : null;
 
+    // ── Project Widgets ──────────────────────────────────
+    case 'project_header':
+      return data.projectTitle ? (
+        <ProjectHeader
+          key={index}
+          title={data.projectTitle}
+          description={data.projectDescription}
+          status={data.projectStatus || 'PLANNING'}
+          projectCode={data.projectCode}
+          canEdit={data.canEditProject}
+          projectId={data.projectId}
+        />
+      ) : null;
+
+    case 'project_governance':
+      return (
+        <ProjectGovernance
+          key={index}
+          department={data.department}
+          branch={data.branch}
+          projectSponsor={data.projectSponsor}
+          projectManager={data.projectManager}
+          octProgramManager={data.octProgramManager}
+          octltRepresentative={data.octltRepresentative}
+          programManagerBusiness={data.programManagerBusiness}
+        />
+      );
+
+    case 'project_objectives':
+      return data.objectives?.length ? (
+        <ProjectObjectives key={index} objectives={data.objectives} />
+      ) : null;
+
+    case 'project_financial':
+      return (
+        <ProjectFinancial
+          key={index}
+          totalBudget={data.totalBudget}
+          fundingSources={data.fundingSources}
+          expenditureAuthority={data.expenditureAuthority}
+        />
+      );
+
+    case 'project_timeline':
+      return (
+        <ProjectTimeline
+          key={index}
+          startDate={data.startDate ?? null}
+          endDate={data.endDate ?? null}
+          progress={data.progress ?? 0}
+          milestones={data.milestones || []}
+        />
+      );
+
+    case 'project_status_updates':
+      return data.statusUpdates?.length ? (
+        <ProjectStatusUpdateSection key={index} updates={data.statusUpdates} />
+      ) : null;
+
     default:
       return null;
   }
@@ -176,24 +287,34 @@ export default function WidgetRenderer({ widgetOrder, data }: WidgetRendererProp
 
   // If there are sidebar widgets, render a 2-column layout
   if (sidebarWidgets.length > 0) {
-    // Header widget renders full-width above the grid
-    const headerWidgets = mainWidgets.filter((w) => w === 'subteam_header');
-    const contentWidgets = mainWidgets.filter((w) => w !== 'subteam_header');
+    // Header widgets render full-width above the grid
+    const headerWidgets = mainWidgets.filter((w) => w === 'subteam_header' || w === 'project_header');
+    const contentWidgets = mainWidgets.filter((w) => w !== 'subteam_header' && w !== 'project_header');
+
+    // Use 8/4 split for project pages, 2/1 for sub-team pages
+    const isProjectLayout = widgetOrder.some(w => w.startsWith('project_'));
+    const gridClass = isProjectLayout
+      ? 'grid grid-cols-1 lg:grid-cols-12 gap-8'
+      : 'grid grid-cols-1 lg:grid-cols-3 gap-8';
+    const mainClass = isProjectLayout ? 'lg:col-span-8 space-y-8' : 'lg:col-span-2';
+    const sideClass = isProjectLayout ? 'lg:col-span-4 space-y-8' : 'space-y-6';
 
     return (
       <>
         {headerWidgets.map((widgetType, index) => renderWidget(widgetType, data, index))}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            {contentWidgets.map((widgetType, index) =>
-              renderWidget(widgetType, data, headerWidgets.length + index)
-            )}
+        <div className={isProjectLayout ? 'max-w-6xl mx-auto px-8 -mt-8 pb-20' : ''}>
+          <div className={gridClass}>
+            <div className={mainClass}>
+              {contentWidgets.map((widgetType, index) =>
+                renderWidget(widgetType, data, headerWidgets.length + index)
+              )}
+            </div>
+            <aside className={sideClass}>
+              {sidebarWidgets.map((widgetType, index) =>
+                renderWidget(widgetType, data, mainWidgets.length + index)
+              )}
+            </aside>
           </div>
-          <aside className="space-y-6">
-            {sidebarWidgets.map((widgetType, index) =>
-              renderWidget(widgetType, data, mainWidgets.length + index)
-            )}
-          </aside>
         </div>
       </>
     );
