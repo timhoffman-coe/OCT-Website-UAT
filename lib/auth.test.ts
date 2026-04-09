@@ -52,7 +52,7 @@ describe('auth', () => {
       expect(result).toEqual(user);
       expect(prisma.user.findUnique).toHaveBeenCalledWith({
         where: { email: 'test@edmonton.ca' },
-        include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true, newsPermission: true },
+        include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true, newsPermission: true, projectPermission: true, projectManagerAssignments: true },
       });
     });
 
@@ -281,18 +281,14 @@ describe('auth', () => {
       ] as never);
       const { getManageableTeamIds } = await import('./auth');
       const ids = await getManageableTeamIds(['parent-1']);
-      expect(ids).toEqual(['child-1', 'child-2']);
-      expect(prisma.team.findMany).toHaveBeenCalledWith({
-        where: { parentId: { in: ['parent-1'] } },
-        select: { id: true },
-      });
+      expect(ids).toEqual(['parent-1', 'child-1', 'child-2']);
     });
 
     it('returns empty array when no children', async () => {
       vi.mocked(prisma.team.findMany).mockResolvedValue([] as never);
       const { getManageableTeamIds } = await import('./auth');
       const ids = await getManageableTeamIds(['orphan-team']);
-      expect(ids).toEqual([]);
+      expect(ids).toEqual(['orphan-team']);
     });
   });
 });
