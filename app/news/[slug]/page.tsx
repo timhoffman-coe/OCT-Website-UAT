@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ArticleRenderer from "@/components/news/ArticleRenderer";
@@ -93,10 +94,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         {/* Hero Image */}
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-16">
           <div className="aspect-[21/9] w-full bg-structural-gray-blue rounded-lg overflow-hidden relative group">
-            <img
+            <Image
               alt={post.title}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
               src={post.image}
+              fill
+              priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-dark-blue/40 to-transparent" />
           </div>

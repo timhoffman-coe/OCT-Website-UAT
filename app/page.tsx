@@ -40,11 +40,12 @@ export default function Home() {
                 return (
                   <Link key={post.slug} href={`/news/${post.slug}`}>
                     <article className="flex flex-col md:flex-row gap-8 group">
-                      <div className="md:w-64 h-44 rounded-xl overflow-hidden shrink-0">
-                        <img
+                      <div className="md:w-64 h-44 rounded-xl overflow-hidden shrink-0 relative">
+                        <Image
                           src={post.image}
                           alt={post.title}
-                          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                          fill
+                          className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                         />
                       </div>
                       <div>
