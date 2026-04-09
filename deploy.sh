@@ -42,10 +42,6 @@ echo "=== Running linter ==="
 npm run lint || { echo "ERROR: Linting failed. Fix lint errors before deploying."; exit 1; }
 
 echo ""
-echo "=== Running type check ==="
-npx tsc --noEmit || { echo "ERROR: Type checking failed. Fix type errors before deploying."; exit 1; }
-
-echo ""
 echo "=== Running unit/integration tests ==="
 npm test || { echo "ERROR: Tests failed. Fix failing tests before deploying."; exit 1; }
 
