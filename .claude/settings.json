@@ -2,6 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(docker compose:*)"
+    ],
+    "additionalDirectories": [
+      "/home/sf-admin/.claude/plans"
     ]
   }
 }
