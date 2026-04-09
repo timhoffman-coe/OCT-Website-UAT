@@ -78,6 +78,10 @@ export default function UserManagementClient({
   const topLevel = teams.filter((t) => !t.parentId);
   const childrenOf = (parentId: string) =>
     teams.filter((t) => t.parentId === parentId);
+  const allDescendantIds = (parentId: string): string[] => {
+    const children = childrenOf(parentId);
+    return children.flatMap((c) => [c.id, ...allDescendantIds(c.id)]);
+  };
 
   // Set of team IDs available in the UI (for filtering during edit)
   const availableTeamIds = new Set(teams.map((t) => t.id));
@@ -201,8 +205,7 @@ export default function UserManagementClient({
   }
 
   function toggleSection(parentId: string) {
-    const children = childrenOf(parentId);
-    const allChildIds = [parentId, ...children.map((c) => c.id)];
+    const allChildIds = [parentId, ...allDescendantIds(parentId)];
     const allSelected = allChildIds.every((id) => form.teamIds.includes(id));
 
     setForm((prev) => {
@@ -293,7 +296,7 @@ export default function UserManagementClient({
             <div className="border border-gray-200 rounded-lg divide-y divide-gray-100 max-h-64 overflow-y-auto">
               {topLevel.map((section) => {
                 const children = childrenOf(section.id);
-                const allIds = [section.id, ...children.map((c) => c.id)];
+                const allIds = [section.id, ...allDescendantIds(section.id)];
                 const selectedCount = allIds.filter((id) => form.teamIds.includes(id)).length;
                 const allSelected = selectedCount === allIds.length;
                 const someSelected = selectedCount > 0 && !allSelected;
@@ -335,29 +338,61 @@ export default function UserManagementClient({
                     {/* Child teams */}
                     {children.length > 0 && (
                       <div className="pl-6 pb-1">
-                        {children.map((child) => (
-                          <button
-                            key={child.id}
-                            type="button"
-                            onClick={() => toggleTeam(child.id)}
-                            className="w-full flex items-center gap-2 px-3 py-1 hover:bg-gray-50 transition-colors"
-                          >
-                            <div className={`w-3.5 h-3.5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
-                              form.teamIds.includes(child.id)
-                                ? 'bg-primary-blue border-primary-blue'
-                                : 'bg-white border-gray-300'
-                            }`}>
-                              {form.teamIds.includes(child.id) && (
-                                <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none">
-                                  <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
+                        {children.map((child) => {
+                          const grandchildren = childrenOf(child.id);
+                          return (
+                            <div key={child.id}>
+                              <button
+                                type="button"
+                                onClick={() => toggleTeam(child.id)}
+                                className="w-full flex items-center gap-2 px-3 py-1 hover:bg-gray-50 transition-colors"
+                              >
+                                <div className={`w-3.5 h-3.5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                                  form.teamIds.includes(child.id)
+                                    ? 'bg-primary-blue border-primary-blue'
+                                    : 'bg-white border-gray-300'
+                                }`}>
+                                  {form.teamIds.includes(child.id) && (
+                                    <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 12 12" fill="none">
+                                      <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                  )}
+                                </div>
+                                <span className="font-sans text-xs text-gray-600 text-left">
+                                  {child.teamName}
+                                </span>
+                              </button>
+                              {/* Sub-teams (grandchildren) */}
+                              {grandchildren.length > 0 && (
+                                <div className="pl-6">
+                                  {grandchildren.map((gc) => (
+                                    <button
+                                      key={gc.id}
+                                      type="button"
+                                      onClick={() => toggleTeam(gc.id)}
+                                      className="w-full flex items-center gap-2 px-3 py-0.5 hover:bg-gray-50 transition-colors"
+                                    >
+                                      <div className={`w-3 h-3 rounded border-2 flex items-center justify-center flex-shrink-0 ${
+                                        form.teamIds.includes(gc.id)
+                                          ? 'bg-primary-blue border-primary-blue'
+                                          : 'bg-white border-gray-300'
+                                      }`}>
+                                        {form.teamIds.includes(gc.id) && (
+                                          <svg className="w-2 h-2 text-white" viewBox="0 0 12 12" fill="none">
+                                            <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                          </svg>
+                                        )}
+                                      </div>
+                                      <span className="font-sans text-[11px] text-gray-500 text-left">
+                                        {gc.teamName}
+                                      </span>
+                                    </button>
+                                  ))}
+                                </div>
                               )}
                             </div>
-                            <span className="font-sans text-xs text-gray-600 text-left">
-                              {child.teamName}
-                            </span>
-                          </button>
-                        ))}
+                          );
+                        })}
                       </div>
                     )}
                   </div>

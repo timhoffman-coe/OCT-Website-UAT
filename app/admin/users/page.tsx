@@ -38,7 +38,7 @@ export default async function UsersPage() {
   const userTeamIds = user.teamPermissions.map((p) => p.teamId);
   const manageableIds = await getManageableTeamIds(userTeamIds);
 
-  const [users, teams] = await Promise.all([
+  const [users, manageableTeams] = await Promise.all([
     prisma.user.findMany({
       where: {
         OR: [
@@ -62,6 +62,32 @@ export default async function UsersPage() {
       select: { id: true, teamName: true, parentId: true },
     }),
   ]);
+
+  // Fetch ancestor teams for UI grouping (so topLevel filter works in the client)
+  const manageableIdSet = new Set(manageableIds);
+  const parentIds = [...new Set(
+    manageableTeams.map((t) => t.parentId).filter((id): id is string => !!id && !manageableIdSet.has(id))
+  )];
+  let ancestorTeams = parentIds.length > 0
+    ? await prisma.team.findMany({
+        where: { id: { in: parentIds }, archivedAt: null },
+        orderBy: { sortOrder: 'asc' },
+        select: { id: true, teamName: true, parentId: true },
+      })
+    : [];
+  // Walk one more level up for grandparent sections
+  const grandparentIds = ancestorTeams
+    .map((t) => t.parentId)
+    .filter((id): id is string => !!id && !manageableIdSet.has(id) && !parentIds.includes(id));
+  if (grandparentIds.length > 0) {
+    const grandparents = await prisma.team.findMany({
+      where: { id: { in: grandparentIds }, archivedAt: null },
+      orderBy: { sortOrder: 'asc' },
+      select: { id: true, teamName: true, parentId: true },
+    });
+    ancestorTeams = [...ancestorTeams, ...grandparents];
+  }
+  const teams = [...ancestorTeams, ...manageableTeams];
 
   // Filter out SUPER_ADMINs from the list
   const filteredUsers = users.filter((u) => u.role !== 'SUPER_ADMIN' && u.id !== user.id);

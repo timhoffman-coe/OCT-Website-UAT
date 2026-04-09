@@ -8,7 +8,7 @@ export async function getCurrentUser() {
 
   const user = await prisma.user.findUnique({
     where: { email },
-    include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true, newsPermission: true },
+    include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true, newsPermission: true, projectPermission: true, projectManagerAssignments: true },
   });
 
   return user;
@@ -113,11 +113,49 @@ export async function requireNewsAccess() {
   return user;
 }
 
-// Get team IDs that a TEAM_ADMIN can delegate (children of their assigned teams)
+export async function canEditProjects(): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user) return false;
+  if (user.role === 'SUPER_ADMIN') return true;
+  return !!user.projectPermission;
+}
+
+export async function requireProjectAccess() {
+  const user = await requireUser();
+  if (user.role === 'SUPER_ADMIN') return user;
+  if (!user.projectPermission) throw new Error('Forbidden: No project edit access');
+  return user;
+}
+
+export async function canEditProject(projectId: string): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user) return false;
+  if (user.role === 'SUPER_ADMIN') return true;
+  if (user.projectPermission) return true;
+  return user.projectManagerAssignments.some((a) => a.projectId === projectId);
+}
+
+export async function requireProjectEditAccess(projectId: string) {
+  const user = await requireUser();
+  if (user.role === 'SUPER_ADMIN') return user;
+  if (user.projectPermission) return user;
+  const hasAssignment = user.projectManagerAssignments.some((a) => a.projectId === projectId);
+  if (!hasAssignment) throw new Error('Forbidden: No access to this project');
+  return user;
+}
+
+// Get team IDs that a TEAM_ADMIN can manage (own teams + all descendants)
 export async function getManageableTeamIds(userTeamIds: string[]): Promise<string[]> {
-  const childTeams = await prisma.team.findMany({
-    where: { parentId: { in: userTeamIds } },
-    select: { id: true },
-  });
-  return childTeams.map((t) => t.id);
+  const allIds = new Set(userTeamIds);
+  let currentParentIds = userTeamIds;
+  for (let depth = 0; depth < 2 && currentParentIds.length > 0; depth++) {
+    const children = await prisma.team.findMany({
+      where: { parentId: { in: currentParentIds } },
+      select: { id: true },
+    });
+    const newIds = children.map((t) => t.id).filter((id) => !allIds.has(id));
+    newIds.forEach((id) => allIds.add(id));
+    currentParentIds = newIds;
+  }
+  return [...allIds];
 }
