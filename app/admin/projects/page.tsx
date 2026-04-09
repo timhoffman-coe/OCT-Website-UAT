@@ -1,4 +1,5 @@
-import { getCurrentUser, requireUser } from '@/lib/auth';
+import Link from 'next/link';
+import { requireUser } from '@/lib/auth';
 import { fetchAllProjectsForAdmin, fetchProjectsAssignedToUser } from '@/lib/data/fetch-project';
 import ProjectListClient from '@/components/admin/ProjectListClient';
 
@@ -24,12 +25,12 @@ export default async function AdminProjectsPage() {
           </p>
         </div>
         {canManageAll && (
-          <a
+          <Link
             href="/admin/projects/new"
             className="flex items-center gap-2 px-4 py-2 bg-[#005087] text-white rounded-lg text-sm font-sans font-medium hover:bg-[#193A5A] transition-colors"
           >
             New Project
-          </a>
+          </Link>
         )}
       </div>
       <ProjectListClient projects={projects} />
