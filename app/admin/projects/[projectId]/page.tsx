@@ -26,6 +26,7 @@ export default async function EditProjectPage({ params }: Props) {
   const { projectId } = await params;
   await requireProjectEditAccess(projectId);
 
+  // eslint-disable-next-line prefer-const
   let [project, widgetDefinitions] = await Promise.all([
     prisma.project.findUnique({
       where: { id: projectId },
