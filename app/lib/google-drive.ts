@@ -95,15 +95,10 @@ export const getFileContent = async (fileId: string, mimeType: string) => {
                     constructor() {
                         this.a = 1; this.b = 0; this.c = 0; this.d = 1; this.e = 0; this.f = 0;
                     }
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     setMatrixValue(_str: string) { return this; }
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     translate(_tx: number, _ty: number) { return this; }
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     scale(_sx: number, _sy: number) { return this; }
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     rotate(_angle: number) { return this; }
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     multiply(_other: DOMMatrix) { return this; }
                 };
             }

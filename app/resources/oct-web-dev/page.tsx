@@ -202,11 +202,7 @@ export default function OctWebDevPage() {
   const togglePhase = (i: number) => {
     setOpenPhases(prev => {
       const next = new Set(prev);
-      if (next.has(i)) {
-        next.delete(i);
-      } else {
-        next.add(i);
-      }
+      next.has(i) ? next.delete(i) : next.add(i);
       return next;
     });
   };
