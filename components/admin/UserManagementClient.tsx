@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useMemo } from 'react';
 import { createUser, updateUser, deleteUser } from '@/lib/actions/user-actions';
-import { Pencil, Trash2, Plus, Save, X, Shield, ShieldCheck, Eye } from 'lucide-react';
+import { Pencil, Trash2, Plus, Save, X, Shield, ShieldCheck, Eye, Search } from 'lucide-react';
 
 type Role = 'SUPER_ADMIN' | 'TEAM_ADMIN' | 'VIEWER';
 
@@ -11,9 +11,13 @@ interface UserWithPermissions {
   email: string;
   name: string;
   role: Role;
+  createdAt: Date;
   teamPermissions: Array<{
     team: { id: string; teamName: string };
   }>;
+  roadmapPermission: { id: string } | null;
+  newsPermission: { id: string } | null;
+  octWebDevPermission: { id: string } | null;
 }
 
 interface Team {
@@ -63,6 +67,13 @@ export default function UserManagementClient({
     teamIds: [] as string[],
   });
 
+  // Filter / sort / group state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [roleFilter, setRoleFilter] = useState<Role | 'ALL'>('ALL');
+  const [teamFilter, setTeamFilter] = useState<string>('ALL');
+  const [sortKey, setSortKey] = useState<'created-desc' | 'created-asc' | 'name-asc' | 'name-desc' | 'role'>('created-desc');
+  const [groupByRole, setGroupByRole] = useState(false);
+
   // Build team hierarchy
   const topLevel = teams.filter((t) => !t.parentId);
   const childrenOf = (parentId: string) =>
@@ -70,6 +81,54 @@ export default function UserManagementClient({
 
   // Set of team IDs available in the UI (for filtering during edit)
   const availableTeamIds = new Set(teams.map((t) => t.id));
+
+  // Filtering + sorting pipeline
+  const ROLE_ORDER: Record<Role, number> = { SUPER_ADMIN: 0, TEAM_ADMIN: 1, VIEWER: 2 };
+
+  const filteredUsers = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    let result = users.filter((u) => {
+      // Search
+      if (query && !u.name.toLowerCase().includes(query) && !u.email.toLowerCase().includes(query)) {
+        return false;
+      }
+      // Role filter
+      if (roleFilter !== 'ALL' && u.role !== roleFilter) {
+        return false;
+      }
+      // Team filter (includes children when parent selected)
+      if (teamFilter !== 'ALL') {
+        const filterIds = [teamFilter, ...childrenOf(teamFilter).map((c) => c.id)];
+        if (!u.teamPermissions.some((p) => filterIds.includes(p.team.id))) {
+          return false;
+        }
+      }
+      return true;
+    });
+
+    // Sort
+    result = [...result].sort((a, b) => {
+      switch (sortKey) {
+        case 'name-asc':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        case 'role':
+          return ROLE_ORDER[a.role] - ROLE_ORDER[b.role];
+        case 'created-asc':
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        case 'created-desc':
+        default:
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+    });
+
+    return result;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [users, teams, searchQuery, roleFilter, teamFilter, sortKey]);
+
+  const matchCount = filteredUsers.length;
 
   function startEdit(u: UserWithPermissions) {
     setEditing(u.id);
@@ -339,6 +398,123 @@ export default function UserManagementClient({
     );
   }
 
+  function renderUserCard(u: UserWithPermissions) {
+    return (
+      <div key={u.id} className="bg-white border border-gray-200 rounded-lg p-4">
+        {editing === u.id ? (
+          renderForm(false)
+        ) : (
+          <div className="flex items-center justify-between">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-sans font-semibold text-gray-900">
+                  {u.name}
+                </span>
+                <span
+                  className={`text-[10px] font-sans font-medium px-1.5 py-0.5 rounded border ${
+                    ROLE_INFO[u.role].color
+                  }`}
+                >
+                  {ROLE_INFO[u.role].label}
+                </span>
+              </div>
+              <p className="font-sans text-sm text-gray-500">{u.email}</p>
+              {(u.teamPermissions.length > 0 || u.roadmapPermission || u.newsPermission || u.octWebDevPermission) && (
+                <div className="flex flex-wrap gap-1 mt-1.5">
+                  {u.teamPermissions.map((p) => (
+                    <span
+                      key={p.team.id}
+                      className="text-[10px] font-sans bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded"
+                    >
+                      {p.team.teamName}
+                    </span>
+                  ))}
+                  {u.roadmapPermission && (
+                    <span className="text-[10px] font-sans bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded">
+                      Roadmap Editor
+                    </span>
+                  )}
+                  {u.newsPermission && (
+                    <span className="text-[10px] font-sans bg-green-50 text-green-700 border border-green-200 px-1.5 py-0.5 rounded">
+                      News Editor
+                    </span>
+                  )}
+                  {u.octWebDevPermission && (
+                    <span className="text-[10px] font-sans bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded">
+                      Web-Dev Viewer
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="flex gap-1 flex-shrink-0 ml-4">
+              <button
+                onClick={() => startEdit(u)}
+                className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-gray-100 transition-colors"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+              {currentUserRole === 'SUPER_ADMIN' && (
+                <button
+                  onClick={() => handleDelete(u.id)}
+                  disabled={isPending}
+                  className="p-1.5 text-gray-400 hover:text-red-600 rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  function renderUserList() {
+    if (filteredUsers.length === 0 && !adding) {
+      return (
+        <div className="text-center py-12">
+          <p className="font-sans text-sm text-gray-500">No users match your filters.</p>
+          <button
+            onClick={() => { setSearchQuery(''); setRoleFilter('ALL'); setTeamFilter('ALL'); }}
+            className="font-sans text-sm text-primary-blue hover:underline mt-2"
+          >
+            Clear filters
+          </button>
+        </div>
+      );
+    }
+
+    if (groupByRole) {
+      return (
+        <>
+          {(['SUPER_ADMIN', 'TEAM_ADMIN', 'VIEWER'] as Role[]).map((role) => {
+            const group = filteredUsers.filter((u) => u.role === role);
+            if (group.length === 0) return null;
+            const info = ROLE_INFO[role];
+            const Icon = info.icon;
+            return (
+              <div key={role}>
+                <div className="flex items-center gap-2 pt-4 pb-2 first:pt-0">
+                  <Icon className="w-4 h-4 text-gray-400" />
+                  <h2 className="font-sans text-sm font-semibold text-gray-700">
+                    {info.label}s
+                  </h2>
+                  <span className="text-xs font-sans text-gray-400">{group.length}</span>
+                </div>
+                <div className="space-y-3">
+                  {group.map((u) => renderUserCard(u))}
+                </div>
+              </div>
+            );
+          })}
+        </>
+      );
+    }
+
+    return <>{filteredUsers.map((u) => renderUserCard(u))}</>;
+  }
+
   return (
     <div className="p-8 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
@@ -361,6 +537,100 @@ export default function UserManagementClient({
         </button>
       </div>
 
+      {/* Toolbar: Search, Filters, Sort, Group */}
+      <div className="mb-4 space-y-3">
+        {/* Row 1: Search + count */}
+        <div className="flex items-center gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name or email..."
+              className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm font-sans focus:border-primary-blue focus:ring-1 focus:ring-primary-blue outline-none"
+            />
+          </div>
+          <span className="text-sm font-sans text-gray-500 whitespace-nowrap">
+            {matchCount} user{matchCount !== 1 ? 's' : ''}
+          </span>
+        </div>
+
+        {/* Row 2: Role pills + Team filter + Sort + Group toggle */}
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Role filter pills */}
+          <div className="flex items-center gap-1">
+            <span className="text-xs font-sans text-gray-500 mr-1">Role:</span>
+            {(['ALL', 'SUPER_ADMIN', 'TEAM_ADMIN', 'VIEWER'] as const).map((role) => (
+              <button
+                key={role}
+                onClick={() => setRoleFilter(role)}
+                className={`text-xs font-sans px-2.5 py-1 rounded-full border transition-colors ${
+                  roleFilter === role
+                    ? 'bg-primary-blue text-white border-primary-blue'
+                    : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                {role === 'ALL' ? 'All' : ROLE_INFO[role].label}
+              </button>
+            ))}
+          </div>
+
+          {/* Team filter dropdown */}
+          <div className="flex items-center gap-1">
+            <span className="text-xs font-sans text-gray-500 mr-1">Team:</span>
+            <select
+              value={teamFilter}
+              onChange={(e) => setTeamFilter(e.target.value)}
+              className="text-xs font-sans border border-gray-300 rounded-lg px-2 py-1 focus:border-primary-blue focus:ring-1 focus:ring-primary-blue outline-none"
+            >
+              <option value="ALL">All teams</option>
+              {topLevel.map((section) => (
+                <optgroup key={section.id} label={section.teamName}>
+                  <option value={section.id}>{section.teamName}</option>
+                  {childrenOf(section.id).map((child) => (
+                    <option key={child.id} value={child.id}>
+                      {child.teamName}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </div>
+
+          {/* Divider */}
+          <div className="w-px h-5 bg-gray-300" />
+
+          {/* Sort dropdown */}
+          <div className="flex items-center gap-1">
+            <span className="text-xs font-sans text-gray-500 mr-1">Sort:</span>
+            <select
+              value={sortKey}
+              onChange={(e) => setSortKey(e.target.value as typeof sortKey)}
+              className="text-xs font-sans border border-gray-300 rounded-lg px-2 py-1 focus:border-primary-blue focus:ring-1 focus:ring-primary-blue outline-none"
+            >
+              <option value="created-desc">Newest first</option>
+              <option value="created-asc">Oldest first</option>
+              <option value="name-asc">Name A-Z</option>
+              <option value="name-desc">Name Z-A</option>
+              <option value="role">Role</option>
+            </select>
+          </div>
+
+          {/* Group by role toggle */}
+          <button
+            onClick={() => setGroupByRole((prev) => !prev)}
+            className={`text-xs font-sans px-2.5 py-1 rounded-full border transition-colors ${
+              groupByRole
+                ? 'bg-primary-blue text-white border-primary-blue'
+                : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'
+            }`}
+          >
+            Group by role
+          </button>
+        </div>
+      </div>
+
       {error && (
         <div className="mb-4 bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2">
           <span className="text-red-600 font-sans text-sm flex-1">{error}</span>
@@ -375,60 +645,7 @@ export default function UserManagementClient({
           </div>
         )}
 
-        {users.map((u) => (
-          <div key={u.id} className="bg-white border border-gray-200 rounded-lg p-4">
-            {editing === u.id ? (
-              renderForm(false)
-            ) : (
-              <div className="flex items-center justify-between">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-sans font-semibold text-gray-900">
-                      {u.name}
-                    </span>
-                    <span
-                      className={`text-[10px] font-sans font-medium px-1.5 py-0.5 rounded border ${
-                        ROLE_INFO[u.role].color
-                      }`}
-                    >
-                      {ROLE_INFO[u.role].label}
-                    </span>
-                  </div>
-                  <p className="font-sans text-sm text-gray-500">{u.email}</p>
-                  {u.teamPermissions.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-1.5">
-                      {u.teamPermissions.map((p) => (
-                        <span
-                          key={p.team.id}
-                          className="text-[10px] font-sans bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded"
-                        >
-                          {p.team.teamName}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="flex gap-1 flex-shrink-0 ml-4">
-                  <button
-                    onClick={() => startEdit(u)}
-                    className="p-1.5 text-gray-400 hover:text-primary-blue rounded hover:bg-gray-100 transition-colors"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </button>
-                  {currentUserRole === 'SUPER_ADMIN' && (
-                    <button
-                      onClick={() => handleDelete(u.id)}
-                      disabled={isPending}
-                      className="p-1.5 text-gray-400 hover:text-red-600 rounded hover:bg-gray-100 disabled:opacity-50 transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
+        {renderUserList()}
       </div>
     </div>
   );

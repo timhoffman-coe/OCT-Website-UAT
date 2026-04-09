@@ -19,6 +19,9 @@ export default async function UsersPage() {
           teamPermissions: {
             include: { team: { select: { id: true, teamName: true } } },
           },
+          roadmapPermission: { select: { id: true } },
+          newsPermission: { select: { id: true } },
+          octWebDevPermission: { select: { id: true } },
         },
       }),
       prisma.team.findMany({
@@ -48,6 +51,9 @@ export default async function UsersPage() {
         teamPermissions: {
           include: { team: { select: { id: true, teamName: true } } },
         },
+        roadmapPermission: { select: { id: true } },
+        newsPermission: { select: { id: true } },
+        octWebDevPermission: { select: { id: true } },
       },
     }),
     prisma.team.findMany({
