@@ -4,6 +4,7 @@ import Link from 'next/link';
 import KPICard from '@/components/budget-dashboard/KPICard';
 import DashboardActivityChart from '@/components/admin/DashboardActivityChart';
 import DashboardActivityFeed from '@/components/admin/DashboardActivityFeed';
+import { getAllPosts } from '@/lib/news';
 import {
   Building2,
   Users,
@@ -20,6 +21,7 @@ import {
   FolderTree,
   UsersRound,
   Briefcase,
+  Newspaper,
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -192,6 +194,9 @@ export default async function AdminDashboard() {
     (r) => r.role === 'VIEWER'
   )?._count || 0;
 
+  const allNewsPosts = getAllPosts();
+  const newsPostCount = allNewsPosts.length;
+
   const roleBadge = ROLE_BADGE[user.role] || ROLE_BADGE.VIEWER;
   const greeting = getGreeting();
   const dateString = new Date().toLocaleDateString('en-US', {
@@ -240,7 +245,7 @@ export default async function AdminDashboard() {
   }
 
   return (
-    <div className="p-8 max-w-7xl">
+    <div className="p-8">
       {/* ── Welcome Header ── */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-1">
@@ -308,6 +313,10 @@ export default async function AdminDashboard() {
                 </div>
               );
             })}
+            <div className="bg-white rounded-lg border border-gray-200 border-t-4 border-t-complement-sunrise px-4 py-3 text-center">
+              <p className="font-sans text-2xl font-bold text-gray-900">{newsPostCount}</p>
+              <p className="font-sans text-xs text-gray-500">News Posts</p>
+            </div>
           </div>
         </div>
       )}
@@ -326,23 +335,23 @@ export default async function AdminDashboard() {
         {/* Quick Actions */}
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
           <h2 className="font-sans text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="space-y-1">
+          <div className="space-y-2">
             {quickActions.map((action) => {
               const Icon = action.icon;
               return (
                 <Link
                   key={action.href}
                   href={action.href}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors group"
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 hover:bg-primary-blue hover:text-white hover:border-primary-blue transition-all group"
                 >
-                  <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-primary-blue/10 text-primary-blue flex items-center justify-center">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-primary-blue/10 text-primary-blue group-hover:bg-white/20 group-hover:text-white flex items-center justify-center transition-colors">
                     <Icon size={16} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-sans text-sm font-medium text-gray-900 truncate">{action.label}</p>
-                    <p className="font-sans text-xs text-gray-400 truncate">{action.description}</p>
+                    <p className="font-sans text-sm font-semibold text-gray-900 group-hover:text-white truncate transition-colors">{action.label}</p>
+                    <p className="font-sans text-xs text-gray-400 group-hover:text-white/70 truncate transition-colors">{action.description}</p>
                   </div>
-                  <ChevronRight size={14} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
+                  <ChevronRight size={14} className="text-gray-300 group-hover:text-white/70 transition-colors" />
                 </Link>
               );
             })}
