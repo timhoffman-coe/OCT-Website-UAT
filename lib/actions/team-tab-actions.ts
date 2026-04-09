@@ -98,11 +98,11 @@ export async function updateDiagramLinks(
     data: links.map((l, i) => ({ ...l, teamTabId: tabId, sortOrder: i })),
   });
 
-  await prisma.auditLog.create({
-    data: { userId: user.id, action: 'UPDATE', entity: 'DiagramLinks', entityId: tabId, description: `Updated diagram links`, changes: { links } },
-  });
-
   const team = await prisma.team.findUniqueOrThrow({ where: { id: tab.teamId } });
+
+  await prisma.auditLog.create({
+    data: { userId: user.id, action: 'UPDATE', entity: 'DiagramLinks', entityId: tabId, description: `Updated diagram links on tab '${tab.label}' for '${team.teamName}'`, changes: { links } },
+  });
   revalidatePath(`/${team.slug}`);
   revalidatePath(`/admin/teams/${tab.teamId}`);
 }

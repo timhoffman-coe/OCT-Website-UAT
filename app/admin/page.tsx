@@ -361,7 +361,7 @@ export default async function AdminDashboard() {
 
       {/* ── Your Teams ── */}
       <div className="mb-8">
-        <h2 className="font-sans text-lg font-semibold text-gray-900 mb-4">OCT Teams</h2>
+        <h2 className="font-sans text-lg font-semibold text-gray-900 mb-4">OCT Sections</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {topLevelTeams.map((team) => {
             const templateColor = TEMPLATE_COLORS[team.pageTemplate] || 'border-t-gray-300';

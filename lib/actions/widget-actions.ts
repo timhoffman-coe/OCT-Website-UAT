@@ -14,7 +14,7 @@ export async function addWidgetToTeam(
   const [team, widgetDef] = await Promise.all([
     prisma.team.findUniqueOrThrow({
       where: { id: teamId },
-      select: { pageTemplate: true, slug: true },
+      select: { pageTemplate: true, slug: true, teamName: true },
     }),
     prisma.widgetDefinition.findUniqueOrThrow({
       where: { id: widgetDefinitionId },
@@ -47,7 +47,7 @@ export async function addWidgetToTeam(
       action: 'ADD_WIDGET',
       entity: 'WidgetInstance',
       entityId: instance.id,
-      description: `Added widget '${widgetDef.widgetType}' to team`,
+      description: `Added widget '${widgetDef.widgetType}' to '${team.teamName}'`,
       changes: { widgetDefinitionId },
     },
   });
@@ -60,8 +60,13 @@ export async function addWidgetToTeam(
 export async function removeWidgetFromTeam(instanceId: string) {
   const instance = await prisma.widgetInstance.findUniqueOrThrow({
     where: { id: instanceId },
+    include: {
+      widgetDefinition: { select: { widgetType: true } },
+    },
   });
   const user = await requireTeamAccess(instance.teamId);
+
+  const team = await prisma.team.findUniqueOrThrow({ where: { id: instance.teamId } });
 
   await prisma.widgetInstance.delete({ where: { id: instanceId } });
 
@@ -71,12 +76,10 @@ export async function removeWidgetFromTeam(instanceId: string) {
       action: 'REMOVE_WIDGET',
       entity: 'WidgetInstance',
       entityId: instanceId,
-      description: `Removed widget from team`,
+      description: `Removed widget '${instance.widgetDefinition.widgetType}' from '${team.teamName}'`,
       changes: instance,
     },
   });
-
-  const team = await prisma.team.findUniqueOrThrow({ where: { id: instance.teamId } });
   revalidatePath(`/${team.slug}`);
   revalidatePath(`/admin/teams/${instance.teamId}`);
 }
@@ -86,6 +89,7 @@ export async function reorderWidgets(
   orderedInstanceIds: string[]
 ) {
   const user = await requireTeamAccess(teamId);
+  const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
 
   await prisma.$transaction(
     orderedInstanceIds.map((id, index) =>
@@ -102,12 +106,10 @@ export async function reorderWidgets(
       action: 'REORDER_WIDGETS',
       entity: 'Team',
       entityId: teamId,
-      description: `Reordered widgets`,
+      description: `Reordered widgets on '${team.teamName}'`,
       changes: { order: orderedInstanceIds },
     },
   });
-
-  const team = await prisma.team.findUniqueOrThrow({ where: { id: teamId } });
   revalidatePath(`/${team.slug}`);
   revalidatePath(`/admin/teams/${teamId}`);
 }
@@ -171,7 +173,7 @@ export async function resetWidgetsToDefault(teamId: string) {
       action: 'RESET_WIDGETS',
       entity: 'Team',
       entityId: teamId,
-      description: `Reset widgets to defaults`,
+      description: `Reset widgets to defaults on '${team.teamName}'`,
       changes: { resetTo: defaults },
     },
   });
@@ -187,8 +189,13 @@ export async function updateWidgetConfig(
 ) {
   const instance = await prisma.widgetInstance.findUniqueOrThrow({
     where: { id: instanceId },
+    include: {
+      widgetDefinition: { select: { widgetType: true } },
+    },
   });
   const user = await requireTeamAccess(instance.teamId);
+
+  const team = await prisma.team.findUniqueOrThrow({ where: { id: instance.teamId } });
 
   const updated = await prisma.widgetInstance.update({
     where: { id: instanceId },
@@ -201,12 +208,10 @@ export async function updateWidgetConfig(
       action: 'UPDATE_WIDGET_CONFIG',
       entity: 'WidgetInstance',
       entityId: instanceId,
-      description: `Updated widget configuration`,
+      description: `Updated config for widget '${instance.widgetDefinition.widgetType}' on '${team.teamName}'`,
       changes: { before: instance.config, after: config },
     },
   });
-
-  const team = await prisma.team.findUniqueOrThrow({ where: { id: instance.teamId } });
   revalidatePath(`/${team.slug}`);
   revalidatePath(`/admin/teams/${instance.teamId}`);
   return updated;
