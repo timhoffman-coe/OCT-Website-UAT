@@ -11,11 +11,12 @@ interface ProjectGovernanceProps {
 }
 
 function Field({ label, value }: { label: string; value?: string | null }) {
-  if (!value) return null;
   return (
     <div className="space-y-1">
       <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{label}</label>
-      <p className="text-gray-900 font-semibold text-lg">{value}</p>
+      <p className={`font-semibold text-lg ${value ? 'text-gray-900' : 'text-gray-300 italic'}`}>
+        {value || 'Not set'}
+      </p>
     </div>
   );
 }
@@ -29,9 +30,6 @@ export default function ProjectGovernance(props: ProjectGovernanceProps) {
     { label: 'OCTLT Representative', value: props.octltRepresentative },
     { label: 'Program Manager (Business)', value: props.programManagerBusiness },
   ];
-
-  const hasAny = fields.some((f) => f.value);
-  if (!hasAny) return null;
 
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden p-8">

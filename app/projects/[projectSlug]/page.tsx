@@ -8,7 +8,7 @@ import { canEditProject } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import type { WidgetDataBag } from '@/components/widgets/WidgetRenderer';
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 interface ProjectPageProps {
   params: Promise<{ projectSlug: string }>;

@@ -122,7 +122,7 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  // Public pages: track the view and pass through
+  // Public pages: track the view and pass through (with optional user identification)
   if (!path.startsWith('/admin') && !path.startsWith('/api/cms')) {
     // Fire-and-forget page view tracking via internal API
     if (!path.startsWith('/api/') && !path.startsWith('/_next/')) {
@@ -144,6 +144,30 @@ export async function proxy(request: NextRequest) {
     }
     const response = NextResponse.next();
     response.headers.set('x-correlation-id', correlationId);
+
+    // Optionally identify the user on public pages so unpublished previews work
+    if (process.env.DEV_BYPASS_IAP === 'true') {
+      response.headers.set(
+        'x-user-email',
+        process.env.DEV_USER_EMAIL || 'dev@edmonton.ca'
+      );
+      response.headers.set(
+        'x-user-name',
+        process.env.DEV_USER_NAME || 'Dev User'
+      );
+    } else {
+      const iapJwt = request.headers.get('x-goog-iap-jwt-assertion');
+      if (iapJwt) {
+        try {
+          const { email, name } = await verifyIAPJwt(iapJwt);
+          response.headers.set('x-user-email', email);
+          response.headers.set('x-user-name', name);
+        } catch {
+          // Not authenticated — that's fine for public pages
+        }
+      }
+    }
+
     return response;
   }
 

@@ -16,6 +16,7 @@ const projectInclude = {
   milestones: { orderBy: { sortOrder: 'asc' as const } },
   objectives: { orderBy: { sortOrder: 'asc' as const } },
   statusUpdates: { orderBy: { createdAt: 'desc' as const }, take: 10 },
+  tags: { include: { tag: true } },
   widgetInstances: {
     orderBy: { sortOrder: 'asc' as const },
     include: { widgetDefinition: true },

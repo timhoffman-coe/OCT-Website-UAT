@@ -16,40 +16,36 @@ interface ProjectTimelineProps {
 
 function formatDate(date: Date | null): string {
   if (!date) return '—';
-  return new Date(date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).toUpperCase();
+  return new Date(date).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' }).toUpperCase();
 }
 
 function formatMilestoneDate(date: Date | null): string {
   if (!date) return '';
-  return new Date(date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+  return new Date(date).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 }
 
 export default function ProjectTimeline({ startDate, endDate, progress, milestones }: ProjectTimelineProps) {
-  if (!startDate && !endDate && milestones.length === 0) return null;
-
   return (
     <div className="bg-white rounded-xl shadow-sm p-8">
       <h2 className="text-[#173858] font-black uppercase text-xs tracking-widest mb-6">Project Timeline</h2>
 
-      {(startDate || endDate) && (
-        <div className="flex justify-between items-center mb-6">
-          <div className="text-center">
-            <p className="text-[10px] font-bold text-gray-400 uppercase">Start</p>
-            <p className="font-bold text-[#173858]">{formatDate(startDate ?? null)}</p>
-          </div>
-          <div className="flex-1 px-4">
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div className="h-full bg-[#003962] transition-all" style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}></div>
-            </div>
-          </div>
-          <div className="text-center">
-            <p className="text-[10px] font-bold text-gray-400 uppercase">End</p>
-            <p className="font-bold text-[#173858]">{formatDate(endDate ?? null)}</p>
+      <div className="flex justify-between items-center mb-6">
+        <div className="text-center">
+          <p className="text-[10px] font-bold text-gray-400 uppercase">Start</p>
+          <p className={`font-bold ${startDate ? 'text-[#173858]' : 'text-gray-300 italic'}`}>{formatDate(startDate ?? null)}</p>
+        </div>
+        <div className="flex-1 px-4">
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-full bg-[#003962] transition-all" style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}></div>
           </div>
         </div>
-      )}
+        <div className="text-center">
+          <p className="text-[10px] font-bold text-gray-400 uppercase">End</p>
+          <p className={`font-bold ${endDate ? 'text-[#173858]' : 'text-gray-300 italic'}`}>{formatDate(endDate ?? null)}</p>
+        </div>
+      </div>
 
-      {milestones.length > 0 && (
+      {milestones.length > 0 ? (
         <div className="space-y-6">
           {milestones.map((milestone, idx) => (
             <div key={milestone.id} className="relative pl-6">
@@ -75,6 +71,8 @@ export default function ProjectTimeline({ startDate, endDate, progress, mileston
             </div>
           ))}
         </div>
+      ) : (
+        <p className="text-sm text-gray-300 italic text-center py-4">No milestones added yet</p>
       )}
     </div>
   );

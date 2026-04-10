@@ -62,6 +62,7 @@ import TeamInitiativesEditor from './TeamInitiativesEditor';
 import TeamContactsEditor from './TeamContactsEditor';
 import TeamQuickLinksEditor from './TeamQuickLinksEditor';
 import ArchiveConfirmDialog from './ArchiveConfirmDialog';
+import OngoingProjectsConfigForm from './OngoingProjectsConfigForm';
 import PageHeaderWidget from '@/components/widgets/PageHeaderWidget';
 import PortfoliosWidget from '@/components/widgets/PortfoliosWidget';
 import TeamTabsWidget from '@/components/widgets/TeamTabsWidget';
@@ -500,13 +501,6 @@ const WIDGET_CONFIG_FIELDS: Record<string, ConfigField[]> = {
     { key: 'buttonLink', label: 'Button Link', type: 'text', placeholder: 'https://...' },
     { key: 'phoneText', label: 'Phone Text', type: 'text', placeholder: 'For urgent incidents, call 780-123-4567' },
   ],
-  ongoing_projects: [
-    { key: 'bannerText', label: 'Banner Text', type: 'text', placeholder: 'ONGOING PROJECTS' },
-    { key: 'heading', label: 'Heading', type: 'text', placeholder: 'Projects' },
-    { key: 'description', label: 'Description', type: 'textarea', placeholder: 'See the list of all current Projects for the Team...' },
-    { key: 'buttonText', label: 'Button Text', type: 'text', placeholder: 'View Project List' },
-    { key: 'buttonLink', label: 'Button Link', type: 'text', placeholder: 'https://...' },
-  ],
   budget_spend: [
     { key: 'heading', label: 'Heading', type: 'text', placeholder: 'Budget & Spend' },
     { key: 'description', label: 'Description', type: 'textarea', placeholder: 'View current-year approved budget, YTD spend...' },
@@ -828,6 +822,17 @@ function WidgetEditorModal({
     }
 
     switch (widgetType) {
+      case 'ongoing_projects':
+        return (
+          <OngoingProjectsConfigForm
+            instanceId={instance.id}
+            currentConfig={(instance.config as Record<string, string>) || {}}
+            onSaved={(config) => {
+              onConfigSaved(instance.id, config);
+              onClose();
+            }}
+          />
+        );
       case 'portfolios':
         return <PortfolioEditor teamId={teamId!} portfolios={portfolios} />;
       case 'team_tabs':

@@ -219,17 +219,17 @@ function renderWidget(widgetType: string, data: WidgetDataBag, index: number) {
 
     // ── Project Widgets ──────────────────────────────────
     case 'project_header':
-      return data.projectTitle ? (
+      return (
         <ProjectHeader
           key={index}
-          title={data.projectTitle}
+          title={data.projectTitle || 'Untitled Project'}
           description={data.projectDescription}
           status={data.projectStatus || 'PLANNING'}
           projectCode={data.projectCode}
           canEdit={data.canEditProject}
           projectId={data.projectId}
         />
-      ) : null;
+      );
 
     case 'project_governance':
       return (
@@ -246,9 +246,7 @@ function renderWidget(widgetType: string, data: WidgetDataBag, index: number) {
       );
 
     case 'project_objectives':
-      return data.objectives?.length ? (
-        <ProjectObjectives key={index} objectives={data.objectives} />
-      ) : null;
+      return <ProjectObjectives key={index} objectives={data.objectives || []} />;
 
     case 'project_financial':
       return (
@@ -272,9 +270,7 @@ function renderWidget(widgetType: string, data: WidgetDataBag, index: number) {
       );
 
     case 'project_status_updates':
-      return data.statusUpdates?.length ? (
-        <ProjectStatusUpdateSection key={index} updates={data.statusUpdates} />
-      ) : null;
+      return <ProjectStatusUpdateSection key={index} updates={data.statusUpdates || []} />;
 
     default:
       return null;

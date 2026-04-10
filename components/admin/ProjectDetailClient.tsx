@@ -2,6 +2,7 @@
 
 import { useMemo, Component, type ReactNode } from 'react';
 import LayoutEditor from './LayoutEditor';
+import ProjectTagEditor from './ProjectTagEditor';
 
 // Catches client errors and displays them instead of crashing + reloading
 class ErrorCatcher extends Component<{ children: ReactNode }, { error: Error | null }> {
@@ -69,6 +70,7 @@ interface ProjectWithRelations {
   milestones: { id: string; name: string; date: Date | null; status: string; sortOrder: number }[];
   objectives: { id: string; iconName: string | null; title: string; description: string; sortOrder: number }[];
   statusUpdates: { id: string; content: string; createdAt: Date }[];
+  tags: { tag: { id: string; name: string; slug: string } }[];
   widgetInstances: WidgetInstanceData[];
 }
 
@@ -125,6 +127,13 @@ export default function ProjectDetailClient({ project, widgetDefinitions, readOn
         <p className="font-sans text-sm text-gray-500">
           /projects/{project.slug} &middot; Project Page
         </p>
+        <div className="mt-3">
+          <ProjectTagEditor
+            projectId={project.id}
+            initialTags={project.tags}
+            readOnly={readOnly}
+          />
+        </div>
       </div>
 
       <ErrorCatcher>
