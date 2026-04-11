@@ -359,7 +359,7 @@ export default function OctWebDevPage() {
                 </div>
 
                 {/* Document Content */}
-                <div ref={docScrollRef} className="flex-1 px-6 lg:px-10 py-5 overflow-y-auto max-h-[700px]">
+                <div ref={docScrollRef} className="flex-1 px-6 lg:px-10 py-5">
                   {activeDoc === null ? (
                     <div className="space-y-6">
                       <div>
