@@ -43,6 +43,24 @@ const envSchema = z.object({
   // Logging
   LOG_LEVEL: z.enum(['DEBUG', 'INFO', 'WARN', 'ERROR', 'SILENT']).optional(),
 
+  // OpenTelemetry — all optional. Logger and telemetry code MUST read these
+  // via process.env directly (not through this module) to avoid a circular
+  // import: this file imports `logger` above.
+  OTEL_SDK_DISABLED: z.enum(['true', 'false']).optional(),
+  OTEL_SERVICE_NAME: z.string().optional(),
+  OTEL_SERVICE_VERSION: z.string().optional(),
+  OTEL_EXPORTER_OTLP_ENDPOINT: z.string().url().optional(),
+  OTEL_EXPORTER_OTLP_HEADERS: z.string().optional(),
+  OTEL_EXPORTER_OTLP_PROTOCOL: z.string().optional(),
+  OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: z.string().url().optional(),
+  OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: z.string().url().optional(),
+  OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: z.string().url().optional(),
+  OTEL_RESOURCE_ATTRIBUTES: z.string().optional(),
+  OTEL_TRACES_SAMPLER: z.string().optional(),
+  OTEL_TRACES_SAMPLER_ARG: z.string().optional(),
+  OTEL_LOG_LEVEL: z.string().optional(),
+  OTEL_METRIC_EXPORT_INTERVAL: z.string().regex(/^\d+$/, 'Must be a number').optional(),
+
   // System
   NODE_ENV: z.enum(['development', 'production', 'test']).optional(),
 });

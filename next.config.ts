@@ -56,7 +56,26 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  serverExternalPackages: ['pdf-parse', '@napi-rs/canvas', 'google-auth-library', '@prisma/client'],
+  serverExternalPackages: [
+    'pdf-parse',
+    '@napi-rs/canvas',
+    'google-auth-library',
+    '@prisma/client',
+    // OpenTelemetry SDK packages must be loaded at runtime, not bundled by
+    // webpack. Bundling them traverses optional peer deps (winston, bunyan,
+    // pino, gRPC) and either fails or emits noisy "Module not found" warnings.
+    '@opentelemetry/api',
+    '@opentelemetry/api-logs',
+    '@opentelemetry/sdk-node',
+    '@opentelemetry/sdk-logs',
+    '@opentelemetry/sdk-metrics',
+    '@opentelemetry/auto-instrumentations-node',
+    '@opentelemetry/exporter-trace-otlp-http',
+    '@opentelemetry/exporter-metrics-otlp-http',
+    '@opentelemetry/exporter-logs-otlp-http',
+    '@opentelemetry/resources',
+    '@opentelemetry/semantic-conventions',
+  ],
   webpack: (config, { isServer, dev }) => {
     if (!isServer && !dev) {
       config.plugins.push(

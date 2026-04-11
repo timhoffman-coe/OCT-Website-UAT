@@ -81,7 +81,30 @@ Feature flags are consumed in `lib/feature-flags.ts` and default to `false` when
 |----------|----------|-------------|
 | `LOG_LEVEL` | No | Minimum log level: `DEBUG`, `INFO`, `WARN`, `ERROR`, or `SILENT` |
 
-The structured logger (`lib/logger.ts`) outputs GCP Cloud Logging compatible JSON in production. Log entries include correlation IDs for request tracing.
+The structured logger (`lib/logger.ts`) is backed by OpenTelemetry. Log entries include correlation IDs for request tracing and are emitted both to stdout (for `docker logs` and stdout-scraping shippers) and to the OTel Logs API for OTLP export.
+
+## OpenTelemetry
+
+The application instruments logs, traces, and metrics using OpenTelemetry. All telemetry is exported via OTLP/HTTP to a collector endpoint configured below. The collector (managed by ops) decides which backends to fan data out to — AppDynamics, Splunk, FireEye Trellix, Aria Operations, etc.
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `OTEL_SDK_DISABLED` | No | Set to `true` to skip OTel bootstrap entirely. Used in tests, builds, and as the rollback path. |
+| `OTEL_SERVICE_NAME` | No | Overrides the `service.name` resource attribute (default `coe-website`). |
+| `OTEL_SERVICE_VERSION` | No | Overrides the `service.version` resource attribute (default `npm_package_version`). |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | No | Base URL of the OTel collector (default `http://localhost:4318`). |
+| `OTEL_EXPORTER_OTLP_HEADERS` | No | Auth headers for the collector, format `key1=val1,key2=val2`. |
+| `OTEL_EXPORTER_OTLP_PROTOCOL` | No | `http/protobuf` (default) or `http/json`. |
+| `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` | No | Per-signal endpoint override for traces. |
+| `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT` | No | Per-signal endpoint override for metrics. |
+| `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT` | No | Per-signal endpoint override for logs. |
+| `OTEL_RESOURCE_ATTRIBUTES` | No | Extra resource attributes, format `k1=v1,k2=v2`. |
+| `OTEL_TRACES_SAMPLER` | No | Sampling strategy (default `parentbased_traceidratio`). |
+| `OTEL_TRACES_SAMPLER_ARG` | No | Sampling ratio (e.g. `0.1` for 10%). |
+| `OTEL_LOG_LEVEL` | No | SDK's own internal log level (`error`, `warn`, `info`, `debug`). |
+| `OTEL_METRIC_EXPORT_INTERVAL` | No | Metrics push interval in milliseconds (default `60000`). |
+
+These variables follow the standard OpenTelemetry environment variable spec, so any collector operator already familiar with OTel will recognize them.
 
 ## System
 

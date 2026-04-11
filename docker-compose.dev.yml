@@ -33,9 +33,25 @@ services:
       - DEV_BYPASS_IAP=true
       - DEV_USER_EMAIL=dev@edmonton.ca
       - DEV_USER_NAME=Dev User
+      # OpenTelemetry — point at the local collector sidecar. Set
+      # OTEL_SDK_DISABLED=true to skip telemetry entirely if the collector
+      # isn't running.
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
+      - OTEL_SERVICE_NAME=coe-website
+      - OTEL_LOG_LEVEL=warn
     depends_on:
       postgres:
         condition: service_healthy
+    restart: unless-stopped
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    ports:
+      - "4318:4318"   # OTLP/HTTP receiver
+      - "4317:4317"   # OTLP/gRPC receiver (unused but exposed)
     restart: unless-stopped
 
 volumes:

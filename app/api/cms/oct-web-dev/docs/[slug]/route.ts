@@ -20,6 +20,7 @@ const ALLOWED_DOCS: Record<string, string> = {
   'widget-system': 'docs/deployment/widget-system.md',
   'service-health': 'docs/deployment/service-health.md',
   'data-portal': 'docs/deployment/data-portal.md',
+  'observability': 'docs/observability.md',
 };
 
 export async function GET(

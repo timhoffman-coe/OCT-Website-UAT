@@ -199,11 +199,10 @@ export async function proxy(request: NextRequest) {
       response.headers.set('x-user-name', name);
       return response;
     } catch (err) {
-      log.error('IAP auth failed', {
-        ip,
-        path,
-        error: err instanceof Error ? err.message : String(err),
-      });
+      // Pass the Error directly — the logger bridge auto-extracts
+      // message/stack/cause. This works on Edge because the bridge only
+      // walks objects, not async-hooks state.
+      log.error('IAP auth failed', { ip, path, error: err });
       return new NextResponse('Unauthorized: Invalid IAP token', {
         status: 401,
       });

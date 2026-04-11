@@ -25,6 +25,7 @@ const DOCUMENTS = [
   { slug: 'ai-assistant', title: 'AI Assistant', description: 'Gemini chat integration, Drive context, and circuit breaker' },
   { slug: 'service-health', title: 'Service Health', description: 'Uptrends API integration, status mapping, and caching' },
   { slug: 'data-portal', title: 'Data Portal', description: 'MSSQL integration, NTLM auth, and budget/incident queries' },
+  { slug: 'observability', title: 'Observability', description: 'OpenTelemetry logs, traces, and metrics; collector setup' },
 ];
 
 const TABS = [

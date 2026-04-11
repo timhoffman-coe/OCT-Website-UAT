@@ -1,0 +1,47 @@
+# Local-development OpenTelemetry Collector configuration.
+#
+# This minimal pipeline only writes received telemetry to the collector's own
+# stdout via the `debug` exporter, so developers can verify that traces,
+# metrics, and logs are flowing from the app. Production wiring (Splunk,
+# AppDynamics, Trellix, Aria) is configured by ops in a separate file and
+# is intentionally NOT defined here.
+#
+# View the collector output with:
+#   docker compose -f docker-compose.dev.yml logs -f otel-collector
+
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+processors:
+  batch:
+    timeout: 1s
+    send_batch_size: 1024
+
+exporters:
+  debug:
+    verbosity: detailed
+    sampling_initial: 5
+    sampling_thereafter: 100
+
+service:
+  telemetry:
+    logs:
+      level: info
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug]

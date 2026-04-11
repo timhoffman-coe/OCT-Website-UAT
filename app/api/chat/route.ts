@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { fetchDriveDocuments } from '../../oct-assistant/services/documentService';
 import { siteMapData } from '@/lib/siteMapData';
-import { logger } from '@/lib/logger';
+import { logger, runWithRequestContext, metrics, trace } from '@/lib/logger';
 
 const log = logger.child({ module: 'chat' });
 
@@ -54,28 +54,31 @@ async function classifyIntent(question: string, ai: GoogleGenAI): Promise<'HR' |
   const prompt = `
     You are a classification system for the City of Edmonton OCT Assistant.
     Analyze the user's input and categorize it into exactly one of the following categories:
-    
+
     1. 'HR': Questions about Human Resources, HR policies, overtime, leave, benefits, CSU 52, collective agreement, union, pay, holidays.
     2. 'IT': Questions about technical issues, passwords, VPN, hardware, software, wifi, printers, SAP, specialized applications, service desk.
     3. 'SiteSearch': Questions asking where to find a page, navigation, "where is...", "show me...", or looking for specific sections of the website.
     4. 'General': Greetings, junk, generic questions, or anything that doesn't fit the above.
 
     Input: "${question}"
-    
+
     Output (just the category name):
   `;
 
   try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: { temperature: 0 },
+    return await trace.span('chat.classify-intent', async () => {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: { temperature: 0 },
+      });
+      const text = response.text?.trim().replace(/['"]/g, '');
+      if (text === 'HR' || text === 'IT' || text === 'SiteSearch') return text;
+      return 'General';
     });
-    const text = response.text?.trim().replace(/['"]/g, '');
-    if (text === 'HR' || text === 'IT' || text === 'SiteSearch') return text;
-    return 'General';
   } catch (e) {
-    log.error('Intent classification failed', { error: e instanceof Error ? e.message : String(e) });
+    // New: pass the Error directly — bridge auto-extracts message/stack/cause.
+    log.error('Intent classification failed', { error: e });
     return 'General';
   }
 }
@@ -86,62 +89,76 @@ const MAX_HISTORY_LENGTH = 20;
 const MAX_HISTORY_CONTENT_LENGTH = 5000;
 
 export async function POST(request: NextRequest) {
-  try {
-    const body: ChatRequest = await request.json();
-    const { question, history = [] } = body;
+  const correlationId =
+    request.headers.get('x-correlation-id') ?? crypto.randomUUID();
 
-    // Validate question
-    if (!question) {
-      return NextResponse.json({ error: 'Missing question' }, { status: 400 });
-    }
-    if (typeof question !== 'string') {
-      return NextResponse.json({ error: 'Question must be a string' }, { status: 400 });
-    }
-    if (question.length > MAX_QUESTION_LENGTH) {
-      return NextResponse.json({ error: `Question exceeds maximum length of ${MAX_QUESTION_LENGTH} characters` }, { status: 400 });
-    }
+  return runWithRequestContext(
+    {
+      correlationId,
+      httpRequest: {
+        requestMethod: 'POST',
+        requestUrl: request.url,
+      },
+    },
+    async () => {
+      try {
+        const body: ChatRequest = await request.json();
+        const { question, history = [] } = body;
 
-    // Validate history
-    if (!Array.isArray(history)) {
-      return NextResponse.json({ error: 'History must be an array' }, { status: 400 });
-    }
-    if (history.length > MAX_HISTORY_LENGTH) {
-      return NextResponse.json({ error: `History exceeds maximum of ${MAX_HISTORY_LENGTH} messages` }, { status: 400 });
-    }
-    for (const msg of history) {
-      if (!msg.role || !['user', 'assistant'].includes(msg.role)) {
-        return NextResponse.json({ error: 'Invalid history message role' }, { status: 400 });
-      }
-      if (typeof msg.content !== 'string' || msg.content.length > MAX_HISTORY_CONTENT_LENGTH) {
-        return NextResponse.json({ error: 'Invalid history message content' }, { status: 400 });
-      }
-    }
+        // Validate question
+        if (!question) {
+          return NextResponse.json({ error: 'Missing question' }, { status: 400 });
+        }
+        if (typeof question !== 'string') {
+          return NextResponse.json({ error: 'Question must be a string' }, { status: 400 });
+        }
+        if (question.length > MAX_QUESTION_LENGTH) {
+          return NextResponse.json({ error: `Question exceeds maximum length of ${MAX_QUESTION_LENGTH} characters` }, { status: 400 });
+        }
 
-    // Circuit breaker: return friendly message if Gemini is repeatedly failing
-    if (isCircuitOpen()) {
-      return NextResponse.json({
-        response: 'The AI assistant is temporarily unavailable. Please try again in a minute, or contact the Service Desk at 780-944-4311 for immediate help.',
-      });
-    }
+        // Validate history
+        if (!Array.isArray(history)) {
+          return NextResponse.json({ error: 'History must be an array' }, { status: 400 });
+        }
+        if (history.length > MAX_HISTORY_LENGTH) {
+          return NextResponse.json({ error: `History exceeds maximum of ${MAX_HISTORY_LENGTH} messages` }, { status: 400 });
+        }
+        for (const msg of history) {
+          if (!msg.role || !['user', 'assistant'].includes(msg.role)) {
+            return NextResponse.json({ error: 'Invalid history message role' }, { status: 400 });
+          }
+          if (typeof msg.content !== 'string' || msg.content.length > MAX_HISTORY_CONTENT_LENGTH) {
+            return NextResponse.json({ error: 'Invalid history message content' }, { status: 400 });
+          }
+        }
 
-    const ai = getAIClient();
+        // Circuit breaker: return friendly message if Gemini is repeatedly failing
+        if (isCircuitOpen()) {
+          metrics.counter('coe.chat_circuit_breaker_open');
+          return NextResponse.json({
+            response: 'The AI assistant is temporarily unavailable. Please try again in a minute, or contact the Service Desk at 780-944-4311 for immediate help.',
+          });
+        }
 
-    // 1. Determine Intent
-    // Use last few messages for better intent classification context if needed, 
-    // but for now, primarily classify the latest question.
-    const intent = await classifyIntent(question, ai);
-    log.info('Intent detected', { intent });
+        const ai = getAIClient();
 
-    // 2. Fetch Relevant Context
-    let documents: Document[] = [];
-    let systemInstruction = '';
-    let contextName = '';
+        // 1. Determine Intent
+        // Use last few messages for better intent classification context if needed,
+        // but for now, primarily classify the latest question.
+        const intent = await classifyIntent(question, ai);
+        log.info('Intent detected', { intent });
+        metrics.counter('coe.chat_requests', { intent });
 
-    if (intent === 'HR') {
-      contextName = 'HR Policies / CSU 52';
-      documents = await fetchDriveDocuments('HR Policies');
+        // 2. Fetch Relevant Context
+        let documents: Document[] = [];
+        let systemInstruction = '';
+        let contextName = '';
 
-      systemInstruction = `
+        if (intent === 'HR') {
+          contextName = 'HR Policies / CSU 52';
+          documents = await fetchDriveDocuments('HR Policies');
+
+          systemInstruction = `
 # MISSION
 Act as a knowledgeable and approachable HR & Labour Relations partner for City of Edmonton employees. Your goal is to simplify complex labour agreements (CSU 52) and HR policies into clear, easy-to-understand conversations.
 
@@ -157,11 +174,11 @@ Act as a knowledgeable and approachable HR & Labour Relations partner for City o
 4. **Follow-up**: You can suggest relevant next steps or related topics naturally (e.g., "Would you like to know about overtime rates clearly?").
 `;
 
-    } else if (intent === 'IT') {
-      contextName = 'IT Service Desk';
-      documents = await fetchDriveDocuments('IT Service Desk');
+        } else if (intent === 'IT') {
+          contextName = 'IT Service Desk';
+          documents = await fetchDriveDocuments('IT Service Desk');
 
-      systemInstruction = `
+          systemInstruction = `
 # MISSION
 Act as a friendly, helpful, and conversational IT Service Desk assistant for the City of Edmonton. Your goal is to help employees resolve technical issues using the information provided in the documents.
 
@@ -186,45 +203,45 @@ Act as a friendly, helpful, and conversational IT Service Desk assistant for the
 - **Inside Information Contact**: ONLY recommend contacting "Inside Information" (780-944-4311) if the troubleshooting steps fail or the documents explicitly say to call them. Do not offer it as a first resort.
 `;
 
-    } else if (intent === 'SiteSearch') {
-      contextName = 'Site Map';
-      // Load site map as documents
-      documents = [{
-        name: 'Site Map',
-        content: siteMapData.map(p => `Title: ${p.title}\nPath: ${p.path}\nDesc: ${p.description}`).join('\n')
-      }];
+        } else if (intent === 'SiteSearch') {
+          contextName = 'Site Map';
+          // Load site map as documents
+          documents = [{
+            name: 'Site Map',
+            content: siteMapData.map(p => `Title: ${p.title}\nPath: ${p.path}\nDesc: ${p.description}`).join('\n')
+          }];
 
-      systemInstruction = `You are the "OCT Site Guide". Help users find specific pages on the website.
-      1. Use the provided "Site Map" as your ONLY source.
-      2. Provide direct links in Markdown: [Page Title](Path).
-      3. If you can't find it, suggest the Home page ([Home](/)).
-      4. **Ambiguity Check**: If the user asks for a page related to a common IT issue (e.g., "network info", "vpn page", "password link"), provide the link BUT ALSO ask: "Are you looking for general information, or are you experiencing an issue and need troubleshooting help?"
-      `;
+          systemInstruction = `You are the "OCT Site Guide". Help users find specific pages on the website.
+          1. Use the provided "Site Map" as your ONLY source.
+          2. Provide direct links in Markdown: [Page Title](Path).
+          3. If you can't find it, suggest the Home page ([Home](/)).
+          4. **Ambiguity Check**: If the user asks for a page related to a common IT issue (e.g., "network info", "vpn page", "password link"), provide the link BUT ALSO ask: "Are you looking for general information, or are you experiencing an issue and need troubleshooting help?"
+          `;
 
-    } else {
-      // General
-      contextName = 'General Assistant';
-      documents = []; // No documents for general chat
-      systemInstruction = `You are the OCT Service Assistant, a helpful AI for City of Edmonton Internal Services.
-      - You can help with IT issues, HR & Labour Relations questions, and finding pages on this website.
-      - If the user asks a specific question about those topics, I will route them to the right knowledge base.
-      - Currently, just answer politely to their greeting or general query.`;
-    }
+        } else {
+          // General
+          contextName = 'General Assistant';
+          documents = []; // No documents for general chat
+          systemInstruction = `You are the OCT Service Assistant, a helpful AI for City of Edmonton Internal Services.
+          - You can help with IT issues, HR & Labour Relations questions, and finding pages on this website.
+          - If the user asks a specific question about those topics, I will route them to the right knowledge base.
+          - Currently, just answer politely to their greeting or general query.`;
+        }
 
-    // 3. Generate Answer
-    // Format History
-    // Limit history to last 10 messages to avoid hitting token limits
-    const recentHistory = history.slice(-10);
-    const historyContext = recentHistory.length > 0
-      ? recentHistory.map(msg => `${msg.role.toUpperCase()}: ${msg.content}`).join('\n')
-      : 'No previous conversation.';
+        // 3. Generate Answer
+        // Format History
+        // Limit history to last 10 messages to avoid hitting token limits
+        const recentHistory = history.slice(-10);
+        const historyContext = recentHistory.length > 0
+          ? recentHistory.map(msg => `${msg.role.toUpperCase()}: ${msg.content}`).join('\n')
+          : 'No previous conversation.';
 
-    // If we have documents, format them.
-    const documentContext = documents.length > 0
-      ? documents.map(doc => `Document: ${doc.name}\nContent:\n${doc.content}`).join('\n\n---\n\n')
-      : 'No specific documents retrieved for this query.';
+        // If we have documents, format them.
+        const documentContext = documents.length > 0
+          ? documents.map(doc => `Document: ${doc.name}\nContent:\n${doc.content}`).join('\n\n---\n\n')
+          : 'No specific documents retrieved for this query.';
 
-    const userPrompt = `
+        const userPrompt = `
 --- CONVERSATION HISTORY ---
 ${historyContext}
 --- END HISTORY ---
@@ -239,26 +256,32 @@ Answer the question using the context above and following the system instruction
 IMPORTANT: Analyze the CONVERSATION HISTORY to see if the user has already provided specific details (like device type or employee status) in previous turns. Do not ask for information that is already in the history.
 `;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: userPrompt,
-      config: {
-        systemInstruction,
-      },
-    });
+        const response = await trace.span('chat.gemini-generate', async () => {
+          return await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: userPrompt,
+            config: {
+              systemInstruction,
+            },
+          });
+        });
 
-    recordGeminiSuccess();
+        recordGeminiSuccess();
 
-    return NextResponse.json({
-      response: response.text || 'No response generated.'
-    });
+        return NextResponse.json({
+          response: response.text || 'No response generated.'
+        });
 
-  } catch (error) {
-    recordGeminiFailure();
-    log.error('Chat API error', { error: error instanceof Error ? error.message : String(error) });
-    return NextResponse.json(
-      { error: 'An unexpected error occurred processing your request.' },
-      { status: 500 }
-    );
-  }
+      } catch (error) {
+        recordGeminiFailure();
+        // New: pass the Error directly — bridge auto-extracts message/stack/cause.
+        log.error('Chat API error', { error });
+        metrics.counter('coe.chat_errors');
+        return NextResponse.json(
+          { error: 'An unexpected error occurred processing your request.' },
+          { status: 500 }
+        );
+      }
+    },
+  );
 }
