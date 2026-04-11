@@ -36,9 +36,10 @@ export default function OngoingProjectsConfigForm({
   currentConfig,
   onSaved,
 }: OngoingProjectsConfigFormProps) {
-  const [mode, setMode] = useState<'none' | 'tag' | 'manual'>(
-    (currentConfig.mode as 'tag' | 'manual') || 'none'
-  );
+  const initialMode: 'none' | 'tag' | 'manual' =
+    (currentConfig.mode as 'tag' | 'manual') || 'none';
+
+  const [mode, setMode] = useState<'none' | 'tag' | 'manual'>(initialMode);
   const [tagSlug, setTagSlug] = useState(currentConfig.tagSlug || '');
   const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>(() => {
     try {
@@ -56,33 +57,56 @@ export default function OngoingProjectsConfigForm({
   const [buttonText, setButtonText] = useState(currentConfig.buttonText || '');
   const [buttonLink, setButtonLink] = useState(currentConfig.buttonLink || '');
 
+  // Tag/project data state. Loading flags are initialized from the starting
+  // mode so we avoid a synchronous setLoading(true) inside an effect (the
+  // react-hooks/set-state-in-effect lint rule flags that as a cascading
+  // render).
   const [tags, setTags] = useState<TagData[]>([]);
   const [projects, setProjects] = useState<ProjectSummary[]>([]);
-  const [loadingTags, setLoadingTags] = useState(false);
-  const [loadingProjects, setLoadingProjects] = useState(false);
+  const [loadingTags, setLoadingTags] = useState(initialMode === 'tag');
+  const [loadingProjects, setLoadingProjects] = useState(initialMode === 'manual');
   const [saving, startSaving] = useTransition();
 
-  // Load tags when tag mode is selected
+  // Mount-time fetch for whichever mode the saved config starts in. This
+  // effect only ever runs once and only calls setState from async callbacks,
+  // so no lint violation.
   useEffect(() => {
-    if (mode === 'tag' && tags.length === 0) {
+    if (initialMode === 'tag') {
+      getAllTags().then((t) => {
+        setTags(t);
+        setLoadingTags(false);
+      });
+    } else if (initialMode === 'manual') {
+      fetchAdminProjects().then((p) => {
+        setProjects(p);
+        setLoadingProjects(false);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Switching modes is a user interaction, not synchronization with an
+  // external system — so data-loading is triggered directly from the click
+  // handler per https://react.dev/learn/you-might-not-need-an-effect.
+  function selectMode(next: 'none' | 'tag' | 'manual') {
+    setMode(next);
+
+    if (next === 'tag' && tags.length === 0 && !loadingTags) {
       setLoadingTags(true);
       getAllTags().then((t) => {
         setTags(t);
         setLoadingTags(false);
       });
     }
-  }, [mode, tags.length]);
 
-  // Load projects when manual mode is selected
-  useEffect(() => {
-    if (mode === 'manual' && projects.length === 0) {
+    if (next === 'manual' && projects.length === 0 && !loadingProjects) {
       setLoadingProjects(true);
       fetchAdminProjects().then((p) => {
         setProjects(p);
         setLoadingProjects(false);
       });
     }
-  }, [mode, projects.length]);
+  }
 
   function handleSave() {
     const config: Record<string, string> = {};
@@ -131,7 +155,7 @@ export default function OngoingProjectsConfigForm({
 
         <div className="grid grid-cols-3 gap-2 mb-4">
           <button
-            onClick={() => setMode('none')}
+            onClick={() => selectMode('none')}
             className={`px-3 py-2 rounded-lg border text-xs font-sans font-medium transition-colors ${
               mode === 'none'
                 ? 'border-primary-blue bg-primary-blue/5 text-primary-blue'
@@ -141,7 +165,7 @@ export default function OngoingProjectsConfigForm({
             CTA Only
           </button>
           <button
-            onClick={() => setMode('tag')}
+            onClick={() => selectMode('tag')}
             className={`px-3 py-2 rounded-lg border text-xs font-sans font-medium transition-colors flex items-center justify-center gap-1.5 ${
               mode === 'tag'
                 ? 'border-primary-blue bg-primary-blue/5 text-primary-blue'
@@ -151,7 +175,7 @@ export default function OngoingProjectsConfigForm({
             <Tag size={12} /> By Tag
           </button>
           <button
-            onClick={() => setMode('manual')}
+            onClick={() => selectMode('manual')}
             className={`px-3 py-2 rounded-lg border text-xs font-sans font-medium transition-colors flex items-center justify-center gap-1.5 ${
               mode === 'manual'
                 ? 'border-primary-blue bg-primary-blue/5 text-primary-blue'
