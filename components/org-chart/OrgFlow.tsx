@@ -295,25 +295,31 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
     return hits;
   }, [root, searchQuery]);
 
-  // When search produces matches, auto-expand each match's ancestor chain and pan to the first.
-  useEffect(() => {
-    if (matchIds.size === 0) return;
-    setExpanded((prev) => {
-      const next = new Set(prev);
-      for (const id of matchIds) {
-        let cursor = parentMap.get(id);
-        while (cursor) {
-          next.add(cursor);
-          cursor = parentMap.get(cursor);
-        }
+  // Derive the set of ancestor ids that must be forced open by the current search,
+  // without mutating the user's manual `expanded` state inside an effect.
+  const searchExpanded = useMemo(() => {
+    if (matchIds.size === 0) return new Set<string>();
+    const ancestors = new Set<string>();
+    for (const id of matchIds) {
+      let cursor = parentMap.get(id);
+      while (cursor) {
+        ancestors.add(cursor);
+        cursor = parentMap.get(cursor);
       }
-      return next;
-    });
+    }
+    return ancestors;
   }, [matchIds, parentMap]);
 
+  const effectiveExpanded = useMemo(() => {
+    if (searchExpanded.size === 0) return expanded;
+    const merged = new Set(expanded);
+    for (const id of searchExpanded) merged.add(id);
+    return merged;
+  }, [expanded, searchExpanded]);
+
   const { nodes, edges, positions } = useMemo(
-    () => layoutTree(root, expanded, totalCounts, matchIds),
-    [root, expanded, totalCounts, matchIds],
+    () => layoutTree(root, effectiveExpanded, totalCounts, matchIds),
+    [root, effectiveExpanded, totalCounts, matchIds],
   );
 
   // Fit or pan after the visible set changes.
