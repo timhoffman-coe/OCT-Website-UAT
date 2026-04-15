@@ -297,6 +297,12 @@ function descendantIds(node: OrgPerson): string[] {
   return out;
 }
 
+// Remove `id` and every descendant manager id beneath it from the set.
+function collapseSubtree(set: Set<string>, node: OrgPerson) {
+  set.delete(node.id);
+  for (const c of node.subordinates ?? []) collapseSubtree(set, c);
+}
+
 function OrgFlowInner({ data }: { data: OrgChartData }) {
   const { root } = data;
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set([root.id]));
@@ -378,14 +384,30 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
     (_, node) => {
       const d = node.data as PersonNodeData;
       if (!d.hasChildren) return;
+      const target = findNodeById(root, node.id);
+      if (!target) return;
       setExpanded((prev) => {
         const next = new Set(prev);
-        if (next.has(node.id)) next.delete(node.id);
-        else next.add(node.id);
+        if (next.has(node.id)) {
+          // Collapsing — drop this node and every descendant manager.
+          collapseSubtree(next, target);
+        } else {
+          // Expanding — accordion: collapse any sibling branches first.
+          const parentId = parentMap.get(node.id);
+          if (parentId) {
+            const parentNode = findNodeById(root, parentId);
+            if (parentNode) {
+              for (const sib of parentNode.subordinates ?? []) {
+                if (sib.id !== node.id) collapseSubtree(next, sib);
+              }
+            }
+          }
+          next.add(node.id);
+        }
         return next;
       });
     },
-    [],
+    [parentMap, root],
   );
 
   const onNodeDoubleClick = useCallback<NodeMouseHandler>(
@@ -397,11 +419,21 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
       const ids = descendantIds(target);
       setExpanded((prev) => {
         const next = new Set(prev);
+        // Accordion: collapse sibling branches before expanding the subtree.
+        const parentId = parentMap.get(node.id);
+        if (parentId) {
+          const parentNode = findNodeById(root, parentId);
+          if (parentNode) {
+            for (const sib of parentNode.subordinates ?? []) {
+              if (sib.id !== node.id) collapseSubtree(next, sib);
+            }
+          }
+        }
         for (const id of ids) next.add(id);
         return next;
       });
     },
-    [root],
+    [parentMap, root],
   );
 
   const handleExpandAll = () => setExpanded(new Set(allManagerIds));
