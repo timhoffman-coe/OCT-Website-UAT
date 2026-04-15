@@ -1,17 +1,20 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ReactFlow,
+  ReactFlowProvider,
   Background,
   Controls,
   Handle,
   Position,
+  useReactFlow,
   type Node,
   type Edge,
   type NodeProps,
+  type NodeMouseHandler,
 } from '@xyflow/react';
-import { User } from 'lucide-react';
+import { User, ChevronDown, ChevronRight, Search } from 'lucide-react';
 import '@xyflow/react/dist/style.css';
 import type { OrgChartData, OrgPerson } from '@/app/org-chart/types';
 
@@ -20,38 +23,99 @@ const NODE_HEIGHT = 180;
 const H_GAP = 40;
 const V_GAP = 80;
 
+// Edmonton palette
+const C = {
+  blue: '#005087',
+  blueShade1: '#00476F',
+  blueTint10: '#E6F0F7',
+  navy: '#193A5A',
+  navyTint10: '#E8EBF0',
+  navyTint30: '#B8C2CF',
+  navyTint50: '#8C9DAD',
+  processBlue: '#0081BC',
+  processBlueTint70: '#339ECD',
+  gray100: '#E2E6EA',
+  gray800: '#2A3844',
+  warning: '#F5A623',
+};
+
 type PersonNodeData = {
   name: string;
   title?: string;
   isRoot: boolean;
+  hasChildren: boolean;
+  isExpanded: boolean;
+  reportCount: number;
+  isMatch: boolean;
 };
 
 function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
+  const { isRoot, hasChildren, isExpanded, reportCount, isMatch } = data;
+
+  const cardStyle = isRoot
+    ? { background: C.blue, borderColor: C.blueShade1, color: '#fff' }
+    : hasChildren
+      ? { background: '#fff', borderColor: C.blue, color: C.navy }
+      : { background: '#fff', borderColor: C.navyTint50, color: C.gray800 };
+
+  const avatarStyle = isRoot
+    ? { background: C.blueShade1 }
+    : hasChildren
+      ? { background: C.processBlue }
+      : { background: C.navyTint50 };
+
   return (
     <div
-      className={`bg-white border-2 rounded-lg shadow-md w-[200px] h-[180px] flex flex-col p-3 ${
-        data.isRoot ? 'border-[#005087]' : 'border-gray-200'
-      }`}
+      className={`border-2 rounded-lg shadow-md w-[200px] h-[180px] flex flex-col overflow-hidden ${
+        isMatch ? 'ring-2 ring-offset-2' : ''
+      } ${hasChildren ? 'cursor-pointer' : 'cursor-default'}`}
+      style={{ ...cardStyle, ...(isMatch ? { boxShadow: `0 0 0 3px ${C.warning}` } : {}) }}
     >
       <Handle type="target" position={Position.Top} className="!bg-gray-400" />
-      <div className="flex justify-center mb-2">
-        <div
-          className={`w-12 h-12 rounded-full flex items-center justify-center ${
-            data.isRoot ? 'bg-[#005087]' : 'bg-gray-300'
-          }`}
-        >
-          <User className={`w-6 h-6 ${data.isRoot ? 'text-white' : 'text-gray-600'}`} />
+      <div className="p-3 flex-1 flex flex-col">
+        <div className="flex justify-center mb-2">
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center"
+            style={avatarStyle}
+          >
+            <User className="w-6 h-6" style={{ color: '#fff' }} />
+          </div>
         </div>
+        <h3
+          className={`text-center font-semibold mb-1 ${isRoot ? 'text-base' : 'text-sm'}`}
+          style={{ color: isRoot ? '#fff' : hasChildren ? C.navy : C.gray800 }}
+        >
+          {data.name}
+        </h3>
+        {data.title && (
+          <p
+            className="text-center text-xs leading-snug line-clamp-2"
+            style={{ color: isRoot ? 'rgba(255,255,255,0.85)' : '#5C6B78' }}
+          >
+            {data.title}
+          </p>
+        )}
       </div>
-      <h3
-        className={`text-center font-semibold mb-1 ${
-          data.isRoot ? 'text-base text-[#005087]' : 'text-sm text-gray-900'
-        }`}
-      >
-        {data.name}
-      </h3>
-      {data.title && (
-        <p className="text-center text-xs leading-snug line-clamp-2 text-gray-600">{data.title}</p>
+      {hasChildren && (
+        <div
+          className="border-t py-1.5 px-3 flex items-center justify-center gap-1.5"
+          style={{
+            background: isRoot ? 'rgba(255,255,255,0.12)' : C.blueTint10,
+            borderColor: isRoot ? 'rgba(255,255,255,0.2)' : C.blueTint10,
+          }}
+        >
+          {isExpanded ? (
+            <ChevronDown className="w-3.5 h-3.5" style={{ color: isRoot ? '#fff' : C.blue }} />
+          ) : (
+            <ChevronRight className="w-3.5 h-3.5" style={{ color: isRoot ? '#fff' : C.blue }} />
+          )}
+          <span
+            className="text-xs font-medium"
+            style={{ color: isRoot ? '#fff' : C.blue }}
+          >
+            {reportCount} {reportCount === 1 ? 'report' : 'reports'}
+          </span>
+        </div>
       )}
       <Handle type="source" position={Position.Bottom} className="!bg-gray-400" />
     </div>
@@ -63,18 +127,25 @@ const nodeTypes = { person: PersonNode };
 interface LayoutResult {
   nodes: Node<PersonNodeData>[];
   edges: Edge[];
-  width: number;
-  height: number;
+  positions: Map<string, { x: number; y: number }>;
 }
 
-function layoutTree(root: OrgPerson): LayoutResult {
+function layoutTree(
+  root: OrgPerson,
+  expanded: Set<string>,
+  totalCounts: Map<string, number>,
+  matchIds: Set<string>,
+): LayoutResult {
   const nodes: Node<PersonNodeData>[] = [];
   const edges: Edge[] = [];
+  const positions = new Map<string, { x: number; y: number }>();
 
-  // Recursively compute the rendered width of each subtree (px).
+  const visibleChildren = (p: OrgPerson): OrgPerson[] =>
+    expanded.has(p.id) ? p.subordinates ?? [] : [];
+
   const subtreeWidth = new Map<string, number>();
   const computeWidth = (p: OrgPerson): number => {
-    const children = p.subordinates ?? [];
+    const children = visibleChildren(p);
     if (children.length === 0) {
       subtreeWidth.set(p.id, NODE_WIDTH);
       return NODE_WIDTH;
@@ -87,24 +158,33 @@ function layoutTree(root: OrgPerson): LayoutResult {
   };
   computeWidth(root);
 
-  let maxDepth = 0;
   const place = (p: OrgPerson, leftX: number, depth: number) => {
-    maxDepth = Math.max(maxDepth, depth);
     const myWidth = subtreeWidth.get(p.id)!;
     const centerX = leftX + myWidth / 2;
     const x = centerX - NODE_WIDTH / 2;
     const y = depth * (NODE_HEIGHT + V_GAP);
+    positions.set(p.id, { x, y });
 
+    const rawChildren = p.subordinates ?? [];
     nodes.push({
       id: p.id,
       type: 'person',
       position: { x, y },
-      data: { name: p.name, title: p.title, isRoot: depth === 0 },
+      data: {
+        name: p.name,
+        title: p.title,
+        isRoot: depth === 0,
+        hasChildren: rawChildren.length > 0,
+        isExpanded: expanded.has(p.id),
+        reportCount: totalCounts.get(p.id) ?? 0,
+        isMatch: matchIds.has(p.id),
+      },
       draggable: false,
+      selectable: false,
     });
 
     let cursor = leftX;
-    for (const child of p.subordinates ?? []) {
+    for (const child of visibleChildren(p)) {
       const cw = subtreeWidth.get(child.id)!;
       place(child, cursor, depth + 1);
       edges.push({
@@ -112,39 +192,271 @@ function layoutTree(root: OrgPerson): LayoutResult {
         source: p.id,
         target: child.id,
         type: 'smoothstep',
-        style: { stroke: '#94a3b8', strokeWidth: 1.5 },
+        style: { stroke: C.processBlueTint70, strokeWidth: 2 },
       });
       cursor += cw + H_GAP;
     }
   };
   place(root, 0, 0);
 
-  return {
-    nodes,
-    edges,
-    width: subtreeWidth.get(root.id)!,
-    height: (maxDepth + 1) * NODE_HEIGHT + maxDepth * V_GAP,
+  return { nodes, edges, positions };
+}
+
+function buildParentMap(root: OrgPerson): Map<string, string> {
+  const map = new Map<string, string>();
+  const walk = (p: OrgPerson) => {
+    for (const c of p.subordinates ?? []) {
+      map.set(c.id, p.id);
+      walk(c);
+    }
   };
+  walk(root);
+  return map;
+}
+
+function collectManagerIds(root: OrgPerson): Set<string> {
+  const ids = new Set<string>();
+  const walk = (p: OrgPerson) => {
+    if ((p.subordinates?.length ?? 0) > 0) {
+      ids.add(p.id);
+      for (const c of p.subordinates!) walk(c);
+    }
+  };
+  walk(root);
+  return ids;
+}
+
+function computeTotalCounts(root: OrgPerson): Map<string, number> {
+  const counts = new Map<string, number>();
+  const walk = (p: OrgPerson): number => {
+    let total = 0;
+    for (const c of p.subordinates ?? []) {
+      total += 1 + walk(c);
+    }
+    counts.set(p.id, total);
+    return total;
+  };
+  walk(root);
+  return counts;
+}
+
+function findNodeById(root: OrgPerson, id: string): OrgPerson | null {
+  if (root.id === id) return root;
+  for (const c of root.subordinates ?? []) {
+    const hit = findNodeById(c, id);
+    if (hit) return hit;
+  }
+  return null;
+}
+
+function descendantIds(node: OrgPerson): string[] {
+  const out: string[] = [];
+  const walk = (p: OrgPerson) => {
+    for (const c of p.subordinates ?? []) {
+      if ((c.subordinates?.length ?? 0) > 0) {
+        out.push(c.id);
+        walk(c);
+      }
+    }
+  };
+  if ((node.subordinates?.length ?? 0) > 0) {
+    out.push(node.id);
+    walk(node);
+  }
+  return out;
+}
+
+function OrgFlowInner({ data }: { data: OrgChartData }) {
+  const { root } = data;
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set([root.id]));
+  const [rawQuery, setRawQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const reactFlow = useReactFlow();
+
+  // Debounce search input.
+  useEffect(() => {
+    const t = setTimeout(() => setSearchQuery(rawQuery.trim()), 200);
+    return () => clearTimeout(t);
+  }, [rawQuery]);
+
+  const parentMap = useMemo(() => buildParentMap(root), [root]);
+  const allManagerIds = useMemo(() => collectManagerIds(root), [root]);
+  const totalCounts = useMemo(() => computeTotalCounts(root), [root]);
+
+  const matchIds = useMemo(() => {
+    if (!searchQuery) return new Set<string>();
+    const q = searchQuery.toLowerCase();
+    const hits = new Set<string>();
+    const walk = (p: OrgPerson) => {
+      if (p.name.toLowerCase().includes(q)) hits.add(p.id);
+      for (const c of p.subordinates ?? []) walk(c);
+    };
+    walk(root);
+    return hits;
+  }, [root, searchQuery]);
+
+  // When search produces matches, auto-expand each match's ancestor chain and pan to the first.
+  useEffect(() => {
+    if (matchIds.size === 0) return;
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      for (const id of matchIds) {
+        let cursor = parentMap.get(id);
+        while (cursor) {
+          next.add(cursor);
+          cursor = parentMap.get(cursor);
+        }
+      }
+      return next;
+    });
+  }, [matchIds, parentMap]);
+
+  const { nodes, edges, positions } = useMemo(
+    () => layoutTree(root, expanded, totalCounts, matchIds),
+    [root, expanded, totalCounts, matchIds],
+  );
+
+  // Fit or pan after the visible set changes.
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    if (matchIds.size > 0) {
+      const firstId = [...matchIds][0];
+      const pos = positions.get(firstId);
+      if (pos) {
+        reactFlow.setCenter(pos.x + NODE_WIDTH / 2, pos.y + NODE_HEIGHT / 2, {
+          zoom: 1,
+          duration: 400,
+        });
+        return;
+      }
+    }
+    reactFlow.fitView({ padding: 0.2, duration: 400 });
+  }, [nodes.length, matchIds, positions, reactFlow]);
+
+  const onNodeClick = useCallback<NodeMouseHandler>(
+    (_, node) => {
+      const d = node.data as PersonNodeData;
+      if (!d.hasChildren) return;
+      setExpanded((prev) => {
+        const next = new Set(prev);
+        if (next.has(node.id)) next.delete(node.id);
+        else next.add(node.id);
+        return next;
+      });
+    },
+    [],
+  );
+
+  const onNodeDoubleClick = useCallback<NodeMouseHandler>(
+    (_, node) => {
+      const d = node.data as PersonNodeData;
+      if (!d.hasChildren) return;
+      const target = findNodeById(root, node.id);
+      if (!target) return;
+      const ids = descendantIds(target);
+      setExpanded((prev) => {
+        const next = new Set(prev);
+        for (const id of ids) next.add(id);
+        return next;
+      });
+    },
+    [root],
+  );
+
+  const handleExpandAll = () => setExpanded(new Set(allManagerIds));
+  const handleCollapseAll = () => setExpanded(new Set([root.id]));
+
+  return (
+    <div
+      className="w-full rounded-lg border overflow-hidden"
+      style={{ borderColor: C.gray100, background: '#fff' }}
+    >
+      {/* Toolbar */}
+      <div
+        className="flex flex-wrap items-center gap-3 px-4 py-3 border-b"
+        style={{ borderColor: C.gray100 }}
+      >
+        <div className="relative flex-1 min-w-[220px]">
+          <Search
+            className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2"
+            style={{ color: C.navyTint50 }}
+          />
+          <input
+            type="text"
+            value={rawQuery}
+            onChange={(e) => setRawQuery(e.target.value)}
+            placeholder="Search by name…"
+            className="w-full pl-9 pr-3 py-2 text-sm rounded-md border outline-none transition focus:ring-2"
+            style={{
+              borderColor: C.gray100,
+              color: C.gray800,
+              // @ts-expect-error — CSS var for focus ring colour
+              '--tw-ring-color': C.processBlue,
+            }}
+          />
+        </div>
+        {searchQuery && (
+          <span className="text-xs" style={{ color: C.navy }}>
+            {matchIds.size} match{matchIds.size === 1 ? '' : 'es'}
+          </span>
+        )}
+        <div className="flex gap-2 ml-auto">
+          <button
+            type="button"
+            onClick={handleExpandAll}
+            className="px-3 py-2 text-xs font-medium rounded-md transition"
+            style={{ background: C.blue, color: '#fff' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = C.blueShade1)}
+            onMouseLeave={(e) => (e.currentTarget.style.background = C.blue)}
+          >
+            Expand all
+          </button>
+          <button
+            type="button"
+            onClick={handleCollapseAll}
+            className="px-3 py-2 text-xs font-medium rounded-md border transition"
+            style={{ borderColor: C.blue, color: C.blue, background: '#fff' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = C.blueTint10)}
+            onMouseLeave={(e) => (e.currentTarget.style.background = '#fff')}
+          >
+            Collapse all
+          </button>
+        </div>
+      </div>
+
+      {/* Canvas */}
+      <div className="w-full h-[75vh]" style={{ background: C.navyTint10 }}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          onNodeClick={onNodeClick}
+          onNodeDoubleClick={onNodeDoubleClick}
+          fitView
+          fitViewOptions={{ padding: 0.2 }}
+          minZoom={0.1}
+          maxZoom={1.5}
+          proOptions={{ hideAttribution: true }}
+          nodesDraggable={false}
+          nodesConnectable={false}
+          elementsSelectable={false}
+        >
+          <Background color={C.navyTint30} gap={20} />
+          <Controls showInteractive={false} />
+        </ReactFlow>
+      </div>
+    </div>
+  );
 }
 
 export default function OrgFlow({ data }: { data: OrgChartData }) {
-  const { nodes, edges } = useMemo(() => layoutTree(data.root), [data]);
-
   return (
-    <div className="w-full h-[80vh] bg-gray-50 rounded-lg border border-gray-200">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        fitView
-        fitViewOptions={{ padding: 0.2 }}
-        minZoom={0.1}
-        maxZoom={1.5}
-        proOptions={{ hideAttribution: true }}
-      >
-        <Background color="#e5e7eb" gap={20} />
-        <Controls showInteractive={false} />
-      </ReactFlow>
-    </div>
+    <ReactFlowProvider>
+      <OrgFlowInner data={data} />
+    </ReactFlowProvider>
   );
 }
