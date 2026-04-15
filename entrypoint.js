@@ -57,10 +57,14 @@ async function fetchSecrets() {
     process.env[envVar] = await accessSecret(secretName);
   }
 
-  // Fetch service account JSON and write to /tmp
+  // Fetch service account JSON and write to /tmp.
+  // A prior run leaves the file at mode 0o400, which blocks rewriting on container restart —
+  // unlink first so writeFileSync can always create a fresh copy.
   console.log(`[entrypoint]   ${SERVICE_ACCOUNT_SECRET} → /tmp/service-account.json`);
   const serviceAccountJson = await accessSecret(SERVICE_ACCOUNT_SECRET);
-  require('fs').writeFileSync('/tmp/service-account.json', serviceAccountJson, { mode: 0o400 });
+  const fs = require('fs');
+  fs.rmSync('/tmp/service-account.json', { force: true });
+  fs.writeFileSync('/tmp/service-account.json', serviceAccountJson, { mode: 0o400 });
   process.env.GOOGLE_APPLICATION_CREDENTIALS = '/tmp/service-account.json';
 
   console.log(`[entrypoint] All secrets loaded successfully.`);
