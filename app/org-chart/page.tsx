@@ -19,24 +19,22 @@ export default async function OrgChartPage() {
       <DashboardDisclaimer dashboardName="OCT Org Chart" />
       <Header />
 
-      <main className="container mx-auto max-w-7xl py-12 px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 text-center">
-          <h1 className="font-sans text-4xl font-bold text-gray-900 mb-4">
-            Organizational Structure
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explore the hierarchy and teams within the Office of the Chief Technology Officer.
-          </p>
+      <main className="container mx-auto max-w-[1600px] py-10 px-4 sm:px-6 lg:px-8">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h1 className="font-sans text-3xl md:text-4xl font-bold text-[#193A5A]">
+              Organizational Structure
+            </h1>
+            <p className="text-base text-gray-600 mt-1">
+              Explore the hierarchy and teams within the Office of the Chief Technology Officer.
+            </p>
+          </div>
+          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
+            Live from HR · Refreshed daily
+          </span>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8">
-          <div className="flex justify-end mb-4">
-            <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-              Live from HR · Refreshed daily
-            </span>
-          </div>
-          <OrgFlow data={data} />
-        </div>
+        <OrgFlow data={data} />
       </main>
 
       <Footer />

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ReactFlow,
   ReactFlowProvider,
-  Background,
   Controls,
   Handle,
   Position,
@@ -22,6 +21,8 @@ const NODE_WIDTH = 200;
 const NODE_HEIGHT = 180;
 const H_GAP = 40;
 const V_GAP = 80;
+const MAX_COLS = 4;
+const ROW_GAP = 40;
 
 // Edmonton palette
 const C = {
@@ -54,15 +55,11 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
 
   const cardStyle = isRoot
     ? { background: C.blue, borderColor: C.blueShade1, color: '#fff' }
-    : hasChildren
-      ? { background: '#fff', borderColor: C.blue, color: C.navy }
-      : { background: '#fff', borderColor: C.navyTint50, color: C.gray800 };
+    : { background: '#fff', borderColor: C.blue, color: C.navy };
 
   const avatarStyle = isRoot
     ? { background: C.blueShade1 }
-    : hasChildren
-      ? { background: C.processBlue }
-      : { background: C.navyTint50 };
+    : { background: C.processBlue };
 
   return (
     <div
@@ -83,7 +80,7 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
         </div>
         <h3
           className={`text-center font-semibold mb-1 ${isRoot ? 'text-base' : 'text-sm'}`}
-          style={{ color: isRoot ? '#fff' : hasChildren ? C.navy : C.gray800 }}
+          style={{ color: isRoot ? '#fff' : C.navy }}
         >
           {data.name}
         </h3>
@@ -143,26 +140,50 @@ function layoutTree(
   const visibleChildren = (p: OrgPerson): OrgPerson[] =>
     expanded.has(p.id) ? p.subordinates ?? [] : [];
 
-  const subtreeWidth = new Map<string, number>();
-  const computeWidth = (p: OrgPerson): number => {
-    const children = visibleChildren(p);
-    if (children.length === 0) {
-      subtreeWidth.set(p.id, NODE_WIDTH);
-      return NODE_WIDTH;
+  // Split siblings into rows of up to MAX_COLS.
+  const chunkRows = (kids: OrgPerson[]): OrgPerson[][] => {
+    if (kids.length === 0) return [];
+    const rows: OrgPerson[][] = [];
+    for (let i = 0; i < kids.length; i += MAX_COLS) {
+      rows.push(kids.slice(i, i + MAX_COLS));
     }
-    const total =
-      children.reduce((sum, c) => sum + computeWidth(c), 0) + H_GAP * (children.length - 1);
-    const w = Math.max(NODE_WIDTH, total);
-    subtreeWidth.set(p.id, w);
-    return w;
+    return rows;
   };
-  computeWidth(root);
 
-  const place = (p: OrgPerson, leftX: number, depth: number) => {
-    const myWidth = subtreeWidth.get(p.id)!;
-    const centerX = leftX + myWidth / 2;
-    const x = centerX - NODE_WIDTH / 2;
-    const y = depth * (NODE_HEIGHT + V_GAP);
+  // Bounding box of each subtree — includes the node itself plus all its descendants
+  // laid out in grid form.
+  const boxW = new Map<string, number>();
+  const boxH = new Map<string, number>();
+  const computeBox = (p: OrgPerson) => {
+    const kids = visibleChildren(p);
+    if (kids.length === 0) {
+      boxW.set(p.id, NODE_WIDTH);
+      boxH.set(p.id, NODE_HEIGHT);
+      return;
+    }
+    for (const c of kids) computeBox(c);
+
+    const rows = chunkRows(kids);
+    let maxRowWidth = 0;
+    let rowsHeightTotal = 0;
+    rows.forEach((row, idx) => {
+      const rw = row.reduce((s, c) => s + boxW.get(c.id)!, 0) + H_GAP * (row.length - 1);
+      const rh = Math.max(...row.map((c) => boxH.get(c.id)!));
+      maxRowWidth = Math.max(maxRowWidth, rw);
+      rowsHeightTotal += rh;
+      if (idx < rows.length - 1) rowsHeightTotal += ROW_GAP;
+    });
+
+    boxW.set(p.id, Math.max(NODE_WIDTH, maxRowWidth));
+    boxH.set(p.id, NODE_HEIGHT + V_GAP + rowsHeightTotal);
+  };
+  computeBox(root);
+
+  // Place each node: (leftX, topY) is the top-left of the subtree's bounding box.
+  const place = (p: OrgPerson, leftX: number, topY: number) => {
+    const myBoxW = boxW.get(p.id)!;
+    const x = leftX + myBoxW / 2 - NODE_WIDTH / 2;
+    const y = topY;
     positions.set(p.id, { x, y });
 
     const rawChildren = p.subordinates ?? [];
@@ -173,7 +194,7 @@ function layoutTree(
       data: {
         name: p.name,
         title: p.title,
-        isRoot: depth === 0,
+        isRoot: p.id === root.id,
         hasChildren: rawChildren.length > 0,
         isExpanded: expanded.has(p.id),
         reportCount: totalCounts.get(p.id) ?? 0,
@@ -183,18 +204,28 @@ function layoutTree(
       selectable: false,
     });
 
-    let cursor = leftX;
-    for (const child of visibleChildren(p)) {
-      const cw = subtreeWidth.get(child.id)!;
-      place(child, cursor, depth + 1);
-      edges.push({
-        id: `${p.id}->${child.id}`,
-        source: p.id,
-        target: child.id,
-        type: 'smoothstep',
-        style: { stroke: C.processBlueTint70, strokeWidth: 2 },
-      });
-      cursor += cw + H_GAP;
+    const kids = visibleChildren(p);
+    if (kids.length === 0) return;
+
+    const rows = chunkRows(kids);
+    let rowTopY = topY + NODE_HEIGHT + V_GAP;
+    for (const row of rows) {
+      const rowWidth = row.reduce((s, c) => s + boxW.get(c.id)!, 0) + H_GAP * (row.length - 1);
+      let cursor = leftX + myBoxW / 2 - rowWidth / 2;
+      const rowHeight = Math.max(...row.map((c) => boxH.get(c.id)!));
+      for (const child of row) {
+        const cw = boxW.get(child.id)!;
+        place(child, cursor, rowTopY);
+        edges.push({
+          id: `${p.id}->${child.id}`,
+          source: p.id,
+          target: child.id,
+          type: 'smoothstep',
+          style: { stroke: C.processBlueTint70, strokeWidth: 2 },
+        });
+        cursor += cw + H_GAP;
+      }
+      rowTopY += rowHeight + ROW_GAP;
     }
   };
   place(root, 0, 0);
@@ -377,15 +408,9 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
   const handleCollapseAll = () => setExpanded(new Set([root.id]));
 
   return (
-    <div
-      className="w-full rounded-lg border overflow-hidden"
-      style={{ borderColor: C.gray100, background: '#fff' }}
-    >
+    <div className="w-full">
       {/* Toolbar */}
-      <div
-        className="flex flex-wrap items-center gap-3 px-4 py-3 border-b"
-        style={{ borderColor: C.gray100 }}
-      >
+      <div className="flex flex-wrap items-center gap-3 mb-4">
         <div className="relative flex-1 min-w-[220px]">
           <Search
             className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2"
@@ -434,8 +459,8 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
         </div>
       </div>
 
-      {/* Canvas */}
-      <div className="w-full h-[75vh]" style={{ background: C.navyTint10 }}>
+      {/* Canvas — no border, inherits page background */}
+      <div className="w-full h-[80vh]">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -443,15 +468,14 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
           onNodeClick={onNodeClick}
           onNodeDoubleClick={onNodeDoubleClick}
           fitView
-          fitViewOptions={{ padding: 0.2 }}
-          minZoom={0.1}
+          fitViewOptions={{ padding: 0.15 }}
+          minZoom={0.2}
           maxZoom={1.5}
           proOptions={{ hideAttribution: true }}
           nodesDraggable={false}
           nodesConnectable={false}
           elementsSelectable={false}
         >
-          <Background color={C.navyTint30} gap={20} />
           <Controls showInteractive={false} />
         </ReactFlow>
       </div>
