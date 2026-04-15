@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getOrgChart } from '@/lib/data/org-chart';
 import { logger } from '@/lib/logger';
 
-export const revalidate = 86400; // 24h — HR data changes infrequently
+export const dynamic = 'force-dynamic'; // data is cached 24h via unstable_cache in getOrgChart
 
 export async function GET() {
   try {

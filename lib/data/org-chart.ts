@@ -1,9 +1,11 @@
+import { unstable_cache } from 'next/cache';
 import { getPool, sql } from '@/lib/mssql';
 import type { OrgChartData, OrgPerson } from '@/app/org-chart/types';
 
 const ROOT_NAME = 'Daryl Croft';
 const ROOT_LEVEL = 2;
 const MAX_LEVEL = 8;
+const ONE_DAY_SECONDS = 86400;
 
 interface PeopleRow {
   CURRENT_LEAF: string | null;
@@ -13,7 +15,7 @@ interface PeopleRow {
   [key: string]: string | number | null;
 }
 
-export async function getOrgChart(): Promise<OrgChartData> {
+async function fetchOrgChart(): Promise<OrgChartData> {
   const pool = await getPool();
   const result = await pool.request()
     .input('rootName', sql.NVarChar, ROOT_NAME)
@@ -39,6 +41,11 @@ export async function getOrgChart(): Promise<OrgChartData> {
 
   return buildTree(result.recordset);
 }
+
+export const getOrgChart = unstable_cache(fetchOrgChart, ['org-chart'], {
+  revalidate: ONE_DAY_SECONDS,
+  tags: ['org-chart'],
+});
 
 function buildTree(rows: PeopleRow[]): OrgChartData {
   const nodes = new Map<string, OrgPerson>();

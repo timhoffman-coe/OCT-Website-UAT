@@ -4,7 +4,7 @@ import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import OrgFlow from '@/components/org-chart/OrgFlow';
 import { getOrgChart } from '@/lib/data/org-chart';
 
-export const revalidate = 86400; // 24h ISR — HR data refreshed once daily
+export const dynamic = 'force-dynamic'; // render on request; data is cached 24h via unstable_cache
 
 export const metadata = {
   title: 'Org Chart | Open City & Technology',
