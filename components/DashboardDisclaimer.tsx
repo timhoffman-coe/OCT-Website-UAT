@@ -4,9 +4,15 @@ import { useState, useEffect } from 'react';
 
 interface DashboardDisclaimerProps {
   dashboardName: string;
+  title?: string;
+  message?: React.ReactNode;
 }
 
-export default function DashboardDisclaimer({ dashboardName }: DashboardDisclaimerProps) {
+export default function DashboardDisclaimer({
+  dashboardName,
+  title = 'Not Yet Live',
+  message,
+}: DashboardDisclaimerProps) {
   const [isOpen, setIsOpen] = useState(true);
 
   // Handle ESC key and body scroll
@@ -84,11 +90,15 @@ export default function DashboardDisclaimer({ dashboardName }: DashboardDisclaim
             </div>
 
             <h2 className="font-sans text-2xl font-bold text-gray-900 mb-4">
-              Not Yet Live
+              {title}
             </h2>
 
             <p className="font-serif text-lg text-gray-700 mb-6">
-              <span className="font-bold">{dashboardName}</span> is not yet live and the data represented is not accurate.
+              {message ?? (
+                <>
+                  <span className="font-bold">{dashboardName}</span> is not yet live and the data represented is not accurate.
+                </>
+              )}
             </p>
 
             <button

@@ -16,7 +16,15 @@ export default async function OrgChartPage() {
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
-      <DashboardDisclaimer dashboardName="OCT Org Chart" />
+      <DashboardDisclaimer
+        dashboardName="OCT Org Chart"
+        title="Live — Source May Be Inaccurate"
+        message={
+          <>
+            <span className="font-bold">OCT Org Chart</span> is live and pulling directly from HR data, but the source itself may be out of date or incomplete. Please verify reporting relationships before relying on them.
+          </>
+        }
+      />
       <Header />
 
       <main className="container mx-auto max-w-[1600px] py-10 px-4 sm:px-6 lg:px-8">
