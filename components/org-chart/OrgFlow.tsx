@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -21,8 +21,21 @@ const NODE_WIDTH = 200;
 const NODE_HEIGHT = 180;
 const H_GAP = 40;
 const V_GAP = 80;
-const MAX_COLS = 4;
-const ROW_GAP = 40;
+// More than this many visible reports → switch from horizontal row to a
+// hanging (vertical-stack) layout, which keeps connector lines from crossing cards.
+const HANGING_THRESHOLD = 4;
+const HANG_OFFSET = 30;
+const HANG_INDENT = 60;
+const HANG_V_GAP = 30;
+
+const HIDDEN_HANDLE_STYLE: CSSProperties = {
+  background: 'transparent',
+  border: 'none',
+  width: 1,
+  height: 1,
+  opacity: 0,
+  pointerEvents: 'none',
+};
 
 // Edmonton palette
 const C = {
@@ -68,7 +81,8 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
       } ${hasChildren ? 'cursor-pointer' : 'cursor-default'}`}
       style={{ ...cardStyle, ...(isMatch ? { boxShadow: `0 0 0 3px ${C.warning}` } : {}) }}
     >
-      <Handle type="target" position={Position.Top} className="!bg-gray-400" />
+      <Handle type="target" id="top" position={Position.Top} className="!bg-gray-400" />
+      <Handle type="target" id="hang-in" position={Position.Left} style={HIDDEN_HANDLE_STYLE} />
       <div className="p-3 flex-1 flex flex-col">
         <div className="flex justify-center mb-2">
           <div
@@ -114,7 +128,13 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
           </span>
         </div>
       )}
-      <Handle type="source" position={Position.Bottom} className="!bg-gray-400" />
+      <Handle type="source" id="bottom" position={Position.Bottom} className="!bg-gray-400" />
+      <Handle
+        type="source"
+        id="hang-out"
+        position={Position.Bottom}
+        style={{ ...HIDDEN_HANDLE_STYLE, left: HANG_OFFSET }}
+      />
     </div>
   );
 }
@@ -140,49 +160,55 @@ function layoutTree(
   const visibleChildren = (p: OrgPerson): OrgPerson[] =>
     expanded.has(p.id) ? p.subordinates ?? [] : [];
 
-  // Split siblings into rows of up to MAX_COLS.
-  const chunkRows = (kids: OrgPerson[]): OrgPerson[][] => {
-    if (kids.length === 0) return [];
-    const rows: OrgPerson[][] = [];
-    for (let i = 0; i < kids.length; i += MAX_COLS) {
-      rows.push(kids.slice(i, i + MAX_COLS));
-    }
-    return rows;
-  };
-
-  // Bounding box of each subtree — includes the node itself plus all its descendants
-  // laid out in grid form.
+  // Bounding box of each subtree.
   const boxW = new Map<string, number>();
   const boxH = new Map<string, number>();
-  const computeBox = (p: OrgPerson) => {
+  // Whether each node renders its children as a hanging stack (vs. a horizontal row).
+  // A node hangs if it has too many reports for one row, OR its parent already hangs —
+  // once we start hanging, descendants keep hanging so the trunk stays clean.
+  const hangMode = new Map<string, boolean>();
+
+  const computeBox = (p: OrgPerson, inheritedHanging: boolean) => {
     const kids = visibleChildren(p);
     if (kids.length === 0) {
       boxW.set(p.id, NODE_WIDTH);
       boxH.set(p.id, NODE_HEIGHT);
+      hangMode.set(p.id, inheritedHanging);
       return;
     }
-    for (const c of kids) computeBox(c);
 
-    const rows = chunkRows(kids);
-    let maxRowWidth = 0;
-    let rowsHeightTotal = 0;
-    rows.forEach((row, idx) => {
-      const rw = row.reduce((s, c) => s + boxW.get(c.id)!, 0) + H_GAP * (row.length - 1);
-      const rh = Math.max(...row.map((c) => boxH.get(c.id)!));
-      maxRowWidth = Math.max(maxRowWidth, rw);
-      rowsHeightTotal += rh;
-      if (idx < rows.length - 1) rowsHeightTotal += ROW_GAP;
-    });
+    const useHanging = inheritedHanging || kids.length > HANGING_THRESHOLD;
+    hangMode.set(p.id, useHanging);
 
-    boxW.set(p.id, Math.max(NODE_WIDTH, maxRowWidth));
-    boxH.set(p.id, NODE_HEIGHT + V_GAP + rowsHeightTotal);
+    for (const c of kids) computeBox(c, useHanging);
+
+    if (useHanging) {
+      const maxChildW = Math.max(...kids.map((c) => boxW.get(c.id)!));
+      const sumChildH =
+        kids.reduce((s, c) => s + boxH.get(c.id)!, 0) + HANG_V_GAP * (kids.length - 1);
+      boxW.set(p.id, Math.max(NODE_WIDTH, HANG_INDENT + maxChildW));
+      boxH.set(p.id, NODE_HEIGHT + V_GAP + sumChildH);
+      return;
+    }
+
+    // Horizontal: single row of up to HANGING_THRESHOLD siblings.
+    const rowWidth =
+      kids.reduce((s, c) => s + boxW.get(c.id)!, 0) + H_GAP * (kids.length - 1);
+    const rowHeight = Math.max(...kids.map((c) => boxH.get(c.id)!));
+    boxW.set(p.id, Math.max(NODE_WIDTH, rowWidth));
+    boxH.set(p.id, NODE_HEIGHT + V_GAP + rowHeight);
   };
-  computeBox(root);
+  computeBox(root, false);
 
   // Place each node: (leftX, topY) is the top-left of the subtree's bounding box.
+  // In horizontal mode the card is centered within its box; in hanging mode it sits at
+  // the box's top-left so the trunk on the left lines up across nested levels.
   const place = (p: OrgPerson, leftX: number, topY: number) => {
     const myBoxW = boxW.get(p.id)!;
-    const x = leftX + myBoxW / 2 - NODE_WIDTH / 2;
+    const useHanging = hangMode.get(p.id)!;
+    const kids = visibleChildren(p);
+
+    const x = useHanging ? leftX : leftX + myBoxW / 2 - NODE_WIDTH / 2;
     const y = topY;
     positions.set(p.id, { x, y });
 
@@ -204,28 +230,44 @@ function layoutTree(
       selectable: false,
     });
 
-    const kids = visibleChildren(p);
     if (kids.length === 0) return;
 
-    const rows = chunkRows(kids);
-    let rowTopY = topY + NODE_HEIGHT + V_GAP;
-    for (const row of rows) {
-      const rowWidth = row.reduce((s, c) => s + boxW.get(c.id)!, 0) + H_GAP * (row.length - 1);
-      let cursor = leftX + myBoxW / 2 - rowWidth / 2;
-      const rowHeight = Math.max(...row.map((c) => boxH.get(c.id)!));
-      for (const child of row) {
-        const cw = boxW.get(child.id)!;
-        place(child, cursor, rowTopY);
+    if (useHanging) {
+      let cursorY = topY + NODE_HEIGHT + V_GAP;
+      for (const child of kids) {
+        place(child, leftX + HANG_INDENT, cursorY);
         edges.push({
           id: `${p.id}->${child.id}`,
           source: p.id,
           target: child.id,
+          sourceHandle: 'hang-out',
+          targetHandle: 'hang-in',
           type: 'smoothstep',
           style: { stroke: C.processBlueTint70, strokeWidth: 2 },
         });
-        cursor += cw + H_GAP;
+        cursorY += boxH.get(child.id)! + HANG_V_GAP;
       }
-      rowTopY += rowHeight + ROW_GAP;
+      return;
+    }
+
+    // Horizontal: single row.
+    const rowWidth =
+      kids.reduce((s, c) => s + boxW.get(c.id)!, 0) + H_GAP * (kids.length - 1);
+    const rowTopY = topY + NODE_HEIGHT + V_GAP;
+    let cursor = leftX + myBoxW / 2 - rowWidth / 2;
+    for (const child of kids) {
+      const cw = boxW.get(child.id)!;
+      place(child, cursor, rowTopY);
+      edges.push({
+        id: `${p.id}->${child.id}`,
+        source: p.id,
+        target: child.id,
+        sourceHandle: 'bottom',
+        targetHandle: 'top',
+        type: 'smoothstep',
+        style: { stroke: C.processBlueTint70, strokeWidth: 2 },
+      });
+      cursor += cw + H_GAP;
     }
   };
   place(root, 0, 0);
