@@ -24,7 +24,6 @@ const V_GAP = 80;
 // More than this many visible reports → switch from horizontal row to a
 // hanging (vertical-stack) layout, which keeps connector lines from crossing cards.
 const HANGING_THRESHOLD = 4;
-const HANG_OFFSET = 30;
 const HANG_INDENT = 60;
 const HANG_V_GAP = 30;
 
@@ -82,7 +81,8 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
       style={{ ...cardStyle, ...(isMatch ? { boxShadow: `0 0 0 3px ${C.warning}` } : {}) }}
     >
       <Handle type="target" id="top" position={Position.Top} className="!bg-gray-400" />
-      <Handle type="target" id="hang-in" position={Position.Left} style={HIDDEN_HANDLE_STYLE} />
+      <Handle type="target" id="left" position={Position.Left} style={HIDDEN_HANDLE_STYLE} />
+      <Handle type="target" id="right" position={Position.Right} style={HIDDEN_HANDLE_STYLE} />
       <div className="p-3 flex-1 flex flex-col">
         <div className="flex justify-center mb-2">
           <div
@@ -129,12 +129,6 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
         </div>
       )}
       <Handle type="source" id="bottom" position={Position.Bottom} className="!bg-gray-400" />
-      <Handle
-        type="source"
-        id="hang-out"
-        position={Position.Bottom}
-        style={{ ...HIDDEN_HANDLE_STYLE, left: HANG_OFFSET }}
-      />
     </div>
   );
 }
@@ -163,9 +157,7 @@ function layoutTree(
   // Bounding box of each subtree.
   const boxW = new Map<string, number>();
   const boxH = new Map<string, number>();
-  // Whether each node renders its children as a hanging stack (vs. a horizontal row).
-  // A node hangs if it has too many reports for one row, OR its parent already hangs —
-  // once we start hanging, descendants keep hanging so the trunk stays clean.
+  // Whether each node renders its children as a hanging grid (vs. a horizontal row).
   const hangMode = new Map<string, boolean>();
 
   const computeBox = (p: OrgPerson, inheritedHanging: boolean) => {
@@ -183,15 +175,31 @@ function layoutTree(
     for (const c of kids) computeBox(c, useHanging);
 
     if (useHanging) {
-      const maxChildW = Math.max(...kids.map((c) => boxW.get(c.id)!));
-      const sumChildH =
-        kids.reduce((s, c) => s + boxH.get(c.id)!, 0) + HANG_V_GAP * (kids.length - 1);
-      boxW.set(p.id, Math.max(NODE_WIDTH, HANG_INDENT + maxChildW));
-      boxH.set(p.id, NODE_HEIGHT + V_GAP + sumChildH);
+      if (kids.length > 1) {
+        // 2-column grid
+        const colWidths = [0, 0];
+        const rowHeights: number[] = [];
+        for (let i = 0; i < kids.length; i++) {
+          const col = i % 2;
+          const row = Math.floor(i / 2);
+          colWidths[col] = Math.max(colWidths[col], boxW.get(kids[i].id)!);
+          rowHeights[row] = Math.max(rowHeights[row] || 0, boxH.get(kids[i].id)!);
+        }
+        const totalW = colWidths[0] + colWidths[1] + H_GAP;
+        const totalH = rowHeights.reduce((s, h) => s + h, 0) + HANG_V_GAP * (rowHeights.length - 1);
+        boxW.set(p.id, Math.max(NODE_WIDTH, totalW));
+        boxH.set(p.id, NODE_HEIGHT + V_GAP + totalH);
+      } else {
+        // 1-column hanging stack
+        const childBoxW = boxW.get(kids[0].id)!;
+        const childBoxH = boxH.get(kids[0].id)!;
+        boxW.set(p.id, Math.max(NODE_WIDTH, HANG_INDENT + childBoxW));
+        boxH.set(p.id, NODE_HEIGHT + V_GAP + childBoxH);
+      }
       return;
     }
 
-    // Horizontal: single row of up to HANGING_THRESHOLD siblings.
+    // Horizontal: single row.
     const rowWidth =
       kids.reduce((s, c) => s + boxW.get(c.id)!, 0) + H_GAP * (kids.length - 1);
     const rowHeight = Math.max(...kids.map((c) => boxH.get(c.id)!));
@@ -201,14 +209,19 @@ function layoutTree(
   computeBox(root, false);
 
   // Place each node: (leftX, topY) is the top-left of the subtree's bounding box.
-  // In horizontal mode the card is centered within its box; in hanging mode it sits at
-  // the box's top-left so the trunk on the left lines up across nested levels.
   const place = (p: OrgPerson, leftX: number, topY: number) => {
     const myBoxW = boxW.get(p.id)!;
     const useHanging = hangMode.get(p.id)!;
     const kids = visibleChildren(p);
 
-    const x = useHanging ? leftX : leftX + myBoxW / 2 - NODE_WIDTH / 2;
+    let x = leftX + myBoxW / 2 - NODE_WIDTH / 2;
+    if (useHanging && kids.length > 1) {
+      const colWidths = [0, 0];
+      for (let i = 0; i < kids.length; i++) {
+        colWidths[i % 2] = Math.max(colWidths[i % 2], boxW.get(kids[i].id)!);
+      }
+      x = leftX + colWidths[0] + H_GAP / 2 - NODE_WIDTH / 2;
+    }
     const y = topY;
     positions.set(p.id, { x, y });
 
@@ -233,19 +246,62 @@ function layoutTree(
     if (kids.length === 0) return;
 
     if (useHanging) {
-      let cursorY = topY + NODE_HEIGHT + V_GAP;
-      for (const child of kids) {
-        place(child, leftX + HANG_INDENT, cursorY);
+      if (kids.length > 1) {
+        const colWidths = [0, 0];
+        for (let i = 0; i < kids.length; i++) {
+          colWidths[i % 2] = Math.max(colWidths[i % 2], boxW.get(kids[i].id)!);
+        }
+        const gutterX = leftX + colWidths[0] + H_GAP / 2;
+
+        let cursorY = topY + NODE_HEIGHT + V_GAP;
+        for (let i = 0; i < kids.length; i++) {
+          const col = i % 2;
+          const row = Math.floor(i / 2);
+          const kid = kids[i];
+          const kw = boxW.get(kid.id)!;
+          
+          let kx;
+          let targetHandle;
+          if (col === 0) {
+            kx = gutterX - H_GAP / 2 - kw;
+            targetHandle = 'right';
+          } else {
+            kx = gutterX + H_GAP / 2;
+            targetHandle = 'left';
+          }
+          
+          place(kid, kx, cursorY);
+          edges.push({
+            id: `${p.id}->${kid.id}`,
+            source: p.id,
+            target: kid.id,
+            sourceHandle: 'bottom',
+            targetHandle: targetHandle,
+            type: 'smoothstep',
+            style: { stroke: C.processBlueTint70, strokeWidth: 2 },
+          });
+          
+          if (col === 1 || i === kids.length - 1) {
+            const rowKids = kids.slice(row * 2, (row + 1) * 2);
+            const rowH = Math.max(...rowKids.map(k => boxH.get(k.id)!));
+            cursorY += rowH + HANG_V_GAP;
+          }
+        }
+      } else {
+        // 1-column hanging stack
+        const kid = kids[0];
+        const kx = leftX + HANG_INDENT;
+        const ky = topY + NODE_HEIGHT + V_GAP;
+        place(kid, kx, ky);
         edges.push({
-          id: `${p.id}->${child.id}`,
+          id: `${p.id}->${kid.id}`,
           source: p.id,
-          target: child.id,
-          sourceHandle: 'hang-out',
-          targetHandle: 'hang-in',
+          target: kid.id,
+          sourceHandle: 'bottom',
+          targetHandle: 'left',
           type: 'smoothstep',
           style: { stroke: C.processBlueTint70, strokeWidth: 2 },
         });
-        cursorY += boxH.get(child.id)! + HANG_V_GAP;
       }
       return;
     }
