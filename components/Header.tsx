@@ -159,7 +159,7 @@ export default function Header() {
                             <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                           </svg>
                         </Link>
-                        <div className="hidden group-hover/its:block absolute left-full top-0 ml-0 w-72 bg-white rounded-md shadow-lg py-1 border border-gray-200">
+                        <div className="hidden group-hover/its:block absolute right-full xl:right-auto xl:left-full top-0 xl:ml-0 w-72 bg-white rounded-md shadow-lg py-1 border border-gray-200">
                           <Link href="/integrated-technology-solutions" className="block px-4 py-2 text-sm font-semibold text-primary-blue hover:bg-gray-100 border-b border-gray-200">View All ITS Teams</Link>
                           <Link href="/technology-infrastructure-operations" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">Technology Infrastructure Operations</Link>
                           <Link href="/data-technology" className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">Data Technology</Link>
