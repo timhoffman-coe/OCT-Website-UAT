@@ -8,182 +8,107 @@ export const metadata = {
 };
 
 export default function ServicesPage() {
-  const serviceGroups = [
+  const sections = [
     {
-      section: 'Technology Planning',
-      sectionUrl: '/technology-planning',
-      services: [
-        {
-          title: 'Technology Investment & Governance',
-          description: 'Strategic oversight of technology investments, portfolio management, and enterprise architecture governance.',
-          icon: '🏛️',
-        },
-        {
-          title: 'Business Engagement & Intake',
-          description: 'Technology project intake, business requirement gathering, and stakeholder engagement services.',
-          icon: '🤝',
-        },
-        {
-          title: 'Vendor & Contract Management',
-          description: 'Procurement, vendor relationships, contract negotiation, and supplier performance management.',
-          icon: '📋',
-        },
-        {
-          title: 'IT Asset Management',
-          description: 'Hardware and software asset tracking, lifecycle management, and license compliance.',
-          icon: '📦',
-        },
-      ],
+      title: 'Technology Planning',
+      url: '/technology-planning',
+      icon: '🏛️',
+      description: 'Strategic oversight of technology investments, portfolio management, business engagement, and enterprise architecture.'
     },
     {
-      section: 'Application Technology Services',
-      sectionUrl: '/application-technology-services',
-      services: [
-        {
-          title: 'Application Development & Support',
-          description: 'Custom software development, application maintenance, system integration, and technical support.',
-          icon: '💻',
-        },
-        {
-          title: 'Artificial Intelligence',
-          description: 'AI and machine learning solutions, intelligent automation, and data analytics services.',
-          icon: '🤖',
-        },
-      ],
+      title: 'Application Technology Services',
+      url: '/application-technology-services',
+      icon: '💻',
+      description: 'Custom software development, application maintenance, system integration, and advanced artificial intelligence solutions.'
     },
     {
-      section: 'Integrated Technology Solutions',
-      sectionUrl: '/integrated-technology-solutions',
-      services: [
-        {
-          title: 'Technology Infrastructure Operations',
-          description: 'Server management, cloud services, storage systems, and infrastructure monitoring.',
-          icon: '🖥️',
-        },
-        {
-          title: 'Network & Data Center Operations',
-          description: 'Network infrastructure, connectivity, data center operations, and telecommunications.',
-          icon: '🌐',
-        },
-        {
-          title: 'Voice, Mobility, & IoT',
-          description: 'Voice communications, mobile device management, and Internet of Things solutions.',
-          icon: '📱',
-        },
-        {
-          title: 'Desktop & End-User Support',
-          description: 'Help desk services, device support, software installation, and end-user training.',
-          icon: '🖱️',
-        },
-        {
-          title: 'Service Management & Monitoring',
-          description: 'IT service desk, incident management, service monitoring, and performance tracking.',
-          icon: '📊',
-        },
-      ],
+      title: 'Integrated Technology Solutions',
+      url: '/integrated-technology-solutions',
+      icon: '🌐',
+      description: 'Enterprise server management, cloud infrastructure, network connectivity, and comprehensive end-user support.'
     },
     {
-      section: 'Project Management Office',
-      sectionUrl: '/project-management-office',
-      services: [
-        {
-          title: 'Project Management Services',
-          description: 'Project planning, execution, governance, risk management, and delivery oversight.',
-          icon: '📈',
-        },
-      ],
+      title: 'Project Management Office',
+      url: '/project-management-office',
+      icon: '📈',
+      description: 'Project planning, governance frameworks, risk management strategies, and delivery oversight for technology initiatives.'
     },
     {
-      section: 'Corporate Information Security',
-      sectionUrl: '/corporate-information-security',
-      services: [
-        {
-          title: 'Cybersecurity & Risk Management',
-          description: 'Threat detection, security monitoring, vulnerability management, and risk assessment.',
-          icon: '🔒',
-        },
-        {
-          title: 'Identity & Access Management',
-          description: 'User authentication, access controls, identity governance, and privileged access management.',
-          icon: '🔑',
-        },
-      ],
-    },
+      title: 'Corporate Information Security',
+      url: '/corporate-information-security',
+      icon: '🔒',
+      description: 'Cybersecurity threat detection, vulnerability management, access controls, and enterprise identity governance.'
+    }
   ];
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="min-h-screen flex flex-col bg-[#f8f9fa] selection:bg-primary-blue/20">
       <Header />
 
-      <main className="container mx-auto max-w-7xl py-12 md:py-16 px-4 sm:px-6 lg:px-8">
-        {/* Page Title */}
-        <div className="mb-12">
-          <h1 className="font-sans text-4xl md:text-5xl font-bold text-primary-blue mb-4 pb-3 border-b-2 border-structural-gray-blue">
-            Our Services
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 relative">
+        {/* Ambient background decoration */}
+        <div 
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[600px] pointer-events-none" 
+          style={{ background: 'radial-gradient(ellipse at top, rgba(0, 105, 180, 0.05) 0%, rgba(255, 255, 255, 0) 70%)' }} 
+        />
+
+        {/* Page Heading */}
+        <div className="max-w-4xl mx-auto text-center mb-24 relative z-10">
+          <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl font-extrabold text-text-dark tracking-tight mb-8">
+            Our <span className="text-primary-blue relative whitespace-nowrap">
+              Services
+              <svg className="absolute -bottom-2 left-0 w-full h-3 text-primary-blue/30" viewBox="0 0 100 10" preserveAspectRatio="none">
+                <path d="M0 5 Q 50 10 100 5 Q 50 0 0 5" fill="currentColor" />
+              </svg>
+            </span>
           </h1>
-          <p className="font-serif text-lg md:text-xl text-text-secondary max-w-3xl mt-6">
-            Open City & Technology provides comprehensive technology services that support the City of Edmonton&apos;s operations and strategic objectives.
+          <p className="font-serif text-xl md:text-2xl text-text-secondary leading-relaxed max-w-3xl mx-auto">
+            Delivering secure, reliable, and innovative technology solutions that enable the City of Edmonton&apos;s operations and strategic objectives.
           </p>
         </div>
 
-        {/* Services by Section */}
-        {serviceGroups.map((group, groupIndex) => (
-          <div key={groupIndex} className="mb-12">
-            {/* Section Header */}
-            <h2 className="font-sans text-2xl font-bold text-primary-blue mb-6">
-              {group.section}
-            </h2>
+        {/* Minimalistic Symmetric Cards */}
+        <div className="flex flex-wrap justify-center gap-8 lg:gap-10 max-w-6xl mx-auto relative z-10">
+          {sections.map((section, index) => (
+            <Link
+              key={index}
+              href={section.url}
+              className="flex-1 min-w-[320px] max-w-[380px] flex flex-col items-center text-center p-10 rounded-[2.5rem] bg-white border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 hover:-translate-y-2 group relative overflow-hidden"
+            >
+              {/* Subtle background gradient on hover */}
+              <div className="absolute inset-0 bg-gradient-to-b from-primary-blue/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="mb-8 p-6 rounded-3xl bg-structural-light-gray group-hover:bg-primary-blue/[0.08] transition-colors duration-500 relative z-10">
+                 <span className="text-6xl block group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 ease-out">{section.icon}</span>
+              </div>
+              
+              <h2 className="text-2xl font-bold text-text-dark mb-5 group-hover:text-primary-blue transition-colors duration-300 relative z-10 leading-tight">
+                {section.title}
+              </h2>
+              
+              <p className="text-text-secondary text-base leading-relaxed flex-grow relative z-10">
+                {section.description}
+              </p>
+              
+              {/* Dynamic Bottom Edge Indicator */}
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1.5 bg-primary-blue group-hover:w-full transition-all duration-500 ease-out rounded-t-full" />
+            </Link>
+          ))}
+        </div>
 
-            {/* Service Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {group.services.map((service, serviceIndex) => (
-                <a
-                  key={serviceIndex}
-                  href={group.sectionUrl}
-                  className="group bg-structural-light-gray rounded-lg p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 border-transparent hover:border-primary-blue"
-                >
-                  <div className="text-5xl mb-4">{service.icon}</div>
-                  <h3 className="font-sans text-xl font-bold text-text-dark mb-3 group-hover:text-primary-blue transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="font-sans text-sm text-text-secondary mb-4">
-                    {service.description}
-                  </p>
-                  <div className="flex items-center font-sans text-sm font-semibold text-primary-blue">
-                    <span>Learn More</span>
-                    <svg
-                      className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {/* Contact Information */}
-        <div className="bg-structural-light-gray rounded-lg p-8 mt-8">
-          <h2 className="font-sans text-2xl font-bold text-text-dark mb-4">
-            How Can We Help?
-          </h2>
-          <p className="font-sans text-base text-text-secondary mb-4">
-            Our team of technology professionals is dedicated to delivering secure, reliable, and innovative solutions that enable City operations and improve citizen services.
-          </p>
-          <p className="font-sans text-base text-text-secondary mb-6">
-            For inquiries about any of our services, please visit our contact page or reach out to the appropriate service area directly.
+        {/* Sleek Contact CTA */}
+        <div className="mt-32 max-w-2xl mx-auto text-center relative z-10">
+          <p className="font-serif text-text-secondary text-xl mb-8">
+            Looking for something specific or need direct assistance?
           </p>
           <Link
             href="/contact"
-            className="inline-block font-sans text-base font-semibold bg-primary-blue text-white px-6 py-3 rounded-md hover:bg-dark-blue transition-colors"
+            className="inline-flex items-center space-x-3 px-10 py-4 rounded-full bg-white border-2 border-gray-100 text-text-dark font-semibold text-lg hover:border-primary-blue hover:text-primary-blue hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 group"
           >
-            Contact Us
+            <span>Contact Our Team</span>
+            <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
           </Link>
         </div>
       </main>
