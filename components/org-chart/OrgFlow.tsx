@@ -24,7 +24,7 @@ const V_GAP = 80;
 // More than this many visible reports → switch from horizontal row to a
 // hanging (vertical-stack) layout, which keeps connector lines from crossing cards.
 const HANGING_THRESHOLD = 4;
-const HANG_INDENT = 60;
+const HANGING_COLS = 4;
 const HANG_V_GAP = 30;
 
 const HIDDEN_HANDLE_STYLE: CSSProperties = {
@@ -34,6 +34,15 @@ const HIDDEN_HANDLE_STYLE: CSSProperties = {
   height: 1,
   opacity: 0,
   pointerEvents: 'none',
+};
+
+const HIDDEN_NODE_STYLE: CSSProperties = {
+  width: 1,
+  height: 1,
+  opacity: 0,
+  pointerEvents: 'none',
+  background: 'transparent',
+  border: 'none',
 };
 
 // Edmonton palette
@@ -81,8 +90,6 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
       style={{ ...cardStyle, ...(isMatch ? { boxShadow: `0 0 0 3px ${C.warning}` } : {}) }}
     >
       <Handle type="target" id="top" position={Position.Top} className="!bg-gray-400" />
-      <Handle type="target" id="left" position={Position.Left} style={HIDDEN_HANDLE_STYLE} />
-      <Handle type="target" id="right" position={Position.Right} style={HIDDEN_HANDLE_STYLE} />
       <div className="p-3 flex-1 flex flex-col">
         <div className="flex justify-center mb-2">
           <div
@@ -133,7 +140,16 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
   );
 }
 
-const nodeTypes = { person: PersonNode };
+function InvisibleNode() {
+  return (
+    <div style={HIDDEN_NODE_STYLE}>
+      <Handle type="target" id="top" position={Position.Top} style={HIDDEN_HANDLE_STYLE} />
+      <Handle type="source" id="bottom" position={Position.Bottom} style={HIDDEN_HANDLE_STYLE} />
+    </div>
+  );
+}
+
+const nodeTypes = { person: PersonNode, invisible: InvisibleNode };
 
 interface LayoutResult {
   nodes: Node<PersonNodeData>[];
@@ -175,27 +191,47 @@ function layoutTree(
     for (const c of kids) computeBox(c, useHanging);
 
     if (useHanging) {
-      if (kids.length > 1) {
-        // 2-column grid
-        const colWidths = [0, 0];
-        const rowHeights: number[] = [];
-        for (let i = 0; i < kids.length; i++) {
-          const col = i % 2;
-          const row = Math.floor(i / 2);
-          colWidths[col] = Math.max(colWidths[col], boxW.get(kids[i].id)!);
-          rowHeights[row] = Math.max(rowHeights[row] || 0, boxH.get(kids[i].id)!);
+      let maxLeftW = 0;
+      let maxRightW = 0;
+      let totalH = 0;
+
+      for (let r = 0; r < kids.length; r += HANGING_COLS) {
+        const rowKids = kids.slice(r, r + HANGING_COLS);
+        const n = rowKids.length;
+        let leftW = 0;
+        let rightW = 0;
+        let rowH = 0;
+
+        for (const k of rowKids) {
+          rowH = Math.max(rowH, boxH.get(k.id)!);
         }
-        const totalW = colWidths[0] + colWidths[1] + H_GAP;
-        const totalH = rowHeights.reduce((s, h) => s + h, 0) + HANG_V_GAP * (rowHeights.length - 1);
-        boxW.set(p.id, Math.max(NODE_WIDTH, totalW));
-        boxH.set(p.id, NODE_HEIGHT + V_GAP + totalH);
-      } else {
-        // 1-column hanging stack
-        const childBoxW = boxW.get(kids[0].id)!;
-        const childBoxH = boxH.get(kids[0].id)!;
-        boxW.set(p.id, Math.max(NODE_WIDTH, HANG_INDENT + childBoxW));
-        boxH.set(p.id, NODE_HEIGHT + V_GAP + childBoxH);
+        totalH += rowH;
+
+        if (n === 4) {
+          leftW = H_GAP / 2 + boxW.get(rowKids[1].id)! + H_GAP + boxW.get(rowKids[0].id)!;
+          rightW = H_GAP / 2 + boxW.get(rowKids[2].id)! + H_GAP + boxW.get(rowKids[3].id)!;
+        } else if (n === 3) {
+          leftW = boxW.get(rowKids[1].id)! / 2 + H_GAP + boxW.get(rowKids[0].id)!;
+          rightW = boxW.get(rowKids[1].id)! / 2 + H_GAP + boxW.get(rowKids[2].id)!;
+        } else if (n === 2) {
+          leftW = H_GAP / 2 + boxW.get(rowKids[0].id)!;
+          rightW = H_GAP / 2 + boxW.get(rowKids[1].id)!;
+        } else if (n === 1) {
+          leftW = boxW.get(rowKids[0].id)! / 2;
+          rightW = boxW.get(rowKids[0].id)! / 2;
+        }
+
+        maxLeftW = Math.max(maxLeftW, leftW);
+        maxRightW = Math.max(maxRightW, rightW);
       }
+
+      const numRows = Math.ceil(kids.length / HANGING_COLS);
+      if (numRows > 1) {
+        totalH += HANG_V_GAP * (numRows - 1);
+      }
+
+      boxW.set(p.id, Math.max(NODE_WIDTH, 2 * Math.max(maxLeftW, maxRightW)));
+      boxH.set(p.id, NODE_HEIGHT + V_GAP + totalH);
       return;
     }
 
@@ -214,14 +250,7 @@ function layoutTree(
     const useHanging = hangMode.get(p.id)!;
     const kids = visibleChildren(p);
 
-    let x = leftX + myBoxW / 2 - NODE_WIDTH / 2;
-    if (useHanging && kids.length > 1) {
-      const colWidths = [0, 0];
-      for (let i = 0; i < kids.length; i++) {
-        colWidths[i % 2] = Math.max(colWidths[i % 2], boxW.get(kids[i].id)!);
-      }
-      x = leftX + colWidths[0] + H_GAP / 2 - NODE_WIDTH / 2;
-    }
+    const x = leftX + myBoxW / 2 - NODE_WIDTH / 2;
     const y = topY;
     positions.set(p.id, { x, y });
 
@@ -246,62 +275,84 @@ function layoutTree(
     if (kids.length === 0) return;
 
     if (useHanging) {
-      if (kids.length > 1) {
-        const colWidths = [0, 0];
-        for (let i = 0; i < kids.length; i++) {
-          colWidths[i % 2] = Math.max(colWidths[i % 2], boxW.get(kids[i].id)!);
-        }
-        const gutterX = leftX + colWidths[0] + H_GAP / 2;
+      const trunkX = leftX + myBoxW / 2;
+      let cursorY = topY + NODE_HEIGHT + V_GAP;
 
-        let cursorY = topY + NODE_HEIGHT + V_GAP;
-        for (let i = 0; i < kids.length; i++) {
-          const col = i % 2;
-          const row = Math.floor(i / 2);
-          const kid = kids[i];
-          const kw = boxW.get(kid.id)!;
-          
-          let kx;
-          let targetHandle;
-          if (col === 0) {
-            kx = gutterX - H_GAP / 2 - kw;
-            targetHandle = 'right';
-          } else {
-            kx = gutterX + H_GAP / 2;
-            targetHandle = 'left';
-          }
-          
-          place(kid, kx, cursorY);
-          edges.push({
-            id: `${p.id}->${kid.id}`,
-            source: p.id,
-            target: kid.id,
-            sourceHandle: 'bottom',
-            targetHandle: targetHandle,
-            type: 'smoothstep',
-            style: { stroke: C.processBlueTint70, strokeWidth: 2 },
-          });
-          
-          if (col === 1 || i === kids.length - 1) {
-            const rowKids = kids.slice(row * 2, (row + 1) * 2);
-            const rowH = Math.max(...rowKids.map(k => boxH.get(k.id)!));
-            cursorY += rowH + HANG_V_GAP;
-          }
-        }
-      } else {
-        // 1-column hanging stack
-        const kid = kids[0];
-        const kx = leftX + HANG_INDENT;
-        const ky = topY + NODE_HEIGHT + V_GAP;
-        place(kid, kx, ky);
+      let prevTrunkId = p.id;
+      let prevTrunkHandle = 'bottom';
+
+      for (let r = 0; r < kids.length; r += HANGING_COLS) {
+        const rowKids = kids.slice(r, r + HANGING_COLS);
+        const n = rowKids.length;
+
+        let rowH = 0;
+        for (const k of rowKids) rowH = Math.max(rowH, boxH.get(k.id)!);
+
+        const trunkId = `${p.id}_trunk_${r}`;
+        const trunkY = cursorY - (r === 0 ? V_GAP / 2 : HANG_V_GAP / 2);
+
+        nodes.push({
+          id: trunkId,
+          type: 'invisible',
+          position: { x: trunkX, y: trunkY },
+          data: {} as unknown as PersonNodeData,
+          draggable: false,
+          selectable: false,
+        });
+
         edges.push({
-          id: `${p.id}->${kid.id}`,
-          source: p.id,
-          target: kid.id,
-          sourceHandle: 'bottom',
-          targetHandle: 'left',
+          id: `${prevTrunkId}->${trunkId}`,
+          source: prevTrunkId,
+          target: trunkId,
+          sourceHandle: prevTrunkHandle,
+          targetHandle: 'top',
           type: 'smoothstep',
           style: { stroke: C.processBlueTint70, strokeWidth: 2 },
         });
+
+        prevTrunkId = trunkId;
+        prevTrunkHandle = 'bottom';
+
+        const xCoords: number[] = [];
+        if (n === 4) {
+          const w0 = boxW.get(rowKids[0].id)!;
+          const w1 = boxW.get(rowKids[1].id)!;
+          const w2 = boxW.get(rowKids[2].id)!;
+          xCoords.push(trunkX - H_GAP / 2 - w1 - H_GAP - w0);
+          xCoords.push(trunkX - H_GAP / 2 - w1);
+          xCoords.push(trunkX + H_GAP / 2);
+          xCoords.push(trunkX + H_GAP / 2 + w2 + H_GAP);
+        } else if (n === 3) {
+          const w0 = boxW.get(rowKids[0].id)!;
+          const w1 = boxW.get(rowKids[1].id)!;
+          xCoords.push(trunkX - w1 / 2 - H_GAP - w0);
+          xCoords.push(trunkX - w1 / 2);
+          xCoords.push(trunkX + w1 / 2 + H_GAP);
+        } else if (n === 2) {
+          const w0 = boxW.get(rowKids[0].id)!;
+          xCoords.push(trunkX - H_GAP / 2 - w0);
+          xCoords.push(trunkX + H_GAP / 2);
+        } else if (n === 1) {
+          const w0 = boxW.get(rowKids[0].id)!;
+          xCoords.push(trunkX - w0 / 2);
+        }
+
+        for (let i = 0; i < n; i++) {
+          const kid = rowKids[i];
+          place(kid, xCoords[i], cursorY);
+
+          edges.push({
+            id: `${trunkId}->${kid.id}`,
+            source: trunkId,
+            target: kid.id,
+            sourceHandle: 'bottom',
+            targetHandle: 'top',
+            type: 'smoothstep',
+            style: { stroke: C.processBlueTint70, strokeWidth: 2 },
+          });
+        }
+
+        cursorY += rowH + HANG_V_GAP;
       }
       return;
     }
@@ -343,18 +394,6 @@ function buildParentMap(root: OrgPerson): Map<string, string> {
   return map;
 }
 
-function collectManagerIds(root: OrgPerson): Set<string> {
-  const ids = new Set<string>();
-  const walk = (p: OrgPerson) => {
-    if ((p.subordinates?.length ?? 0) > 0) {
-      ids.add(p.id);
-      for (const c of p.subordinates!) walk(c);
-    }
-  };
-  walk(root);
-  return ids;
-}
-
 function computeTotalCounts(root: OrgPerson): Map<string, number> {
   const counts = new Map<string, number>();
   const walk = (p: OrgPerson): number => {
@@ -378,32 +417,25 @@ function findNodeById(root: OrgPerson, id: string): OrgPerson | null {
   return null;
 }
 
-function descendantIds(node: OrgPerson): string[] {
-  const out: string[] = [];
-  const walk = (p: OrgPerson) => {
+// Returns the chain [root, ..., node]. Empty when `id` is not in the tree.
+function buildPathToRoot(root: OrgPerson, id: string): OrgPerson[] {
+  const path: OrgPerson[] = [];
+  const walk = (p: OrgPerson): boolean => {
+    path.push(p);
+    if (p.id === id) return true;
     for (const c of p.subordinates ?? []) {
-      if ((c.subordinates?.length ?? 0) > 0) {
-        out.push(c.id);
-        walk(c);
-      }
+      if (walk(c)) return true;
     }
+    path.pop();
+    return false;
   };
-  if ((node.subordinates?.length ?? 0) > 0) {
-    out.push(node.id);
-    walk(node);
-  }
-  return out;
-}
-
-// Remove `id` and every descendant manager id beneath it from the set.
-function collapseSubtree(set: Set<string>, node: OrgPerson) {
-  set.delete(node.id);
-  for (const c of node.subordinates ?? []) collapseSubtree(set, c);
+  walk(root);
+  return path;
 }
 
 function OrgFlowInner({ data }: { data: OrgChartData }) {
   const { root } = data;
-  const [expanded, setExpanded] = useState<Set<string>>(() => new Set([root.id]));
+  const [focusedId, setFocusedId] = useState(root.id);
   const [rawQuery, setRawQuery] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const reactFlow = useReactFlow();
@@ -415,7 +447,6 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
   }, [rawQuery]);
 
   const parentMap = useMemo(() => buildParentMap(root), [root]);
-  const allManagerIds = useMemo(() => collectManagerIds(root), [root]);
   const totalCounts = useMemo(() => computeTotalCounts(root), [root]);
 
   const matchIds = useMemo(() => {
@@ -430,8 +461,19 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
     return hits;
   }, [root, searchQuery]);
 
-  // Derive the set of ancestor ids that must be forced open by the current search,
-  // without mutating the user's manual `expanded` state inside an effect.
+  // A search reveals matches anywhere in the tree, so snap focus to the real
+  // root while a query is active.
+  const effectiveFocusedId = searchQuery ? root.id : focusedId;
+  const effectiveRoot = useMemo(
+    () => findNodeById(root, effectiveFocusedId) ?? root,
+    [root, effectiveFocusedId],
+  );
+  const breadcrumbPath = useMemo(
+    () => buildPathToRoot(root, effectiveFocusedId),
+    [root, effectiveFocusedId],
+  );
+
+  // Ancestors of search matches (within the full tree) must be forced open.
   const searchExpanded = useMemo(() => {
     if (matchIds.size === 0) return new Set<string>();
     const ancestors = new Set<string>();
@@ -445,16 +487,16 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
     return ancestors;
   }, [matchIds, parentMap]);
 
+  // Focused root always shows its direct reports; search ancestors stay open too.
   const effectiveExpanded = useMemo(() => {
-    if (searchExpanded.size === 0) return expanded;
-    const merged = new Set(expanded);
+    const merged = new Set<string>([effectiveFocusedId]);
     for (const id of searchExpanded) merged.add(id);
     return merged;
-  }, [expanded, searchExpanded]);
+  }, [effectiveFocusedId, searchExpanded]);
 
   const { nodes, edges, positions } = useMemo(
-    () => layoutTree(root, effectiveExpanded, totalCounts, matchIds),
-    [root, effectiveExpanded, totalCounts, matchIds],
+    () => layoutTree(effectiveRoot, effectiveExpanded, totalCounts, matchIds),
+    [effectiveRoot, effectiveExpanded, totalCounts, matchIds],
   );
 
   // Fit or pan after the visible set changes.
@@ -476,66 +518,23 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
       }
     }
     reactFlow.fitView({ padding: 0.2, duration: 400 });
-  }, [nodes.length, matchIds, positions, reactFlow]);
+  }, [nodes.length, matchIds, positions, reactFlow, effectiveFocusedId]);
 
   const onNodeClick = useCallback<NodeMouseHandler>(
     (_, node) => {
       const d = node.data as PersonNodeData;
       if (!d.hasChildren) return;
-      const target = findNodeById(root, node.id);
-      if (!target) return;
-      setExpanded((prev) => {
-        const next = new Set(prev);
-        if (next.has(node.id)) {
-          // Collapsing — drop this node and every descendant manager.
-          collapseSubtree(next, target);
-        } else {
-          // Expanding — accordion: collapse any sibling branches first.
-          const parentId = parentMap.get(node.id);
-          if (parentId) {
-            const parentNode = findNodeById(root, parentId);
-            if (parentNode) {
-              for (const sib of parentNode.subordinates ?? []) {
-                if (sib.id !== node.id) collapseSubtree(next, sib);
-              }
-            }
-          }
-          next.add(node.id);
-        }
-        return next;
-      });
+      if (node.id === effectiveFocusedId) return;
+      setFocusedId(node.id);
+      setRawQuery('');
     },
-    [parentMap, root],
+    [effectiveFocusedId],
   );
 
-  const onNodeDoubleClick = useCallback<NodeMouseHandler>(
-    (_, node) => {
-      const d = node.data as PersonNodeData;
-      if (!d.hasChildren) return;
-      const target = findNodeById(root, node.id);
-      if (!target) return;
-      const ids = descendantIds(target);
-      setExpanded((prev) => {
-        const next = new Set(prev);
-        // Accordion: collapse sibling branches before expanding the subtree.
-        const parentId = parentMap.get(node.id);
-        if (parentId) {
-          const parentNode = findNodeById(root, parentId);
-          if (parentNode) {
-            for (const sib of parentNode.subordinates ?? []) {
-              if (sib.id !== node.id) collapseSubtree(next, sib);
-            }
-          }
-        }
-        for (const id of ids) next.add(id);
-        return next;
-      });
-    },
-    [parentMap, root],
-  );
-
-  const handleExpandAll = () => setExpanded(new Set(allManagerIds));
-  const handleCollapseAll = () => setExpanded(new Set([root.id]));
+  const resetToTop = () => {
+    setFocusedId(root.id);
+    setRawQuery('');
+  };
 
   return (
     <div className="w-full">
@@ -565,29 +564,58 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
             {matchIds.size} match{matchIds.size === 1 ? '' : 'es'}
           </span>
         )}
-        <div className="flex gap-2 ml-auto">
+        {effectiveFocusedId !== root.id && (
           <button
             type="button"
-            onClick={handleExpandAll}
-            className="px-3 py-2 text-xs font-medium rounded-md transition"
-            style={{ background: C.blue, color: '#fff' }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = C.blueShade1)}
-            onMouseLeave={(e) => (e.currentTarget.style.background = C.blue)}
-          >
-            Expand all
-          </button>
-          <button
-            type="button"
-            onClick={handleCollapseAll}
-            className="px-3 py-2 text-xs font-medium rounded-md border transition"
+            onClick={resetToTop}
+            className="ml-auto px-3 py-2 text-xs font-medium rounded-md border transition"
             style={{ borderColor: C.blue, color: C.blue, background: '#fff' }}
             onMouseEnter={(e) => (e.currentTarget.style.background = C.blueTint10)}
             onMouseLeave={(e) => (e.currentTarget.style.background = '#fff')}
           >
-            Collapse all
+            Back to top
           </button>
-        </div>
+        )}
       </div>
+
+      {/* Breadcrumb trail — only when focused below the root */}
+      {breadcrumbPath.length > 1 && (
+        <nav
+          aria-label="Org chart breadcrumb"
+          className="flex flex-wrap items-center gap-1 mb-3 text-sm"
+        >
+          {breadcrumbPath.map((p, i) => {
+            const isLast = i === breadcrumbPath.length - 1;
+            return (
+              <span key={p.id} className="flex items-center gap-1">
+                {i > 0 && (
+                  <ChevronRight
+                    className="w-3.5 h-3.5"
+                    style={{ color: C.navyTint30 }}
+                  />
+                )}
+                {isLast ? (
+                  <span className="font-semibold" style={{ color: C.navy }}>
+                    {p.name}
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFocusedId(p.id);
+                      setRawQuery('');
+                    }}
+                    className="hover:underline"
+                    style={{ color: C.blue }}
+                  >
+                    {p.name}
+                  </button>
+                )}
+              </span>
+            );
+          })}
+        </nav>
+      )}
 
       {/* Canvas — no border, inherits page background */}
       <div className="w-full h-[80vh]">
@@ -596,7 +624,6 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
           edges={edges}
           nodeTypes={nodeTypes}
           onNodeClick={onNodeClick}
-          onNodeDoubleClick={onNodeDoubleClick}
           fitView
           fitViewOptions={{ padding: 0.15 }}
           minZoom={0.2}
