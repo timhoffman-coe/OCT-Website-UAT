@@ -25,7 +25,7 @@ const V_GAP = 80;
 // hanging (vertical-stack) layout, which keeps connector lines from crossing cards.
 const HANGING_THRESHOLD = 4;
 const HANGING_COLS = 4;
-const HANG_V_GAP = 30;
+const HANG_V_GAP = 60;
 
 const HIDDEN_HANDLE_STYLE: CSSProperties = {
   background: 'transparent',
@@ -306,7 +306,7 @@ function layoutTree(
           target: trunkId,
           sourceHandle: prevTrunkHandle,
           targetHandle: 'top',
-          type: 'smoothstep',
+          type: 'straight',
           style: { stroke: C.processBlueTint70, strokeWidth: 2 },
         });
 
