@@ -3,6 +3,8 @@ import Footer from '@/components/Footer';
 import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import OrgFlow from '@/components/org-chart/OrgFlow';
 import { getOrgChart } from '@/lib/data/org-chart';
+import { logger } from '@/lib/logger';
+import type { OrgChartData } from '@/app/org-chart/types';
 
 export const dynamic = 'force-dynamic'; // render on request; data is cached 24h via unstable_cache
 
@@ -12,7 +14,14 @@ export const metadata = {
 };
 
 export default async function OrgChartPage() {
-  const data = await getOrgChart();
+  let data: OrgChartData | null = null;
+  try {
+    data = await getOrgChart();
+  } catch (error) {
+    logger.error('Org chart fetch failed', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
@@ -42,7 +51,19 @@ export default async function OrgChartPage() {
           </span>
         </div>
 
-        <OrgFlow data={data} />
+        {data ? (
+          <OrgFlow data={data} />
+        ) : (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-6 py-8 text-center">
+            <h2 className="text-lg font-semibold text-[#193A5A]">
+              Org chart is temporarily unavailable
+            </h2>
+            <p className="mt-2 text-sm text-gray-600 max-w-xl mx-auto">
+              We couldn&apos;t reach the data source right now. Please try
+              again later.
+            </p>
+          </div>
+        )}
       </main>
 
       <Footer />
