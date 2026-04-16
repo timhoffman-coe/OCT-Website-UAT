@@ -293,7 +293,7 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 - [ ] Add Key Initiatives Spotlight section to main page
 
 ### Org Chart Integration
-- [ ] Tie in OCT Org Chart with existing pages
+- [x] Tie in OCT Org Chart with existing pages
 
 ## Team Pages & CMS Content Population
 
