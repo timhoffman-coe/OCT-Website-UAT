@@ -15,7 +15,7 @@ import {
   type EdgeProps,
   type NodeMouseHandler,
 } from '@xyflow/react';
-import { User, ChevronDown, ChevronRight, Search } from 'lucide-react';
+import { User, ChevronDown, ChevronRight, ChevronUp, Search } from 'lucide-react';
 import '@xyflow/react/dist/style.css';
 import type { OrgChartData, OrgPerson } from '@/app/org-chart/types';
 
@@ -142,6 +142,34 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
   );
 }
 
+type ParentLinkData = {
+  name: string;
+  parentId: string;
+};
+
+function ParentLinkNode({ data }: NodeProps<Node<ParentLinkData>>) {
+  return (
+    <div
+      className="border-2 border-dashed rounded-lg shadow-sm w-[200px] h-[60px] flex items-center justify-center gap-2 cursor-pointer bg-white transition hover:shadow-md"
+      style={{ borderColor: C.processBlueTint70 }}
+    >
+      <ChevronUp className="w-4 h-4" style={{ color: C.blue }} />
+      <div className="flex flex-col items-start leading-tight">
+        <span
+          className="text-[10px] uppercase tracking-wide"
+          style={{ color: C.navyTint50 }}
+        >
+          Up to
+        </span>
+        <span className="text-sm font-semibold" style={{ color: C.blue }}>
+          {data.name}
+        </span>
+      </div>
+      <Handle type="source" id="bottom" position={Position.Bottom} style={HIDDEN_HANDLE_STYLE} />
+    </div>
+  );
+}
+
 function InvisibleNode() {
   return (
     <div style={HIDDEN_NODE_STYLE}>
@@ -166,7 +194,7 @@ function BusEdge({
   return <BaseEdge path={path} style={style} />;
 }
 
-const nodeTypes = { person: PersonNode, invisible: InvisibleNode };
+const nodeTypes = { person: PersonNode, invisible: InvisibleNode, parentLink: ParentLinkNode };
 const edgeTypes = { bus: BusEdge };
 
 interface LayoutResult {
@@ -513,10 +541,45 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
     return merged;
   }, [effectiveFocusedId, searchExpanded]);
 
-  const { nodes, edges, positions } = useMemo(
-    () => layoutTree(effectiveRoot, effectiveExpanded, totalCounts, matchIds),
-    [effectiveRoot, effectiveExpanded, totalCounts, matchIds],
-  );
+  const { nodes, edges, positions } = useMemo(() => {
+    const result = layoutTree(effectiveRoot, effectiveExpanded, totalCounts, matchIds);
+
+    if (effectiveFocusedId !== root.id) {
+      const parentId = parentMap.get(effectiveFocusedId);
+      if (parentId) {
+        const parent = findNodeById(root, parentId);
+        const focusedPos = result.positions.get(effectiveFocusedId);
+        if (parent && focusedPos) {
+          const linkId = `parent-link-${parent.id}`;
+          const linkHeight = 60;
+          const linkY = focusedPos.y - linkHeight - V_GAP;
+          result.nodes.unshift({
+            id: linkId,
+            type: 'parentLink',
+            position: { x: focusedPos.x, y: linkY },
+            data: { name: parent.name, parentId: parent.id } as unknown as PersonNodeData,
+            draggable: false,
+            selectable: false,
+          });
+          result.edges.unshift({
+            id: `${linkId}->${effectiveFocusedId}`,
+            source: linkId,
+            target: effectiveFocusedId,
+            sourceHandle: 'bottom',
+            targetHandle: 'top',
+            type: 'straight',
+            style: {
+              stroke: C.processBlueTint70,
+              strokeWidth: 2,
+              strokeDasharray: '4 4',
+            },
+          });
+        }
+      }
+    }
+
+    return result;
+  }, [effectiveRoot, effectiveExpanded, totalCounts, matchIds, effectiveFocusedId, parentMap, root]);
 
   // Fit or pan after the visible set changes.
   const firstRender = useRef(true);
@@ -541,6 +604,12 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
 
   const onNodeClick = useCallback<NodeMouseHandler>(
     (_, node) => {
+      if (node.type === 'parentLink') {
+        const { parentId } = node.data as unknown as ParentLinkData;
+        setFocusedId(parentId);
+        setRawQuery('');
+        return;
+      }
       const d = node.data as PersonNodeData;
       if (!d.hasChildren) return;
       if (node.id === effectiveFocusedId) return;
