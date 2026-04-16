@@ -7,10 +7,12 @@ import {
   Controls,
   Handle,
   Position,
+  BaseEdge,
   useReactFlow,
   type Node,
   type Edge,
   type NodeProps,
+  type EdgeProps,
   type NodeMouseHandler,
 } from '@xyflow/react';
 import { User, ChevronDown, ChevronRight, Search } from 'lucide-react';
@@ -89,7 +91,7 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
       } ${hasChildren ? 'cursor-pointer' : 'cursor-default'}`}
       style={{ ...cardStyle, ...(isMatch ? { boxShadow: `0 0 0 3px ${C.warning}` } : {}) }}
     >
-      <Handle type="target" id="top" position={Position.Top} className="!bg-gray-400" />
+      <Handle type="target" id="top" position={Position.Top} style={HIDDEN_HANDLE_STYLE} />
       <div className="p-3 flex-1 flex flex-col">
         <div className="flex justify-center mb-2">
           <div
@@ -135,7 +137,7 @@ function PersonNode({ data }: NodeProps<Node<PersonNodeData>>) {
           </span>
         </div>
       )}
-      <Handle type="source" id="bottom" position={Position.Bottom} className="!bg-gray-400" />
+      <Handle type="source" id="bottom" position={Position.Bottom} style={HIDDEN_HANDLE_STYLE} />
     </div>
   );
 }
@@ -149,7 +151,23 @@ function InvisibleNode() {
   );
 }
 
+type BusEdgeData = { busY?: number };
+
+function BusEdge({
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  data,
+  style,
+}: EdgeProps<Edge<BusEdgeData>>) {
+  const busY = data?.busY ?? sourceY;
+  const path = `M ${sourceX} ${sourceY} L ${sourceX} ${busY} L ${targetX} ${busY} L ${targetX} ${targetY}`;
+  return <BaseEdge path={path} style={style} />;
+}
+
 const nodeTypes = { person: PersonNode, invisible: InvisibleNode };
+const edgeTypes = { bus: BusEdge };
 
 interface LayoutResult {
   nodes: Node<PersonNodeData>[];
@@ -347,7 +365,7 @@ function layoutTree(
             target: kid.id,
             sourceHandle: 'bottom',
             targetHandle: 'top',
-            type: 'smoothstep',
+            type: 'bus',
             style: { stroke: C.processBlueTint70, strokeWidth: 2 },
           });
         }
@@ -371,7 +389,8 @@ function layoutTree(
         target: child.id,
         sourceHandle: 'bottom',
         targetHandle: 'top',
-        type: 'smoothstep',
+        type: 'bus',
+        data: { busY: rowTopY - V_GAP / 2 },
         style: { stroke: C.processBlueTint70, strokeWidth: 2 },
       });
       cursor += cw + H_GAP;
@@ -623,6 +642,7 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
           nodes={nodes}
           edges={edges}
           nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodeClick={onNodeClick}
           fitView
           fitViewOptions={{ padding: 0.15 }}
