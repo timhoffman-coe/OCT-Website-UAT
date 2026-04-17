@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket, Map, BarChart3, Newspaper, FolderKanban } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket, Map, BarChart3, Newspaper, FolderKanban, Link2 } from 'lucide-react';
 
 interface Team {
   id: string;
@@ -19,9 +19,10 @@ interface AdminSidebarProps {
   userName: string;
   canEditNews?: boolean;
   canEditProjects?: boolean;
+  canEditLinks?: boolean;
 }
 
-export default function AdminSidebar({ teams, userRole, userName, canEditNews, canEditProjects }: AdminSidebarProps) {
+export default function AdminSidebar({ teams, userRole, userName, canEditNews, canEditProjects, canEditLinks }: AdminSidebarProps) {
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path || pathname.startsWith(path + '/');
@@ -252,6 +253,26 @@ export default function AdminSidebar({ teams, userRole, userName, canEditNews, c
           </div>
         )}
 
+        {/* Links Section */}
+        {canEditLinks && (
+          <div className="pt-4">
+            <p className="px-3 text-xs font-sans font-semibold text-white/40 uppercase tracking-wider mb-2">
+              Links
+            </p>
+            <Link
+              href="/admin/links"
+              className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                isActive('/admin/links') && !isActive('/admin/links-editors')
+                  ? 'bg-primary-blue text-white'
+                  : 'text-white/80 hover:bg-white/10'
+              }`}
+            >
+              <Link2 className="w-4 h-4" />
+              Manage Links
+            </Link>
+          </div>
+        )}
+
         {/* Admin Section */}
         {(userRole === 'SUPER_ADMIN' || userRole === 'TEAM_ADMIN') && (
           <div className="pt-4">
@@ -303,6 +324,17 @@ export default function AdminSidebar({ teams, userRole, userName, canEditNews, c
                 >
                   <Rocket className="w-4 h-4" />
                   Roadmap Editors
+                </Link>
+                <Link
+                  href="/admin/links-editors"
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                    isActive('/admin/links-editors')
+                      ? 'bg-primary-blue text-white'
+                      : 'text-white/80 hover:bg-white/10'
+                  }`}
+                >
+                  <Link2 className="w-4 h-4" />
+                  Links Editors
                 </Link>
                 <Link
                   href="/admin/oct-web-dev-viewers"

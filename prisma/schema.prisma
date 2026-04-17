@@ -30,6 +30,7 @@ model User {
   octWebDevPermission          OctWebDevPermission?
   newsPermission               NewsPermission?
   projectPermission            ProjectPermission?
+  linksPermission              LinksPermission?
   projectManagerAssignments    ProjectManagerAssignment[]
 }
 
@@ -72,6 +73,14 @@ model NewsPermission {
 }
 
 model ProjectPermission {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LinksPermission {
   id        String   @id @default(cuid())
   userId    String   @unique
   createdAt DateTime @default(now())
@@ -648,4 +657,36 @@ model ProjectManagerAssignment {
 
   @@unique([userId, projectId])
   @@index([projectId])
+}
+
+// ============================================================
+// CONTENT: LINKS PAGE
+// ============================================================
+
+model LinkCategory {
+  id        String   @id @default(cuid())
+  title     String
+  subtitle  String
+  iconBg    String   @default("bg-blue-50")
+  iconColor String   @default("text-process-blue")
+  isTeamGrid Boolean @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  links LinkItem[]
+}
+
+model LinkItem {
+  id         String   @id @default(cuid())
+  categoryId String
+  name       String
+  url        String
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  category LinkCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId])
 }

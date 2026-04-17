@@ -1,84 +1,14 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { prisma } from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Important Links | Open City & Technology',
   description: 'Quick access to important internal and external resources, tools, and systems for Open City & Technology.',
 };
-
-const linkCategories = [
-  {
-    title: 'Incident & Problem Management',
-    subtitle: '7 resources',
-    iconBg: 'bg-red-50',
-    iconColor: 'text-edmonton-error',
-    open: false,
-    links: [
-      { name: 'Helix (Remedy) SmartIT', url: '#' },
-      { name: 'Helix (Remedy) DWP', url: '#' },
-      { name: 'Incident Management Process', url: '#' },
-      { name: 'WO from Incident Ticket', url: '#' },
-      { name: 'Incident Management Flow Charts', url: '#' },
-      { name: 'Problem Mgmt Process Guide', url: '#' },
-      { name: 'Root Cause Analysis (RCA)', url: '#' },
-    ],
-  },
-  {
-    title: 'Change Management',
-    subtitle: '8 resources',
-    iconBg: 'bg-blue-50',
-    iconColor: 'text-process-blue',
-    open: false,
-    links: [
-      { name: 'OCT Change Management', url: '#' },
-      { name: 'OCT Schedule Outages', url: '#' },
-      { name: 'Severity 1 Procedures', url: '#' },
-      { name: 'OCT Change Management Definitions', url: '#' },
-      { name: 'Change Approval - Form', url: '#' },
-      { name: 'Work Order vs Change Ticket', url: '#' },
-      { name: 'Remedy Definitions', url: '#' },
-      { name: 'Change Ticket Cheat Sheet', url: '#' },
-    ],
-  },
-  {
-    title: 'Resource Management',
-    subtitle: '9 resources',
-    iconBg: 'bg-amber-50',
-    iconColor: 'text-edmonton-warning',
-    open: false,
-    links: [
-      { name: 'Taleo', url: '#' },
-      { name: 'Recruitment Toolkit', url: '#' },
-      { name: 'Recruitment Approval Process User Guide', url: '#' },
-      { name: 'Recruitment Approval Form', url: '#' },
-      { name: 'SAP Time Entry Request', url: '#' },
-      { name: 'New Account Request', url: '#' },
-      { name: 'Phone Request', url: '#' },
-      { name: 'Offboarding Link', url: '#' },
-      { name: 'Supervisor Offboarding Checklist', url: '#' },
-    ],
-  },
-  {
-    title: 'OCT Team Sites & Resources',
-    subtitle: '9 resources',
-    iconBg: 'bg-purple-50',
-    iconColor: 'text-purple-600',
-    open: false,
-    isTeamGrid: true,
-    links: [
-      { name: 'OCT Service Catalog', url: '#' },
-      { name: 'Technology Infrastructure Operations', url: '#' },
-      { name: 'Service Desk', url: '#' },
-      { name: 'Service Management Office', url: '#' },
-      { name: 'Enterprise Commons Project', url: '#' },
-      { name: 'OCT Employee Links', url: '#' },
-      { name: 'Technology PMO', url: '#' },
-      { name: 'Open Data Portal', url: 'https://data.edmonton.ca' },
-      { name: 'Open City', url: '#' },
-    ],
-  },
-];
 
 const chevronSvg = (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary transition-transform duration-300 group-open:rotate-180">
@@ -98,7 +28,12 @@ const categoryIcon = (
   </svg>
 );
 
-export default function LinksPage() {
+export default async function LinksPage() {
+  const categories = await prisma.linkCategory.findMany({
+    include: { links: { orderBy: { sortOrder: 'asc' } } },
+    orderBy: { sortOrder: 'asc' },
+  });
+
   return (
     <div className="bg-structural-light-gray min-h-screen flex flex-col">
       <Header />
@@ -122,11 +57,13 @@ export default function LinksPage() {
         {/* Accordion Directory */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
           <div className="space-y-6">
-            {linkCategories.map((category, catIndex) => (
+            {categories.length === 0 && (
+              <p className="text-center text-text-secondary py-12">No links configured yet.</p>
+            )}
+            {categories.map((category) => (
               <details
-                key={catIndex}
+                key={category.id}
                 className="group bg-white rounded-2xl border border-structural-gray-blue overflow-hidden"
-                open={category.open || undefined}
               >
                 <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-structural-light-gray transition-colors list-none [&::-webkit-details-marker]:hidden">
                   <div className="flex items-center gap-4">
@@ -141,14 +78,14 @@ export default function LinksPage() {
                   {chevronSvg}
                 </summary>
                 <div className="px-6 pb-8">
-                  {'isTeamGrid' in category && category.isTeamGrid ? (
+                  {category.isTeamGrid ? (
                     /* Team Sites — compact tag grid */
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mt-2">
-                      {category.links.map((link, index) => {
+                      {category.links.map((link) => {
                         const isExternal = link.url.startsWith('http');
                         return (
                           <a
-                            key={index}
+                            key={link.id}
                             href={link.url}
                             target={isExternal ? '_blank' : undefined}
                             rel={isExternal ? 'noopener noreferrer' : undefined}
@@ -162,11 +99,11 @@ export default function LinksPage() {
                   ) : (
                     /* Standard link cards grid */
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
-                      {category.links.map((link, index) => {
+                      {category.links.map((link) => {
                         const isExternal = link.url.startsWith('http');
                         return (
                           <a
-                            key={index}
+                            key={link.id}
                             href={link.url}
                             target={isExternal ? '_blank' : undefined}
                             rel={isExternal ? 'noopener noreferrer' : undefined}

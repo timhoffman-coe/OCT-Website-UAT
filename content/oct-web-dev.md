@@ -28,13 +28,15 @@
 - [x] Roadmap editor permissions management
 - [x] OCT-Web-Dev viewer permissions management
 - [x] Project editor permissions management (global + per-project)
+- [x] Links page CMS (categories + links CRUD, reordering)
+- [x] Links editor permissions management
 
 ### Pages & Content
 - [x] All 5 section landing pages (Tech Planning, Business Solutions, ITS, PMO, CIS)
 - [x] ITS sub-team pages (Data Tech, Partner Exp, Service Delivery, Tech Infra Ops)
 - [x] Home, About, Services, Contact, Leadership, Org Chart pages
 - [x] Search page with content index
-- [x] Links, Policies, Technology Strategies pages
+- [x] Links page (CMS-managed), Policies, Technology Strategies pages
 - [x] AI Resources and Branch Templates pages
 - [x] NIC landing page with sub-page stubs
 - [x] How OCT Works interactive architecture diagram (React Flow)

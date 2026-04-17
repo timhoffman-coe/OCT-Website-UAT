@@ -72,7 +72,7 @@ Central identity table. Every CMS user has one row.
 | createdAt | DateTime | Default `now()` | Account creation timestamp |
 | updatedAt | DateTime | Auto-updated | Last modification timestamp |
 
-**Relations:** teamPermissions, auditLogs, roadmapPermission, octWebDevPermission, newsPermission, projectPermission, projectManagerAssignments
+**Relations:** teamPermissions, auditLogs, roadmapPermission, octWebDevPermission, newsPermission, projectPermission, linksPermission, projectManagerAssignments
 
 #### TeamPermission
 
@@ -122,6 +122,16 @@ Grants a user access to manage news articles.
 #### ProjectPermission
 
 Grants a user access to manage projects.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | String | PK, cuid | Unique identifier |
+| userId | String | Unique, FK → User (CASCADE) | One permission per user |
+| createdAt | DateTime | Default `now()` | When access was granted |
+
+#### LinksPermission
+
+Grants a user access to manage link categories and links on the Links page.
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
@@ -663,6 +673,44 @@ Tracks anonymous page visits for the analytics dashboard.
 
 ---
 
+### 9. Links Page
+
+#### LinkCategory
+
+A group of related links displayed as an accordion section on the public Links page.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | String | PK, cuid | Unique identifier |
+| title | String | Required | Category heading (e.g., "Change Management") |
+| subtitle | String | Required | Description text (e.g., "8 resources") |
+| iconBg | String | Default `"bg-blue-50"` | Tailwind background class for the icon |
+| iconColor | String | Default `"text-process-blue"` | Tailwind text color class for the icon |
+| isTeamGrid | Boolean | Default `false` | If true, renders links as a compact tag grid |
+| sortOrder | Int | Default `0` | Display order on the public page |
+| createdAt | DateTime | Default `now()` | Record creation timestamp |
+| updatedAt | DateTime | Auto-updated | Last modification timestamp |
+
+**Relations:** links (LinkItem[])
+
+#### LinkItem
+
+An individual link within a category.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | String | PK, cuid | Unique identifier |
+| categoryId | String | FK → LinkCategory (CASCADE) | Parent category |
+| name | String | Required | Display name for the link |
+| url | String | Required | Link URL |
+| sortOrder | Int | Default `0` | Display order within the category |
+| createdAt | DateTime | Default `now()` | Record creation timestamp |
+| updatedAt | DateTime | Auto-updated | Last modification timestamp |
+
+**Indexes:** categoryId
+
+---
+
 ## Relationship Diagram
 
 ```
@@ -673,6 +721,7 @@ User
  ├── OctWebDevPermission?
  ├── NewsPermission?
  ├── ProjectPermission?
+ ├── LinksPermission?
  └── ProjectManagerAssignment[] ──→ Project
 
 Team (self-referencing hierarchy)
@@ -706,6 +755,9 @@ Project
 
 RoadmapSection
  └── RoadmapProject[]
+
+LinkCategory
+ └── LinkItem[]
 ```
 
 ## Cascade Rules Summary
@@ -733,5 +785,6 @@ RoadmapSection
 | `add_audit_log_description` | 2026-04-09 | AuditLog.description field |
 | `add_projects` | 2026-04-09 | Project, ProjectMilestone, ProjectObjective, ProjectStatusUpdate, ProjectTag, ProjectTagAssignment, ProjectManagerAssignment, ProjectPermission |
 | `widget_instance_project_support` | 2026-04-09 | WidgetInstance.projectId, project widget definitions |
+| `add_links_cms` | 2026-04-17 | LinksPermission, LinkCategory, LinkItem |
 
 For migration procedures see [Prisma Migration Workflow](prisma-migration-workflow.md).

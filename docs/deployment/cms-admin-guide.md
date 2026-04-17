@@ -22,9 +22,11 @@ The left sidebar organizes content hierarchically:
 - **Dashboard** — link to the main dashboard
 - **Teams** — expandable tree showing sections, teams, and sub-teams. The tree auto-expands to show the page you're currently viewing.
 - **News** — news post management (requires news editor permission)
+- **Links** — link categories and links management (requires links editor permission)
 - **Administration** (SUPER_ADMIN and TEAM_ADMIN only):
   - User Management
   - News Editors (SUPER_ADMIN only)
+  - Links Editors (SUPER_ADMIN only)
   - Roadmap Editors (SUPER_ADMIN only)
   - OCT-Web-Dev Viewers (SUPER_ADMIN only)
   - Page Analytics
@@ -153,6 +155,7 @@ Click a user card to change their role or team assignments. TEAM_ADMIN users can
 ### Special permissions
 
 - **News Editors** — go to the News Editors page to grant or revoke news post editing access
+- **Links Editors** — go to the Links Editors page to grant or revoke links page editing access
 - **Roadmap Editors** — go to the Roadmap Editors page to grant or revoke roadmap editing access
 - **OCT-Web-Dev Viewers** — go to the OCT-Web-Dev Viewers page to control who can see the development documentation
 
@@ -227,6 +230,46 @@ Click any post card on the news list to open the editor. Make changes and save.
 2. Select a user from the dropdown and click **Add**
 3. To revoke access, click the remove button next to an editor's name
 
+## Links
+
+The CMS includes a Links management system for maintaining the public Links page (`/links`). Access requires a Links Editor permission (granted by Super Admins) or the Super Admin role.
+
+### Viewing Link Categories
+
+Navigate to **Links > Manage Links** in the sidebar. The page shows all link categories with their styling, link counts, and expand/collapse controls.
+
+### Managing Categories
+
+1. Click **Add Category** to create a new category
+2. Fill in:
+   - **Title** — the category heading (e.g., "Change Management")
+   - **Subtitle** — description text (e.g., "8 resources")
+   - **Icon Background** — background color for the category icon
+   - **Icon Color** — color for the category icon
+   - **Grid layout** — check this for a compact tag grid instead of the standard card layout
+3. Click **Create Category** to save
+
+To edit a category, click the pencil icon. To delete, click the trash icon (this also deletes all links within that category).
+
+Use the up/down arrow buttons to reorder categories on the public page.
+
+### Managing Links Within a Category
+
+1. Expand a category by clicking its title
+2. Click **Add link** at the bottom
+3. Enter the **Name** and **URL** for the link
+4. Click **Add Link** to save
+
+To edit a link, click the pencil icon. To delete, click the trash icon. Use the up/down arrows to reorder links within a category.
+
+### Managing Links Editors (SUPER_ADMIN)
+
+1. Go to **Links Editors** in the Administration section
+2. Select a user from the dropdown and click **Add**
+3. To revoke access, click the remove button next to an editor's name
+
+Super Admins automatically have links edit access.
+
 ## Page Analytics
 
 The analytics dashboard at `/admin/analytics` shows page view metrics for the public site:
@@ -252,6 +295,10 @@ This is a filtered view of the full audit log, scoped to the specific team.
 
 ## Special Permission Pages (SUPER_ADMIN)
 
+### Links Editors
+
+Go to **Links Editors** in the Administration section to manage who can edit the Links page. Add or remove editors using the same interface as News Editors.
+
 ### Roadmap Editors
 
 Go to **Roadmap Editors** in the Administration section to manage who can edit the Technology Roadmap. Add or remove editors using the same interface as News Editors.
@@ -260,4 +307,4 @@ Go to **Roadmap Editors** in the Administration section to manage who can edit t
 
 Go to **OCT-Web-Dev Viewers** in the Administration section to manage who can view the OCT-Web-Dev documentation pages. Add or remove viewers using the same interface.
 
-In both cases, Super Admins automatically have access without needing an explicit permission.
+In all cases, Super Admins automatically have access without needing an explicit permission.

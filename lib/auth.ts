@@ -8,7 +8,7 @@ export async function getCurrentUser() {
 
   const user = await prisma.user.findUnique({
     where: { email },
-    include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true, newsPermission: true, projectPermission: true, projectManagerAssignments: true },
+    include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true, newsPermission: true, projectPermission: true, linksPermission: true, projectManagerAssignments: true },
   });
 
   return user;
@@ -128,6 +128,20 @@ export async function canEditProjects(): Promise<boolean> {
   if (!user) return false;
   if (user.role === 'SUPER_ADMIN') return true;
   return !!user.projectPermission;
+}
+
+export async function canEditLinks(): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user) return false;
+  if (user.role === 'SUPER_ADMIN') return true;
+  return !!user.linksPermission;
+}
+
+export async function requireLinksAccess() {
+  const user = await requireUser();
+  if (user.role === 'SUPER_ADMIN') return user;
+  if (!user.linksPermission) throw new Error('Forbidden: No links edit access');
+  return user;
 }
 
 export async function requireProjectAccess() {

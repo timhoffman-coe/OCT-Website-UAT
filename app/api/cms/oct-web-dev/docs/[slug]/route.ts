@@ -22,6 +22,8 @@ const ALLOWED_DOCS: Record<string, string> = {
   'data-portal': 'docs/deployment/data-portal.md',
   'observability': 'docs/observability.md',
   'database-schema': 'docs/deployment/database-schema.md',
+  'links-system': 'docs/deployment/links-system.md',
+  'projects-system': 'docs/deployment/projects-system.md',
 };
 
 export async function GET(
