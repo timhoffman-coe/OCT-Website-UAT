@@ -40,6 +40,7 @@ Documentation for the City of Edmonton Open City & Technology website — a Next
 | Document | Audience | Description |
 |----------|----------|-------------|
 | [API Reference](deployment/api-reference.md) | Developers | All 23 API endpoints with request/response examples |
+| [Database Schema](deployment/database-schema.md) | Developers | PostgreSQL schema reference: tables, columns, relationships, indexes |
 | [Environment Variables](deployment/environment-variables.md) | Developers | Complete reference for all env vars, feature flags, per-environment guide |
 | [Testing](deployment/testing.md) | Developers | Vitest/Playwright setup, mocking patterns, writing new tests |
 

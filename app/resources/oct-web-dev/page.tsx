@@ -19,6 +19,7 @@ const DOCUMENTS = [
   { slug: 'deployment-guide', title: 'Deployment Guide', description: 'Production deployment and operations' },
   { slug: 'cicd-pipeline', title: 'CI/CD Pipeline', description: 'Local build to GCP production deployment' },
   { slug: 'prisma-migration-workflow', title: 'Prisma Migrations', description: 'Schema change lifecycle and rollback procedures' },
+  { slug: 'database-schema', title: 'Database Schema', description: 'PostgreSQL schema: tables, columns, relationships, indexes, and enums' },
   { slug: 'secret-management', title: 'Secret Management', description: 'Google Secret Manager setup and credential rotation' },
   { slug: 'environment-variables', title: 'Environment Variables', description: 'Complete reference for all env vars and feature flags' },
   { slug: 'testing', title: 'Testing', description: 'Test framework, conventions, and how to run tests' },
