@@ -6,7 +6,6 @@ import {
   ReactFlowProvider,
   Background,
   Controls,
-  MiniMap,
   Panel,
   BackgroundVariant,
   useReactFlow,
@@ -182,13 +181,6 @@ function ArchitectureFlowInner() {
           <Controls
             showInteractive={false}
             className="!bg-gray-900/90 !border-cyan-900/50 !rounded-lg !shadow-lg [&>button]:!bg-gray-800 [&>button]:!border-cyan-900/30 [&>button]:!fill-cyan-400 [&>button:hover]:!bg-gray-700"
-          />
-          <MiniMap
-            className="!bg-gray-900/90 !border-cyan-900/50 !rounded-lg"
-            nodeColor="#0e7490"
-            maskColor="rgba(0, 0, 0, 0.7)"
-            pannable
-            zoomable
           />
 
           {/* Breadcrumb navigation */}

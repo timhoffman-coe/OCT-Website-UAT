@@ -17,6 +17,15 @@ export function useScrollAnimation(options: UseScrollAnimationOptions = {}) {
     const element = ref.current;
     if (!element) return;
 
+    // If the element is already in the viewport on mount, show it immediately.
+    // The IntersectionObserver's negative rootMargin can miss elements that are
+    // visible on initial load but outside the shrunk detection zone.
+    const rect = element.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      setIsVisible(true);
+      if (triggerOnce) return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
