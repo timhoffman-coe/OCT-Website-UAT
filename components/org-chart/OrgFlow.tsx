@@ -480,7 +480,7 @@ function buildPathToRoot(root: OrgPerson, id: string): OrgPerson[] {
   return path;
 }
 
-function OrgFlowInner({ data }: { data: OrgChartData }) {
+function OrgFlowInner({ data, headerSlot }: { data: OrgChartData; headerSlot?: React.ReactNode }) {
   const { root } = data;
   const [focusedId, setFocusedId] = useState(root.id);
   const [rawQuery, setRawQuery] = useState('');
@@ -627,7 +627,8 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
   return (
     <div className="w-full">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-3 mb-4">
+      <div className="flex flex-wrap items-center gap-3 mb-2">
+        {headerSlot}
         <div className="relative flex-1 min-w-[220px]">
           <Search
             className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2"
@@ -729,10 +730,10 @@ function OrgFlowInner({ data }: { data: OrgChartData }) {
   );
 }
 
-export default function OrgFlow({ data }: { data: OrgChartData }) {
+export default function OrgFlow({ data, headerSlot }: { data: OrgChartData; headerSlot?: React.ReactNode }) {
   return (
     <ReactFlowProvider>
-      <OrgFlowInner data={data} />
+      <OrgFlowInner data={data} headerSlot={headerSlot} />
     </ReactFlowProvider>
   );
 }

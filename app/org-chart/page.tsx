@@ -36,23 +36,26 @@ export default async function OrgChartPage() {
       />
       <Header />
 
-      <main className="container mx-auto max-w-[1600px] py-10 px-4 sm:px-6 lg:px-8">
-        <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-          <div>
-            <h1 className="font-sans text-3xl md:text-4xl font-bold text-[#193A5A]">
-              Organizational Structure
-            </h1>
-            <p className="text-base text-gray-600 mt-1">
-              Explore the hierarchy and teams within the Office of the Chief Technology Officer.
-            </p>
-          </div>
-          <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
-            Live from HR · Refreshed daily
-          </span>
-        </div>
-
+      <main className="container mx-auto max-w-[1600px] py-4 px-4 sm:px-6 lg:px-8">
         {data ? (
-          <OrgFlow data={data} />
+          <OrgFlow 
+            data={data}
+            headerSlot={
+              <div className="mr-0 lg:mr-auto flex-none w-full lg:w-auto mb-2 lg:mb-0">
+                <div className="flex flex-wrap items-baseline gap-2 md:gap-3 lg:mb-0.5">
+                  <h1 className="font-sans text-xl md:text-2xl font-bold text-[#193A5A]">
+                    Organizational Structure
+                  </h1>
+                  <span className="text-[10px] text-gray-400 uppercase tracking-wider hidden sm:inline-block">
+                    Live from HR · Refreshed daily
+                  </span>
+                </div>
+                <p className="text-xs text-gray-600 hidden xl:block">
+                  Explore the hierarchy and teams within the Office of the Chief Technology Officer.
+                </p>
+              </div>
+            }
+          />
         ) : (
           <div className="rounded-lg border border-amber-200 bg-amber-50 px-6 py-8 text-center">
             <h2 className="text-lg font-semibold text-[#193A5A]">
