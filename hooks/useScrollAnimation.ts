@@ -17,15 +17,6 @@ export function useScrollAnimation(options: UseScrollAnimationOptions = {}) {
     const element = ref.current;
     if (!element) return;
 
-    // If the element is already in the viewport on mount, show it immediately.
-    // The IntersectionObserver's negative rootMargin can miss elements that are
-    // visible on initial load but outside the shrunk detection zone.
-    const rect = element.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      setIsVisible(true);
-      if (triggerOnce) return;
-    }
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -42,7 +33,22 @@ export function useScrollAnimation(options: UseScrollAnimationOptions = {}) {
 
     observer.observe(element);
 
+    // If the element is already in the viewport on mount, show it immediately.
+    // The IntersectionObserver's negative rootMargin can miss elements that are
+    // visible on initial load but outside the shrunk detection zone.
+    // Deferred via rAF to avoid synchronous setState in the effect body.
+    const rafId = requestAnimationFrame(() => {
+      const rect = element.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        setIsVisible(true);
+        if (triggerOnce) {
+          observer.unobserve(element);
+        }
+      }
+    });
+
     return () => {
+      cancelAnimationFrame(rafId);
       observer.disconnect();
     };
   }, [threshold, rootMargin, triggerOnce]);
