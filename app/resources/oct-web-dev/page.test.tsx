@@ -99,7 +99,7 @@ describe('OctWebDevPage', () => {
     render(<OctWebDevPage />);
     await waitFor(() => {
       expect(screen.getByText('67%')).toBeInTheDocument();
-      expect(screen.getByText('2 of 3 tasks')).toBeInTheDocument();
+      expect(screen.getByText('2/3')).toBeInTheDocument();
     });
   });
 
@@ -129,7 +129,7 @@ describe('OctWebDevPage', () => {
     // 3 done out of 7 total = 43%
     await waitFor(() => {
       expect(screen.getByText('43%')).toBeInTheDocument();
-      expect(screen.getByText('3 of 7 tasks')).toBeInTheDocument();
+      expect(screen.getByText('3/7')).toBeInTheDocument();
     });
   });
 });
