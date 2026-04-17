@@ -54,20 +54,6 @@ export default function AIResourcesPage() {
                 </div>
               </a>
 
-              {/* Generative AI Standard Link */}
-              <div className="mt-6 pt-6 border-t border-gray-200 flex justify-center">
-                <a
-                  href="https://portal-onecity.edmonton.ca/sites/default/files/box-files/GenerativeAIStandard.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center bg-primary-blue text-white hover:bg-dark-blue font-medium text-sm px-4 py-2 rounded-full transition-colors duration-200"
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  CoE Generative AI Standard
-                </a>
-              </div>
             </div>
           </div>
 
@@ -119,6 +105,75 @@ export default function AIResourcesPage() {
                   </div>
                 </div>
             </div>
+          </div>
+        </div>
+
+        {/* CoE Gemini Prompt Repository */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+          <div className="lg:col-span-2">
+            <a
+              href="https://sites.google.com/edmonton.ca/geminipromptrepository/home"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-white border-2 border-primary-blue rounded-lg p-8 h-full hover:shadow-lg transition-shadow duration-200"
+            >
+              <div className="flex items-start gap-6">
+                <div className="flex-shrink-0">
+                  <Image
+                    src="/images/logos/gemini-logo.webp"
+                    alt="Gemini Logo"
+                    width={64}
+                    height={64}
+                    sizes="64px"
+                    className="w-16 h-16 object-contain"
+                  />
+                </div>
+                <div className="flex-1">
+                  <h2 className="font-sans text-2xl font-bold text-primary-blue mb-3">
+                    CoE Gemini Prompt Repository
+                  </h2>
+                  <p className="font-serif text-base text-text-secondary mb-4">
+                    Browse and contribute to the Centre of Excellence&apos;s curated collection of Gemini prompts. Find ready-to-use prompts for common tasks across City business areas.
+                  </p>
+                  <div className="flex items-center text-primary-blue font-semibold">
+                    <span>Explore Prompts</span>
+                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          {/* CoE Generative AI Standard Card - 1/3 width */}
+          <div className="lg:col-span-1">
+            <a
+              href="https://portal-onecity.edmonton.ca/sites/default/files/box-files/GenerativeAIStandard.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block bg-structural-gray-blue border-2 border-primary-blue rounded-lg p-6 h-full hover:shadow-lg transition-shadow duration-200"
+            >
+              <div className="flex flex-col items-center text-center">
+                <div className="flex-shrink-0 mb-4">
+                  <svg className="w-16 h-16 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h2 className="font-sans text-xl font-bold text-primary-blue mb-3">
+                  CoE Generative AI Standard
+                </h2>
+                <p className="font-serif text-sm text-text-secondary mb-4">
+                  Review the City of Edmonton&apos;s official standard for Generative AI use.
+                </p>
+                <div className="flex items-center text-primary-blue font-semibold text-sm">
+                  <span>View Standard (PDF)</span>
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
+              </div>
+            </a>
           </div>
         </div>
 
