@@ -84,9 +84,9 @@
 ## Connect Dashboards to Real Data Sources
 
 ### Configure MSSQL Data Portal Connection
-- [ ] Set real credentials for MSSQL connection
+- [x] Set real credentials for MSSQL connection
 - [ ] Verify connectivity via /api/data-portal/health endpoint
-- [ ] Test NTLM authentication against on-prem SQL Server
+- [x] Test NTLM authentication against on-prem SQL Server
 - [ ] Enable encryption on MSSQL connection
 
 ### CIO Executive Dashboard
@@ -97,7 +97,7 @@
 - [ ] Remove "SAMPLE DATA ONLY - NOT LIVE" banner
 
 ### People Management Dashboard
-- [ ] Identify real data source for HR data
+- [x] Identify real data source for HR data
 - [ ] Create API route for people/HR metrics
 - [ ] Replace hardcoded sample arrays with live data
 - [ ] Remove "SAMPLE DATA ONLY - NOT LIVE" banner
@@ -338,10 +338,10 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 - [x] Projects added to sitemap
 
 ### News & Announcements Section
-- [ ] Create news/blog page with chronological post listing
-- [ ] Add CMS editor for creating and editing posts (non-technical users)
-- [ ] Support rich text, images, and categorization/tagging
-- [ ] Add "What's New" widget or feed to main page
+- [x] Create news/blog page with chronological post listing
+- [x] Add CMS editor for creating and editing posts (non-technical users)
+- [x] Support rich text, images, and categorization/tagging
+- [x] Add "What's New" widget or feed to main page
 
 ### Branch Idea Submission
 - [ ] Create idea submission form accessible to all branch members
@@ -380,7 +380,7 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 - [ ] Test RBAC flows end-to-end
 
 ### Environment Configuration
-- [ ] Document environment variable requirements
+- [x] Document environment variable requirements
 
 ### Documentation
 - [x] API documentation for all /api/* routes
