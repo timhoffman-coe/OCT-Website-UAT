@@ -38,19 +38,19 @@ export default async function OrgChartPage() {
 
       <main className="container mx-auto max-w-[1600px] py-4 px-4 sm:px-6 lg:px-8">
         {data ? (
-          <OrgFlow 
+          <OrgFlow
             data={data}
             headerSlot={
-              <div className="mr-0 lg:mr-auto flex-none w-full lg:w-auto mb-2 lg:mb-0">
-                <div className="flex flex-wrap items-baseline gap-2 md:gap-3 lg:mb-0.5">
-                  <h1 className="font-sans text-xl md:text-2xl font-bold text-[#193A5A]">
-                    Organizational Structure
-                  </h1>
-                  <span className="text-[10px] text-gray-400 uppercase tracking-wider hidden sm:inline-block">
-                    Live from HR · Refreshed daily
-                  </span>
-                </div>
-                <p className="text-xs text-gray-600 hidden xl:block">
+              <h1 className="font-sans text-xl md:text-2xl font-bold text-[#193A5A]">
+                Organizational Structure
+              </h1>
+            }
+            subtitleSlot={
+              <div className="flex flex-wrap items-baseline gap-2 md:gap-3 mb-1">
+                <span className="text-[10px] text-gray-400 uppercase tracking-wider hidden sm:inline-block">
+                  Live from HR · Refreshed daily
+                </span>
+                <p className="text-xs text-gray-600 hidden xl:inline-block">
                   Explore the hierarchy and teams within the Office of the Chief Technology Officer.
                 </p>
               </div>
