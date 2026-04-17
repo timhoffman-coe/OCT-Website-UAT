@@ -72,7 +72,7 @@ Central identity table. Every CMS user has one row.
 | createdAt | DateTime | Default `now()` | Account creation timestamp |
 | updatedAt | DateTime | Auto-updated | Last modification timestamp |
 
-**Relations:** teamPermissions, auditLogs, roadmapPermission, octWebDevPermission, newsPermission, projectPermission, linksPermission, projectManagerAssignments
+**Relations:** teamPermissions, auditLogs, roadmapPermission, octWebDevPermission, newsPermission, projectPermission, linksPermission, policiesPermission, projectManagerAssignments
 
 #### TeamPermission
 
@@ -709,6 +709,36 @@ An individual link within a category.
 
 **Indexes:** categoryId
 
+### 10. Policies Page
+
+#### Policy
+
+A policy, directive, or standard operating procedure displayed on the public Policies & Procedures page.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | String | PK, cuid | Unique identifier |
+| title | String | Required | Policy name |
+| type | String | Required | One of: `Directive & Procedure`, `Policy`, `Standard Operating Procedures` |
+| code | String | Required | Policy code (e.g., `A1429D`, `C581`, `SOP`) |
+| category | String | Required | One of: `security`, `infrastructure`, `governance`, `personnel` |
+| description | String | Required | Brief description of the policy |
+| url | String | Required | External URL to the policy document |
+| featured | Boolean | Default `false` | If true, displayed prominently (at most one) |
+| sortOrder | Int | Default `0` | Display order on the public page |
+| createdAt | DateTime | Default `now()` | Record creation timestamp |
+| updatedAt | DateTime | Auto-updated | Last modification timestamp |
+
+#### PoliciesPermission
+
+Per-user permission to edit policies (same structure as LinksPermission, NewsPermission, etc.).
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| id | String | PK, cuid | Unique identifier |
+| userId | String | FK → User (CASCADE), Unique | The user who has edit access |
+| createdAt | DateTime | Default `now()` | When the permission was granted |
+
 ---
 
 ## Relationship Diagram
@@ -722,6 +752,7 @@ User
  ├── NewsPermission?
  ├── ProjectPermission?
  ├── LinksPermission?
+ ├── PoliciesPermission?
  └── ProjectManagerAssignment[] ──→ Project
 
 Team (self-referencing hierarchy)
@@ -758,6 +789,8 @@ RoadmapSection
 
 LinkCategory
  └── LinkItem[]
+
+Policy (standalone — no relations)
 ```
 
 ## Cascade Rules Summary
@@ -786,5 +819,6 @@ LinkCategory
 | `add_projects` | 2026-04-09 | Project, ProjectMilestone, ProjectObjective, ProjectStatusUpdate, ProjectTag, ProjectTagAssignment, ProjectManagerAssignment, ProjectPermission |
 | `widget_instance_project_support` | 2026-04-09 | WidgetInstance.projectId, project widget definitions |
 | `add_links_cms` | 2026-04-17 | LinksPermission, LinkCategory, LinkItem |
+| `add_policies_cms` | 2026-04-17 | PoliciesPermission, Policy |
 
 For migration procedures see [Prisma Migration Workflow](prisma-migration-workflow.md).

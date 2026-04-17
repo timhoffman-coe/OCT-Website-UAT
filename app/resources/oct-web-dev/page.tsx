@@ -23,6 +23,7 @@ const DOCUMENTS = [
   { slug: 'observability', title: 'Observability', description: 'OpenTelemetry logs, traces, and metrics; collector setup' },
   { slug: 'prisma-migration-workflow', title: 'Prisma Migrations', description: 'Schema change lifecycle and rollback procedures' },
   { slug: 'links-system', title: 'Links System', description: 'Links page CMS, categories, permissions, and display modes' },
+  { slug: 'policies-system', title: 'Policies System', description: 'Policies page CMS, permissions, and featured policy management' },
   { slug: 'projects-system', title: 'Projects System', description: 'Project pages, widget editors, permissions, and tags' },
   { slug: 'secret-management', title: 'Secret Management', description: 'Google Secret Manager setup and credential rotation' },
   { slug: 'service-health', title: 'Service Health', description: 'Uptrends API integration, status mapping, and caching' },

@@ -85,6 +85,7 @@ export default async function AdminLayout({
         canEditNews={user.role === 'SUPER_ADMIN' || !!user.newsPermission}
         canEditProjects={user.role === 'SUPER_ADMIN' || !!user.projectPermission || user.projectManagerAssignments.length > 0}
         canEditLinks={user.role === 'SUPER_ADMIN' || !!user.linksPermission}
+        canEditPolicies={user.role === 'SUPER_ADMIN' || !!user.policiesPermission}
       />
       <main className="flex-1 overflow-auto">{children}</main>
     </div>

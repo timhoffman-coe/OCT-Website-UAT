@@ -23,6 +23,7 @@ const ALLOWED_DOCS: Record<string, string> = {
   'observability': 'docs/observability.md',
   'database-schema': 'docs/deployment/database-schema.md',
   'links-system': 'docs/deployment/links-system.md',
+  'policies-system': 'docs/deployment/policies-system.md',
   'projects-system': 'docs/deployment/projects-system.md',
 };
 

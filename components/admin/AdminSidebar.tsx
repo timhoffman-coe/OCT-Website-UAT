@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket, Map, BarChart3, Newspaper, FolderKanban, Link2 } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardList, Trash2, ChevronRight, ChevronDown, ExternalLink, Rocket, Map, BarChart3, Newspaper, FolderKanban, Link2, FileText } from 'lucide-react';
 
 interface Team {
   id: string;
@@ -20,9 +20,10 @@ interface AdminSidebarProps {
   canEditNews?: boolean;
   canEditProjects?: boolean;
   canEditLinks?: boolean;
+  canEditPolicies?: boolean;
 }
 
-export default function AdminSidebar({ teams, userRole, userName, canEditNews, canEditProjects, canEditLinks }: AdminSidebarProps) {
+export default function AdminSidebar({ teams, userRole, userName, canEditNews, canEditProjects, canEditLinks, canEditPolicies }: AdminSidebarProps) {
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path || pathname.startsWith(path + '/');
@@ -273,6 +274,26 @@ export default function AdminSidebar({ teams, userRole, userName, canEditNews, c
           </div>
         )}
 
+        {/* Policies Section */}
+        {canEditPolicies && (
+          <div className="pt-4">
+            <p className="px-3 text-xs font-sans font-semibold text-white/40 uppercase tracking-wider mb-2">
+              Policies
+            </p>
+            <Link
+              href="/admin/policies"
+              className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                isActive('/admin/policies') && !isActive('/admin/policies-editors')
+                  ? 'bg-primary-blue text-white'
+                  : 'text-white/80 hover:bg-white/10'
+              }`}
+            >
+              <FileText className="w-4 h-4" />
+              Manage Policies
+            </Link>
+          </div>
+        )}
+
         {/* Admin Section */}
         {(userRole === 'SUPER_ADMIN' || userRole === 'TEAM_ADMIN') && (
           <div className="pt-4">
@@ -335,6 +356,17 @@ export default function AdminSidebar({ teams, userRole, userName, canEditNews, c
                 >
                   <Link2 className="w-4 h-4" />
                   Links Editors
+                </Link>
+                <Link
+                  href="/admin/policies-editors"
+                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-sans transition-colors ${
+                    isActive('/admin/policies-editors')
+                      ? 'bg-primary-blue text-white'
+                      : 'text-white/80 hover:bg-white/10'
+                  }`}
+                >
+                  <FileText className="w-4 h-4" />
+                  Policies Editors
                 </Link>
                 <Link
                   href="/admin/oct-web-dev-viewers"

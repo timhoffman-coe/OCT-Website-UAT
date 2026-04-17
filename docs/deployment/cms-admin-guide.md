@@ -23,11 +23,13 @@ The left sidebar organizes content hierarchically:
 - **Teams** — expandable tree showing sections, teams, and sub-teams. The tree auto-expands to show the page you're currently viewing.
 - **News** — news post management (requires news editor permission)
 - **Links** — link categories and links management (requires links editor permission)
+- **Policies** — policies and procedures management (requires policies editor permission)
 - **Administration** (SUPER_ADMIN and TEAM_ADMIN only):
   - User Management
   - News Editors (SUPER_ADMIN only)
   - Links Editors (SUPER_ADMIN only)
   - Roadmap Editors (SUPER_ADMIN only)
+  - Policies Editors (SUPER_ADMIN only)
   - OCT-Web-Dev Viewers (SUPER_ADMIN only)
   - Page Analytics
   - Audit Log (SUPER_ADMIN only)
@@ -270,6 +272,39 @@ To edit a link, click the pencil icon. To delete, click the trash icon. Use the 
 
 Super Admins automatically have links edit access.
 
+## Policies
+
+The CMS includes a Policies management system for maintaining the public Policies & Procedures page (`/policies`). Access requires a Policies Editor permission (granted by Super Admins) or the Super Admin role.
+
+### Viewing Policies
+
+Navigate to **Policies > Manage Policies** in the sidebar. The page shows all policies with their title, code, type badge, category, featured status, and description.
+
+### Managing Policies
+
+1. Click **Add Policy** to create a new policy
+2. Fill in:
+   - **Title** — the policy name (e.g., "Acceptable Use of Communication Technology")
+   - **Code** — the policy code (e.g., "A1429D", "C581", "SOP")
+   - **Type** — choose one: Directive & Procedure, Policy, or Standard Operating Procedures
+   - **Category** — choose one: Security & Risk, Infrastructure, Data Governance, or Personnel
+   - **Description** — brief summary of the policy
+   - **URL** — link to the external policy document (PDF, Google Doc, etc.)
+   - **Featured** — check to display prominently on the public page (only one policy can be featured at a time)
+3. Click **Create Policy** to save
+
+To edit a policy, click the pencil icon. To delete, click the trash icon.
+
+Use the up/down arrow buttons to reorder policies on the public page.
+
+### Managing Policies Editors (SUPER_ADMIN)
+
+1. Go to **Policies Editors** in the Administration section
+2. Select a user from the dropdown and click **Add**
+3. To revoke access, click the remove button next to an editor's name
+
+Super Admins automatically have policies edit access.
+
 ## Page Analytics
 
 The analytics dashboard at `/admin/analytics` shows page view metrics for the public site:
@@ -298,6 +333,10 @@ This is a filtered view of the full audit log, scoped to the specific team.
 ### Links Editors
 
 Go to **Links Editors** in the Administration section to manage who can edit the Links page. Add or remove editors using the same interface as News Editors.
+
+### Policies Editors
+
+Go to **Policies Editors** in the Administration section to manage who can edit the Policies & Procedures page. Add or remove editors using the same interface as News Editors.
 
 ### Roadmap Editors
 

@@ -30,6 +30,8 @@
 - [x] Project editor permissions management (global + per-project)
 - [x] Links page CMS (categories + links CRUD, reordering)
 - [x] Links editor permissions management
+- [x] Policies page CMS (policy CRUD, reordering, featured management)
+- [x] Policies editor permissions management
 
 ### Pages & Content
 - [x] All 5 section landing pages (Tech Planning, Business Solutions, ITS, PMO, CIS)

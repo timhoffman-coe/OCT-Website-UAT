@@ -31,6 +31,7 @@ model User {
   newsPermission               NewsPermission?
   projectPermission            ProjectPermission?
   linksPermission              LinksPermission?
+  policiesPermission           PoliciesPermission?
   projectManagerAssignments    ProjectManagerAssignment[]
 }
 
@@ -81,6 +82,14 @@ model ProjectPermission {
 }
 
 model LinksPermission {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PoliciesPermission {
   id        String   @id @default(cuid())
   userId    String   @unique
   createdAt DateTime @default(now())
@@ -689,4 +698,22 @@ model LinkItem {
   category LinkCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@index([categoryId])
+}
+
+// ============================================================
+// CONTENT: POLICIES PAGE
+// ============================================================
+
+model Policy {
+  id          String   @id @default(cuid())
+  title       String
+  type        String
+  code        String
+  category    String
+  description String
+  url         String
+  featured    Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
