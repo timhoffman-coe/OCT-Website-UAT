@@ -9,24 +9,24 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 const DOCUMENTS = [
-  { slug: 'architecture-overview', title: 'Architecture Overview', description: 'System architecture, directory structure, and tech stack' },
-  { slug: 'cms-overview', title: 'CMS Overview', description: 'How the content management system works' },
-  { slug: 'widget-system', title: 'Widget System', description: 'Widget types, template blocklist, and how to add new widgets' },
-  { slug: 'projects-system', title: 'Projects System', description: 'Project pages, widget editors, permissions, and tags' },
-  { slug: 'cms-admin-guide', title: 'CMS Admin Guide', description: 'User guide for content editors' },
-  { slug: 'api-reference', title: 'API Reference', description: 'Complete reference for all API routes' },
-  { slug: 'development-setup', title: 'Development Setup', description: 'Local dev environment and tooling guide' },
-  { slug: 'deployment-guide', title: 'Deployment Guide', description: 'Production deployment and operations' },
-  { slug: 'cicd-pipeline', title: 'CI/CD Pipeline', description: 'Local build to GCP production deployment' },
-  { slug: 'prisma-migration-workflow', title: 'Prisma Migrations', description: 'Schema change lifecycle and rollback procedures' },
-  { slug: 'database-schema', title: 'Database Schema', description: 'PostgreSQL schema: tables, columns, relationships, indexes, and enums' },
-  { slug: 'secret-management', title: 'Secret Management', description: 'Google Secret Manager setup and credential rotation' },
-  { slug: 'environment-variables', title: 'Environment Variables', description: 'Complete reference for all env vars and feature flags' },
-  { slug: 'testing', title: 'Testing', description: 'Test framework, conventions, and how to run tests' },
   { slug: 'ai-assistant', title: 'AI Assistant', description: 'Gemini chat integration, Drive context, and circuit breaker' },
-  { slug: 'service-health', title: 'Service Health', description: 'Uptrends API integration, status mapping, and caching' },
+  { slug: 'api-reference', title: 'API Reference', description: 'Complete reference for all API routes' },
+  { slug: 'architecture-overview', title: 'Architecture Overview', description: 'System architecture, directory structure, and tech stack' },
+  { slug: 'cicd-pipeline', title: 'CI/CD Pipeline', description: 'Local build to GCP production deployment' },
+  { slug: 'cms-admin-guide', title: 'CMS Admin Guide', description: 'User guide for content editors' },
+  { slug: 'cms-overview', title: 'CMS Overview', description: 'How the content management system works' },
   { slug: 'data-portal', title: 'Data Portal', description: 'MSSQL integration, NTLM auth, and budget/incident queries' },
+  { slug: 'database-schema', title: 'Database Schema', description: 'PostgreSQL schema: tables, columns, relationships, indexes, and enums' },
+  { slug: 'deployment-guide', title: 'Deployment Guide', description: 'Production deployment and operations' },
+  { slug: 'development-setup', title: 'Development Setup', description: 'Local dev environment and tooling guide' },
+  { slug: 'environment-variables', title: 'Environment Variables', description: 'Complete reference for all env vars and feature flags' },
   { slug: 'observability', title: 'Observability', description: 'OpenTelemetry logs, traces, and metrics; collector setup' },
+  { slug: 'prisma-migration-workflow', title: 'Prisma Migrations', description: 'Schema change lifecycle and rollback procedures' },
+  { slug: 'projects-system', title: 'Projects System', description: 'Project pages, widget editors, permissions, and tags' },
+  { slug: 'secret-management', title: 'Secret Management', description: 'Google Secret Manager setup and credential rotation' },
+  { slug: 'service-health', title: 'Service Health', description: 'Uptrends API integration, status mapping, and caching' },
+  { slug: 'testing', title: 'Testing', description: 'Test framework, conventions, and how to run tests' },
+  { slug: 'widget-system', title: 'Widget System', description: 'Widget types, template blocklist, and how to add new widgets' },
 ];
 
 const TABS = [
@@ -215,27 +215,22 @@ export default function OctWebDevPage() {
 
       {/* Page Header */}
       <div className="bg-[#193A5A] text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-[#005087] rounded-lg shadow-lg shadow-[#005087]/50">
-              <Map className="w-6 h-6 text-white" />
+            <div className="p-1.5 bg-[#005087] rounded-lg shadow-lg shadow-[#005087]/50">
+              <Map className="w-5 h-5 text-white" />
             </div>
-            <div className="flex-1">
-              <h1 className="text-2xl lg:text-3xl font-bold tracking-tight">OCT Web Development</h1>
-              <p className="text-xs text-[#839899] font-medium tracking-widest uppercase">OCT Website Development Progress</p>
-            </div>
+            <h1 className="text-lg lg:text-xl font-bold tracking-tight flex-1">OCT Web Development</h1>
             {canView && totalItems > 0 && (
-              <div className="text-right">
-                <p className="text-2xl font-bold tabular-nums">{overallPct}%</p>
-                <p className="text-xs text-[#839899] font-sans">{totalDone} of {totalItems} tasks</p>
+              <div className="flex items-center gap-3">
+                <div className="w-28 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-400 rounded-full transition-all duration-500" style={{ width: `${overallPct}%` }} />
+                </div>
+                <span className="text-sm font-bold tabular-nums">{overallPct}%</span>
+                <span className="text-xs text-[#839899] font-sans">{totalDone}/{totalItems}</span>
               </div>
             )}
           </div>
-          {canView && totalItems > 0 && (
-            <div className="mt-4 w-full h-2 bg-white/10 rounded-full overflow-hidden">
-              <div className="h-full bg-emerald-400 rounded-full transition-all duration-500" style={{ width: `${overallPct}%` }} />
-            </div>
-          )}
         </div>
 
         {/* Tab Bar */}
@@ -249,13 +244,13 @@ export default function OctWebDevPage() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-5 py-3 text-sm font-sans font-medium transition-colors relative cursor-pointer rounded-t-lg ${
+                    className={`flex items-center gap-1.5 px-4 py-1.5 text-sm font-sans font-medium transition-colors relative cursor-pointer rounded-t-lg ${
                       isActive
                         ? 'bg-gray-50 text-[#005087]'
                         : 'text-white/60 hover:text-white/90 hover:bg-white/5'
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-3.5 h-3.5" />
                     {tab.label}
                   </button>
                 );
