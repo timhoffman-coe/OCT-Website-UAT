@@ -52,7 +52,7 @@ describe('auth', () => {
       expect(result).toEqual(user);
       expect(prisma.user.findUnique).toHaveBeenCalledWith({
         where: { email: 'test@edmonton.ca' },
-        include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true, newsPermission: true, projectPermission: true, projectManagerAssignments: true },
+        include: { teamPermissions: true, roadmapPermission: true, octWebDevPermission: true, newsPermission: true, projectPermission: true, linksPermission: true, policiesPermission: true, projectManagerAssignments: true },
       });
     });
 
