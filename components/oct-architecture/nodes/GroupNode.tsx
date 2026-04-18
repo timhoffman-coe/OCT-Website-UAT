@@ -28,13 +28,12 @@ export const GroupNode = memo(function GroupNode({ data }: NodeProps) {
         }}
       >
         <span
-          className="text-[11px] font-bold uppercase tracking-wider font-sans"
-          style={{ color }}
+          className="text-[11px] font-bold uppercase tracking-wider font-sans text-white"
         >
           {label}
         </span>
         {sublabel && (
-          <span className="block text-[9px] text-gray-500 font-sans">{sublabel}</span>
+          <span className="block text-[9px] text-white/60 font-sans">{sublabel}</span>
         )}
       </div>
       <Handle type="target" position={Position.Top} className="!bg-transparent !border-0 !w-0 !h-0" />

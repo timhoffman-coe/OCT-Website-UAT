@@ -111,6 +111,22 @@ export const landingNodes: Node[] = [
   },
 
   // ═══════════════════════════════════════════
+  // EQUINIX EXPRESS LINKS (right of COE Internal, above Partners)
+  // ═══════════════════════════════════════════
+  {
+    id: 'landing-equinix',
+    type: 'landingZone',
+    position: { x: 1180, y: 240 },
+    data: {
+      label: 'Equinix Express Links',
+      icon: '🔗',
+      variant: 'purpleZone',
+      clickable: false,
+    },
+    style: { width: 200, height: 100 },
+  },
+
+  // ═══════════════════════════════════════════
   // PARTNER NETWORKS (far right, pink)
   // ═══════════════════════════════════════════
   {

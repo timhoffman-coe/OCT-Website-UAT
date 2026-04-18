@@ -1,33 +1,33 @@
 import type { Node, Edge } from '@xyflow/react';
 
 export const partnerNetworksNodes: Node[] = [
-  // Container group
-  {
-    id: 'partner-group',
-    type: 'group',
-    position: { x: 0, y: 0 },
-    data: { label: 'Partner Networks' },
-    style: { width: 1300, height: 160 },
-  },
-
-  // Partner services
+  // B2B Firewall (above group)
   {
     id: 'b2b-firewall',
     type: 'service',
-    position: { x: 20, y: 45 },
+    position: { x: 370, y: 0 },
     data: {
-      label: 'Future B2B Firewall',
+      label: 'B2B Firewall Cluster',
       icon: '🔥',
       sublabel: 'ACL Controlled',
       accent: '#ef4444',
     },
-    parentId: 'partner-group',
-    extent: 'parent' as const,
   },
+
+  // Container group
+  {
+    id: 'partner-group',
+    type: 'group',
+    position: { x: 0, y: 120 },
+    data: { label: 'Partner Networks' },
+    style: { width: 900, height: 160 },
+  },
+
+  // Partner services
   {
     id: 'ahs',
     type: 'service',
-    position: { x: 310, y: 45 },
+    position: { x: 100, y: 45 },
     data: { label: 'Alberta Health Services', icon: '🏥', accent: '#10b981' },
     parentId: 'partner-group',
     extent: 'parent' as const,
@@ -35,7 +35,7 @@ export const partnerNetworksNodes: Node[] = [
   {
     id: 'eps',
     type: 'service',
-    position: { x: 580, y: 45 },
+    position: { x: 370, y: 45 },
     data: { label: 'Edmonton Police Service', icon: '🚔', accent: '#3b82f6' },
     parentId: 'partner-group',
     extent: 'parent' as const,
@@ -43,7 +43,7 @@ export const partnerNetworksNodes: Node[] = [
   {
     id: 'epcor',
     type: 'service',
-    position: { x: 850, y: 45 },
+    position: { x: 640, y: 45 },
     data: { label: 'EPCOR', icon: '⚡', accent: '#eab308' },
     parentId: 'partner-group',
     extent: 'parent' as const,
@@ -55,25 +55,19 @@ export const partnerNetworksEdges: Edge[] = [
   {
     id: 'e-b2b-ahs',
     source: 'b2b-firewall',
-    sourceHandle: 'right',
     target: 'ahs',
-    targetHandle: 'left',
     type: 'glow',
   },
   {
     id: 'e-b2b-eps',
     source: 'b2b-firewall',
-    sourceHandle: 'right',
     target: 'eps',
-    targetHandle: 'left',
     type: 'glow',
   },
   {
     id: 'e-b2b-epcor',
     source: 'b2b-firewall',
-    sourceHandle: 'right',
     target: 'epcor',
-    targetHandle: 'left',
     type: 'glow',
   },
 ];

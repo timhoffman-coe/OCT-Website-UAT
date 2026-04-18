@@ -3,7 +3,7 @@
 import { memo } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 
-type Variant = 'userGroup' | 'cloud' | 'securityBar' | 'blueZone' | 'partnerZone';
+type Variant = 'userGroup' | 'cloud' | 'securityBar' | 'blueZone' | 'partnerZone' | 'purpleZone';
 
 const variantStyles: Record<Variant, {
   border: string;
@@ -52,6 +52,14 @@ const variantStyles: Record<Variant, {
     sublabelColor: 'rgba(244, 114, 182, 0.6)',
     boxShadow: '0 0 15px rgba(244, 114, 182, 0.08)',
     accentColor: '#ec4899',
+  },
+  purpleZone: {
+    border: '1.5px solid rgba(139, 92, 246, 0.6)',
+    background: 'rgba(139, 92, 246, 0.06)',
+    textColor: '#a78bfa',
+    sublabelColor: 'rgba(167, 139, 250, 0.6)',
+    boxShadow: '0 0 20px rgba(139, 92, 246, 0.1)',
+    accentColor: '#8b5cf6',
   },
 };
 
@@ -197,7 +205,9 @@ export const LandingZoneNode = memo(function LandingZoneNode({ data }: NodeProps
       <Handle type="target" position={Position.Top} className="!bg-transparent !border-0 !w-0 !h-0" />
       <Handle type="source" position={Position.Bottom} className="!bg-transparent !border-0 !w-0 !h-0" />
       <Handle type="target" position={Position.Left} id="left" className="!bg-transparent !border-0 !w-0 !h-0" />
+      <Handle type="source" position={Position.Left} id="left-source" className="!bg-transparent !border-0 !w-0 !h-0" />
       <Handle type="source" position={Position.Right} id="right" className="!bg-transparent !border-0 !w-0 !h-0" />
+      <Handle type="target" position={Position.Right} id="right-target" className="!bg-transparent !border-0 !w-0 !h-0" />
     </div>
   );
 });

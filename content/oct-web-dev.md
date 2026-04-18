@@ -138,10 +138,10 @@
 - [ ] Wireless Towers
 
 ### How OCT Works — Network Architecture Map
-- [ ] Complete the network map with any missing infrastructure zones
-- [ ] Add additional drill-down sub-diagrams for zones without them
-- [ ] Verify all service nodes reflect current infrastructure
-- [ ] Add labels/descriptions to edges showing protocol/connection types
+- [x] Complete the network map with any missing infrastructure zones
+- [x] Add additional drill-down sub-diagrams for zones without them
+- [x] Verify all service nodes reflect current infrastructure
+- [x] Add labels/descriptions to edges showing protocol/connection types
 
 ### Fix Placeholder Links
 

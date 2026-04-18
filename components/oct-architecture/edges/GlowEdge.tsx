@@ -24,6 +24,8 @@ export const GlowEdge = memo(function GlowEdge({
   });
 
   const label = data?.label as string | undefined;
+  const color = (data?.color as string) || '8, 145, 178';
+  const flowColor = (data?.flowColor as string) || 'rgba(34, 211, 238, 0.9)';
 
   return (
     <>
@@ -32,7 +34,7 @@ export const GlowEdge = memo(function GlowEdge({
         d={edgePath}
         style={{
           fill: 'none',
-          stroke: 'rgba(8, 145, 178, 0.15)',
+          stroke: `rgba(${color}, 0.15)`,
           strokeWidth: 6,
         }}
       />
@@ -42,7 +44,7 @@ export const GlowEdge = memo(function GlowEdge({
         className="react-flow__edge-path"
         style={{
           fill: 'none',
-          stroke: 'rgba(8, 145, 178, 0.3)',
+          stroke: `rgba(${color}, 0.3)`,
           strokeWidth: 1.5,
           ...style,
         }}
@@ -54,7 +56,7 @@ export const GlowEdge = memo(function GlowEdge({
         className="animated-flow-edge"
         style={{
           fill: 'none',
-          stroke: 'rgba(34, 211, 238, 0.9)',
+          stroke: flowColor,
           strokeWidth: 2.5,
           strokeDasharray: '4 14',
           strokeLinecap: 'round',
