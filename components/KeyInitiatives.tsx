@@ -46,14 +46,14 @@ export default function KeyInitiatives() {
           Key Initiatives Spotlight
         </h2>
 
-        <div className="relative max-w-4xl mx-auto overflow-hidden rounded-lg shadow-xl bg-gray-900">
+        <div className="relative max-w-4xl mx-auto overflow-hidden rounded-lg shadow-xl bg-gray-900" aria-roledescription="carousel" aria-label="Key Initiatives Spotlight">
           {/* Carousel Track */}
           <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
             {slides.map((slide, index) => (
-              <div key={index} className="carousel-slide relative w-full flex-shrink-0">
+              <div key={index} className="carousel-slide relative w-full flex-shrink-0" role="group" aria-roledescription="slide" aria-label={`Slide ${index + 1} of ${slides.length}: ${slide.title}`}>
                 <Image
                   src={slide.image}
                   alt={slide.alt}
@@ -79,6 +79,7 @@ export default function KeyInitiatives() {
             onClick={prevSlide}
             disabled={currentSlide === 0}
             className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 transition disabled:opacity-50"
+            aria-label="Previous slide"
           >
             <svg
               className="h-6 w-6"
@@ -86,6 +87,7 @@ export default function KeyInitiatives() {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -99,6 +101,7 @@ export default function KeyInitiatives() {
             onClick={nextSlide}
             disabled={currentSlide === slides.length - 1}
             className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 transition disabled:opacity-50"
+            aria-label="Next slide"
           >
             <svg
               className="h-6 w-6"
@@ -106,6 +109,7 @@ export default function KeyInitiatives() {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"

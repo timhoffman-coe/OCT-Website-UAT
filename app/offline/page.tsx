@@ -7,7 +7,7 @@ export const dynamic = 'force-static';
 
 function WifiOffIcon({ className }: { className?: string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M12 20h.01" />
       <path d="M8.5 16.429a5 5 0 0 1 7 0" />
       <path d="M5 12.859a10 10 0 0 1 5.17-2.69" />
@@ -21,7 +21,7 @@ function WifiOffIcon({ className }: { className?: string }) {
 
 function HomeIcon({ className }: { className?: string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />
     </svg>
@@ -30,7 +30,7 @@ function HomeIcon({ className }: { className?: string }) {
 
 function RefreshIcon({ className }: { className?: string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
       <path d="M3 3v5h5" />
       <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
@@ -41,7 +41,7 @@ function RefreshIcon({ className }: { className?: string }) {
 
 function GroupsIcon({ className }: { className?: string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
       <circle cx="9" cy="7" r="4" />
       <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
@@ -52,7 +52,7 @@ function GroupsIcon({ className }: { className?: string }) {
 
 function DashboardIcon({ className }: { className?: string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <rect width="7" height="9" x="3" y="3" rx="1" />
       <rect width="7" height="5" x="14" y="3" rx="1" />
       <rect width="7" height="9" x="14" y="12" rx="1" />
@@ -63,7 +63,7 @@ function DashboardIcon({ className }: { className?: string }) {
 
 function FolderIcon({ className }: { className?: string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2" />
     </svg>
   );
@@ -71,7 +71,7 @@ function FolderIcon({ className }: { className?: string }) {
 
 function HeartPulseIcon({ className }: { className?: string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M19.5 12.572l-7.5 7.428l-7.5-7.428A5 5 0 1 1 12 6.006a5 5 0 1 1 7.5 6.572" />
       <path d="M5 12h2l2 4 4-8 2 4h2" />
     </svg>
@@ -96,7 +96,7 @@ export default function OfflinePage() {
         </div>
       </header>
 
-      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl w-full text-center py-16 md:py-24">
           {/* Offline hero */}
           <div className="relative mb-8">

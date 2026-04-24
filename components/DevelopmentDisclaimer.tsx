@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 const STORAGE_KEY = 'coe-disclaimer-dismissed-date';
 
 export default function DevelopmentDisclaimer() {
   const [isOpen, setIsOpen] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, isOpen);
 
   // Check localStorage on mount to see if we should show the modal
   useEffect(() => {
@@ -55,6 +58,10 @@ export default function DevelopmentDisclaimer() {
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dev-disclaimer-title"
           className="relative bg-white rounded-lg shadow-xl max-w-md w-full p-8"
           onClick={(e) => e.stopPropagation()}
         >
@@ -69,6 +76,7 @@ export default function DevelopmentDisclaimer() {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -88,6 +96,7 @@ export default function DevelopmentDisclaimer() {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -98,7 +107,7 @@ export default function DevelopmentDisclaimer() {
               </svg>
             </div>
 
-            <h2 className="font-sans text-2xl font-bold text-gray-900 mb-4">
+            <h2 id="dev-disclaimer-title" className="font-sans text-2xl font-bold text-gray-900 mb-4">
               Under Development
             </h2>
 

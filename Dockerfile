@@ -46,6 +46,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/jws ./node_modules/j
 COPY --from=builder --chown=nextjs:nodejs /app/entrypoint.js ./entrypoint.js
 COPY --from=builder --chown=nextjs:nodejs /app/content ./content
 COPY --from=builder --chown=nextjs:nodejs /app/docs ./docs
+COPY --from=builder --chown=nextjs:nodejs /app/VERSION ./VERSION
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/prisma.config.js ./prisma.config.js
 RUN mkdir -p /app/prisma-cli && cd /app/prisma-cli && npm init -y > /dev/null 2>&1 && npm install prisma@7.4.1 > /dev/null 2>&1

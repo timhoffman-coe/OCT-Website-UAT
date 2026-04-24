@@ -56,7 +56,7 @@ export default function WhoWeAre() {
               <div className="relative bg-gray-200 rounded-lg overflow-hidden aspect-video flex items-center justify-center">
                 <div className="text-center">
                   <div className="inline-block bg-primary-blue rounded-full p-4 mb-2">
-                    <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <svg aria-hidden="true" className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                     </svg>
                   </div>
@@ -87,6 +87,7 @@ export default function WhoWeAre() {
                         {item.title}
                       </span>
                       <svg
+                        aria-hidden="true"
                         className={`w-5 h-5 text-primary-blue transition-transform ${openAccordion === index ? 'rotate-180' : ''
                           }`}
                         fill="none"
@@ -111,6 +112,7 @@ export default function WhoWeAre() {
                         >
                           Learn More
                           <svg
+                            aria-hidden="true"
                             className="w-4 h-4 ml-2"
                             fill="none"
                             viewBox="0 0 24 24"

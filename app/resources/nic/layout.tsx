@@ -24,7 +24,7 @@ export default function NICLayout({
             {/* Main Content Area with Sidebar - adjusted for fixed header */}
             <div className="flex flex-1 pt-[104px] md:pt-[128px]">
                 <Sidebar />
-                <main className="flex-1 overflow-x-hidden p-6 relative">
+                <main id="main-content" className="flex-1 overflow-x-hidden p-6 relative">
                     {children}
                 </main>
             </div>

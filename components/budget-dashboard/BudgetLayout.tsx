@@ -126,7 +126,7 @@ const BudgetLayout: React.FC<LayoutProps> = ({ children }) => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 flex flex-col overflow-hidden relative">
+            <main id="main-content" className="flex-1 flex flex-col overflow-hidden relative">
                 <div className="flex-1 overflow-auto">
                     {children}
                 </div>

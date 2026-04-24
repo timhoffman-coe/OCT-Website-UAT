@@ -71,7 +71,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
           <div className="px-8 mb-8">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-dark-blue rounded-lg flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-white">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-white">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />
                 </svg>
               </div>
@@ -85,7 +85,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
           {/* Search in sidebar */}
           <div className="px-6 mb-4">
             <div className="relative">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary">
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
               </svg>
               <input
@@ -94,6 +94,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 bg-structural-light-gray border-none rounded-lg text-sm text-dark-blue placeholder:text-text-secondary focus:ring-2 focus:ring-process-blue/20"
                 placeholder="Search policies..."
+                aria-label="Search policies"
               />
             </div>
           </div>
@@ -109,7 +110,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
                     : 'text-text-secondary hover:bg-structural-light-gray'
                 }`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                   {cat.icon}
                 </svg>
                 <span>{cat.label}</span>
@@ -122,7 +123,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
               href="/contact"
               className="w-full bg-structural-light-gray text-text-secondary py-3 rounded-xl font-bold text-sm tracking-tight flex items-center justify-center gap-2 hover:bg-structural-gray-blue hover:text-dark-blue transition-all border border-structural-gray-blue"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
               </svg>
               Report Broken Link
@@ -131,7 +132,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 pt-8 pb-20 px-4 sm:px-6 lg:px-12 overflow-x-hidden">
+        <main id="main-content" className="flex-1 pt-8 pb-20 px-4 sm:px-6 lg:px-12 overflow-x-hidden">
           {/* Mobile filter pills */}
           <div className="lg:hidden flex flex-wrap gap-2 mb-8">
             {categories.map((cat) => (
@@ -152,7 +153,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
           {/* Mobile search */}
           <div className="lg:hidden mb-8">
             <div className="relative">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary">
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
               </svg>
               <input
@@ -194,7 +195,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
                   <div className="relative z-10">
                     <span className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-bold text-white uppercase tracking-widest mb-4">Featured</span>
                     <h3 className="text-2xl font-bold text-white mb-2 leading-tight">{featuredPolicy.title}</h3>
-                    <p className="text-white/60 text-sm mb-6 line-clamp-2">{featuredPolicy.description}</p>
+                    <p className="text-white/80 text-sm mb-6 line-clamp-2">{featuredPolicy.description}</p>
                     <span className="px-5 py-2.5 bg-white text-dark-blue rounded-lg font-bold text-xs uppercase tracking-wider inline-block group-hover:bg-structural-light-gray transition-colors">
                       Review Policy
                     </span>
@@ -212,7 +213,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
                   >
                     <div>
                       <div className="w-12 h-12 rounded-xl bg-process-blue/10 flex items-center justify-center text-process-blue mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                         </svg>
                       </div>
@@ -242,7 +243,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
                   onClick={() => setActiveCategory(domain.id)}
                   className="group p-8 bg-white rounded-2xl border border-structural-gray-blue hover:border-process-blue/30 hover:shadow-md transition-all text-center"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-dark-blue mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-dark-blue mx-auto mb-4 group-hover:scale-110 transition-transform">
                     {domain.icon}
                   </svg>
                   <h4 className="font-bold text-dark-blue mb-1">{domain.label}</h4>
@@ -272,7 +273,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
                   >
                     <div className="flex gap-5">
                       <div className="mt-1 w-10 h-10 rounded-lg bg-structural-light-gray flex items-center justify-center text-text-secondary flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                         </svg>
                       </div>
@@ -285,7 +286,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
                         <span className="text-[11px] font-semibold text-text-secondary">{policy.code}</span>
                       </div>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 mt-2">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 mt-2">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                     </svg>
                   </a>
@@ -326,7 +327,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
                 <ul className="space-y-4">
                   <li>
                     <a className="flex items-center gap-3 text-sm text-text-secondary hover:text-dark-blue group" href="#">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-process-blue group-hover:scale-110 transition-transform">
+                      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-process-blue group-hover:scale-110 transition-transform">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                       </svg>
                       Policy Template
@@ -334,7 +335,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
                   </li>
                   <li>
                     <Link className="flex items-center gap-3 text-sm text-text-secondary hover:text-dark-blue group" href="/contact">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-process-blue group-hover:scale-110 transition-transform">
+                      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-process-blue group-hover:scale-110 transition-transform">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
                       </svg>
                       Compliance Hotline
@@ -342,7 +343,7 @@ export default function PoliciesClient({ policies }: { policies: PolicyData[] })
                   </li>
                   <li>
                     <a className="flex items-center gap-3 text-sm text-text-secondary hover:text-dark-blue group" href="#">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-process-blue group-hover:scale-110 transition-transform">
+                      <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-process-blue group-hover:scale-110 transition-transform">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
                       </svg>
                       F.A.Q. for New Staff

@@ -1,10 +1,10 @@
 services:
   postgres:
     image: postgres:16-alpine
+    env_file: .env.local
     environment:
       POSTGRES_DB: coe_cms
       POSTGRES_USER: coe_admin
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_password}
     volumes:
       - pgdata_dev:/var/lib/postgresql/data
     ports:
@@ -25,14 +25,11 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    env_file: .env.local
     environment:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true
       - GOOGLE_APPLICATION_CREDENTIALS=/app/service-account.json
-      - DATABASE_URL=postgresql://coe_admin:${POSTGRES_PASSWORD:-dev_password}@postgres:5432/coe_cms
-      - DEV_BYPASS_IAP=true
-      - DEV_USER_EMAIL=dev@edmonton.ca
-      - DEV_USER_NAME=Dev User
       # OpenTelemetry — point at the local collector sidecar. Set
       # OTEL_SDK_DISABLED=true to skip telemetry entirely if the collector
       # isn't running.

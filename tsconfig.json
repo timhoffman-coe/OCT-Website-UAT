@@ -38,6 +38,7 @@
   ],
   "exclude": [
     "node_modules",
+    "Mockups",
     "prisma/full-export.ts",
     "prisma/export-db.ts",
     "prisma/create-subteams.ts",

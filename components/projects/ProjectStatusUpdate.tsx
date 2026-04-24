@@ -24,7 +24,7 @@ export default function ProjectStatusUpdateSection({ updates }: ProjectStatusUpd
         <>
           <div className="bg-blue-50/50 p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#003962]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#003962]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               <span className="text-[10px] font-bold text-[#005087] uppercase">Updated {formatUpdateDate(latest.createdAt)}</span>
             </div>
             <p className="text-sm text-[#173858] italic leading-relaxed">&ldquo;{latest.content}&rdquo;</p>

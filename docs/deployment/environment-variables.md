@@ -23,6 +23,12 @@ In **production**, Google Cloud IAP handles authentication. The app verifies the
 
 In **development** with `DEV_BYPASS_IAP=true`, the request interceptor (`proxy.ts`) automatically sets the `x-user-email` header to `DEV_USER_EMAIL`. If `ADMIN_PASSWORD` is also set, users must enter the password at `/login` first.
 
+## Page View Tracking
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `INTERNAL_API_SECRET` | No | Shared secret used by `proxy.ts` to authenticate internal calls to `/api/track-view`. Without it, page view tracking is disabled. |
+
 ## AI Assistant (Gemini)
 
 | Variable | Required | Description |
@@ -116,7 +122,7 @@ These variables follow the standard OpenTelemetry environment variable spec, so 
 
 | Variable | Local Dev | Docker Dev | Production |
 |----------|-----------|------------|------------|
-| `DATABASE_URL` | `.env` | `docker-compose.dev.yml` | `docker-compose.prod.yml` |
+| `DATABASE_URL` | `.env.local` | `docker-compose.dev.yml` | `docker-compose.prod.yml` |
 | `DEV_BYPASS_IAP` | `.env.local` | `docker-compose.dev.yml` | Not set (uses IAP) |
 | `GEMINI_API_KEY` | `.env.local` | `.env.local` | Google Secret Manager |
 | `MSSQL_*` | `.env.local` | `.env.local` | `docker-compose.prod.yml` |

@@ -2,7 +2,6 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import DashboardDisclaimer from '@/components/DashboardDisclaimer';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine } from 'recharts';
 import { ClientResponsiveContainer } from '@/components/ClientOnly';
 
@@ -45,7 +44,6 @@ export default function AssetManagementPage() {
 
     return (
         <div className="bg-gray-100 min-h-screen font-sans">
-            <DashboardDisclaimer dashboardName="Asset Management" />
             <Header />
 
             {/* Sample Data Warning Banner */}
@@ -55,7 +53,8 @@ export default function AssetManagementPage() {
                 </p>
             </div>
 
-            <main className="container mx-auto max-w-7xl py-8 px-4 sm:px-6 lg:px-8">
+            <div className="relative">
+            <main id="main-content" className="container mx-auto max-w-7xl py-8 px-4 sm:px-6 lg:px-8">
 
                 {/* Top Row: Spend & Savings */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -255,6 +254,15 @@ export default function AssetManagementPage() {
                 </div>
 
             </main>
+
+            {/* Semi-transparent overlay */}
+            <div className="absolute inset-0 bg-white/75 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
+                <div className="text-center px-8 py-12 bg-white/90 rounded-2xl shadow-xl border border-gray-200">
+                    <p className="text-3xl font-bold text-gray-800">Coming with ServiceNow</p>
+                    <p className="text-gray-500 mt-2 text-lg">This dashboard will be powered by live ServiceNow data</p>
+                </div>
+            </div>
+            </div>
 
             <Footer />
         </div>

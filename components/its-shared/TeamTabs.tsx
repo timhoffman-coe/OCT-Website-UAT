@@ -31,8 +31,8 @@ export default function TeamTabs({ tabs }: TeamTabsProps) {
   return (
     <div>
       {/* Tab List */}
-      <div className="flex flex-wrap border-b-2 border-structural-gray-blue mb-6">
-        {tabs.map((tab) => (
+      <div className="flex flex-wrap border-b-2 border-structural-gray-blue mb-6" role="tablist" aria-label="Team content">
+        {tabs.map((tab, idx) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
@@ -42,8 +42,14 @@ export default function TeamTabs({ tabs }: TeamTabsProps) {
                 : 'text-text-secondary border-transparent hover:text-text-dark hover:bg-structural-light-gray'
             }`}
             role="tab"
+            id={`team-tab-${tab.id}`}
             aria-selected={activeTab === tab.id}
             aria-controls={`tab-panel-${tab.id}`}
+            tabIndex={activeTab === tab.id ? 0 : -1}
+            onKeyDown={(e) => {
+              if (e.key === 'ArrowRight') { e.preventDefault(); const next = tabs[(idx + 1) % tabs.length]; setActiveTab(next.id); (e.currentTarget.parentElement?.querySelector(`#team-tab-${next.id}`) as HTMLElement)?.focus(); }
+              if (e.key === 'ArrowLeft') { e.preventDefault(); const prev = tabs[(idx - 1 + tabs.length) % tabs.length]; setActiveTab(prev.id); (e.currentTarget.parentElement?.querySelector(`#team-tab-${prev.id}`) as HTMLElement)?.focus(); }
+            }}
           >
             {tab.label}
           </button>
@@ -56,7 +62,7 @@ export default function TeamTabs({ tabs }: TeamTabsProps) {
           key={activeContent.id}
           id={`tab-panel-${activeContent.id}`}
           role="tabpanel"
-          aria-labelledby={activeContent.id}
+          aria-labelledby={`team-tab-${activeContent.id}`}
           className="grid grid-cols-1 md:grid-cols-2 gap-10 animate-fadeIn"
         >
           {/* Video Section */}

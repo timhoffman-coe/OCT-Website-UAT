@@ -17,7 +17,7 @@ export default function OCTArchitecturePage() {
   return (
     <div className="bg-[#0a0e17] min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 p-4 md:p-8">
+      <main id="main-content" className="flex-1 p-4 md:p-8">
         <div className="max-w-[95%] mx-auto">
           {/* Page Header */}
           <div className="mb-4">

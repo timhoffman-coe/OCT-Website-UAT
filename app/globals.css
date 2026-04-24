@@ -133,6 +133,13 @@ body {
   flex: 0 0 100%;
 }
 
+/* Draw-check animation for success states */
+@keyframes drawCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Fade-in animation for tabs */
 @keyframes fadeIn {
   from {
@@ -170,3 +177,35 @@ body {
 .tiptap hr { border-color: #E2E6EA; margin: 1.5rem 0; }
 .tiptap a { color: #0081BC; text-decoration: underline; }
 .tiptap strong { font-weight: 600; color: #193A5A; }
+
+/* Accessibility: Global focus-visible styles */
+@layer base {
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [role="tab"]:focus-visible,
+  [role="menuitem"]:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid #005087;
+    outline-offset: 2px;
+  }
+}
+
+/* Accessibility: Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessibility: Allow keyboard users to flip cards */
+.flip-card-container:focus-within .flip-card-inner {
+  transform: rotateY(180deg);
+}

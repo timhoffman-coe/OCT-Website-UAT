@@ -291,7 +291,7 @@ export default function RoadmapPage() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
+      <main id="main-content" className="flex-1 max-w-7xl mx-auto w-full px-4 py-8">
 
         {loading ? (
           <div className="animate-pulse space-y-8 py-4">

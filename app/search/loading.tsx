@@ -5,7 +5,8 @@ export default function SearchLoading() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
-      <main className="animate-pulse p-4 md:p-8">
+      <main id="main-content" className="animate-pulse p-4 md:p-8">
+        <p className="sr-only" role="status">Loading content, please wait.</p>
         <div className="max-w-3xl mx-auto">
           {/* Search bar */}
           <div className="h-12 w-full bg-gray-200 rounded-lg mb-8" />

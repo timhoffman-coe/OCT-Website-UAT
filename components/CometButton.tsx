@@ -56,6 +56,7 @@ export const CometButton: React.FC<CometButtonProps> = ({ className, contentClas
 
             {/* SVG Overlay Layer */}
             <svg
+                aria-hidden="true"
                 className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
                 width={dims.width}
                 height={dims.height}

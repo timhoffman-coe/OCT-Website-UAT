@@ -10,6 +10,8 @@ const routeMap: Record<string, { label: string; parent: string | null }> = {
   '/leadership': { label: 'Our Leadership', parent: '/about' },
   '/about/how-oct-works': { label: 'How OCT Works', parent: '/about' },
   '/contact': { label: 'Contact', parent: '/' },
+  '/get-help': { label: 'Get Help & Support', parent: '/' },
+  '/technology-intake': { label: 'Technology Intake', parent: '/' },
   '/search': { label: 'Search', parent: '/' },
   '/service-health': { label: 'Service Health', parent: '/' },
   '/services': { label: 'All Teams', parent: '/' },

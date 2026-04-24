@@ -72,9 +72,11 @@ export default function KeyInitiativesWidget({ slides }: { slides: KeyInitiative
               <button
                 onClick={prevSlide}
                 disabled={currentSlide === 0}
+                aria-label="Previous slide"
                 className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 transition disabled:opacity-50"
               >
                 <svg
+                  aria-hidden="true"
                   className="h-6 w-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -87,9 +89,11 @@ export default function KeyInitiativesWidget({ slides }: { slides: KeyInitiative
               <button
                 onClick={nextSlide}
                 disabled={currentSlide === slides.length - 1}
+                aria-label="Next slide"
                 className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 transition disabled:opacity-50"
               >
                 <svg
+                  aria-hidden="true"
                   className="h-6 w-6"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

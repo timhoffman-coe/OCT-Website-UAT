@@ -87,7 +87,7 @@ export default function NotFound() {
     <div className="bg-white min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <main id="main-content" className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl w-full text-center py-16 md:py-24">
           {/* 404 hero */}
           <div className="relative mb-8">

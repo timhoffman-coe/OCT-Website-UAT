@@ -98,6 +98,7 @@ export default function LinksAccordion() {
               </h2>
               <div className="flex-shrink-0 ml-4">
                 <svg
+                  aria-hidden="true"
                   className={`h-5 w-5 text-primary-blue transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -126,6 +127,7 @@ export default function LinksAccordion() {
                         rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
                       >
                         <svg
+                          aria-hidden="true"
                           className="h-4 w-4 mr-2 flex-shrink-0 text-primary-blue"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"

@@ -206,7 +206,7 @@ export default function ServiceHealthDashboard() {
                     {isLoading ? (
                         <LoadingSkeleton />
                     ) : (
-                        <main className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <main id="main-content" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {services.map((service) => (
                                 <div
                                     key={service.id}

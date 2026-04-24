@@ -14,7 +14,7 @@ export default function ITSTeamPageTemplate({ dataBag, widgetOrder }: ITSTeamPag
   return (
     <div className="bg-white min-h-screen">
       <Header />
-      <main>
+      <main id="main-content">
         <WidgetRenderer widgetOrder={order} data={dataBag} />
       </main>
       <Footer />

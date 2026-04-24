@@ -72,7 +72,7 @@ export default function Sections() {
                 <p className="text-text-secondary max-w-xl leading-relaxed mb-8 text-lg">Your central workspace for branch-wide directives, strategic roadmaps, and administrative toolsets designed for every team member.</p>
                 <div className="inline-flex items-center gap-4 px-8 py-4 bg-process-blue text-white font-bold rounded-xl group-hover:bg-dark-blue transition-all duration-300 shadow-lg">
                   <span>Enter Branch Overview</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                   </svg>
                 </div>
@@ -102,7 +102,7 @@ export default function Sections() {
                   <p className="text-base text-text-secondary leading-relaxed mb-6">{team.description}</p>
                   <div className="flex items-center text-process-blue text-[10px] font-black uppercase tracking-widest gap-2 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">
                     Enter Workspace
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                     </svg>
                   </div>

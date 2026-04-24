@@ -56,7 +56,7 @@ export default function ProjectHeader({ title, description, status, projectCode,
                 href={`/admin/projects/${projectId}`}
                 className="bg-white text-[#003962] px-6 py-3 rounded-md font-bold shadow-lg transition-all hover:bg-[#006493] hover:text-white flex items-center gap-2"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
                 Edit Details
               </a>
             </div>

@@ -12,7 +12,7 @@ export default function LeadershipPage() {
     <div className="bg-structural-light-gray min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
         {/* Hero Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-16 mb-20">
           <div className="max-w-3xl">

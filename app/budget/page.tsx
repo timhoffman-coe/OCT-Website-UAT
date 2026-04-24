@@ -52,7 +52,7 @@ export default function BudgetPage() {
         </p>
       </div>
 
-      <main className="container mx-auto max-w-7xl py-12 md:py-16 px-4 sm:px-6 lg:px-8">
+      <main id="main-content" className="container mx-auto max-w-7xl py-12 md:py-16 px-4 sm:px-6 lg:px-8">
         {/* Page Title */}
         <div className="mb-12">
           <h1 className="font-sans text-4xl md:text-5xl font-bold text-primary-blue mb-4 pb-3 border-b-2 border-[#F4F2F1]">

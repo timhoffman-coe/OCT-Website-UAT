@@ -25,6 +25,7 @@ const ALLOWED_DOCS: Record<string, string> = {
   'links-system': 'docs/deployment/links-system.md',
   'policies-system': 'docs/deployment/policies-system.md',
   'projects-system': 'docs/deployment/projects-system.md',
+  'versioning': 'docs/deployment/versioning.md',
 };
 
 export async function GET(

@@ -12,7 +12,7 @@ export default function RelatedStories({ posts }: RelatedStoriesProps) {
         <h3 className="font-sans text-2xl font-black text-dark-blue uppercase tracking-tight">Related Stories</h3>
         <Link href="/news" className="text-sm font-bold text-process-blue hover:underline flex items-center gap-1">
           View Newsroom
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
         </Link>

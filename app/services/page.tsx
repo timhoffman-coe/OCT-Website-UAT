@@ -45,7 +45,7 @@ export default function ServicesPage() {
     <div className="min-h-screen flex flex-col bg-[#f8f9fa] selection:bg-primary-blue/20">
       <Header />
 
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 relative">
+      <main id="main-content" className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 relative">
         {/* Ambient background decoration */}
         <div 
           className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1200px] h-[600px] pointer-events-none" 
@@ -57,7 +57,7 @@ export default function ServicesPage() {
           <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl font-extrabold text-text-dark tracking-tight mb-8">
             Our <span className="text-primary-blue relative whitespace-nowrap">
               Services
-              <svg className="absolute -bottom-2 left-0 w-full h-3 text-primary-blue/30" viewBox="0 0 100 10" preserveAspectRatio="none">
+              <svg aria-hidden="true" className="absolute -bottom-2 left-0 w-full h-3 text-primary-blue/30" viewBox="0 0 100 10" preserveAspectRatio="none">
                 <path d="M0 5 Q 50 10 100 5 Q 50 0 0 5" fill="currentColor" />
               </svg>
             </span>
@@ -106,7 +106,7 @@ export default function ServicesPage() {
             className="inline-flex items-center space-x-3 px-10 py-4 rounded-full bg-white border-2 border-gray-100 text-text-dark font-semibold text-lg hover:border-primary-blue hover:text-primary-blue hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 group"
           >
             <span>Contact Our Team</span>
-            <svg className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg aria-hidden="true" className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>

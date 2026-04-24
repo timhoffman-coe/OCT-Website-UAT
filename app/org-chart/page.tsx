@@ -36,7 +36,7 @@ export default async function OrgChartPage() {
       />
       <Header />
 
-      <main className="container mx-auto max-w-[1600px] py-4 px-4 sm:px-6 lg:px-8">
+      <main id="main-content" className="container mx-auto max-w-[1600px] py-4 px-4 sm:px-6 lg:px-8">
         {data ? (
           <OrgFlow
             data={data}

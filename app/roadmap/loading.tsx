@@ -5,7 +5,8 @@ export default function RoadmapLoading() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
-      <main className="animate-pulse">
+      <main id="main-content" className="animate-pulse">
+        <p className="sr-only" role="status">Loading content, please wait.</p>
         {/* Header */}
         <div className="bg-white shadow-sm p-6">
           <div className="max-w-7xl mx-auto flex items-center justify-between">

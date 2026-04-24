@@ -5,7 +5,8 @@ export default function ServiceHealthLoading() {
   return (
     <div className="bg-gray-50 min-h-screen">
       <Header />
-      <main className="animate-pulse p-4 md:p-8">
+      <main id="main-content" className="animate-pulse p-4 md:p-8">
+        <p className="sr-only" role="status">Loading content, please wait.</p>
         {/* Title */}
         <div className="max-w-7xl mx-auto mb-8">
           <div className="h-8 w-56 bg-gray-300 rounded mb-4" />

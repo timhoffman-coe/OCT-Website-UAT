@@ -26,7 +26,7 @@ export default function PortfolioCard({ icon, title, description, href, isPublis
           )}
         </div>
         <h3 className="font-sans text-xl font-semibold text-white mb-2">{title}</h3>
-        <p className="font-sans text-sm text-white/60 flex-grow mb-4">{description}</p>
+        <p className="font-sans text-sm text-white/80 flex-grow mb-4">{description}</p>
         {isPublished ? (
           <Link
             href={href}
@@ -35,7 +35,7 @@ export default function PortfolioCard({ icon, title, description, href, isPublis
             View Services &rarr;
           </Link>
         ) : (
-          <span className="font-sans text-white/40 font-semibold inline-flex items-center">
+          <span className="font-sans text-white/70 font-semibold inline-flex items-center">
             Coming Soon
           </span>
         )}

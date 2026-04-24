@@ -140,7 +140,9 @@ export default function NewsPostEditor({ mode, post }: NewsPostEditorProps) {
         <div className="lg:col-span-8 space-y-5">
           {/* Title */}
           <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <label htmlFor="news-title" className="sr-only">Article title</label>
             <input
+              id="news-title"
               type="text"
               value={form.title}
               onChange={e => updateField('title', e.target.value)}
@@ -148,7 +150,9 @@ export default function NewsPostEditor({ mode, post }: NewsPostEditorProps) {
               className="w-full text-2xl font-sans font-bold text-gray-900 placeholder:text-gray-300 border-0 p-0 focus:ring-0 outline-none"
             />
             <div className="mt-3">
+              <label htmlFor="news-description" className="sr-only">Article summary</label>
               <textarea
+                id="news-description"
                 value={form.description}
                 onChange={e => updateField('description', e.target.value)}
                 rows={2}
@@ -292,6 +296,9 @@ export default function NewsPostEditor({ mode, post }: NewsPostEditorProps) {
               <div className="flex items-center gap-3 pt-1">
                 <button
                   type="button"
+                  role="switch"
+                  aria-checked={form.featured}
+                  aria-label="Featured post"
                   onClick={() => updateField('featured', !form.featured)}
                   className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${
                     form.featured ? 'bg-[#005087]' : 'bg-gray-200'

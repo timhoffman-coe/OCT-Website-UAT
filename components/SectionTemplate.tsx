@@ -33,7 +33,7 @@ export default function SectionTemplate({
     <div className="bg-white min-h-screen">
       <Header />
 
-      <main className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <main id="main-content" className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         {/* Page Title Section */}
         <div className="mb-12">
           <h1 className="font-sans text-4xl md:text-5xl font-bold text-primary-blue mb-4 pb-3 border-b-2 border-structural-gray-blue">

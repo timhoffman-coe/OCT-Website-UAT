@@ -30,7 +30,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
     <div className="bg-gray-50 min-h-screen">
       <Header />
 
-      <main className="max-w-7xl mx-auto pt-12 pb-20 px-4 sm:px-6 lg:px-8">
+      <main id="main-content" className="max-w-7xl mx-auto pt-12 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="mb-10">
           <h1 className="text-4xl font-black text-[#003962] tracking-tight mb-2">Projects</h1>

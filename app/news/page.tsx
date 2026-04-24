@@ -20,7 +20,7 @@ export default function NewsPage() {
     <div className="bg-white min-h-screen">
       <Header />
 
-      <main className="max-w-7xl mx-auto pt-12 pb-20 px-4 sm:px-6 lg:px-8">
+      <main id="main-content" className="max-w-7xl mx-auto pt-12 pb-20 px-4 sm:px-6 lg:px-8">
         {featuredPost && <FeaturedStory post={featuredPost} />}
         <NewsGrid posts={nonFeaturedPosts} categories={categories} />
       </main>

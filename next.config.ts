@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 import { InjectManifest } from "workbox-webpack-plugin";
+import { readFileSync } from 'fs';
+
+const appVersion = readFileSync('./VERSION', 'utf-8').trim();
 
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_APP_VERSION: appVersion,
+  },
   allowedDevOrigins: ['10.10.10.45'],
   output: 'standalone',
   experimental: {

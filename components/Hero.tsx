@@ -16,14 +16,14 @@ export default function Hero() {
       </div>
 
       <div className="relative max-w-4xl mx-auto text-center">
-        <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white/70 text-[11px] font-bold tracking-widest uppercase mb-6">
+        <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 text-white/85 text-[11px] font-bold tracking-widest uppercase mb-6">
           Branch Portal Home
         </span>
         <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-8 leading-[1.1]">
           Powering the Modern<br />
           <span className="text-process-blue">Open City.</span>
         </h1>
-        <p className="text-lg text-white/50 font-medium max-w-2xl mx-auto">
+        <p className="text-lg text-white/80 font-medium max-w-2xl mx-auto">
           Access the resources, tools, and technical expertise required to build a smarter, more connected Edmonton.
         </p>
       </div>

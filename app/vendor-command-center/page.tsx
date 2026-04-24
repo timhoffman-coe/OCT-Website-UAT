@@ -128,7 +128,7 @@ export default function VendorCommandCenter() {
         return (
             <div className="min-h-screen bg-slate-50">
                 <Header />
-                <main className="animate-pulse p-4 md:p-8">
+                <main id="main-content" className="animate-pulse p-4 md:p-8">
                     <div className="max-w-7xl mx-auto mb-8">
                         <div className="h-8 w-64 bg-gray-300 rounded mb-4" />
                     </div>
@@ -207,7 +207,7 @@ export default function VendorCommandCenter() {
             </div>
 
             {/* Main Content */}
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+            <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
 
                 {/* Filters */}
                 <FilterBar filters={filters} setFilters={setFilters} />

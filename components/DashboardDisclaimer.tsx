@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface DashboardDisclaimerProps {
   dashboardName: string;
@@ -14,6 +15,8 @@ export default function DashboardDisclaimer({
   message,
 }: DashboardDisclaimerProps) {
   const [isOpen, setIsOpen] = useState(true);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, isOpen);
 
   // Handle ESC key and body scroll
   useEffect(() => {
@@ -46,6 +49,10 @@ export default function DashboardDisclaimer({
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dashboard-disclaimer-title"
           className="relative bg-white rounded-lg shadow-xl max-w-md w-full p-8"
           onClick={(e) => e.stopPropagation()}
         >
@@ -60,6 +67,7 @@ export default function DashboardDisclaimer({
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -79,6 +87,7 @@ export default function DashboardDisclaimer({
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -89,7 +98,7 @@ export default function DashboardDisclaimer({
               </svg>
             </div>
 
-            <h2 className="font-sans text-2xl font-bold text-gray-900 mb-4">
+            <h2 id="dashboard-disclaimer-title" className="font-sans text-2xl font-bold text-gray-900 mb-4">
               {title}
             </h2>
 

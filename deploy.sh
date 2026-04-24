@@ -32,7 +32,8 @@ if [ -n "$(git status --porcelain)" ]; then
 fi
 
 GIT_SHA=$(git rev-parse --short HEAD)
-echo "Deploying commit: ${GIT_SHA}"
+SEMVER=$(cat VERSION | tr -d '[:space:]')
+echo "Deploying commit: ${GIT_SHA} (v${SEMVER})"
 
 #───────────────────────────────────────────────────────
 # Step 1: Quality gates (lint, typecheck, test, build)
@@ -60,6 +61,7 @@ echo "=== Building app image ==="
 docker build \
   -t "${IMAGE}:latest" \
   -t "${IMAGE}:${GIT_SHA}" \
+  -t "${IMAGE}:v${SEMVER}" \
   .
 
 #───────────────────────────────────────────────────────
@@ -69,10 +71,11 @@ echo ""
 echo "=== Pushing images to ghcr.io ==="
 docker push "${IMAGE}:latest"
 docker push "${IMAGE}:${GIT_SHA}"
+docker push "${IMAGE}:v${SEMVER}"
 
 echo ""
 echo "=== Build complete ==="
-echo "Image: ${IMAGE}:latest (${GIT_SHA})"
+echo "Image: ${IMAGE}:latest (${GIT_SHA}, v${SEMVER})"
 echo ""
 echo "To deploy, SSH into the prod server and run:"
 echo "  cd ~/apps/nextjs-site"

@@ -27,7 +27,7 @@ export default function SubTeamPageTemplate({ dataBag, widgetOrder }: SubTeamPag
   return (
     <div className="bg-white min-h-screen">
       <Header />
-      <main>
+      <main id="main-content">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <WidgetRenderer widgetOrder={order} data={dataBag} />
         </div>

@@ -58,7 +58,7 @@ export default function PortfolioSubpageTemplate({
     <div className="bg-white min-h-screen">
       <Header />
 
-      <main>
+      <main id="main-content">
         <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           {/* Hero Block */}
           <section className="bg-structural-light-gray rounded-lg p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 mb-8">

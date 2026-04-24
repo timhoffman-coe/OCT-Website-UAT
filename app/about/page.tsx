@@ -13,7 +13,7 @@ export default function AboutPage() {
     <div className="bg-white min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
         {/* Hero Section */}
         <header className="px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center flex flex-col items-center">
           <div className="max-w-4xl">
@@ -43,7 +43,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="w-full md:w-3/5">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-12 h-12 text-process-blue mb-6">
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-12 h-12 text-process-blue mb-6">
                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
               </svg>
               <h2 className="text-3xl font-bold text-dark-blue mb-6">A Message from our Branch Manager</h2>
@@ -83,7 +83,7 @@ export default function AboutPage() {
               </p>
               <div className="space-y-4">
                 <div className="flex items-start gap-4 p-6 rounded-xl bg-white/5 border border-white/10">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-process-blue flex-shrink-0">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-process-blue flex-shrink-0">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                   </svg>
                   <div>
@@ -92,7 +92,7 @@ export default function AboutPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-4 p-6 rounded-xl bg-white/5 border border-white/10">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-process-blue flex-shrink-0">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-process-blue flex-shrink-0">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
                   </svg>
                   <div>
@@ -135,7 +135,7 @@ export default function AboutPage() {
               <div className="bg-white p-12 rounded-3xl shadow-sm">
                 <div className="flex items-center gap-4 mb-10">
                   <div className="w-12 h-12 bg-green-100 text-edmonton-success rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
                     </svg>
                   </div>
@@ -143,7 +143,7 @@ export default function AboutPage() {
                 </div>
                 <ul className="space-y-6">
                   <li className="flex gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-process-blue flex-shrink-0 mt-1">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-process-blue flex-shrink-0 mt-1">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     <div>
@@ -152,7 +152,7 @@ export default function AboutPage() {
                     </div>
                   </li>
                   <li className="flex gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-process-blue flex-shrink-0 mt-1">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-process-blue flex-shrink-0 mt-1">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                     <div>
@@ -167,7 +167,7 @@ export default function AboutPage() {
               <div className="bg-white p-12 rounded-3xl shadow-sm">
                 <div className="flex items-center gap-4 mb-10">
                   <div className="w-12 h-12 bg-red-100 text-edmonton-error rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                     </svg>
                   </div>
@@ -175,7 +175,7 @@ export default function AboutPage() {
                 </div>
                 <ul className="space-y-6">
                   <li className="flex gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-edmonton-error flex-shrink-0 mt-1">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-edmonton-error flex-shrink-0 mt-1">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
                     </svg>
                     <div>
@@ -184,7 +184,7 @@ export default function AboutPage() {
                     </div>
                   </li>
                   <li className="flex gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-edmonton-error flex-shrink-0 mt-1">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-edmonton-error flex-shrink-0 mt-1">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
                     </svg>
                     <div>
@@ -193,7 +193,7 @@ export default function AboutPage() {
                     </div>
                   </li>
                   <li className="flex gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-edmonton-error flex-shrink-0 mt-1">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-edmonton-error flex-shrink-0 mt-1">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
                     </svg>
                     <div>

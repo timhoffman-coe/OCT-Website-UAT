@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  packages: write
+
+jobs:
+  commitlint:
+    name: Lint Commit Messages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Validate commits
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha || github.event.before }} --to ${{ github.event.pull_request.head.sha || github.sha }} --verbose
+
+  quality:
+    name: Quality Gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  release:
+    name: Semantic Release
+    needs: [commitlint, quality]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    outputs:
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run semantic-release
+        id: semantic
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+  docker:
+    name: Build & Push Docker Image
+    needs: release
+    if: needs.release.outputs.new_release_published == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/jmcgilliscoe/oct-website:latest
+            ghcr.io/jmcgilliscoe/oct-website:v${{ needs.release.outputs.new_release_version }}
+            ghcr.io/jmcgilliscoe/oct-website:${{ github.sha }}

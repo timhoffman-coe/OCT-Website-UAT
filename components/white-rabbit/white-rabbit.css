@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+/* Scoped CRT Terminal Styles */
+.white-rabbit-root {
+  --color-crt-bg: #0a0a0a;
+  --color-crt-green: #33ff33;
+  --color-crt-green-dim: #1a8c1a;
+  --color-crt-green-dark: #1a3a1a;
+  --color-crt-amber: #ffaa00;
+  --color-crt-amber-dim: #8c5e00;
+  --color-crt-alert: #ff3333;
+
+  font-family: "IBM Plex Mono", "Courier New", Courier, monospace;
+  background-color: var(--color-crt-bg);
+  color: var(--color-crt-green);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+}
+
+/* CRT Screen Container */
+.white-rabbit-root .crt-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  max-height: 600px;
+  background-color: var(--color-crt-bg);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(51, 255, 51, 0.2), inset 0 0 40px rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scanlines */
+.white-rabbit-root .crt-container::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 50;
+  background-size: 100% 4px, 6px 100%;
+  pointer-events: none;
+}
+
+/* Screen Flicker */
+.white-rabbit-root .crt-container::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(51, 255, 51, 0.02);
+  opacity: 0;
+  z-index: 50;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.02; }
+  50% { opacity: 0.05; }
+  100% { opacity: 0.02; }
+}
+
+/* Text Glow */
+.white-rabbit-root .crt-text {
+  text-shadow: 0 0 5px rgba(51, 255, 51, 0.5);
+}
+
+.white-rabbit-root .crt-text-dim {
+  color: var(--color-crt-green-dim);
+  text-shadow: none;
+}
+
+.white-rabbit-root .crt-text-alert {
+  color: var(--color-crt-alert);
+  text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
+}
+
+/* Amber Mode Overrides */
+.white-rabbit-root.amber-mode {
+  color: var(--color-crt-amber);
+}
+.white-rabbit-root.amber-mode .crt-container {
+  box-shadow: 0 0 20px rgba(255, 170, 0, 0.2), inset 0 0 40px rgba(0, 0, 0, 0.8);
+}
+.white-rabbit-root.amber-mode .crt-container::after {
+  background: rgba(255, 170, 0, 0.02);
+}
+.white-rabbit-root.amber-mode .crt-text {
+  text-shadow: 0 0 5px rgba(255, 170, 0, 0.5);
+}
+.white-rabbit-root.amber-mode .crt-text-dim {
+  color: var(--color-crt-amber-dim);
+}
+
+/* Blinking Cursor */
+.white-rabbit-root .cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Selection */
+.white-rabbit-root ::selection {
+  background: var(--color-crt-green-dark);
+  color: var(--color-crt-green);
+}
+.white-rabbit-root.amber-mode ::selection {
+  background: #3a2600;
+  color: var(--color-crt-amber);
+}
+
+/* Utility classes */
+.white-rabbit-root .menu-item {
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.white-rabbit-root .menu-item:hover {
+  background-color: var(--color-crt-green-dark);
+}
+.white-rabbit-root.amber-mode .menu-item:hover {
+  background-color: #3a2600;
+}
+.white-rabbit-root .menu-item.selected {
+  background-color: var(--color-crt-green);
+  color: var(--color-crt-bg);
+}
+.white-rabbit-root.amber-mode .menu-item.selected {
+  background-color: var(--color-crt-amber);
+  color: var(--color-crt-bg);
+}
+
+/* Typewriter effect container */
+.white-rabbit-root .typewriter {
+  white-space: pre-wrap;
+}
+
+/* Hide scrollbars for terminal immersion */
+.white-rabbit-root ::-webkit-scrollbar {
+  display: none;
+}
+.white-rabbit-root * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}

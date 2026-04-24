@@ -70,7 +70,7 @@ const fallback = {
     {
       label: 'Submit a Ticket',
       description: 'Create a new support request.',
-      href: '#',
+      href: '/get-help',
     },
     {
       label: 'Knowledge Base',

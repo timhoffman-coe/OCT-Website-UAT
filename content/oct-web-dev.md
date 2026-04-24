@@ -43,6 +43,11 @@
 - [x] NIC landing page with sub-page stubs
 - [x] How OCT Works interactive architecture diagram (React Flow)
 - [x] Dynamic team/sub-team slug routes
+- [x] Get Help & Support page (multi-step support case wizard with IAP auth)
+- [x] Technology Intake page (multi-step intake wizard with department/branch selection)
+- [x] OCT Site Changes page (version timeline with categorized changelog entries)
+- [x] Slide-in navigation panels (replaced cascading dropdown menus)
+- [x] Redesigned footer with multi-section navigation and branding
 
 ### Dashboards
 - [x] CIO Executive Dashboard (sample data)
@@ -145,47 +150,9 @@
 
 ### Fix Placeholder Links
 
-#### /links page — LinksAccordion (40 links)
-
-**Incident & Problem Management:**
-- [ ] Helix (Remedy) SmartIT
-- [ ] Helix (Remedy) DWP
-- [ ] Incident Management Process
-- [ ] WO from Incident Ticket
-- [ ] Incident Management Flow Charts
-- [ ] Problem Mgmt Process Guide
-- [ ] Root Cause Analysis (RCA)
-
-**Change Management:**
-- [ ] OCT Change Management
-- [ ] OCT Schedule Outages
-- [ ] Severity 1 Procedures
-- [ ] OCT Change Management Definitions
-- [ ] Change Approval - Form
-- [ ] Work Order vs Change Ticket
-- [ ] Remedy Definitions
-- [ ] Change Ticket Cheat Sheet
-
-**Resource Management:**
-- [ ] Taleo
-- [ ] Recruitment Toolkit
-- [ ] Recruitment Approval Process User Guide
-- [ ] Recruitment Approval Form
-- [ ] SAP Time Entry Request
-- [ ] New Account Request
-- [ ] Phone Request
-- [ ] Offboarding Link
-- [ ] Supervisor Offboarding Checklist
-
-**OCT Team Sites & Resources:**
-- [ ] OCT Service Catalog
-- [ ] Technology Infrastructure Operations
-- [ ] Service Desk
-- [ ] Service Management Office
-- [ ] Enterprise Commons Project
-- [ ] OCT Employee Links
-- [ ] Technology PMO
-- [ ] Open City
+#### /links page (CMS-managed)
+- [ ] Delegate Links editor access to content owner
+- [ ] Delegate to verify all links are accurate and up to date
 
 #### /project-management-office page (24 links)
 
@@ -226,15 +193,15 @@
 - [ ] Documentation
 
 #### /contact page (2 links)
-- [ ] "Start Technology Intake →" button
-- [ ] "Open Support Ticket →" button
+- [x] "Start Technology Intake →" button
+- [x] "Open Support Ticket →" button
 
 #### Header mobile nav (5 links)
-- [ ] Service & Infrastructure Health
-- [ ] People Management
-- [ ] Asset Management
-- [ ] Incident & Service Management
-- [ ] Leadership
+- [x] Service & Infrastructure Health
+- [x] People Management
+- [x] Asset Management
+- [x] Incident & Service Management
+- [x] Leadership
 
 #### /service-health/dashboard (1 link)
 - [ ] "View Incident Log" link
@@ -245,55 +212,43 @@
 - [ ] Carrier Services
 - [ ] Team Directory
 
-#### Portfolio subpages & template (11 links)
+#### Portfolio subpages & template
 
 **PortfolioSubpageTemplate (shared):**
-- [ ] "View Incident History" link
+- [ ] Delegate access to content owner
+- [ ] Delegate to validate links
 
 **Service Delivery — Digital Workplace Catalog:**
-- [ ] Catalog Modernization (initiative)
-- [ ] Automated Fulfillment (initiative)
-- [ ] Digital Workplace Portal (quick link)
-- [ ] Service Request Status (quick link)
-- [ ] Catalog Feedback (quick link)
+- [ ] Delegate access to content owner
+- [ ] Delegate to validate links
 
 **Partner Experience — Service Desk:**
-- [ ] AI-Powered Support Chat (initiative)
-- [ ] Self-Service Portal Enhancement (initiative)
-- [ ] Submit a Ticket (quick link)
-- [ ] Knowledge Base (quick link)
-- [ ] Track My Tickets (quick link)
+- [ ] Delegate access to content owner
+- [ ] Delegate to validate links
 
 **Data Technology — Network Services:**
-- [ ] Next-Gen Firewall Upgrade (initiative)
-- [ ] Fibre Expansion Phase 4 (initiative)
-- [ ] Network Diagrams (quick link)
-- [ ] SolarWinds Dashboard (quick link)
-- [ ] IP Address Management (quick link)
+- [ ] Delegate access to content owner
+- [ ] Delegate to validate links
 
-### Service Delivery Content — Replace Placeholder Team Members
+### Service Delivery Content (CMS-managed)
 
-All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
+#### Service Delivery main page
+- [ ] Delegate access to content owner
+- [ ] Delegate to update any widgets and links
 
-#### Service Delivery main page (fallbackDataBag)
-- [ ] Manager, Service Delivery and Analytics
-- [ ] Team Lead, Service Management Office
-- [ ] Team Lead, Monitoring & Analytics
+#### Service Management Office
+- [ ] Delegate access to content owner
+- [ ] Delegate to update any widgets and links
 
-#### Service Management Office (contacts array)
-- [ ] Manager, Service Management Office
-- [ ] ITSM Process Lead
+#### Monitoring & Analytics
+- [ ] Delegate access to content owner
+- [ ] Delegate to update any widgets and links
 
-#### Monitoring & Analytics (contacts array)
-- [ ] Manager, Monitoring & Analytics
-- [ ] Senior Monitoring Engineer
-
-#### Digital Workplace Catalog (contacts array)
-- [ ] Manager, Digital Workplace
-- [ ] Catalog Administrator
+#### Digital Workplace Catalog
+- [ ] Delegate access to content owner
+- [ ] Delegate to update any widgets and links
 
 ### Main Page Enhancements
-- [ ] Add "Learn more about OCT" section to main page
 - [ ] Add Key Initiatives Spotlight section to main page
 
 ### Org Chart Integration
@@ -376,6 +331,13 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 - [x] Add unit/integration test step
 - [x] Add build verification step
 - [x] Configure deployment pipeline
+- [x] Add semantic versioning with semantic-release
+- [x] Add commitlint + husky for conventional commit enforcement
+- [x] CI-level commitlint validation on pushes and pull requests
+- [x] Automated GitHub Actions release workflow
+- [x] Docker images tagged with semver
+- [x] VERSION file as single source of truth for app version
+- [x] Version displayed in site footer
 
 ### Production Authentication
 - [x] Configure Google Cloud IAP for production
@@ -392,6 +354,7 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 - [x] Development setup guide
 - [x] Deployment guide
 - [x] CMS admin user guide
+- [x] Versioning and release process documentation
 
 ### PWA / Service Worker
 - [x] Validate service worker configuration (migrated from Serwist to Google Workbox)
@@ -583,10 +546,7 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 
 ### ESLint Configuration
 - [x] Added no-console rule
-- [ ] Add eslint-plugin-security
-- [ ] Add eslint-plugin-import for sorting
-- [ ] Add eslint-plugin-jsx-a11y
-- [ ] Add Prettier integration
+- [x] Add eslint-plugin-security
 
 ### API Design Standards
 - [ ] Add API versioning (/api/v1/...)
@@ -606,11 +566,6 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 - [x] Create seed data strategy
 - [x] Add migration rollback procedures
 
-### Incident Response Plan
-- [ ] Document security incident response procedures
-- [ ] Define escalation paths
-- [ ] Create runbook for common operational issues
-- [ ] Set up alerting for critical failures
 
 ## Polish & Accessibility
 
@@ -621,6 +576,9 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 - [ ] Remove dev bypass auth mode for production builds
 
 ### UI/UX Audit
+- [ ] Wire up Get Help form submit to ServiceNow API (currently a stub, shows "integration coming soon" warning)
+- [ ] Wire up Technology Intake form submit to intake API (currently a stub, shows "integration coming soon" warning)
+- [ ] Remove "integration coming soon" warnings from Get Help and Technology Intake confirmation pages after APIs are connected
 - [ ] Fix all disabled/non-functional buttons and form elements
 - [ ] Audit TransactionForm disabled input field
 - [ ] Enable commented-out roadmap features via feature flags
@@ -632,14 +590,14 @@ All entries below currently use "First Last" / "firstname.lastname@edmonton.ca".
 - [ ] Test search results accuracy and relevance
 
 ### Accessibility (WCAG 2.1 AA)
-- [ ] Screen reader compatibility audit
-- [ ] Keyboard navigation testing
-- [ ] Color contrast verification (4.5:1 minimum)
-- [ ] ARIA labels on all interactive elements
-- [ ] Focus management for modals and dynamic content
-- [ ] Alt text on all images
-- [ ] Proper heading hierarchy
-- [ ] Form labels associated with inputs
+- [x] Screen reader compatibility audit
+- [x] Keyboard navigation testing
+- [x] Color contrast verification (4.5:1 minimum)
+- [x] ARIA labels on all interactive elements
+- [x] Focus management for modals and dynamic content
+- [x] Alt text on all images
+- [x] Proper heading hierarchy
+- [x] Form labels associated with inputs
 
 ### Mobile Responsiveness
 - [ ] Test all pages at 320px, 375px, 768px, 1024px breakpoints

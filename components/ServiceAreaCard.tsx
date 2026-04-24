@@ -47,7 +47,7 @@ export default function ServiceAreaCard({
       </h3>
 
       {/* Short Description */}
-      <p className="font-sans text-sm text-white/60 mb-4 line-clamp-3">
+      <p className="font-sans text-sm text-white/80 mb-4 line-clamp-3">
         {shortDescription}
       </p>
 
@@ -56,6 +56,7 @@ export default function ServiceAreaCard({
         <div className="flex items-center text-process-blue font-sans text-sm font-semibold">
           <span>Learn More</span>
           <svg
+            aria-hidden="true"
             className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
             fill="none"
             viewBox="0 0 24 24"
@@ -70,7 +71,7 @@ export default function ServiceAreaCard({
           </svg>
         </div>
       ) : (
-        <span className="font-sans text-white/40 font-semibold text-sm">
+        <span className="font-sans text-white/70 font-semibold text-sm">
           Coming Soon
         </span>
       )}

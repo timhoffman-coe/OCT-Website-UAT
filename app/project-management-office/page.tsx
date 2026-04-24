@@ -19,14 +19,14 @@ import {
 
 // Icon components for custom icons that match the screenshot
 const TrendIcon = () => (
-  <svg className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg aria-hidden="true" className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M3 17l6-6 4 4 8-8" />
     <path d="M17 7h4v4" />
   </svg>
 );
 
 const ProjectsIcon = () => (
-  <svg className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg aria-hidden="true" className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <rect x="3" y="3" width="18" height="18" rx="2" />
     <path d="M3 9h18" />
     <path d="M9 21V9" />
@@ -34,7 +34,7 @@ const ProjectsIcon = () => (
 );
 
 const RiskIcon = () => (
-  <svg className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg aria-hidden="true" className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
     <path d="M14 2v6h6" />
     <path d="M12 18v-6" />
@@ -43,7 +43,7 @@ const RiskIcon = () => (
 );
 
 const EngagementsIcon = () => (
-  <svg className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg aria-hidden="true" className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <line x1="8" y1="6" x2="21" y2="6" />
     <line x1="8" y1="12" x2="21" y2="12" />
     <line x1="8" y1="18" x2="21" y2="18" />
@@ -54,7 +54,7 @@ const EngagementsIcon = () => (
 );
 
 const TimeMachineIcon = () => (
-  <svg className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg aria-hidden="true" className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="12" r="10" />
     <path d="M12 6v6l4 2" />
     <path d="M2 12h2" />
@@ -62,7 +62,7 @@ const TimeMachineIcon = () => (
 );
 
 const ArchiveIcon = () => (
-  <svg className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+  <svg aria-hidden="true" className="w-8 h-8 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <rect x="3" y="3" width="18" height="4" />
     <path d="M3 7v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7" />
     <path d="M10 12h4" />
@@ -125,7 +125,7 @@ export default function ProjectManagementOfficePage() {
       <Header />
 
       {/* Main Content */}
-      <main>
+      <main id="main-content">
         {/* Hero Section */}
         <div className="bg-white py-12">
           <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -298,7 +298,7 @@ export default function ProjectManagementOfficePage() {
               {
                 icon: (
                   <div className="w-8 h-8 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" className="w-7 h-7" fill="#217346">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" className="w-7 h-7" fill="#217346">
                       <path d="M21.17 3H7.83A1.83 1.83 0 0 0 6 4.83v14.34A1.83 1.83 0 0 0 7.83 21h13.34A1.83 1.83 0 0 0 23 19.17V4.83A1.83 1.83 0 0 0 21.17 3zM12 17l-3.5-3.5 1.41-1.41L12 14.17l4.59-4.58L18 11l-6 6z"/>
                       <path d="M1 7v13h5v-2H3V9h3V7H1z" opacity="0.3"/>
                     </svg>
@@ -325,7 +325,7 @@ export default function ProjectManagementOfficePage() {
               {
                 icon: (
                   <div className="w-8 h-8 flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" className="w-7 h-7" fill="#0078D4">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" className="w-7 h-7" fill="#0078D4">
                       <path d="M22.2 18.2L19.4 9c-.4-1.4-1.8-2.3-3.2-2.3H12V3h-2v3.7H7.8c-1.4 0-2.7.9-3.2 2.3L1.8 18.2c-.3 1.1.5 2.1 1.6 2.1h17.2c1.1 0 1.9-1 1.6-2.1zM12 16c-1.7 0-3-1.3-3-3s1.3-3 3-3 3 1.3 3 3-1.3 3-3 3z"/>
                     </svg>
                   </div>

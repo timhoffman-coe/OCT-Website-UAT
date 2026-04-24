@@ -52,46 +52,45 @@ export default function AboutTabs() {
   return (
     <>
       {/* Tab Navigation */}
-      <div className="flex flex-wrap justify-center border-b border-structural-gray-blue mb-12">
-        <button
-          onClick={() => setActiveTab('actions')}
-          className={`px-8 py-4 text-sm font-bold uppercase tracking-widest border-b-2 transition-all ${
-            activeTab === 'actions'
-              ? 'border-process-blue text-dark-blue bg-process-blue/5'
-              : 'border-transparent text-text-secondary hover:text-dark-blue'
-          }`}
-        >
-          Key Actions
-        </button>
-        <button
-          onClick={() => setActiveTab('projects')}
-          className={`px-8 py-4 text-sm font-bold uppercase tracking-widest border-b-2 transition-all ${
-            activeTab === 'projects'
-              ? 'border-process-blue text-dark-blue bg-process-blue/5'
-              : 'border-transparent text-text-secondary hover:text-dark-blue'
-          }`}
-        >
-          Capital Projects
-        </button>
-        <button
-          onClick={() => setActiveTab('performance')}
-          className={`px-8 py-4 text-sm font-bold uppercase tracking-widest border-b-2 transition-all ${
-            activeTab === 'performance'
-              ? 'border-process-blue text-dark-blue bg-process-blue/5'
-              : 'border-transparent text-text-secondary hover:text-dark-blue'
-          }`}
-        >
-          Performance
-        </button>
+      <div className="flex flex-wrap justify-center border-b border-structural-gray-blue mb-12" role="tablist" aria-label="Branch information">
+        {(['actions', 'projects', 'performance'] as const).map((tab) => {
+          const labels = { actions: 'Key Actions', projects: 'Capital Projects', performance: 'Performance' };
+          return (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              role="tab"
+              id={`tab-${tab}`}
+              aria-selected={activeTab === tab}
+              aria-controls={`tabpanel-${tab}`}
+              tabIndex={activeTab === tab ? 0 : -1}
+              onKeyDown={(e) => {
+                const tabs = ['actions', 'projects', 'performance'] as const;
+                const idx = tabs.indexOf(tab);
+                if (e.key === 'ArrowRight') { e.preventDefault(); const next = tabs[(idx + 1) % tabs.length]; setActiveTab(next); (e.currentTarget.parentElement?.querySelector(`#tab-${next}`) as HTMLElement)?.focus(); }
+                if (e.key === 'ArrowLeft') { e.preventDefault(); const prev = tabs[(idx - 1 + tabs.length) % tabs.length]; setActiveTab(prev); (e.currentTarget.parentElement?.querySelector(`#tab-${prev}`) as HTMLElement)?.focus(); }
+                if (e.key === 'Home') { e.preventDefault(); setActiveTab('actions'); (e.currentTarget.parentElement?.querySelector('#tab-actions') as HTMLElement)?.focus(); }
+                if (e.key === 'End') { e.preventDefault(); setActiveTab('performance'); (e.currentTarget.parentElement?.querySelector('#tab-performance') as HTMLElement)?.focus(); }
+              }}
+              className={`px-8 py-4 text-sm font-bold uppercase tracking-widest border-b-2 transition-all ${
+                activeTab === tab
+                  ? 'border-process-blue text-dark-blue bg-process-blue/5'
+                  : 'border-transparent text-text-secondary hover:text-dark-blue'
+              }`}
+            >
+              {labels[tab]}
+            </button>
+          );
+        })}
       </div>
 
       {/* Key Actions Tab */}
       {activeTab === 'actions' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div id="tabpanel-actions" role="tabpanel" aria-labelledby="tab-actions" className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {keyActions.map((action, idx) => (
             <div key={idx} className="bg-structural-light-gray rounded-3xl p-10 border border-structural-gray-blue">
               <div className="w-14 h-14 bg-dark-blue rounded-xl flex items-center justify-center mb-8">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 text-white">
+                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 text-white">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
                 </svg>
               </div>
@@ -104,7 +103,7 @@ export default function AboutTabs() {
 
       {/* Capital Projects Tab */}
       {activeTab === 'projects' && (
-        <div>
+        <div id="tabpanel-projects" role="tabpanel" aria-labelledby="tab-projects">
           <p className="text-text-secondary mb-8 text-lg">
             The City&apos;s capital investments align with the City&apos;s strategic direction. The full list can be found in the{' '}
             <a
@@ -161,7 +160,7 @@ export default function AboutTabs() {
 
       {/* Performance Tab */}
       {activeTab === 'performance' && (
-        <div>
+        <div id="tabpanel-performance" role="tabpanel" aria-labelledby="tab-performance">
           {/* Stat Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-16">
             <div className="bg-white p-8 rounded-2xl text-center border-b-4 border-dark-blue shadow-sm">

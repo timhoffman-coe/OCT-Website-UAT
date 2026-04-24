@@ -5,7 +5,8 @@ export default function CIODashboardLoading() {
   return (
     <div className="bg-gray-100 min-h-screen">
       <Header />
-      <main className="animate-pulse">
+      <main id="main-content" className="animate-pulse">
+        <p className="sr-only" role="status">Loading content, please wait.</p>
         {/* Banner */}
         <div className="bg-gray-300 h-12" />
 

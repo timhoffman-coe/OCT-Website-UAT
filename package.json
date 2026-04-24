@@ -1,6 +1,6 @@
 {
   "name": "coe-website",
-  "version": "0.1.0",
+  "version": "1.10.0",
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
@@ -16,7 +16,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "prepare": "husky"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -66,7 +67,12 @@
     "seed": "npx ts-node --compiler-options {\"module\":\"commonjs\"} prisma/seed.ts"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
     "@playwright/test": "^1.58.2",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -80,8 +86,11 @@
     "@vitejs/plugin-react": "^6.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
+    "eslint-plugin-security": "^4.0.0",
+    "husky": "^9.1.7",
     "jsdom": "^28.1.0",
     "prisma": "^7.4.0",
+    "semantic-release": "^24.2.9",
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^5",

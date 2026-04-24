@@ -13,7 +13,7 @@ export default function ContactPage() {
     <div className="bg-white min-h-screen">
       <Header />
 
-      <main className="max-w-7xl mx-auto py-12 md:py-16 px-4 sm:px-6 lg:px-8">
+      <main id="main-content" className="max-w-7xl mx-auto py-12 md:py-16 px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <header className="mb-16">
           <span className="text-[0.6875rem] uppercase tracking-widest font-bold text-process-blue mb-4 block">
@@ -38,7 +38,7 @@ export default function ContactPage() {
               <div className="group relative overflow-hidden p-8 rounded-xl bg-dark-blue text-white transition-all hover:-translate-y-1">
                 <div className="mb-8">
                   {/* Rocket icon */}
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-white/70">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-white/70">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
                   </svg>
                 </div>
@@ -46,20 +46,20 @@ export default function ContactPage() {
                 <p className="text-white/70 text-sm leading-relaxed mb-8">
                   Ready to launch a new project? Submit your requirements here for architectural review and resource allocation.
                 </p>
-                <a
-                  href="#"
+                <Link
+                  href="/technology-intake"
                   className="block w-full py-4 bg-primary-blue text-white font-bold rounded-md text-center hover:bg-process-blue transition-colors"
                 >
                   Submit Requirements
                   <span className="ml-2">→</span>
-                </a>
+                </Link>
               </div>
 
               {/* Open Support Ticket */}
               <div className="group relative overflow-hidden p-8 rounded-xl bg-white border border-structural-gray-blue transition-all hover:-translate-y-1">
                 <div className="mb-8">
                   {/* Ticket icon */}
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-process-blue">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-process-blue">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z" />
                   </svg>
                 </div>
@@ -67,13 +67,13 @@ export default function ContactPage() {
                 <p className="text-text-secondary text-sm leading-relaxed mb-8">
                   Need technical assistance? Our support team is here to help with application errors, hardware, and access issues.
                 </p>
-                <a
-                  href="#"
+                <Link
+                  href="/get-help"
                   className="block w-full py-4 bg-process-blue text-white font-bold rounded-md text-center hover:bg-primary-blue transition-colors"
                 >
                   Get Assistance
                   <span className="ml-2">→</span>
-                </a>
+                </Link>
               </div>
             </section>
 
@@ -113,7 +113,7 @@ export default function ContactPage() {
                     href="mailto:daryl.croft@edmonton.ca"
                     className="px-5 py-2.5 bg-primary-blue text-white rounded-md flex items-center gap-2 hover:bg-dark-blue transition-all font-semibold text-sm justify-center"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                     </svg>
                     Email Branch Manager
@@ -206,7 +206,7 @@ export default function ContactPage() {
                     <h4 className="font-bold text-dark-blue mb-1">Integrated Technology Solutions (ITS)</h4>
                     <p className="text-xs text-text-secondary">Infrastructure, networks, and end-user support</p>
                   </div>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 ml-4">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 ml-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
                   </svg>
                 </Link>
@@ -219,7 +219,7 @@ export default function ContactPage() {
                     <h4 className="font-bold text-dark-blue mb-1">Application Technology Services (ATS)</h4>
                     <p className="text-xs text-text-secondary">Application development, support, and AI solutions</p>
                   </div>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 ml-4">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 ml-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
                   </svg>
                 </Link>
@@ -232,7 +232,7 @@ export default function ContactPage() {
                     <h4 className="font-bold text-dark-blue mb-1">Corporate Information Security (CIS)</h4>
                     <p className="text-xs text-text-secondary">Cybersecurity, risk management, and identity services</p>
                   </div>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 ml-4">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 ml-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
                   </svg>
                 </Link>
@@ -245,7 +245,7 @@ export default function ContactPage() {
                     <h4 className="font-bold text-dark-blue mb-1">Project Management Office (PMO)</h4>
                     <p className="text-xs text-text-secondary">Project governance, delivery, and oversight</p>
                   </div>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 ml-4">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 ml-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
                   </svg>
                 </Link>
@@ -258,7 +258,7 @@ export default function ContactPage() {
                     <h4 className="font-bold text-dark-blue mb-1">Technology Planning</h4>
                     <p className="text-xs text-text-secondary">Strategic technology direction, investment, and governance</p>
                   </div>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 ml-4">
+                  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-text-secondary group-hover:text-process-blue transition-colors flex-shrink-0 ml-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
                   </svg>
                 </Link>
@@ -299,7 +299,7 @@ export default function ContactPage() {
                 <h4 className="text-[0.6875rem] font-bold text-process-blue uppercase tracking-widest mb-4">Contact Service Desk</h4>
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-process-blue flex-shrink-0 mt-0.5">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-process-blue flex-shrink-0 mt-0.5">
                       <path fillRule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z" clipRule="evenodd" />
                     </svg>
                     <div>
@@ -307,7 +307,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-process-blue flex-shrink-0 mt-0.5">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-process-blue flex-shrink-0 mt-0.5">
                       <path fillRule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z" clipRule="evenodd" />
                     </svg>
                     <div>

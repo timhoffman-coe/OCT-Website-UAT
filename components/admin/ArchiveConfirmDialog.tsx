@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Archive, AlertTriangle } from 'lucide-react';
 import { archiveTeam, getArchiveImpact } from '@/lib/actions/team-actions';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface ArchiveConfirmDialogProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ export default function ArchiveConfirmDialog({
   teamName,
   hasChildren,
 }: ArchiveConfirmDialogProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, isOpen);
   const router = useRouter();
   const [confirmText, setConfirmText] = useState('');
   const [impact, setImpact] = useState<Awaited<ReturnType<typeof getArchiveImpact>> | null>(null);
@@ -68,9 +71,14 @@ export default function ArchiveConfirmDialog({
       <div
         className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       />
       <div className="flex min-h-full items-center justify-center p-4">
         <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="archive-dialog-title"
           className="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6"
           onClick={(e) => e.stopPropagation()}
         >
@@ -79,7 +87,7 @@ export default function ArchiveConfirmDialog({
               <AlertTriangle className="w-5 h-5 text-red-600" />
             </div>
             <div>
-              <h3 className="font-sans text-lg font-bold text-gray-900">Archive Team</h3>
+              <h3 id="archive-dialog-title" className="font-sans text-lg font-bold text-gray-900">Archive Team</h3>
               <p className="font-sans text-sm text-gray-500">This action can be undone from the Trash page.</p>
             </div>
           </div>

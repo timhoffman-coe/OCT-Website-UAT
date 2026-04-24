@@ -5,7 +5,8 @@ export default function TeamPageLoading() {
   return (
     <div className="bg-white min-h-screen">
       <Header />
-      <main className="animate-pulse">
+      <main id="main-content" className="animate-pulse">
+        <p className="sr-only" role="status">Loading content, please wait.</p>
         {/* Hero / Title Section */}
         <div className="bg-gray-100 py-10 px-6">
           <div className="max-w-5xl mx-auto">

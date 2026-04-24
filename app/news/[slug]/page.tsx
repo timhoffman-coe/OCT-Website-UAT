@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     <div className="bg-structural-light-gray min-h-screen">
       <Header />
 
-      <main className="pt-8 pb-20">
+      <main id="main-content" className="pt-8 pb-20">
         {/* Article Header */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 mb-12">
           {/* Breadcrumb */}
@@ -59,7 +59,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <Link href="/news" className="text-[0.6875rem] uppercase tracking-widest text-process-blue font-bold hover:underline">
               News
             </Link>
-            <svg className="w-4 h-4 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg aria-hidden="true" className="w-4 h-4 text-text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
             <span className="text-[0.6875rem] uppercase tracking-widest text-text-secondary">{post.category}</span>
@@ -82,7 +82,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               </div>
             </div>
             <div className="flex items-center gap-2 text-text-secondary">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span className="text-xs font-semibold">{readTime} min read</span>
@@ -107,13 +107,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           {/* Share Widget (Desktop) */}
           <aside className="hidden lg:block lg:col-span-1 sticky top-32 h-fit">
             <div className="flex flex-col gap-4">
-              <button className="w-10 h-10 rounded-full bg-white hover:bg-structural-gray-blue transition-colors flex items-center justify-center text-dark-blue" title="Print Article">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <button className="w-10 h-10 rounded-full bg-white hover:bg-structural-gray-blue transition-colors flex items-center justify-center text-dark-blue" title="Print Article" aria-label="Print Article">
+                <svg aria-hidden="true" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18.75 12h.008v.008h-.008V12zm-2.25 0h.008v.008H16.5V12z" />
                 </svg>
               </button>
-              <button className="w-10 h-10 rounded-full bg-white hover:bg-structural-gray-blue transition-colors flex items-center justify-center text-dark-blue" title="Bookmark">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <button className="w-10 h-10 rounded-full bg-white hover:bg-structural-gray-blue transition-colors flex items-center justify-center text-dark-blue" title="Bookmark" aria-label="Bookmark">
+                <svg aria-hidden="true" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
                 </svg>
               </button>
@@ -137,7 +137,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             href="/news"
             className="inline-flex items-center gap-1 text-process-blue hover:text-primary-blue font-medium transition-colors"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
             Back to all news

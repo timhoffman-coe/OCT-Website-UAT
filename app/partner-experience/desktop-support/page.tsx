@@ -70,7 +70,7 @@ const fallback = {
     {
       label: 'Request On-Site Support',
       description: 'Schedule a technician visit.',
-      href: '#',
+      href: '/get-help',
     },
     {
       label: 'Hardware Request Form',

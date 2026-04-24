@@ -70,7 +70,7 @@ const fallback = {
     {
       label: 'Software Request Form',
       description: 'Request new software installation.',
-      href: '#',
+      href: '/get-help',
     },
     {
       label: 'Device Inventory',

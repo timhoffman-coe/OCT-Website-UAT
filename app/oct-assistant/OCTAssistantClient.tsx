@@ -73,7 +73,7 @@ export default function OCTAssistantClient() {
       </div>
 
       {/* Chat Area */}
-      <main className="flex-grow container mx-auto max-w-7xl p-4 md:p-6">
+      <main id="main-content" className="flex-grow container mx-auto max-w-7xl p-4 md:p-6">
         <div className="h-full w-full max-w-4xl mx-auto" style={{ height: 'calc(100vh - 280px)' }}>
           <ChatWindow
             messages={messages}

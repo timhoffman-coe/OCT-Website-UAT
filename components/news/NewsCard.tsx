@@ -36,7 +36,7 @@ export default function NewsCard({ post }: NewsCardProps) {
         </p>
         <span className="text-process-blue font-bold text-sm inline-flex items-center gap-1">
           Learn more
-          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg aria-hidden="true" className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </span>

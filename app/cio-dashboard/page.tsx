@@ -36,7 +36,7 @@ export default function CIODashboardPage() {
         <h1 className="font-sans text-2xl font-bold text-primary-blue">Chief Information Officer Dashboard</h1>
       </div>
 
-      <main className="p-4 md:p-6 lg:p-8">
+      <main id="main-content" className="p-4 md:p-6 lg:p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
           {/* Critical Systems Performance */}

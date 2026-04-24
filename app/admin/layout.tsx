@@ -87,7 +87,7 @@ export default async function AdminLayout({
         canEditLinks={user.role === 'SUPER_ADMIN' || !!user.linksPermission}
         canEditPolicies={user.role === 'SUPER_ADMIN' || !!user.policiesPermission}
       />
-      <main className="flex-1 overflow-auto">{children}</main>
+      <main id="main-content" className="flex-1 overflow-auto">{children}</main>
     </div>
   );
 }

@@ -66,7 +66,7 @@ const businessUnits = [
 ];
 
 const mailIcon = (
-  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
     <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
   </svg>
 );
@@ -146,16 +146,16 @@ export default function LeadershipContent() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="max-w-2xl text-center md:text-left">
             <h2 className="text-3xl font-bold text-white mb-4">Departmental Leadership</h2>
-            <p className="text-white/60 text-lg">Our Directors oversee specialized teams that provide critical technology infrastructure and support across the entire municipality.</p>
+            <p className="text-white/80 text-lg">Our Directors oversee specialized teams that provide critical technology infrastructure and support across the entire municipality.</p>
           </div>
           <div className="flex gap-4">
             <div className="px-6 py-4 bg-white/5 border border-white/10 rounded-lg text-center">
               <div className="text-2xl font-bold text-white">5</div>
-              <div className="text-[0.6875rem] text-white/60 uppercase tracking-widest">Strategic Units</div>
+              <div className="text-[0.6875rem] text-white/80 uppercase tracking-widest">Strategic Units</div>
             </div>
             <div className="px-6 py-4 bg-white/5 border border-white/10 rounded-lg text-center">
               <div className="text-2xl font-bold text-white">120+</div>
-              <div className="text-[0.6875rem] text-white/60 uppercase tracking-widest">Staff Members</div>
+              <div className="text-[0.6875rem] text-white/80 uppercase tracking-widest">Staff Members</div>
             </div>
           </div>
         </div>
@@ -213,7 +213,7 @@ export default function LeadershipContent() {
                     href={unit.link}
                     className="flex items-center gap-2 text-process-blue font-medium hover:text-dark-blue transition-colors"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
                     </svg>
                     View {unit.section}
@@ -226,7 +226,7 @@ export default function LeadershipContent() {
           {/* Contact Utility Card */}
           <div className="bg-structural-light-gray p-8 rounded-xl flex flex-col justify-center items-center text-center border-2 border-dashed border-structural-gray-blue">
             <div className="mb-4 text-process-blue">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
               </svg>
             </div>

@@ -139,7 +139,7 @@ function SearchResults() {
     <div className="bg-gray-100 min-h-screen">
       <Header />
 
-      <main className="p-4 md:p-8 lg:p-12">
+      <main id="main-content" className="p-4 md:p-8 lg:p-12">
         <div className="max-w-7xl mx-auto">
           {/* Page Header */}
           <div className="mb-8">
@@ -206,7 +206,7 @@ export default function SearchPage() {
     <Suspense fallback={
       <div className="bg-gray-100 min-h-screen">
         <Header />
-        <main className="p-4 md:p-8 lg:p-12">
+        <main id="main-content" className="p-4 md:p-8 lg:p-12">
           <div className="max-w-7xl mx-auto">
             <div className="bg-white rounded-lg shadow-lg p-8">
               <p className="font-sans text-gray-600 text-center">Loading search results...</p>

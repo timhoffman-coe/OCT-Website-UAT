@@ -4,7 +4,8 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Lock, Map, CheckCircle2, Circle, Loader2, ChevronDown, FileText, Cpu, ClipboardList } from 'lucide-react';
+import { Lock, Map, CheckCircle2, Circle, Loader2, ChevronDown, FileText, Cpu, ClipboardList, Sparkles, Zap, Wrench } from 'lucide-react';
+import { siteChangesData, type ChangeCategory } from '@/lib/siteChangesData';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -12,7 +13,7 @@ const DOCUMENTS = [
   { slug: 'ai-assistant', title: 'AI Assistant', description: 'Gemini chat integration, Drive context, and circuit breaker' },
   { slug: 'api-reference', title: 'API Reference', description: 'Complete reference for all API routes' },
   { slug: 'architecture-overview', title: 'Architecture Overview', description: 'System architecture, directory structure, and tech stack' },
-  { slug: 'cicd-pipeline', title: 'CI/CD Pipeline', description: 'Local build to GCP production deployment' },
+  { slug: 'cicd-pipeline', title: 'CI/CD Pipeline', description: 'Build pipeline, commit validation, and GCP production deployment' },
   { slug: 'cms-admin-guide', title: 'CMS Admin Guide', description: 'User guide for content editors' },
   { slug: 'cms-overview', title: 'CMS Overview', description: 'How the content management system works' },
   { slug: 'data-portal', title: 'Data Portal', description: 'MSSQL integration, NTLM auth, and budget/incident queries' },
@@ -28,6 +29,7 @@ const DOCUMENTS = [
   { slug: 'secret-management', title: 'Secret Management', description: 'Google Secret Manager setup and credential rotation' },
   { slug: 'service-health', title: 'Service Health', description: 'Uptrends API integration, status mapping, and caching' },
   { slug: 'testing', title: 'Testing', description: 'Test framework, conventions, and how to run tests' },
+  { slug: 'versioning', title: 'Versioning & Releases', description: 'Semantic versioning, conventional commits, and automated releases' },
   { slug: 'widget-system', title: 'Widget System', description: 'Widget types, template blocklist, and how to add new widgets' },
 ];
 
@@ -35,7 +37,29 @@ const TABS = [
   { id: 'design', label: 'Design', icon: Cpu },
   { id: 'docs', label: 'Docs', icon: FileText },
   { id: 'progress', label: 'Progress', icon: ClipboardList },
+  { id: 'changes', label: 'Changes', icon: Sparkles },
 ] as const;
+
+const INITIALLY_EXPANDED_VERSIONS = 5;
+
+const changeCategoryConfig: Record<
+  ChangeCategory,
+  { bg: string; text: string; icon: typeof Sparkles }
+> = {
+  'New Feature': { bg: 'bg-[#005087]/10', text: 'text-[#005087]', icon: Sparkles },
+  Enhancement: { bg: 'bg-emerald-500/10', text: 'text-emerald-600', icon: Zap },
+  Content: { bg: 'bg-blue-500/10', text: 'text-blue-600', icon: FileText },
+  'Bug Fix': { bg: 'bg-red-500/10', text: 'text-red-500', icon: Wrench },
+};
+
+function formatChangeDate(dateStr: string): string {
+  const date = new Date(dateStr + 'T00:00:00');
+  return date.toLocaleDateString('en-CA', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
 
 type TabId = (typeof TABS)[number]['id'];
 
@@ -104,13 +128,16 @@ function parsePhases(md: string): Phase[] {
 
 const markdownComponents = {
   h1: ({ children }: { children?: React.ReactNode }) => (
-    <h1 className="text-xl lg:text-2xl font-bold text-gray-900 font-sans mb-4 mt-6 first:mt-0">{children}</h1>
+    <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 font-sans mb-4 mt-8 first:mt-0">{children}</h1>
   ),
   h2: ({ children }: { children?: React.ReactNode }) => (
     <h2 className="text-lg lg:text-xl font-bold text-gray-800 font-sans mb-3 mt-6 pb-2 border-b border-gray-200">{children}</h2>
   ),
   h3: ({ children }: { children?: React.ReactNode }) => (
-    <h3 className="text-base lg:text-lg font-semibold text-gray-700 font-sans mb-2 mt-4">{children}</h3>
+    <h3 className="text-base lg:text-lg font-semibold text-gray-600 font-sans mb-2 mt-5 pl-3 border-l-2 border-gray-300">{children}</h3>
+  ),
+  h4: ({ children }: { children?: React.ReactNode }) => (
+    <h4 className="text-sm lg:text-base font-medium text-gray-500 font-sans mb-1.5 mt-4 uppercase tracking-wide">{children}</h4>
   ),
   p: ({ children }: { children?: React.ReactNode }) => (
     <p className="text-sm lg:text-base text-gray-600 font-sans leading-relaxed mb-3">{children}</p>
@@ -152,6 +179,79 @@ const markdownComponents = {
   hr: () => <hr className="my-6 border-gray-200" />,
 };
 
+function PhaseContent({ content }: { content: string }) {
+  const lines = content.split('\n');
+  const elements: React.ReactNode[] = [];
+  let level = 0; // 0 = under h3, 1 = under h4, 2 = under bold label
+  let pendingItems: { text: string; checked: boolean }[] = [];
+  let key = 0;
+
+  const flushItems = () => {
+    if (pendingItems.length === 0) return;
+    const ml = level === 0 ? '' : level === 1 ? 'ml-6' : 'ml-12';
+    elements.push(
+      <ul key={key++} className={`space-y-1.5 mb-4 ${ml}`}>
+        {pendingItems.map((item, j) => (
+          <li key={j} className="flex items-start gap-2.5 text-sm font-sans">
+            {item.checked ? (
+              <CheckCircle2 className="w-4.5 h-4.5 text-emerald-500 flex-shrink-0 mt-0.5" />
+            ) : (
+              <Circle className="w-4.5 h-4.5 text-gray-300 flex-shrink-0 mt-0.5" />
+            )}
+            <span className={item.checked ? 'text-gray-400 line-through' : 'text-gray-700'}>
+              {item.text}
+            </span>
+          </li>
+        ))}
+      </ul>
+    );
+    pendingItems = [];
+  };
+
+  for (const line of lines) {
+    if (line.startsWith('### ')) {
+      flushItems();
+      level = 0;
+      elements.push(
+        <h3 key={key++} className="text-base font-bold text-gray-800 font-sans mt-6 first:mt-0 mb-2 pb-1.5 border-b border-gray-200">
+          {line.slice(4)}
+        </h3>
+      );
+    } else if (line.startsWith('#### ')) {
+      flushItems();
+      level = 1;
+      elements.push(
+        <h4 key={key++} className="text-sm font-semibold text-gray-700 font-sans mt-5 mb-1.5 ml-6 pl-3 border-l-2 border-[#005087]/30">
+          {line.slice(5)}
+        </h4>
+      );
+    } else if (/^\*\*.*[*:]\*\*\s*$/.test(line)) {
+      flushItems();
+      level = 2;
+      elements.push(
+        <p key={key++} className="text-xs font-semibold text-gray-500 font-sans mt-3 mb-1 ml-12 uppercase tracking-wide">
+          {line.replace(/\*\*/g, '')}
+        </p>
+      );
+    } else if (/^- \[[ x]\]/.test(line)) {
+      const checked = /^- \[x\]/.test(line);
+      const text = line.replace(/^- \[[ x]\]\s*/, '');
+      pendingItems.push({ text, checked });
+    } else if (line.trim() !== '') {
+      flushItems();
+      const ml = level === 0 ? '' : level === 1 ? 'ml-6' : 'ml-12';
+      elements.push(
+        <p key={key++} className={`text-sm text-gray-600 font-sans leading-relaxed mb-2 ${ml}`}>
+          {line}
+        </p>
+      );
+    }
+  }
+  flushItems();
+
+  return <>{elements}</>;
+}
+
 export default function OctWebDevPage() {
   const [canView, setCanView] = useState<boolean | null>(null);
   const [content, setContent] = useState('');
@@ -162,6 +262,7 @@ export default function OctWebDevPage() {
   const [failedDocs, setFailedDocs] = useState<Set<string>>(new Set());
   const [activeDoc, setActiveDoc] = useState<string | null>(null);
   const docScrollRef = useRef<HTMLDivElement>(null);
+  const [expandedVersions, setExpandedVersions] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetch('/api/cms/oct-web-dev/check-access')
@@ -263,7 +364,7 @@ export default function OctWebDevPage() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+      <main id="main-content" className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
           <div className="flex items-center justify-center py-24 text-gray-400">
             <Loader2 className="w-6 h-6 animate-spin mr-3" />
@@ -447,54 +548,99 @@ export default function OctWebDevPage() {
 
                     {isOpen && (
                       <div className="px-5 py-4 border-t border-gray-100">
-                        <ReactMarkdown
-                          components={{
-                            h3: ({ children }) => (
-                              <h3 className="text-base font-semibold text-gray-700 font-sans mt-5 first:mt-0 mb-2">{children}</h3>
-                            ),
-                            ul: ({ children }) => (
-                              <ul className="space-y-1.5 mb-4">{children}</ul>
-                            ),
-                            li: ({ children }) => {
-                              const text = String(children);
-                              const isChecked = text.startsWith('[x]') || text.includes('\u2705');
-                              const stripped = typeof children === 'string'
-                                ? children.replace(/^\[[ x]\]\s*/, '')
-                                : Array.isArray(children)
-                                  ? children.map((child, idx) =>
-                                      idx === 0 && typeof child === 'string'
-                                        ? child.replace(/^\[[ x]\]\s*/, '')
-                                        : child
-                                    )
-                                  : children;
-                              return (
-                                <li className="flex items-start gap-2.5 text-sm font-sans">
-                                  {isChecked ? (
-                                    <CheckCircle2 className="w-4.5 h-4.5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                                  ) : (
-                                    <Circle className="w-4.5 h-4.5 text-gray-300 flex-shrink-0 mt-0.5" />
-                                  )}
-                                  <span className={isChecked ? 'text-gray-400 line-through' : 'text-gray-700'}>{stripped}</span>
-                                </li>
-                              );
-                            },
-                            p: ({ children }) => (
-                              <p className="text-sm text-gray-600 font-sans leading-relaxed">{children}</p>
-                            ),
-                            input: ({ checked }) => checked ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-500 inline-block mr-1.5 -mt-0.5" />
-                            ) : (
-                              <Circle className="w-4 h-4 text-gray-300 inline-block mr-1.5 -mt-0.5" />
-                            ),
-                          }}
-                        >
-                          {phase.content}
-                        </ReactMarkdown>
+                        <PhaseContent content={phase.content} />
                       </div>
                     )}
                   </div>
                 );
               })}
+            </div>
+          )}
+
+          {/* Changes Tab */}
+          {activeTab === 'changes' && (
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              {/* Header card */}
+              <div className="px-6 py-5 border-b border-gray-200 flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900 font-sans">Site Changes</h2>
+                  <p className="text-sm text-gray-500 font-sans mt-0.5">New features, improvements, and content updates</p>
+                </div>
+                <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-4 py-2">
+                  <Sparkles className="w-4 h-4 text-[#005087]" />
+                  <span className="text-sm font-bold text-gray-900">v{siteChangesData[0].version}</span>
+                  <span className="text-xs text-gray-500">latest</span>
+                </div>
+              </div>
+
+              {/* Timeline */}
+              <div className="px-6 py-6">
+                <div className="relative">
+                  <div className="absolute left-[11px] top-3 bottom-0 w-0.5 bg-gray-200" />
+
+                  {siteChangesData.map((version, i) => {
+                    const isOlder = i >= INITIALLY_EXPANDED_VERSIONS;
+                    const isExpanded = !isOlder || expandedVersions.has(version.version);
+
+                    return (
+                      <div key={version.version} className="relative pl-10 pb-8 last:pb-0">
+                        <div
+                          className={`absolute top-1.5 rounded-full border-4 border-white ${
+                            i === 0
+                              ? 'left-[3px] w-[18px] h-[18px] bg-[#005087] shadow-md shadow-[#005087]/30'
+                              : 'left-[5px] w-3.5 h-3.5 bg-gray-400'
+                          }`}
+                        />
+
+                        {isOlder ? (
+                          <button
+                            onClick={() => setExpandedVersions(prev => {
+                              const next = new Set(prev);
+                              next.has(version.version) ? next.delete(version.version) : next.add(version.version);
+                              return next;
+                            })}
+                            className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1 group cursor-pointer w-full text-left"
+                          >
+                            <h3 className="text-xl font-bold text-gray-900 font-sans group-hover:text-[#005087] transition-colors">
+                              v{version.version}
+                            </h3>
+                            <span className="text-sm text-gray-500 font-sans">{formatChangeDate(version.date)}</span>
+                            <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+                          </button>
+                        ) : (
+                          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
+                            <h3 className="text-xl font-bold text-gray-900 font-sans">v{version.version}</h3>
+                            <span className="text-sm text-gray-500 font-sans">{formatChangeDate(version.date)}</span>
+                          </div>
+                        )}
+
+                        {version.summary && isExpanded && (
+                          <p className="text-sm text-gray-500 font-sans mb-3">{version.summary}</p>
+                        )}
+
+                        {isExpanded && (
+                          <div className="mt-3 space-y-2">
+                            {version.changes.map((change, j) => {
+                              const config = changeCategoryConfig[change.category];
+                              const Icon = config.icon;
+                              return (
+                                <div key={j} className="bg-gray-50 rounded-lg border border-gray-200 p-4">
+                                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${config.bg} ${config.text}`}>
+                                    <Icon className="w-3 h-3" />
+                                    {change.category}
+                                  </span>
+                                  <h4 className="text-sm font-semibold text-gray-900 font-sans mt-1.5">{change.title}</h4>
+                                  <p className="text-xs text-gray-500 font-sans mt-1 leading-relaxed">{change.description}</p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           )}
           </>

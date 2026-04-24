@@ -29,7 +29,7 @@ The `entrypoint.js` script checks for `GCP_PROJECT_ID` in the environment. If se
 | `coe-website-mssql-password` | `MSSQL_PASSWORD` | On-prem SQL Server password |
 | `coe-website-service-account-json` | *(file)* | Google service account key (written to `/tmp/service-account.json`) |
 
-**Non-secret config** (set in `docker-compose.prod.yml`): `MSSQL_SERVER`, `MSSQL_DATABASE`, `MSSQL_PORT`, `MSSQL_DOMAIN`, `MSSQL_ENCRYPT`, `MSSQL_TRUST_CERT`, `SERVICEHEALTH_API_BASE_URL`, `ADMIN_EMAIL`, `LOG_LEVEL`.
+**Non-secret config** (set in `docker-compose.prod.yml`): `MSSQL_SERVER`, `MSSQL_DATABASE`, `MSSQL_PORT`, `MSSQL_DOMAIN`, `MSSQL_ENCRYPT`, `MSSQL_TRUST_CERT`, `SERVICEHEALTH_API_BASE_URL`, `LOG_LEVEL`.
 
 **Not in Secret Manager:** `POSTGRES_PASSWORD` and `DATABASE_URL` are provided by Docker Compose via the `.env` file on the server. Docker Compose needs these values before containers start, so they cannot be fetched from inside a container.
 

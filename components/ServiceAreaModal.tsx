@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 interface ServiceAreaModalProps {
   isOpen: boolean;
@@ -20,6 +21,9 @@ export default function ServiceAreaModal({
   fullDescription,
   features,
 }: ServiceAreaModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialogRef, isOpen);
+
   // Handle ESC key to close modal
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -52,6 +56,10 @@ export default function ServiceAreaModal({
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
         <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="servicearea-modal-title"
           className="relative bg-white rounded-lg shadow-xl max-w-3xl w-full p-8 md:p-12"
           onClick={(e) => e.stopPropagation()}
         >
@@ -66,6 +74,7 @@ export default function ServiceAreaModal({
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -91,7 +100,7 @@ export default function ServiceAreaModal({
               </div>
             )}
 
-            <h2 className="font-sans text-3xl font-bold text-gray-900 mb-4">
+            <h2 id="servicearea-modal-title" className="font-sans text-3xl font-bold text-gray-900 mb-4">
               {title}
             </h2>
 
@@ -112,6 +121,7 @@ export default function ServiceAreaModal({
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
+                        aria-hidden="true"
                       >
                         <path
                           strokeLinecap="round"

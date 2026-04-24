@@ -50,7 +50,7 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const baseClasses = 'font-sans font-semibold rounded-md transition-colors duration-300 inline-block';
+  const baseClasses = 'font-sans font-semibold rounded-md transition-colors duration-300 inline-block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-blue disabled:cursor-not-allowed disabled:opacity-50';
   const combinedClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`.trim();
 
   if (props.as === 'link') {
