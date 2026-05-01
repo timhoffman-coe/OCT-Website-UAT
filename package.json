@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "next lint --dir .",
+    "lint": "next lint .",
     "lint:fix": "next lint --dir . --fix",
     "db:migrate": "npx prisma migrate dev",
     "db:seed": "npx prisma db seed",

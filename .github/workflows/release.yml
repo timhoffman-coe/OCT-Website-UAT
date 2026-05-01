@@ -49,7 +49,7 @@ jobs:
       - name: Generate Prisma Client
         run: npx prisma generate
       - name: Lint
-        run: npx next lint --dir .
+        run: npx next lint -- .
       - name: Unit Tests
         run: npm test
       - name: Build
