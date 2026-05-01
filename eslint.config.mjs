@@ -1,29 +1,36 @@
-import { defineConfig, globalIgnores } from "eslint/config";
-import nextVitals from "eslint-config-next/core-web-vitals";
-import nextTs from "eslint-config-next/typescript";
+import { FlatCompat } from "@eslint/eslintrc";
+import path from "path";
+import { fileURLToPath } from "url";
 import security from "eslint-plugin-security";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 
-const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+  // 1. Next.js Core Vitals & TypeScript Support
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  
+  // 2. Security Plugin
   security.configs.recommended,
+
+  // 3. Global Rules & jsx-a11y
   {
-    // jsx-a11y recommended rules (plugin already registered by eslint-config-next)
     rules: {
       ...jsxA11y.flatConfigs.recommended.rules,
-       // 🔧 Overrides (these win because they come after the spread)
       "jsx-a11y/label-has-associated-control": "warn",
       "jsx-a11y/click-events-have-key-events": "warn",
       "jsx-a11y/no-static-element-interactions": "off",
-      "jsx-a11y/anchor-is-valid": "warn", // optional but likely needed
+      "jsx-a11y/anchor-is-valid": "warn",
+      "no-console": "error",
     },
   },
-  {
-    rules: {
-      "no-console": ["error"],
-    },
-  },
+
+  // 4. Overrides for Scripts and Prisma
   {
     files: ["prisma/**/*.ts", "scripts/**/*.ts", "scripts/**/*.js", "scripts/**/*.mjs"],
     rules: {
@@ -31,19 +38,19 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-require-imports": "off",
     },
   },
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    ".next/**",
-    "out/**",
-    "build/**",
-    "next-env.d.ts",
-    // Generated files (Workbox service worker)
-    "public/sw.js",
-    "public/workbox-*.js",
-    // Mockups are source material, not part of the app
-    "Mockups/**",
-  ]),
-]);
+
+  // 5. Global Ignores (This replaces globalIgnores function)
+  {
+    ignores: [
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+      "public/sw.js",
+      "public/workbox-*.js",
+      "Mockups/**",
+    ],
+  },
+];
 
 export default eslintConfig;
