@@ -673,7 +673,7 @@ function WidgetPreviewModal({
   onClose: () => void;
 }) {
   const preview = WIDGET_PREVIEWS[widgetType];
-  // eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map
+   
   const IconComponent = resolveIcon(icon);
 
   useEffect(() => {
@@ -789,7 +789,7 @@ function WidgetEditorModal({
   teamQuickLinks: LayoutEditorProps['teamQuickLinks'];
   projectData?: ProjectData;
 }) {
-  // eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map
+   
   const IconComponent = resolveIcon(instance.widgetDefinition.icon);
   const widgetType = instance.widgetDefinition.widgetType;
   const isConfigWidget = widgetType in WIDGET_CONFIG_FIELDS;
@@ -1259,7 +1259,7 @@ function SortableWidgetItem({
     opacity: isDragging ? 0.5 : 1,
   };
 
-  // eslint-disable-next-line react-hooks/static-components -- resolveIcon returns a stable reference from a static map
+   
   const IconComponent = resolveIcon(instance.widgetDefinition.icon);
 
   return (
@@ -1445,7 +1445,7 @@ export default function LayoutEditor({
 
   useEffect(() => {
     if (prevPendingRef.current && !isPending) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: show saved indicator after async transition completes
+       
       setShowSaved(true);
       const timer = setTimeout(() => setShowSaved(false), 3000);
       return () => clearTimeout(timer);

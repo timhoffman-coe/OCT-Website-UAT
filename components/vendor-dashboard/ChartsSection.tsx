@@ -64,7 +64,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ vendors }) => {
         riskLevel: v.riskLevel
     }));
 
-    // eslint-disable-next-line react-hooks/static-components -- inline tooltip component for recharts, stateless
+     
     const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: { name: string; x: number; riskLevel: string; z?: number } }> }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;

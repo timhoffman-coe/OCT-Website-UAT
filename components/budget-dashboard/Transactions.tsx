@@ -44,7 +44,7 @@ const Transactions: React.FC<TransactionsProps> = ({ forcedType }) => {
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect -- reset filters on route change
         setSearchTerm('');
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+         
         setProgramFilter('');
     }, [forcedType]);
 

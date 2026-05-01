@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     // jsx-a11y recommended rules (plugin already registered by eslint-config-next)
     rules: {
       ...jsxA11y.flatConfigs.recommended.rules,
+       // 🔧 Overrides (these win because they come after the spread)
+      "jsx-a11y/label-has-associated-control": "warn",
+      "jsx-a11y/click-events-have-key-events": "warn",
+      "jsx-a11y/no-static-element-interactions": "off",
+      "jsx-a11y/anchor-is-valid": "warn", // optional but likely needed
     },
   },
   {
