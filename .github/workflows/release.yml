@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-        - name: Debug Files
+      - name: Debug Files
         run: |
           ls -la
           node -v
